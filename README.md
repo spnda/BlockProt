@@ -4,7 +4,7 @@
 
 ### Building yourself
 
-Simply clone this repository and add the following to `de.sean.splugin:SToken.java`:
+Simply clone this repository and add the following to `de/sean/splugin/SToken.java`:
 
 ```java
 public class SToken {
@@ -13,4 +13,4 @@ public class SToken {
 ```
 
 Then use `gradlew build` to build your JAR into `./build/libs/`.
-JDA automatically gets shadowed which means you won't need to put the JAR anywhere you use it.
+JDA automatically gets shadowed which means you won't need to put the JDA package anywhere you use this plugin.

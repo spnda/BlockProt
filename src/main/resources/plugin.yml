@@ -1,0 +1,24 @@
+main: de.sean.splugin.App
+name: SPlugin
+version: 0.1
+api-version: 1.13
+dependencies:
+  - NBTAPI
+permissions:
+  splugin.votestart:
+    description: Erlaubt einen Spieler eine globale Wahl zu starten.
+
+  splugin.vote:
+    description: Erlaubt einen Spieler an einer Wahl teil zu nehmen.
+
+commands:
+  lock:
+    description: Chest/Ofen/... für andere Nutzer sperren
+    usage: /lock <add/remove/private/public>
+
+  wahl:
+    description: Für einen Spieler wählen
+    usage: /wahl <Spielernamen>
+
+  wahlstart:
+    description: Eine Wahl starten

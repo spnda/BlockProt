@@ -33,7 +33,7 @@ public class App extends JavaPlugin {
     @Override
     public void onEnable() {
         /* Discord */
-        JDABuilder builder = new JDABuilder(SToken.token);
+        JDABuilder builder = new JDABuilder(SToken.TOKEN);
         try {
             builder.setActivity(Activity.playing("Minecraft"));
             jda = builder.build();

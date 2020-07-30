@@ -11,3 +11,6 @@ public class SToken {
     protected static final TOKEN = "YOUR TOKEN HERE";
 }
 ```
+
+Then use `gradlew build` to build your JAR into `./build/libs/`.
+JDA automatically gets shadowed which means you won't need to put the JAR anywhere you use it.

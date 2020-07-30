@@ -24,7 +24,6 @@ import net.dv8tion.jda.api.entities.Activity;
 import org.jetbrains.annotations.NotNull;
 
 public class App extends JavaPlugin {
-    private static final String token = "Njc3MTg0NDM3MzA5NDA3MjM4.XkQjPg.xwZZy1Ju_jq-iG6tloxQPIpm1JU";
     private static JDA jda;
 
     private static App instance;
@@ -34,7 +33,7 @@ public class App extends JavaPlugin {
     @Override
     public void onEnable() {
         /* Discord */
-        JDABuilder builder = new JDABuilder(token);
+        JDABuilder builder = new JDABuilder(SToken.token);
         try {
             builder.setActivity(Activity.playing("Minecraft"));
             jda = builder.build();

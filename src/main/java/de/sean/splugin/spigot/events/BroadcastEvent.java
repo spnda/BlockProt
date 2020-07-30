@@ -20,9 +20,9 @@ public class BroadcastEvent implements Listener {
             // It's now morning. Send a message to discord.
             JDA jda = App.getInstance().getDiscordInstance();
             if (jda != null) {
-                Guild guild = jda.getGuildById(SUtil.guildID);
+                Guild guild = jda.getGuildById(SUtil.GUILD_ID);
                 if (guild == null) return;
-                TextChannel channel = guild.getTextChannelById(SUtil.channelID);
+                TextChannel channel = guild.getTextChannelById(SUtil.CHANNEL_ID);
                 try {
                     if (channel != null) channel.sendMessage("Es ist nun morgen.").queue();
                 } catch (Exception e) {

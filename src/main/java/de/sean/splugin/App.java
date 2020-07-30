@@ -8,10 +8,14 @@ import de.sean.splugin.util.SUtil;
 
 /* Java */
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import javax.security.auth.login.LoginException;
 
 /* Spigot */
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,21 +31,13 @@ public class App extends JavaPlugin {
 
     private static App instance;
 
+    private static FileConfiguration config;
+
     @Override
     public void onEnable() {
-        /* Discord */
-        JDABuilder builder = new JDABuilder(SToken.TOKEN);
-        try {
-            builder.setActivity(Activity.playing("Minecraft"));
-            jda = builder.build();
-            jda.awaitReady();
-            getLogger().info("Discord has started successfully!");
-        } catch (LoginException | InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        // Add event listeners for discord
-        jda.addEventListener(new SHandler());
+        /* Config */
+        File configFile = App.getInstance().getConfigFile();
+        config = YamlConfiguration.loadConfiguration(configFile);
 
         /* Spigot */
         instance = this;
@@ -60,6 +56,25 @@ public class App extends JavaPlugin {
         PluginManager pm = Bukkit.getServer().getPluginManager();
         registerEvents(pm);
         registerCommands();
+
+        /* Discord */
+        SUtil.GUILD_ID = config.getString("DiscordGuild");
+        SUtil.CHANNEL_ID = config.getString("DiscordChannel");
+        // Only initialize discord stuff if a guild and channel are present.
+        if (SUtil.GUILD_ID != null || SUtil.CHANNEL_ID != null) {
+            JDABuilder builder = new JDABuilder(config.getString("DiscordToken"));
+            try {
+                builder.setActivity(Activity.playing("Minecraft"));
+                jda = builder.build();
+                jda.awaitReady();
+                getLogger().info("Discord has started successfully!");
+            } catch (LoginException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            // Add event listeners for discord
+            jda.addEventListener(new SHandler());
+        }
     }
 
     @Override
@@ -83,11 +98,11 @@ public class App extends JavaPlugin {
         //pm.registerEvents(new RespawnEvent(), this);        // Handles every respawn of a player
     }
 
-    public void registerCommands() {
+    private void registerCommands() {
         getCommand("lock").setExecutor(new LockExecutor());
     }
 
-    public File getConfigFile() { 
+    public File getConfigFile() {
         return new File(getDataFolder() + File.separator + "config.yml");
     }
 

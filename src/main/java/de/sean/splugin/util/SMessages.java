@@ -33,9 +33,7 @@ public class SMessages {
     }
     
     public static String getRandomMessage(final String messageList) {
-        File configFile = App.getInstance().getConfigFile();
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        final List<?> messages = config.getList(messageList, new ArrayList<>());
+        final List<?> messages = App.getInstance().getConfig().getList(messageList, new ArrayList<>());
         if (messages != null && messages.size() > 0) {
             if (messages.size() == 1) return (String) messages.get(0);
             final int index = new Random().nextInt(Math.max(0, messages.size()));

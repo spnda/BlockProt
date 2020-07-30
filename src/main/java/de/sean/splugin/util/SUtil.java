@@ -22,8 +22,8 @@ public class SUtil {
     private static HashMap<UUID, Long> playerLastActivity = new HashMap<>();
     private static final HashMap<UUID, Boolean> afkPlayers = new HashMap<>();
 
-    public static final String guildID = "329896640133726220";
-    public static final String channelID = "692063419003699281";
+    public static String GUILD_ID;
+    public static String CHANNEL_ID;
 
     public static void removePlayerAFK(UUID uuid)                       {           afkPlayers.remove(uuid); }
     public static void setPlayerAFK(UUID uuid, boolean afk)             {           afkPlayers.put(uuid, afk); }
@@ -33,9 +33,9 @@ public class SUtil {
     public static void setLastActivityForPlayer(UUID uuid, long time)   {           playerLastActivity.put(uuid, time); }
     public static long getLastActivityForPlayer(UUID uuid)              { return    playerLastActivity.get(uuid); }
 
-    public static void saveConfigFile(File file, FileConfiguration config) {
+    public static void saveConfigFile(FileConfiguration config) {
         try {
-            config.save(file);
+            config.save(App.getInstance().getConfigFile());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -66,7 +66,7 @@ public class SUtil {
     }
 
     public static String removePlayerTypeForString(String name) {
-        return name.split("|")[1].trim();
+        return name.split("\\|")[1].trim();
     }
 
     public static String getStringForPlayerType(PlayerType playerType) {
@@ -88,15 +88,14 @@ public class SUtil {
     }
 
     public static PlayerType getPlayerType(Player player) {
-        File configFile = App.getInstance().getConfigFile();
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        FileConfiguration config = App.getInstance().getConfig();
         Object obj = config.get("Players." + player.getUniqueId() + ".Role");
 
         // There was no data found. We should put some default data there.
         // For now, return PlayerType.CITIZEN.
         if (obj == null) {
             config.set("Players." + player.getUniqueId() + ".Role", "CITIZEN");
-            saveConfigFile(configFile, config);
+            saveConfigFile(config);
             return PlayerType.CITIZEN;
         } else if (obj.equals("MAYOR")) {
             return PlayerType.MAYOR;

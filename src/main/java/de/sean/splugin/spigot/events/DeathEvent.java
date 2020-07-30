@@ -6,6 +6,7 @@ import de.sean.splugin.util.SMessages;
 import de.sean.splugin.util.SUtil;
 
 /* Spigot */
+import net.dv8tion.jda.api.entities.Guild;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,7 +25,9 @@ public class DeathEvent implements Listener {
         
         /* Discord */
         JDA jda = App.getInstance().getDiscordInstance();
-        TextChannel channel = jda.getGuildById(SUtil.guildID).getTextChannelById(SUtil.channelID);
-        channel.sendMessage(message);
+        Guild guild = jda.getGuildById(SUtil.GUILD_ID);
+        if (guild == null) return;
+        TextChannel channel = guild.getTextChannelById(SUtil.CHANNEL_ID);
+        if (channel != null) channel.sendMessage(message);
     }
 }

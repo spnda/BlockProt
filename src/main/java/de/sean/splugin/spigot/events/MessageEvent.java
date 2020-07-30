@@ -47,9 +47,9 @@ public class MessageEvent implements Listener {
 
         /* Discord */
         JDA jda = App.getInstance().getDiscordInstance();
-        Guild guild = jda.getGuildById(SUtil.guildID);
+        Guild guild = jda.getGuildById(SUtil.GUILD_ID);
         if (guild == null) return;
-        TextChannel channel = guild.getTextChannelById(SUtil.channelID);
+        TextChannel channel = guild.getTextChannelById(SUtil.CHANNEL_ID);
         try {
             if (channel != null) channel.sendMessage("**" + player.getName() + "**: " + message).queue();
         } catch (Exception e) {

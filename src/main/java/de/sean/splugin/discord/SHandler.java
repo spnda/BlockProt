@@ -85,29 +85,30 @@ public class SHandler extends ListenerAdapter {
             case "?help":
                 eb = new EmbedBuilder();
                 eb.setColor(SUtil.randomColor());
-                eb.setTitle("9D Server Hilfe", null);
-                eb.setDescription("Dieser Bot bindet den 9D Minecraft Server mit dem 9D Discord Server. Bot und Plugin geschrieben von Sean.");
-                eb.addField("Privat Nachrichten", "Ihr k\u00F6nnt mit `?msg`, wenn ihr im Privatchat mit diesem Bot seid, private Nachrichten an Spieler auf dem Minecraft Server schicken.", false);
+                eb.setTitle("Server Help", null);
+                eb.setDescription("This bot links a minecraft server with a discord bot. https://github.com/spnda/SPlugin");
+                eb.addField("Private Messages", "Using `?msg` you can whisper to any player currently online on the server.", false);
+                eb.addField("Online Players", "`?players` will give you a neat list of all online players.", false);
                 event.getChannel().sendMessage(eb.build()).queue();
                 break;
             case "?players":
                 eb = new EmbedBuilder();
                 eb.setColor(SUtil.randomColor());
-                eb.setTitle("9D Online Spieler", null);
+                eb.setTitle("Online Players", null);
                 List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
-                eb.setDescription("Es sind " + players.size() + " von maximal " + Bukkit.getMaxPlayers() + " Spielern online.");
+                eb.setDescription("There are " + players.size() + " / " + Bukkit.getMaxPlayers() + " players online.");
                 StringBuilder playerList = new StringBuilder();
                 for (Player player : players) {
                     playerList.append(player.getDisplayName().replaceAll("§[a-z]", "")).append("\n");
                 }
-                eb.addField("Spieler online", playerList.toString(), false);
+                eb.addField("Players online", playerList.toString(), false);
                 event.getChannel().sendMessage(eb.build()).queue();
                 break;
             case "?test":
                 onGenericEvent(new ReconnectedEvent(App.getInstance().getDiscordInstance(), 0L));
                 break;
             default:
-                if (!event.getChannel().getId().equals(SUtil.channelID)) return; // mc-server channel. UND KEIN ANDERER!
+                if (!event.getChannel().getId().equals(SUtil.CHANNEL_ID)) return;
                 if (event.getAuthor().isBot()) return; // Ignore all bots.
                 String divider = ChatColor.GRAY + " | " + ChatColor.RESET;
                 String msg = event.getMessage().getContentStripped();

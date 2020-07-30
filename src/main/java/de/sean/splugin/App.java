@@ -4,10 +4,12 @@ package de.sean.splugin;
 import de.sean.splugin.discord.SHandler;
 import de.sean.splugin.spigot.commands.*;
 import de.sean.splugin.spigot.events.*;
+import de.sean.splugin.spigot.tasks.AfkChecker;
 import de.sean.splugin.util.SUtil;
 
 /* Java */
 import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import javax.security.auth.login.LoginException;
@@ -31,16 +33,15 @@ public class App extends JavaPlugin {
 
     private static App instance;
 
-    private static FileConfiguration config;
-
     @Override
     public void onEnable() {
-        /* Config */
-        File configFile = App.getInstance().getConfigFile();
-        config = YamlConfiguration.loadConfiguration(configFile);
-
         /* Spigot */
         instance = this;
+
+        /* Config */
+        File configFile = getConfigFile();
+        System.out.println(configFile.getPath());
+        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
         // When we're reloading we want to set default values to all players, as old data gets lost on a reload.
         for (Player player : this.getServer().getOnlinePlayers()) {
@@ -51,7 +52,7 @@ public class App extends JavaPlugin {
         // Sleep checker task
         // Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new SleepChecker(), 0L, 20L);
         // Afk checker task
-        // Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new AfkChecker(), 0L, 20L);
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new AfkChecker(), 0L, 20L);
 
         PluginManager pm = Bukkit.getServer().getPluginManager();
         registerEvents(pm);
@@ -60,20 +61,22 @@ public class App extends JavaPlugin {
         /* Discord */
         SUtil.GUILD_ID = config.getString("DiscordGuild");
         SUtil.CHANNEL_ID = config.getString("DiscordChannel");
+        String token = config.getString("DiscordToken");
         // Only initialize discord stuff if a guild and channel are present.
-        if (SUtil.GUILD_ID != null || SUtil.CHANNEL_ID != null) {
-            JDABuilder builder = new JDABuilder(config.getString("DiscordToken"));
+        System.out.println(SUtil.GUILD_ID + " " + SUtil.CHANNEL_ID + " " + token);
+        if (SUtil.GUILD_ID != null && SUtil.CHANNEL_ID != null && token != null) {
+            JDABuilder builder = new JDABuilder(token);
             try {
                 builder.setActivity(Activity.playing("Minecraft"));
                 jda = builder.build();
                 jda.awaitReady();
                 getLogger().info("Discord has started successfully!");
+
+                // Add event listeners for discord
+                jda.addEventListener(new SHandler());
             } catch (LoginException | InterruptedException e) {
                 e.printStackTrace();
             }
-
-            // Add event listeners for discord
-            jda.addEventListener(new SHandler());
         }
     }
 

@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /* Spigot */
 import org.bukkit.configuration.file.FileConfiguration;
@@ -57,7 +58,7 @@ public class SUtil {
     }
 
     public static int randomInt(int min, int max)  {
-        return (int)Math.floor(Math.random() * (max - min + 1)) + 1;
+        return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
 
     public static Color randomColor() {

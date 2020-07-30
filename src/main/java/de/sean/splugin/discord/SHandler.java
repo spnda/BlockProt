@@ -21,9 +21,13 @@ import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.EmbedBuilder;
+import org.gradle.util.Path;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,11 +46,15 @@ public class SHandler extends ListenerAdapter {
 
     @SubscribeEvent
     public void onGenericEvent(final @NotNull GenericEvent event) {
+        // This is purely a thing for myself. Whenever the IP changes my DNS record gets changed.
+        // Can be ignored by anyone else.
         if (event instanceof ReconnectedEvent) {
             new Thread(() -> {
                 System.out.println("API has reconnected!");
                 ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", "node .");
-                processBuilder.directory(new File("./freenom-update"));
+                String dir = "./freenom-update";
+                if (!Files.exists(FileSystems.getDefault().getPath(dir), LinkOption.NOFOLLOW_LINKS)) return;
+                processBuilder.directory(new File(dir));
                 System.out.println(processBuilder.directory());
                 try {
                     Process process = processBuilder.start();

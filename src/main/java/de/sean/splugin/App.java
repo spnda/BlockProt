@@ -95,8 +95,6 @@ public class App extends JavaPlugin {
 
     public void registerCommands() {
         getCommand("lock").setExecutor(new LockExecutor());
-        getCommand("wahl").setExecutor(new VoteExecutor(votingInstance));
-        getCommand("wahlstart").setExecutor(new VoteStartExecutor(votingInstance));
     }
 
     public File getConfigFile() { 

@@ -5,7 +5,6 @@ import de.sean.splugin.discord.SHandler;
 import de.sean.splugin.spigot.commands.*;
 import de.sean.splugin.spigot.events.*;
 import de.sean.splugin.util.SUtil;
-import de.sean.splugin.util.SVote;
 
 /* Java */
 import java.io.File;
@@ -28,8 +27,6 @@ public class App extends JavaPlugin {
 
     private static App instance;
 
-    private static SVote votingInstance;
-
     @Override
     public void onEnable() {
         /* Discord */
@@ -46,10 +43,6 @@ public class App extends JavaPlugin {
         // Add event listeners for discord
         jda.addEventListener(new SHandler());
 
-        /* Log appender */
-        // We somehow need to append to the console to read it's output
-        //LogManager.getRootLogger().addAppender();
-
         /* Spigot */
         instance = this;
 
@@ -63,9 +56,6 @@ public class App extends JavaPlugin {
         // Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new SleepChecker(), 0L, 20L);
         // Afk checker task
         // Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new AfkChecker(), 0L, 20L);
-
-        // Create the voting util class.
-        votingInstance = new SVote();
 
         PluginManager pm = Bukkit.getServer().getPluginManager();
         registerEvents(pm);

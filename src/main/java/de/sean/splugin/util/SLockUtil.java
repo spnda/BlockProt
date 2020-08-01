@@ -1,14 +1,17 @@
 package de.sean.splugin.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class SLockUtil {
     public static final String LOCK_ATTRIBUTE = "splugin_lock";
 
-    public static final HashMap<UUID, LockData> locking = new HashMap<UUID, LockData>();
-    public static final HashMap<UUID, GivePermData> givingPermission = new HashMap<UUID, GivePermData>();
+    public static final HashMap<UUID, LockData> locking = new HashMap<>();
+    public static final HashMap<UUID, GivePermData> givingPermission = new HashMap<>();
     public static final HashMap<UUID, LockData> info = new HashMap<>();
+    public static final HashMap<UUID, LockData> removingLocking = new HashMap<>();
 
     public static void addUserToAddLocking(UUID uuid) {
         if (locking.get(uuid) != null) locking.remove(uuid);
@@ -45,6 +48,14 @@ public class SLockUtil {
 
     public static void removeUserFromInfo(UUID uuid) {
         if (info.get(uuid) != null) info.remove(uuid);
+    }
+
+    public static void addRemoveLockingForUser(UUID uuid) {
+        removingLocking.put(uuid, new LockData(System.currentTimeMillis(), uuid, true));
+    }
+
+    public static void removeRemoveLockingForUser(UUID uuid) {
+        removingLocking.remove(uuid);
     }
 
     public static class LockData {

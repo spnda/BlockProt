@@ -78,6 +78,14 @@ public class InteractEvent implements Listener {
                         }
                         SLockUtil.removeUserFromInfo(playerUUID);
                     }
+                    SLockUtil.LockData removeLockingdata = SLockUtil.removingLocking.get(playerUUID);
+                    if (removeLockingdata != null) {
+                        if (System.currentTimeMillis() - removeLockingdata.timeRequested < 120000) {
+                            access.clear();
+                            blockTile.setString(SLockUtil.LOCK_ATTRIBUTE, access.toString());
+                        }
+                        SLockUtil.removeRemoveLockingForUser(playerUUID);
+                    }
                     if (access.contains(playerUUIDString)) {
                         // Permission granted. Do whatever you want.
                         SLockUtil.LockData data = SLockUtil.locking.get(playerUUID);

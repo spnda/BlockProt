@@ -38,6 +38,10 @@ public class LockExecutor implements CommandExecutor {
                     if (!sender.isOp()) return false;
                     SLockUtil.addUserToInfo(player.getUniqueId());
                     return true;
+                case "clear":
+                    if (!sender.isOp()) return false;
+                    SLockUtil.addRemoveLockingForUser(player.getUniqueId());
+                    return true;
                 default:
                     // A unknown argument was passed.
                     return false;

@@ -41,6 +41,7 @@ public class InteractEvent implements Listener {
             case FURNACE:
             case HOPPER:
             case ANVIL:
+            case BARREL:
 
             // Doors
             case OAK_DOOR:

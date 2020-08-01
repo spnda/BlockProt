@@ -38,6 +38,9 @@ public class App extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // When starting also update IP as it might have changed while the server was offline.
+        updateIP();
+
         /* Spigot */
         instance = this;
 
@@ -102,6 +105,28 @@ public class App extends JavaPlugin {
         pm.registerEvents(new MessageEvent(), this);        // Handles every chat message event
         pm.registerEvents(new MoveEvent(), this);           // Handles every move of a player
         //pm.registerEvents(new RespawnEvent(), this);        // Handles every respawn of a player
+    }
+
+    public void updateIP() {
+        new Thread(() -> {
+            ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", "node .");
+            String dir = "./freenom-update";
+            if (!Files.exists(FileSystems.getDefault().getPath(dir), LinkOption.NOFOLLOW_LINKS)) return;
+            processBuilder.directory(new File(dir));
+            System.out.println(processBuilder.directory());
+            try {
+                Process process = processBuilder.start();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    System.out.println(line);
+                }
+                process.waitFor();
+                bufferedReader.close();
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     private void registerCommands() {

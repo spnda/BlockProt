@@ -42,26 +42,7 @@ public class SHandler extends ListenerAdapter {
         // This is purely a thing for myself. Whenever the IP changes my DNS record gets changed.
         // Can be ignored by anyone else.
         if (event instanceof ReconnectedEvent) {
-            new Thread(() -> {
-                System.out.println("API has reconnected!");
-                ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", "node .");
-                String dir = "./freenom-update";
-                if (!Files.exists(FileSystems.getDefault().getPath(dir), LinkOption.NOFOLLOW_LINKS)) return;
-                processBuilder.directory(new File(dir));
-                System.out.println(processBuilder.directory());
-                try {
-                    Process process = processBuilder.start();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        System.out.println(line);
-                    }
-                    process.waitFor();
-                    bufferedReader.close();
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }).start();
+            App.getInstance().updateIP();
         }
     }
 

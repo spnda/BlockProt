@@ -3,6 +3,7 @@ package de.sean.splugin.spigot.events;
 /* SPlugin */
 import de.sean.splugin.App;
 import de.sean.splugin.util.SLockUtil;
+import de.sean.splugin.util.SMessages;
 import de.sean.splugin.util.SUtil;
 
 /* Java */
@@ -33,6 +34,12 @@ import de.tr7zw.nbtapi.NBTTileEntity;
 public class InteractEvent implements Listener {
     @EventHandler
     public void PlayerInteract(final PlayerInteractEvent event) {
+        SUtil.setLastActivityForPlayer(event.getPlayer().getUniqueId(), System.currentTimeMillis());
+        if (SUtil.isPlayerAFK(event.getPlayer().getUniqueId())) {
+            SUtil.setPlayerAFK(event.getPlayer().getUniqueId(), false);
+            SMessages.unmarkPlayerAFK(event.getPlayer());
+        }
+
         if (event.getClickedBlock() == null) return;
         switch (event.getClickedBlock().getType()) {
             case CHEST:

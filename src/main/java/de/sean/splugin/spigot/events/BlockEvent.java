@@ -25,7 +25,7 @@ public class BlockEvent implements Listener {
         if (blockTile != null) {
             String nbt = blockTile.getString(SLockUtil.LOCK_ATTRIBUTE);
             List<String> access = SUtil.parseStringList(nbt);
-            if (!access.contains(event.getPlayer().getUniqueId().toString())) {
+            if (!access.isEmpty() && !access.contains(event.getPlayer().getUniqueId().toString())) {
                 // Prevent unauthorized players from breaking locked blocks.
                 event.setCancelled(true);
             }

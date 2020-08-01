@@ -99,6 +99,7 @@ public class App extends JavaPlugin {
         // pm.registerEvents(new BroadcastEvent(), this);      // Handles every broadcast to all players, including ones from plugins
         // pm.registerEvents(new ChangeWorldEvent(), this);    // Runs everytime a user changes worlds (goes through a portal)
         pm.registerEvents(new DeathEvent(), this);          // Handles every player death event
+        pm.registerEvents(new ExplodeEvent(), this);
         pm.registerEvents(new InteractEvent(), this);       // Handles every block interaction by a player
         pm.registerEvents(new JoinEvent(), this);           // Handles every user join event
         pm.registerEvents(new LeaveEvent(), this);          // Handles every user leave event

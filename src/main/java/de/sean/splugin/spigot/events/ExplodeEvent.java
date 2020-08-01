@@ -4,6 +4,7 @@ package de.sean.splugin.spigot.events;
 import de.sean.splugin.util.SLockUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,7 +36,7 @@ public class ExplodeEvent implements Listener {
         } else if (e.getEntityType() == EntityType.CREEPER) {
             // We don't want mob griefing but villagers use mob griefing to work
             // So we'll just do it like this.
-            blocks.clear();
+            e.setCancelled(true);
         }
     }
 }

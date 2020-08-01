@@ -7,7 +7,7 @@ import de.sean.splugin.util.SUtil;
 import de.sean.splugin.util.SUtil.PlayerType;
 
 /* Spigot */
-import net.dv8tion.jda.api.entities.Guild;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,13 +15,10 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 /* Discord */
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.md_5.bungee.api.ChatColor;
 
 public class MessageEvent implements Listener {
-    // private String citizenFormat        = ChatColor.GREEN   + "B\u00FCrger | "           + ChatColor.RESET + "%1$s: %2$s";
-    private String messageFormat = "%1$s: %2$s";
-
     @EventHandler
     public void PlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
@@ -35,6 +32,7 @@ public class MessageEvent implements Listener {
             player.setDisplayName(playerNickname);
             player.setPlayerListName(playerNickname);
         }
+        final String messageFormat = "%1$s: %2$s";
         event.setFormat(messageFormat);
         event.setMessage(message);
 

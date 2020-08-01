@@ -1,21 +1,22 @@
 package de.sean.splugin.spigot.events;
 
-/* Spigot */
+/* SPlugin */
+import de.sean.splugin.App;
 import de.sean.splugin.util.SLockUtil;
 import de.sean.splugin.util.SUtil;
-import de.tr7zw.nbtapi.NBTCompound;
-import de.tr7zw.nbtapi.NBTList;
-import de.tr7zw.nbtapi.NBTTileEntity;
+
+/* Java */
+import java.util.List;
+import java.util.UUID;
+
+/* Spigot */
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
-import org.bukkit.block.TileState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,12 +26,9 @@ import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import de.sean.splugin.App;
-import org.bukkit.persistence.PersistentDataContainer;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+/* NBT API */
+import de.tr7zw.nbtapi.NBTCompound;
+import de.tr7zw.nbtapi.NBTTileEntity;
 
 public class InteractEvent implements Listener {
     @EventHandler

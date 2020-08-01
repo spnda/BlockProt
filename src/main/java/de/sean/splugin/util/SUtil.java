@@ -1,23 +1,19 @@
 package de.sean.splugin.util;
 
 /* SPlugin */
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 import de.sean.splugin.App;
 
 /* Java */
 import java.awt.Color;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import org.jetbrains.annotations.NotNull;
 
 /* Spigot */
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import net.md_5.bungee.api.ChatColor;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 public class SUtil {
     private static HashMap<UUID, Long> playerLastActivity = new HashMap<>();

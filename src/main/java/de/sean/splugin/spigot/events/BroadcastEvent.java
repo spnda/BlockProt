@@ -1,16 +1,22 @@
 package de.sean.splugin.spigot.events;
 
+/* SPLugin */
 import de.sean.splugin.App;
 import de.sean.splugin.util.SUtil;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.TextChannel;
+
+/* Java */
+import java.util.Arrays;
+import java.util.List;
+
+/* Spigot */
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.BroadcastMessageEvent;
 
-import java.util.Arrays;
-import java.util.List;
+/* Discord */
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 public class BroadcastEvent implements Listener {
     @EventHandler

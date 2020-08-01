@@ -1,8 +1,7 @@
 package de.sean.splugin.util;
 
-import java.util.ArrayList;
+/* Java */
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 public class SLockUtil {

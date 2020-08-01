@@ -4,20 +4,17 @@ package de.sean.splugin.util;
 import de.sean.splugin.App;
 
 /* Java */
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import org.jetbrains.annotations.NotNull;
 
 /* Spigot */
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 public class SMessages {
     public static void markPlayerAFK(@NotNull Player player) {

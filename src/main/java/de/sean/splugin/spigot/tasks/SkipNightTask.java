@@ -1,11 +1,11 @@
 package de.sean.splugin.spigot.tasks;
 
 /* Spigot */
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Statistic;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
-import net.md_5.bungee.api.ChatColor;
 
 public class SkipNightTask extends BukkitRunnable {
     private final World world;

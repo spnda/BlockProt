@@ -8,11 +8,15 @@ import de.sean.splugin.spigot.tasks.AfkChecker;
 import de.sean.splugin.util.SUtil;
 
 /* Java */
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.LinkOption;
 import javax.security.auth.login.LoginException;
+import org.jetbrains.annotations.NotNull;
 
 /* Spigot */
 import org.bukkit.Bukkit;
@@ -26,7 +30,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import org.jetbrains.annotations.NotNull;
 
 public class App extends JavaPlugin {
     private static JDA jda;

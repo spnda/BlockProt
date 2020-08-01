@@ -4,13 +4,13 @@ package de.sean.splugin.spigot.events;
 import de.sean.splugin.App;
 
 /* Spigot */
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent.BedEnterResult;
-import net.md_5.bungee.api.ChatColor;
 
 public class BedEnterEvent implements Listener {
     @EventHandler

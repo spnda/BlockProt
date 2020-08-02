@@ -145,7 +145,8 @@ public class InteractEvent implements Listener {
                         Location secChest = doubleChest.getLocation();
                         // If we are targeting the further away chest block, get the closer one
                         // (Closer/Further away from 0, 0, 0)
-                        if (event.getClickedBlock().getLocation().getX() > secChest.getX()) secChest.subtract(.5, 0, .5);
+                        if (event.getClickedBlock().getLocation().getX() > secChest.getX()) secChest.subtract(.5, 0, 0);
+                        else if (event.getClickedBlock().getLocation().getZ() > secChest.getZ()) secChest.subtract(0, 0, .5);
                         else secChest.add(.5, 0, .5);
                         BlockState secChestState = event.getPlayer().getWorld().getBlockAt(secChest).getState();
                         NBTTileEntity secTileEntity = new NBTTileEntity(secChestState);

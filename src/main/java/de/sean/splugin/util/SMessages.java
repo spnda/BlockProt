@@ -41,6 +41,8 @@ public class SMessages {
             case "Messages.Join": return "[player] has joined the server!";
             case "Messages.Leave": return "[player] has left the server!";
             case "Messages.Death": return "[message]...";
+            case "Messages.SleepEnter": return "[player] has gone to sleep!";
+            case "Messages.SleepLeave": return "[player] has woken up!";
             default: return "";
         }
     }

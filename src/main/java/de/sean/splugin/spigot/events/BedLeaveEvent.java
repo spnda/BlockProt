@@ -1,6 +1,7 @@
 package de.sean.splugin.spigot.events;
 
 /* Spigot */
+import de.sean.splugin.util.SMessages;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -13,6 +14,6 @@ public class BedLeaveEvent implements Listener {
     public void PlayerLeaveBed(PlayerBedLeaveEvent event) {
         Player player = event.getPlayer();
         //  Check if this is the overworld...
-        Bukkit.broadcastMessage(player.getDisplayName() + ChatColor.YELLOW + " ist aufgestanden!");
+        Bukkit.broadcastMessage(SMessages.getRandomMessage("Messages.SleepLeave").replace("[player]", event.getPlayer().getDisplayName()));
     }
 }

@@ -4,6 +4,7 @@ package de.sean.splugin.spigot.events;
 import de.sean.splugin.App;
 
 /* Spigot */
+import de.sean.splugin.util.SMessages;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -19,7 +20,6 @@ public class BedEnterEvent implements Listener {
         if (!event.getBedEnterResult().equals(BedEnterResult.OK)) return;
         App plugin = App.getInstance();
         Player player = event.getPlayer();
-        //  Check if this is the overworld...
-        Bukkit.getScheduler().runTaskLater(plugin, ()  -> Bukkit.broadcastMessage(player.getDisplayName() + ChatColor.YELLOW + " schl\u00E4ft jetzt!"), 1);
+        Bukkit.broadcastMessage(SMessages.getRandomMessage("Messages.SleepEnter").replace("[player]", event.getPlayer().getDisplayName()));
     }
 }

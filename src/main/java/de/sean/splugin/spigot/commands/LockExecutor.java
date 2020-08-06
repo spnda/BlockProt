@@ -1,9 +1,12 @@
 package de.sean.splugin.spigot.commands;
 
 /* SPlugin */
+import de.sean.splugin.App;
 import de.sean.splugin.util.SLockUtil;
 
 /* Java */
+import de.sean.splugin.util.SUtil;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 /* Spigot */
@@ -47,6 +50,11 @@ public class LockExecutor implements CommandExecutor {
                     if (!sender.isOp()) return false;
                     SLockUtil.addRemoveLockingForUser(player.getUniqueId());
                     return true;
+                case "place":
+                    FileConfiguration config = App.getInstance().getConfig();
+                    config.set("Players." + player.getUniqueId() + ".NotLockOnPlace", !config.getBoolean("Players." + player.getUniqueId() + ".NotLockOnPlace"));
+                    SUtil.saveConfigFile(config);
+                    break;
                 default:
                     // A unknown argument was passed.
                     return false;

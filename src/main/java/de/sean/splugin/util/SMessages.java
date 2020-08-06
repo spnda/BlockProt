@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
 
 public class SMessages {
     public static void markPlayerAFK(@NotNull Player player) {
-        Bukkit.broadcastMessage(player.getDisplayName() + ChatColor.YELLOW + " ist nun AFK.");
+        Bukkit.broadcastMessage(player.getDisplayName() + ChatColor.YELLOW + " is now AFK.");
         player.setDisplayName(player.getDisplayName() + " (AFK)");
         player.setPlayerListName(player.getPlayerListName() + " (AFK)");
     }
@@ -26,7 +26,7 @@ public class SMessages {
     public static void unmarkPlayerAFK(@NotNull Player player) {
         player.setPlayerListName(player.getPlayerListName().replace(" (AFK)", ""));
         player.setDisplayName(player.getDisplayName().replace(" (AFK)", ""));
-        Bukkit.broadcastMessage(player.getDisplayName() + ChatColor.YELLOW + " ist nun nicht mehr AFK.");
+        Bukkit.broadcastMessage(player.getDisplayName() + ChatColor.YELLOW + " is no more AFK.");
     }
     
     public static String getRandomMessage(final String messageList) {
@@ -38,8 +38,8 @@ public class SMessages {
         }
         // If no messages we're defined, return the default ones
         switch (messageList) {
-            case "Messages.Join": return "[player] hat den Server betreten!";
-            case "Messages.Leave": return "[player] hat den Server verlassen!";
+            case "Messages.Join": return "[player] has joined the server!";
+            case "Messages.Leave": return "[player] has left the server!";
             case "Messages.Death": return "[message]...";
             default: return "";
         }

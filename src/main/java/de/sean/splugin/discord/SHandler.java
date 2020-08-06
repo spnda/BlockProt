@@ -52,7 +52,7 @@ public class SHandler extends ListenerAdapter {
         if (event.getChannelType().equals(ChannelType.PRIVATE)) {
             if (message[0].equals("?msg")) {
                 if (message.length < 3) {
-                    event.getChannel().sendMessage("Nicht genug Argumente. Nutzung: `?msg <MC Name> <Nachricht>`");
+                    event.getChannel().sendMessage("Nicht genug Argumente. Nutzung: `?msg <MC Name> <Nachricht>`").queue();
                 } else {
                     User user = event.getAuthor();
                     Player player = Bukkit.getPlayer(message[1]);

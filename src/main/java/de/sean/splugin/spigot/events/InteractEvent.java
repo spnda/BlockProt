@@ -43,23 +43,8 @@ public class InteractEvent implements Listener {
         if (event.getClickedBlock() == null) return;
         switch (event.getClickedBlock().getType()) {
             case CHEST:
-            case FURNACE:
-            case HOPPER:
-            case ANVIL:
-            case BARREL:
-            case SHULKER_BOX:
-
-            // Doors
-            case OAK_DOOR:
-            case BIRCH_DOOR:
-            case SPRUCE_DOOR:
-            case JUNGLE_DOOR:
-            case DARK_OAK_DOOR:
-            case ACACIA_DOOR:
-            case CRIMSON_DOOR:
-            case WARPED_DOOR:
                 if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-                    // The user left clicked to edit the block
+                    // The user left clicked to edit the chest
                     DoubleChest doubleChest = null;
                     BlockState chestState = event.getClickedBlock().getState();
                     if (chestState instanceof Chest) {
@@ -72,73 +57,12 @@ public class InteractEvent implements Listener {
 
                     NBTTileEntity blockTileEntity = new NBTTileEntity(chestState);
                     NBTCompound blockTile = blockTileEntity.getPersistentDataContainer();
+
                     String nbt = blockTile.getString(SLockUtil.LOCK_ATTRIBUTE);
                     List<String> access = SUtil.parseStringList(nbt);
-                    Player player = event.getPlayer();
-                    UUID playerUUID = player.getUniqueId();
-                    String playerUUIDString = playerUUID.toString();
 
-                    SLockUtil.LockData infoData = SLockUtil.info.get(playerUUID);
-                    if (infoData != null) {
-                        if (System.currentTimeMillis() - infoData.timeRequested <= 120000) {
-                            player.sendMessage(ChatColor.GREEN + "Lock Info: \n" + ChatColor.RESET + access.toString());
-                        }
-                        SLockUtil.removeUserFromInfo(playerUUID);
-                    }
-                    SLockUtil.LockData removeLockingdata = SLockUtil.removingLocking.get(playerUUID);
-                    if (removeLockingdata != null) {
-                        if (System.currentTimeMillis() - removeLockingdata.timeRequested < 120000) {
-                            access.clear();
-                            blockTile.setString(SLockUtil.LOCK_ATTRIBUTE, access.toString());
-                        }
-                        SLockUtil.removeRemoveLockingForUser(playerUUID);
-                    }
-                    if (access.contains(playerUUIDString)) {
-                        // Permission granted. Do whatever you want.
-                        SLockUtil.LockData data = SLockUtil.locking.get(playerUUID);
-                        SLockUtil.GivePermData giveData = SLockUtil.givingPermission.get(playerUUID);
-                        if (data != null) {
-                            // The user requested private/public modification
-                            if (!data.action) {
-                                access.remove(playerUUIDString);
-                                blockTile.setString(SLockUtil.LOCK_ATTRIBUTE, access.toString());
-                                SLockUtil.removeUserFromLocking(playerUUID);
-                                event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Zugriff entfernt."));
-                            } else {
-                                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Zugriff bereits gegeben."));
-                            }
-                        } else if (giveData != null) {
-                            // The user requested add/remove modification
-                            if (access.contains(giveData.uuidToGive.toString()) && giveData.action) {
-                                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Zugriff ist dem Spieler bereits gegeben."));
-                            } else {
-                                if (giveData.action) {
-                                    access.add(giveData.uuidToGive.toString());
-                                    event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Neuem Spieler Zugriff gegeben."));
-                                } else {
-                                    access.remove(giveData.uuidToGive.toString());
-                                    event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Spieler Zugriff entfernt."));
-                                }
-                                blockTile.setString(SLockUtil.LOCK_ATTRIBUTE, access.toString());
-                                SLockUtil.removeUserFromGiving(playerUUID);
-                            }
-                        }
-                    } else {
-                        if (access.size() == 0) {
-                            // Nobody owns this
-                            SLockUtil.LockData data = SLockUtil.locking.get(playerUUID);
-                            if (data != null) {
-                                if (data.action) {
-                                    access.add(playerUUIDString);
-                                    blockTile.setString(SLockUtil.LOCK_ATTRIBUTE, access.toString());
-                                    SLockUtil.removeUserFromLocking(playerUUID);
-                                    event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Zugriff gegeben."));
-                                }
-                            }
-                        } else {
-                            event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Kein Zugriff."));
-                        }
-                    }
+                    List<String> newAccess = handleLock(access, event);
+                    blockTile.setString(SLockUtil.LOCK_ATTRIBUTE, access.toString());
 
                     // If we have a double chest we will have to add the NBT Tag to both TileEntities.
                     if (doubleChest != null) {
@@ -157,8 +81,8 @@ public class InteractEvent implements Listener {
                 } else {
                     // The user right clicked and is trying to access the container
                     NBTTileEntity blockTileEntity = new NBTTileEntity(event.getClickedBlock().getState());
-                    NBTCompound blockTile = blockTileEntity.getPersistentDataContainer();
                     try {
+                        NBTCompound blockTile = blockTileEntity.getPersistentDataContainer();
                         String nbt = blockTile.getString(SLockUtil.LOCK_ATTRIBUTE);
                         if (nbt == null) break;
                         List<String> access = SUtil.parseStringList(nbt);
@@ -172,6 +96,36 @@ public class InteractEvent implements Listener {
                         }
                     } catch (Exception e) {
                         App.getInstance().getLogger().severe("Tile NBT could not be read. " + e.toString());
+                    }
+                }
+                break;
+            case FURNACE:
+            case HOPPER:
+            case BARREL:
+            case SHULKER_BOX:
+                if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+                    BlockState state = event.getClickedBlock().getState();
+                    NBTTileEntity blockTileEntity = new NBTTileEntity(state);
+                    NBTCompound blockTile = blockTileEntity.getPersistentDataContainer();
+
+                    String nbt = blockTile.getString(SLockUtil.LOCK_ATTRIBUTE);
+                    List<String> access = SUtil.parseStringList(nbt);
+
+                    List<String> newAccess = handleLock(access, event);
+                    blockTile.setString(SLockUtil.LOCK_ATTRIBUTE, access.toString());
+                } else {
+                    // The user right clicked and is trying to access the container
+                    NBTTileEntity blockTile = new NBTTileEntity(event.getClickedBlock().getState());
+                    String nbt = blockTile.getString(SLockUtil.LOCK_ATTRIBUTE);
+                    if (nbt == null) break;
+                    List<String> access = SUtil.parseStringList(nbt);
+                    if (access.isEmpty()) {
+                        event.setCancelled(false);
+                    } else {
+                        if (!access.contains(event.getPlayer().getUniqueId().toString())) {
+                            event.setCancelled(true);
+                            event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Kein Zugriff."));
+                        }
                     }
                 }
                 break;
@@ -192,5 +146,71 @@ public class InteractEvent implements Listener {
                 }
                 break;
         }
+    }
+
+    private List<String> handleLock(List<String> access, PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        UUID playerUUID = player.getUniqueId();
+        String playerUUIDString = playerUUID.toString();
+
+        SLockUtil.LockData infoData = SLockUtil.info.get(playerUUID);
+        if (infoData != null) {
+            if (System.currentTimeMillis() - infoData.timeRequested <= 120000) {
+                player.sendMessage(ChatColor.GREEN + "Lock Info: \n" + ChatColor.RESET + access.toString());
+            }
+            SLockUtil.removeUserFromInfo(playerUUID);
+        }
+        SLockUtil.LockData removeLockingdata = SLockUtil.removingLocking.get(playerUUID);
+        if (removeLockingdata != null) {
+            if (System.currentTimeMillis() - removeLockingdata.timeRequested < 120000) {
+                access.clear();
+            }
+            SLockUtil.removeRemoveLockingForUser(playerUUID);
+        }
+        if (access.contains(playerUUIDString)) {
+            // Permission granted. Do whatever you want.
+            SLockUtil.LockData data = SLockUtil.locking.get(playerUUID);
+            SLockUtil.GivePermData giveData = SLockUtil.givingPermission.get(playerUUID);
+            if (data != null) {
+                // The user requested private/public modification
+                if (!data.action) {
+                    access.remove(playerUUIDString);
+                    SLockUtil.removeUserFromLocking(playerUUID);
+                    event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Zugriff entfernt."));
+                } else {
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Zugriff bereits gegeben."));
+                }
+            } else if (giveData != null) {
+                // The user requested add/remove modification
+                if (access.contains(giveData.uuidToGive.toString()) && giveData.action) {
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Zugriff ist dem Spieler bereits gegeben."));
+                } else {
+                    if (giveData.action) {
+                        access.add(giveData.uuidToGive.toString());
+                        event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Neuem Spieler Zugriff gegeben."));
+                    } else {
+                        access.remove(giveData.uuidToGive.toString());
+                        event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Spieler Zugriff entfernt."));
+                    }
+                    SLockUtil.removeUserFromGiving(playerUUID);
+                }
+            }
+        } else {
+            if (access.size() == 0) {
+                // Nobody owns this
+                SLockUtil.LockData data = SLockUtil.locking.get(playerUUID);
+                if (data != null) {
+                    if (data.action) {
+                        access.add(playerUUIDString);
+                        SLockUtil.removeUserFromLocking(playerUUID);
+                        event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Zugriff gegeben."));
+                    }
+                }
+            } else {
+                event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Kein Zugriff."));
+            }
+        }
+
+        return access;
     }
 }

@@ -68,10 +68,10 @@ public class SUtil {
 
     public static String getStringForPlayerType(PlayerType playerType) {
         switch (playerType) {
-            case MAYOR:             return "B\u00FCrgermeister";
-            case DEPUTY_MAYOR:      return "Stellvtr. B\u00FCrgermeister";
-            case OWNER:             return "Eigent\u00FCmer";
-            case CITIZEN: default:  return "B\u00FCrger";
+            case MAYOR:             return "Mayor";
+            case DEPUTY_MAYOR:      return "Deputy Mayor";
+            case OWNER:             return "Owner";
+            case CITIZEN: default:  return "Citizen";
         }
     }
 

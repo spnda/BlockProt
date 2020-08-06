@@ -14,8 +14,12 @@ file into `server/plugins/SPlugin`. That yml file can have various data:
 - Messages:
     - Join: `List of String`. A list of different messages to post when a player joins. `[player]` will be replaced with the player name.
     - Leave: `List of String`. A list of different messages to post when a player leaves. `[player]` will be replaced with the player name.
-    - Death: `List of String`. A list of different messages to post when a player dies. `[message]` will be replaced with the original death message.
-
+    - Death: `List of String`. A list of different messages to post when a player dies. `[message]` will be replaced with the original death message. `[player]` will be replaced with the player name.
+    - SleepEnter: `List of String`. A list of different messages to post when a player enters a bed. `[player]` will be replaced with the player name.
+    - SleepLeave: `List of String`. A list of different messages to post when a player leaves a bed. `[player]` will be replaced with the player name.
+- Players:
+    - player uuid:
+        - Role: `OWNER` | `CITIZEN`
 ## Building yourself
 
 Simply clone this repository and use `gradlew build` to build your JAR into `./build/libs/`.

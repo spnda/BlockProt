@@ -59,7 +59,6 @@ public class SHandler extends ListenerAdapter {
                     if (player != null) player.sendMessage(ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + user.getName() + " whispers to you: " + SUtil.concatArrayRange(message, 2, message.length));
                 }
             }
-            return;
         }
 
         EmbedBuilder eb;

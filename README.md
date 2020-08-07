@@ -11,8 +11,6 @@ To further configure discord and in-game settings you will need to add a `config
 file into `server/plugins/SPlugin`. That yml file can have various data:
 - Discord:
     - Token: `String`. Your discord bot token. You can get one from your application https://discord.com/developers
-    - Guild: `String`. The guild ID you want to stream the chat data to.
-    - Channel: `String`. The channel ID you want to stream the chat data to.
     - JoinMessage: `bool`. If true, the bot will send a message for each player that join to discord.
     - LeaveMessage: `bool`. If true, the bot will send a message for each player that leaves to discord.
     - Channels: `List of Guild/Channel`. You can have one channel per guild but multiple guilds.

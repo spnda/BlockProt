@@ -82,7 +82,7 @@ public class SHandler extends ListenerAdapter {
                 for (Player player : players) {
                     playerList.append(player.getDisplayName().replaceAll("§[a-z]", "")).append("\n");
                 }
-                eb.addField("Players online", playerList.toString(), false);
+                if (playerList.length() > 0) eb.addField("Players online", playerList.toString(), false);
                 event.getChannel().sendMessage(eb.build()).queue();
                 break;
             default:

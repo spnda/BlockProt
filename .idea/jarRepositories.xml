@@ -26,10 +26,5 @@
       <option name="name" value="maven" />
       <option name="url" value="https://hub.spigotmc.org/nexus/content/repositories/snapshots/" />
     </remote-repository>
-    <remote-repository>
-      <option name="id" value="maven3" />
-      <option name="name" value="maven3" />
-      <option name="url" value="https://repo.codemc.org/repository/maven-public" />
-    </remote-repository>
   </component>
 </project>

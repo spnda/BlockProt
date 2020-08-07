@@ -2,6 +2,7 @@ package de.sean.splugin.spigot.events;
 
 /* SPlugin */
 import de.sean.splugin.App;
+import de.sean.splugin.discord.DiscordUtil;
 import de.sean.splugin.util.SMessages;
 import de.sean.splugin.util.SUtil;
 import de.sean.splugin.util.SUtil.PlayerType;
@@ -44,14 +45,7 @@ public class MessageEvent implements Listener {
         }
 
         /* Discord */
-        JDA jda = App.getInstance().getDiscordInstance();
-        Guild guild = jda.getGuildById(SUtil.GUILD_ID);
-        if (guild == null) return;
-        TextChannel channel = guild.getTextChannelById(SUtil.CHANNEL_ID);
-        try {
-            if (channel != null) channel.sendMessage("**" + player.getName() + "**: " + message).queue();
-        } catch (Exception e) {
-            App.getInstance().getLogger().severe("Couldn't send message to Discord: " + e.toString());
-        }
+        DiscordUtil discord = App.getInstance().getDiscordUtil();
+        discord.sendMessage("**" + player.getName() + "**: " + message);
     }
 }

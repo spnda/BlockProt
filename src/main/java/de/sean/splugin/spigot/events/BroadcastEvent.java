@@ -24,17 +24,7 @@ public class BroadcastEvent implements Listener {
         List<String> possibleMorningMessages = Arrays.asList("&eThe night has been skipped.", "&eAhhh, finally morning.", "&eArghh, it's so bright outside.");
         if (possibleMorningMessages.contains(event.getMessage())) {
             // It's now morning. Send a message to discord.
-            JDA jda = App.getInstance().getDiscordInstance();
-            if (jda != null) {
-                Guild guild = jda.getGuildById(SUtil.GUILD_ID);
-                if (guild == null) return;
-                TextChannel channel = guild.getTextChannelById(SUtil.CHANNEL_ID);
-                try {
-                    if (channel != null) channel.sendMessage("Es ist nun morgen.").queue();
-                } catch (Exception e) {
-                    App.getInstance().getLogger().severe("Couldn't send message to Discord: " + e.toString());
-                }
-            }
+            App.getInstance().getDiscordUtil().sendMessage(event.getMessage());
         }
     }
 }

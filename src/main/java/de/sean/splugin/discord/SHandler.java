@@ -86,11 +86,9 @@ public class SHandler extends ListenerAdapter {
                 eb.addField("Players online", playerList.toString(), false);
                 event.getChannel().sendMessage(eb.build()).queue();
                 break;
-            case "?test":
-                onGenericEvent(new ReconnectedEvent(App.getInstance().getDiscordInstance(), 0L));
-                break;
             default:
-                if (!event.getChannel().getId().equals(SUtil.CHANNEL_ID)) return;
+                if (DiscordUtil.channels.get(event.getGuild()) != null && !DiscordUtil.channels.get(event.getGuild()).getId().equals(event.getChannel().getId()))
+                    return;
                 if (event.getAuthor().isBot()) return; // Ignore all bots.
                 String divider = ChatColor.GRAY + " | " + ChatColor.RESET;
                 String msg = event.getMessage().getContentStripped();

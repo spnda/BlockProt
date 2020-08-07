@@ -19,9 +19,6 @@ public class SUtil {
     private static HashMap<UUID, Long> playerLastActivity = new HashMap<>();
     private static final HashMap<UUID, Boolean> afkPlayers = new HashMap<>();
 
-    public static String GUILD_ID;
-    public static String CHANNEL_ID;
-
     public static void removePlayerAFK(UUID uuid)                       {           afkPlayers.remove(uuid); }
     public static void setPlayerAFK(UUID uuid, boolean afk)             {           afkPlayers.put(uuid, afk); }
     public static boolean isPlayerAFK(UUID uuid)                        { return    afkPlayers.get(uuid); }

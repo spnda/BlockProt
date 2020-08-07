@@ -1,6 +1,7 @@
 package de.sean.splugin;
 
 /* SPlugin */
+import de.sean.splugin.discord.DiscordUtil;
 import de.sean.splugin.discord.SHandler;
 import de.sean.splugin.spigot.commands.*;
 import de.sean.splugin.spigot.events.*;
@@ -32,7 +33,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 
 public class App extends JavaPlugin {
-    private static JDA jda;
+    private static DiscordUtil discord;
 
     private static App instance;
 
@@ -65,25 +66,7 @@ public class App extends JavaPlugin {
         registerCommands();
 
         /* Discord */
-        SUtil.GUILD_ID = config.getString("Discord.Guild");
-        SUtil.CHANNEL_ID = config.getString("Discord.Channel");
-        String token = config.getString("Discord.Token");
-        // Only initialize discord stuff if a guild, channel and token are present.
-        System.out.println(SUtil.GUILD_ID + " " + SUtil.CHANNEL_ID + " " + token);
-        if (SUtil.GUILD_ID != null && SUtil.CHANNEL_ID != null && token != null) {
-            JDABuilder builder = new JDABuilder(token);
-            try {
-                builder.setActivity(Activity.playing("Minecraft"));
-                jda = builder.build();
-                jda.awaitReady();
-                getLogger().info("Discord has started successfully!");
-
-                // Add event listeners for discord
-                jda.addEventListener(new SHandler());
-            } catch (LoginException | InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        discord = new DiscordUtil(config);
     }
 
     @Override
@@ -139,7 +122,7 @@ public class App extends JavaPlugin {
         return new File(getDataFolder() + File.separator + "config.yml");
     }
 
-    public JDA getDiscordInstance() { return jda; }
+    public DiscordUtil getDiscordUtil() { return discord; }
 
     public static App getInstance() { return instance; }
 }

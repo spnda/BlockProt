@@ -47,7 +47,6 @@ public class App extends JavaPlugin {
 
         /* Config */
         File configFile = getConfigFile();
-        System.out.println(configFile.getPath());
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
         // When we're reloading we want to set default values to all players, as old data gets lost on a reload.
@@ -83,6 +82,7 @@ public class App extends JavaPlugin {
         // pm.registerEvents(new BroadcastEvent(), this);      // Handles every broadcast to all players, including ones from plugins
         // pm.registerEvents(new ChangeWorldEvent(), this);    // Runs everytime a user changes worlds (goes through a portal)
         pm.registerEvents(new DeathEvent(), this);          // Handles every player death event
+        pm.registerEvents(new DismountEvent(), this);       // Handles every entity dismount
         pm.registerEvents(new ExplodeEvent(), this);        // Handles every explosion in the world
         pm.registerEvents(new InteractEvent(), this);       // Handles every block interaction by a player
         pm.registerEvents(new JoinEvent(), this);           // Handles every user join event
@@ -98,7 +98,6 @@ public class App extends JavaPlugin {
             String dir = "./freenom-update";
             if (!Files.exists(FileSystems.getDefault().getPath(dir), LinkOption.NOFOLLOW_LINKS)) return;
             processBuilder.directory(new File(dir));
-            System.out.println(processBuilder.directory());
             try {
                 Process process = processBuilder.start();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));

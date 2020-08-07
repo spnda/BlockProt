@@ -65,10 +65,10 @@ public class App extends JavaPlugin {
         registerCommands();
 
         /* Discord */
-        SUtil.GUILD_ID = config.getString("DiscordGuild");
-        SUtil.CHANNEL_ID = config.getString("DiscordChannel");
-        String token = config.getString("DiscordToken");
-        // Only initialize discord stuff if a guild and channel are present.
+        SUtil.GUILD_ID = config.getString("Discord.Guild");
+        SUtil.CHANNEL_ID = config.getString("Discord.Channel");
+        String token = config.getString("Discord.Token");
+        // Only initialize discord stuff if a guild, channel and token are present.
         System.out.println(SUtil.GUILD_ID + " " + SUtil.CHANNEL_ID + " " + token);
         if (SUtil.GUILD_ID != null && SUtil.CHANNEL_ID != null && token != null) {
             JDABuilder builder = new JDABuilder(token);

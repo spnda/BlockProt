@@ -1,16 +1,23 @@
 package de.sean.splugin.spigot.events;
 
 /* SPlugin */
+import de.sean.splugin.App;
 import de.sean.splugin.util.SMessages;
 import de.sean.splugin.util.SUtil;
 import de.sean.splugin.util.SUtil.PlayerType;
 
 /* Spigot */
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.TextChannel;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+
+/* Discord */
+import net.dv8tion.jda.api.JDA;
 
 public class JoinEvent implements Listener {
     @EventHandler
@@ -37,5 +44,14 @@ public class JoinEvent implements Listener {
         playerNickname = SUtil.getChatColorForPlayerType(pt) + ptString + " | " + ChatColor.RESET + player.getName();
         player.setDisplayName(playerNickname);
         player.setPlayerListName(playerNickname);
+
+        /* Discord */
+        if (App.getInstance().getConfig().getBoolean("Discord.JoinMessage")) {
+            JDA jda = App.getInstance().getDiscordInstance();
+            Guild guild = jda.getGuildById(SUtil.GUILD_ID);
+            if (guild == null) return;
+            TextChannel channel = guild.getTextChannelById(SUtil.CHANNEL_ID);
+            if (channel != null) channel.sendMessage(SMessages.getRandomMessage("Messages.Join").replace("[player]", player.getDisplayName())).queue();
+        }
     }
 }

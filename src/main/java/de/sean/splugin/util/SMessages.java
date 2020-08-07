@@ -43,6 +43,8 @@ public class SMessages {
             case "Messages.Death": return "[message]...";
             case "Messages.SleepEnter": return "[player] has gone to sleep!";
             case "Messages.SleepLeave": return "[player] has woken up!";
+            case "Messages.Welcome": return "Welcome [player]!";
+            case "Messages.WelcomeBack": return "Welcome back, [player]!";
             default: return "";
         }
     }

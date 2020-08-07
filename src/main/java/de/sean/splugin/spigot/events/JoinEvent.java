@@ -27,10 +27,10 @@ public class JoinEvent implements Listener {
         /* Format Join Message */
         if (!player.hasPlayedBefore()) {
             // The player just joined for the first time, introduce the player to the server.
-            SMessages.sendTitleMessage(player, "Willkommen auf dem 9D Server!", "");
+            SMessages.sendTitleMessage(player, SMessages.getRandomMessage("Messages.Welcome").replace("[player]", player.getDisplayName()), "");
         } else {
             // The player is not playing for the first time, just welcome the player.
-            SMessages.sendTitleMessage(player, "Willkommen zur\u00FCck!", "");
+            SMessages.sendTitleMessage(player, SMessages.getRandomMessage("Messages.WelcomeBack").replace("[player]", player.getDisplayName()), "");
         }
         event.setJoinMessage(ChatColor.GREEN + SMessages.getRandomMessage("Messages.Join").replace("[player]", event.getPlayer().getDisplayName()));
 

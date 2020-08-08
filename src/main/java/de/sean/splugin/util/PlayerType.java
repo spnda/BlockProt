@@ -29,7 +29,7 @@ public class PlayerType {
         try {
             // We load the roles at startup
             // The PlayerType of a player gets loaded up when they join the server.
-            Map<String, Object> roles = config.getConfigurationSection("Roles").getValues(false);
+            Map<String, Object> roles = config.getConfigurationSection("roles").getValues(false);
             for (Map.Entry<String, Object> pair : roles.entrySet()) {
                 String id = pair.getKey(), name = null;
                 ChatColor color = null;

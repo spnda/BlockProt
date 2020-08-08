@@ -16,7 +16,7 @@ public class LeaveEvent implements Listener {
     @EventHandler
     public void PlayerLeave(PlayerQuitEvent event) {
         /* Format leave message */
-        event.setQuitMessage(ChatColor.RED + SMessages.getRandomMessage("Messages.Leave").replace("[player]", event.getPlayer().getName()));
+        event.setQuitMessage(ChatColor.RED + SMessages.getRandomMessage("messages.leave").replace("[player]", event.getPlayer().getName()));
         
         /* AFK */
         SUtil.removeActivityForPlayer(event.getPlayer().getUniqueId());
@@ -25,7 +25,7 @@ public class LeaveEvent implements Listener {
         /* Discord */
         DiscordUtil discord = App.getInstance().getDiscordUtil();
         if (discord.leaveMessage) {
-            discord.sendMessage(SMessages.getRandomMessage("Messages.Leave").replace("[player]", event.getPlayer().getName()));
+            discord.sendMessage(SMessages.getRandomMessage("messages.leave").replace("[player]", event.getPlayer().getName()));
         }
     }
 }

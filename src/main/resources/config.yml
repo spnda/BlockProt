@@ -1,0 +1,25 @@
+# SPlugin Config
+
+features:
+  skipNight: true # Enable skipping the night when a certain percentage of players sleep.
+  afk: true # Enable AFK displaying when players are inactive for 2 minutes
+
+messages:
+  join:
+    - "[player] has joined the server!"
+  leave:
+    - "[player] has left the server!"
+  death:
+    - "[message]..."
+  welcome:
+    - "Welcome [player]!"
+  welcomeBack:
+    - "Welcome back, [player]!"
+  skipNight:
+    - "Skipping the night..."
+  nightSkipped:
+    - "The night has been skipped!"
+  everyoneSleeping:
+    - "Everyone is sleeping!"
+  sleeping:
+    - "[sleeping] are currently sleeping. [needed] to skip the night."

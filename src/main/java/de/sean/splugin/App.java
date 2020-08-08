@@ -38,9 +38,8 @@ public class App extends JavaPlugin {
         updateIP();
 
         /* Config */
-        instance = this;
-        File configFile = instance.getConfigFile();
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        (instance = this).saveDefaultConfig();
+        FileConfiguration config = instance.getConfig();
 
         PlayerType.loadFromConfig(config);
 
@@ -50,8 +49,10 @@ public class App extends JavaPlugin {
             SUtil.setPlayerAFK(player.getUniqueId(), false);
         }
 
-        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new SleepChecker(), 0L, 20L);
-        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new AfkChecker(), 0L, 20L);
+        if (config.getBoolean("features.skipNight"))
+            Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new SleepChecker(), 0L, 20L);
+        if (config.getBoolean("features.afk"))
+            Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new AfkChecker(), 0L, 20L);
 
         PluginManager pm = Bukkit.getServer().getPluginManager();
         registerEvents(pm);

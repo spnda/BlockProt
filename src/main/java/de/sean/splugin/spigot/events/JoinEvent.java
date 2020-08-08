@@ -22,19 +22,19 @@ public class JoinEvent implements Listener {
         /* Format Join Message */
         if (!player.hasPlayedBefore()) {
             // The player just joined for the first time, introduce the player to the server.
-            SMessages.sendTitleMessage(player, SMessages.getRandomMessage("Messages.Welcome").replace("[player]", player.getDisplayName()), "");
+            SMessages.sendTitleMessage(player, SMessages.getRandomMessage("messages.welcome").replace("[player]", player.getDisplayName()), "");
         } else {
             // The player is not playing for the first time, just welcome the player.
-            SMessages.sendTitleMessage(player, SMessages.getRandomMessage("Messages.WelcomeBack").replace("[player]", player.getDisplayName()), "");
+            SMessages.sendTitleMessage(player, SMessages.getRandomMessage("messages.welcomeBack").replace("[player]", player.getDisplayName()), "");
         }
-        event.setJoinMessage(ChatColor.GREEN + SMessages.getRandomMessage("Messages.Join").replace("[player]", event.getPlayer().getDisplayName()));
+        event.setJoinMessage(ChatColor.GREEN + SMessages.getRandomMessage("messages.join").replace("[player]", event.getPlayer().getDisplayName()));
 
         /* AFK */
         SUtil.setLastActivityForPlayer(player.getUniqueId(), System.currentTimeMillis());
         SUtil.setPlayerAFK(player.getUniqueId(), false);
 
         /* Format Player Display Name */
-        String role = App.getInstance().getConfig().getString("Players." + player.getUniqueId() + ".Role");
+        String role = App.getInstance().getConfig().getString("players." + player.getUniqueId() + ".role");
         PlayerType pt = PlayerType.setPlayerTypeForPlayer(player.getUniqueId(), PlayerType.getForId(role));
         // Here, we will check if the current display name matches the username.
         // If it doesn't, the player is inside a spigot permission group which has a prefix defined.
@@ -49,7 +49,7 @@ public class JoinEvent implements Listener {
         /* Discord */
         DiscordUtil discord = App.getInstance().getDiscordUtil();
         if (discord.joinMessage) {
-            discord.sendMessage(SMessages.getRandomMessage("Messages.Join").replace("[player]", player.getName()));
+            discord.sendMessage(SMessages.getRandomMessage("messages.join").replace("[player]", player.getName()));
         }
     }
 }

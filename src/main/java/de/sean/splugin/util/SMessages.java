@@ -36,21 +36,8 @@ public class SMessages {
             final int index = new Random().nextInt(Math.max(0, messages.size()));
             return (String) messages.get(index);
         }
-        // If no messages we're defined, return the default ones
-        switch (messageList) {
-            case "Messages.Join": return "[player] has joined the server!";
-            case "Messages.Leave": return "[player] has left the server!";
-            case "Messages.Death": return "[message]...";
-            case "Messages.SleepEnter": return "[player] has gone to sleep!";
-            case "Messages.SleepLeave": return "[player] has woken up!";
-            case "Messages.Welcome": return "Welcome [player]!";
-            case "Messages.WelcomeBack": return "Welcome back, [player]!";
-            case "Messages.SkipNight": return "Skipping the night...";
-            case "Messages.NightSkipped": return "The night has been skipped!";
-            case "Messages.EveryoneSleeping": return "Everyone is sleeping!";
-            case "Messages.Sleeping": return "Sleeping";
-            default: return "";
-        }
+        // If no messages we're defined, return a empty string
+        return "";
     }
 
     public static void sendGlobalActionBarMessage(final String message) {

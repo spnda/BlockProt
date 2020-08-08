@@ -53,7 +53,7 @@ public class LockExecutor implements CommandExecutor {
                 return true;
             case "place":
                 FileConfiguration config = App.getInstance().getConfig();
-                config.set("Players." + player.getUniqueId() + ".NotLockOnPlace", !config.getBoolean("Players." + player.getUniqueId() + ".NotLockOnPlace"));
+                config.set("Players." + player.getUniqueId() + ".NotLockOnPlace", !config.getBoolean("players." + player.getUniqueId() + ".notLockOnPlace"));
                 SUtil.saveConfigFile(config);
                 break;
             default:

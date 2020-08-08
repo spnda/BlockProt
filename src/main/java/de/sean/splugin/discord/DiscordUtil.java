@@ -26,9 +26,9 @@ public class DiscordUtil {
 
     public DiscordUtil(FileConfiguration config) throws NullPointerException {
         Map<String, Object> discord = config.getConfigurationSection("Discord").getValues(true);
-        final String token = config.getString("Discord.Token");
-        this.joinMessage = config.getBoolean("Discord.JoinMessage");
-        this.leaveMessage = config.getBoolean("Discord.LeaveMessage");
+        final String token = config.getString("discord.token");
+        this.joinMessage = config.getBoolean("discord.joinMessage");
+        this.leaveMessage = config.getBoolean("discord.leaveMessage");
         // Only initialize discord stuff if a guild, channel and token are present.
         if (token != null) {
             JDABuilder builder = new JDABuilder(token);
@@ -44,7 +44,7 @@ public class DiscordUtil {
                 e.printStackTrace();
             }
 
-            Map<String, Object> channelsConfig = config.getConfigurationSection("Discord.Channels").getValues(true);
+            Map<String, Object> channelsConfig = config.getConfigurationSection("discord.channels").getValues(true);
             for (Map.Entry<String, Object> pair : channelsConfig.entrySet()) {
                 Guild guild = jda.getGuildById(pair.getKey());
                 if (guild != null) {

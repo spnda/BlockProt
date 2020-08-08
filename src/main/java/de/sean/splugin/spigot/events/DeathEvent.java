@@ -15,7 +15,7 @@ public class DeathEvent implements Listener {
     @EventHandler
     public void PlayerDeath(PlayerDeathEvent event) {
         // Some more formatting in the future?
-        String message = SMessages.getRandomMessage("Messages.Death").replace("[message]", event.getDeathMessage()).replace("[player]", event.getEntity().getDisplayName());
+        String message = SMessages.getRandomMessage("messages.death").replace("[message]", event.getDeathMessage()).replace("[player]", event.getEntity().getDisplayName());
         event.setDeathMessage(ChatColor.RED + message);
         
         /* Discord */

@@ -83,7 +83,9 @@ public class InteractEvent implements Listener {
             case BLACKSTONE_STAIRS:
             case POLISHED_BLACKSTONE_STAIRS:
             case POLISHED_BLACKSTONE_BRICK_STAIRS:
-                if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                if (event.getAction() == Action.RIGHT_CLICK_BLOCK
+                        && !App.getInstance().getConfig().getBoolean("DisableChairSitting")
+                        && player.hasPermission("splugin.sit")) {
                     final Block block = event.getClickedBlock();
                     if (block == null) break;
                     final Location location = event.getClickedBlock().getLocation().clone();
@@ -101,7 +103,7 @@ public class InteractEvent implements Listener {
                 }
                 break;
             case CHEST:
-                if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+                if (event.getAction() == Action.LEFT_CLICK_BLOCK && player.hasPermission("spigot.lock")) {
                     // The user left clicked to edit the chest
                     DoubleChest doubleChest = null;
                     BlockState chestState = event.getClickedBlock().getState();
@@ -161,7 +163,7 @@ public class InteractEvent implements Listener {
             case HOPPER:
             case BARREL:
             case SHULKER_BOX:
-                if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+                if (event.getAction() == Action.LEFT_CLICK_BLOCK && player.hasPermission("spigot.lock")) {
                     BlockState state = event.getClickedBlock().getState();
                     NBTTileEntity blockTileEntity = new NBTTileEntity(state);
                     NBTCompound blockTile = blockTileEntity.getPersistentDataContainer();

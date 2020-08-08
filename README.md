@@ -9,6 +9,7 @@ Admins can define groups of users, players can lock chests/hoppers... and everyt
 
 To further configure discord and in-game settings you will need to add a `config.yml` 
 file into `server/plugins/SPlugin`. That yml file can have various data:
+- DisableChairSitting: `bool`. If true, no players will be able to sit on stairs.
 - Discord:
     - Token: `String`. Your discord bot token. You can get one from your application https://discord.com/developers
     - JoinMessage: `bool`. If true, the bot will send a message for each player that join to discord.
@@ -46,6 +47,15 @@ Roles:
     CITIZEN:
         Name: "Citizen"
         Color: "YELLOW"
+```
+Example permissions.yml file:
+```yml
+groups:
+    Default:
+        default: true
+        permissions:
+            - splugin.sit
+            - splugin.lock
 ```
 
 ## ▶️ Building yourself

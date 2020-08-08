@@ -13,7 +13,7 @@ public class PlayerType {
     private static List<PlayerType> playerTypes = new ArrayList<>();
     private static HashMap<UUID, PlayerType> players = new HashMap<>();
 
-    public static final PlayerType DEFAULT = registerPlayerType("DEFAULT", "Default", ChatColor.GREEN);
+    public static final PlayerType DEFAULT = registerPlayerType("DEFAULT", "", ChatColor.WHITE);
 
     public final String id;
     public final String name;

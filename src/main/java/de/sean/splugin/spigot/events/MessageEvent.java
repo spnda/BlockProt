@@ -24,9 +24,11 @@ public class MessageEvent implements Listener {
         /* Chat formatting */
         String ptString = pt.name;
         if (!player.getDisplayName().split("|")[0].equals(ptString)) {
-            String playerNickname = pt.color + ptString + " | " + ChatColor.RESET + player.getName();
-            player.setDisplayName(playerNickname);
-            player.setPlayerListName(playerNickname);
+            if (!ptString.equals("")) {
+                String playerNickname = pt.color + ptString + " | " + ChatColor.RESET + player.getName();
+                player.setDisplayName(playerNickname);
+                player.setPlayerListName(playerNickname);
+            }
         }
         final String messageFormat = "%1$s: %2$s";
         event.setFormat(messageFormat);

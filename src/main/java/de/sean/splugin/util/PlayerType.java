@@ -36,7 +36,6 @@ public class PlayerType {
                 if (pair.getValue() instanceof MemorySection) {
                     Map<String, Object> role = ((MemorySection) pair.getValue()).getValues(false);
                     for (Map.Entry<String, Object> rolePair : role.entrySet()) {
-                        System.out.println("rolePair.getKey(): " + rolePair.getKey());
                         if (rolePair.getKey().toLowerCase().equals("name")) name = rolePair.getValue().toString();
                         else if (rolePair.getKey().toLowerCase().equals("color")) color = (ChatColor) ChatColor.class.getField(rolePair.getValue().toString().toUpperCase()).get(null);
                     }
@@ -71,7 +70,6 @@ public class PlayerType {
     }
 
     public static PlayerType getForId(String id) {
-        System.out.println(playerTypes);
         for (PlayerType playerType : playerTypes) {
             if (playerType.id.equals(id)) {
                 return playerType;

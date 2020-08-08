@@ -2,10 +2,10 @@ package de.sean.splugin;
 
 /* SPlugin */
 import de.sean.splugin.discord.DiscordUtil;
-import de.sean.splugin.discord.SHandler;
 import de.sean.splugin.spigot.commands.*;
 import de.sean.splugin.spigot.events.*;
 import de.sean.splugin.spigot.tasks.AfkChecker;
+import de.sean.splugin.util.PlayerType;
 import de.sean.splugin.util.SUtil;
 
 /* Java */
@@ -16,7 +16,6 @@ import java.io.InputStreamReader;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
-import javax.security.auth.login.LoginException;
 import org.jetbrains.annotations.NotNull;
 
 /* Spigot */
@@ -26,11 +25,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-
-/* Discord */
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Activity;
 
 public class App extends JavaPlugin {
     private static DiscordUtil discord;
@@ -48,6 +42,8 @@ public class App extends JavaPlugin {
         /* Config */
         File configFile = getConfigFile();
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+
+        PlayerType.loadFromConfig(config);
 
         // When we're reloading we want to set default values to all players, as old data gets lost on a reload.
         for (Player player : this.getServer().getOnlinePlayers()) {

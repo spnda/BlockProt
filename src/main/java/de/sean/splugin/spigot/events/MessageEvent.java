@@ -3,9 +3,9 @@ package de.sean.splugin.spigot.events;
 /* SPlugin */
 import de.sean.splugin.App;
 import de.sean.splugin.discord.DiscordUtil;
+import de.sean.splugin.util.PlayerType;
 import de.sean.splugin.util.SMessages;
 import de.sean.splugin.util.SUtil;
-import de.sean.splugin.util.SUtil.PlayerType;
 
 /* Spigot */
 import net.md_5.bungee.api.ChatColor;
@@ -14,22 +14,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-/* Discord */
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.TextChannel;
-
 public class MessageEvent implements Listener {
     @EventHandler
     public void PlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
-        PlayerType pt = SUtil.getPlayerType(player);
+        PlayerType pt = PlayerType.getPlayerTypeForPlayer(player.getUniqueId());
         String message = event.getMessage();
 
         /* Chat formatting */
-        String ptString = SUtil.getStringForPlayerType(pt);
+        String ptString = pt.name;
         if (!player.getDisplayName().split("|")[0].equals(ptString)) {
-            String playerNickname = SUtil.getChatColorForPlayerType(pt) + ptString + " | " + ChatColor.RESET + player.getName();
+            String playerNickname = pt.color + ptString + " | " + ChatColor.RESET + player.getName();
             player.setDisplayName(playerNickname);
             player.setPlayerListName(playerNickname);
         }

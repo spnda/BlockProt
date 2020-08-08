@@ -23,6 +23,10 @@ file into `server/plugins/SPlugin`. That yml file can have various data:
 - Players:
     - player uuid:
         - Role: `OWNER` | `CITIZEN`
+- Roles:
+    - NEW_ROLE_ID:
+        - Name: `String`. The displayed name of your new role.
+        - Color: `Color`. The colour of your new role. Only 16 colours, no hex!
         
 An example config.yml file:
 ```yml
@@ -35,6 +39,13 @@ Messages:
     Join:
     - '[player] has joined this server!'
     - '[player] has joined the server.'
+Players:
+    - 7bf18cg3-e1c6-4c2f-98sb-0e63f2f4ec9f:
+        Role: CITIZEN
+Roles:
+    CITIZEN:
+        Name: "Citizen"
+        Color: "YELLOW"
 ```
 
 ## ▶️ Building yourself

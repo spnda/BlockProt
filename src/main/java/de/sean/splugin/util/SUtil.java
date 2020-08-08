@@ -11,12 +11,10 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.jetbrains.annotations.NotNull;
 
 /* Spigot */
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 
 public class SUtil {
-    private static HashMap<UUID, Long> playerLastActivity = new HashMap<>();
+    private static final HashMap<UUID, Long> playerLastActivity = new HashMap<>();
     private static final HashMap<UUID, Boolean> afkPlayers = new HashMap<>();
 
     public static void removePlayerAFK(UUID uuid)                       {           afkPlayers.remove(uuid); }
@@ -61,51 +59,5 @@ public class SUtil {
 
     public static String removePlayerTypeForString(String name) {
         return name.split("\\|")[1].trim();
-    }
-
-    public static String getStringForPlayerType(PlayerType playerType) {
-        switch (playerType) {
-            case MAYOR:             return "Mayor";
-            case DEPUTY_MAYOR:      return "Deputy Mayor";
-            case OWNER:             return "Owner";
-            case CITIZEN: default:  return "Citizen";
-        }
-    }
-
-    public static ChatColor getChatColorForPlayerType(PlayerType playerType) {
-        switch (playerType) {
-            case MAYOR:             return ChatColor.GOLD;
-            case DEPUTY_MAYOR:      return ChatColor.YELLOW;
-            case OWNER:             return ChatColor.RED;
-            case CITIZEN: default:  return ChatColor.GREEN;
-        }
-    }
-
-    public static PlayerType getPlayerType(Player player) {
-        FileConfiguration config = App.getInstance().getConfig();
-        Object obj = config.get("Players." + player.getUniqueId() + ".Role");
-
-        // There was no data found. We should put some default data there.
-        // For now, return PlayerType.CITIZEN.
-        if (obj == null) {
-            config.set("Players." + player.getUniqueId() + ".Role", "CITIZEN");
-            saveConfigFile(config);
-            return PlayerType.CITIZEN;
-        } else if (obj.equals("MAYOR")) {
-            return PlayerType.MAYOR;
-        } else if (obj.equals("OWNER")) {
-            return PlayerType.OWNER;
-        } else if (obj.equals("DEPUTY_MAYOR")) {
-            return PlayerType.DEPUTY_MAYOR;
-        } else {
-            return PlayerType.CITIZEN;
-        }
-    }
-
-    public enum PlayerType {
-        CITIZEN,
-        MAYOR,
-        DEPUTY_MAYOR,
-        OWNER,
     }
 }

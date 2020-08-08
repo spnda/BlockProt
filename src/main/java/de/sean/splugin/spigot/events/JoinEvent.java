@@ -36,7 +36,10 @@ public class JoinEvent implements Listener {
         /* Format Player Display Name */
         String role = App.getInstance().getConfig().getString("Players." + player.getUniqueId() + ".Role");
         PlayerType pt = PlayerType.setPlayerTypeForPlayer(player.getUniqueId(), PlayerType.getForId(role));
-        if (pt != null) {
+        // Here, we will check if the current display name matches the username.
+        // If it doesn't, the player is inside a spigot permission group which has a prefix defined.
+        // Therefore, we don't want to add any other prefix to the name.
+        if (pt != null && player.getDisplayName().equals(player.getName())) {
             String playerNickname, ptString = pt.name;
             playerNickname = pt.color + ptString + " | " + ChatColor.RESET + player.getName();
             player.setDisplayName(playerNickname);

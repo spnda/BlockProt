@@ -5,6 +5,7 @@ import de.sean.splugin.discord.DiscordUtil;
 import de.sean.splugin.spigot.commands.*;
 import de.sean.splugin.spigot.events.*;
 import de.sean.splugin.spigot.tasks.AfkChecker;
+import de.sean.splugin.spigot.tasks.SleepChecker;
 import de.sean.splugin.util.PlayerType;
 import de.sean.splugin.util.SUtil;
 
@@ -36,11 +37,9 @@ public class App extends JavaPlugin {
         // When starting also update IP as it might have changed while the server was offline.
         updateIP();
 
-        /* Spigot */
-        instance = this;
-
         /* Config */
-        File configFile = getConfigFile();
+        instance = this;
+        File configFile = instance.getConfigFile();
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
         PlayerType.loadFromConfig(config);
@@ -51,9 +50,7 @@ public class App extends JavaPlugin {
             SUtil.setPlayerAFK(player.getUniqueId(), false);
         }
 
-        // Sleep checker task
-        // Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new SleepChecker(), 0L, 20L);
-        // Afk checker task
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new SleepChecker(), 0L, 20L);
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new AfkChecker(), 0L, 20L);
 
         PluginManager pm = Bukkit.getServer().getPluginManager();

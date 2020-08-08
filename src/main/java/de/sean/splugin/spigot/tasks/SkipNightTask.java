@@ -1,9 +1,7 @@
 package de.sean.splugin.spigot.tasks;
 
 /* Spigot */
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
-import org.bukkit.Statistic;
+import de.sean.splugin.util.SMessages;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -16,18 +14,15 @@ public class SkipNightTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        final long time = world.getTime();
-        if (time >= 450  && time <= 1000) {
-            // Announce night skip
-            Bukkit.broadcastMessage(ChatColor.YELLOW + "");
-            SleepChecker.skippingWorlds.remove(world);
-
-            // Reset sleep statistic
-            world.getPlayers().forEach(player -> player.setStatistic(Statistic.TIME_SINCE_REST, 0));
-
-            this.cancel();
+        final long time = this.world.getTime();
+        if (time < 450 || time > 1000) {
+            this.world.setTime(time);
         } else {
-            world.setTime(time + 1);
+            this.world.getPlayers().forEach(player -> player.sendMessage(SMessages.getRandomMessage("Messages.NightSkipped")));
+            SleepChecker.skippingWorlds.remove(this.world);
+            this.world.setStorm(false);
+            this.world.setThundering(false);
+            this.cancel();
         }
     }
 }

@@ -86,9 +86,9 @@ public class SHandler extends ListenerAdapter {
                 event.getChannel().sendMessage(eb.build()).queue();
                 break;
             default:
-                if (DiscordUtil.channels.get(event.getGuild()) != null && !DiscordUtil.channels.get(event.getGuild()).getId().equals(event.getChannel().getId()))
-                    return;
-                if (event.getAuthor().isBot()) return; // Ignore all bots.
+                if (DiscordUtil.channels.get(event.getGuild()) == null) break;
+                if (!DiscordUtil.channels.get(event.getGuild()).equals(event.getTextChannel())) break;
+                if (event.getAuthor().isBot()) break; // Ignore all bots.
                 String divider = ChatColor.GRAY + " | " + ChatColor.RESET;
                 String msg = event.getMessage().getContentStripped();
                 if (msg.replaceAll(" ", "").isEmpty()) return; // Usually this is a image/embed, can't send these.

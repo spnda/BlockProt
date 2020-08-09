@@ -1,7 +1,7 @@
 package de.sean.splugin.discord;
 
 /* SPlugin */
-import de.sean.splugin.App;
+import de.sean.splugin.SPlugin;
 import de.sean.splugin.util.SUtil;
 
 /* Java */
@@ -29,7 +29,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 public class SHandler extends ListenerAdapter {
     @Override
     public void onReady(@NotNull ReadyEvent event) {
-        App.getInstance().getLogger().info("Discord has started!");
+        SPlugin.instance.getLogger().info("Discord has started!");
     }
 
     @Override
@@ -42,20 +42,20 @@ public class SHandler extends ListenerAdapter {
         // This is purely a thing for myself. Whenever the IP changes my DNS record gets changed.
         // Can be ignored by anyone else.
         if (event instanceof ReconnectedEvent) {
-            App.getInstance().updateIP();
+            SPlugin.instance.updateIP();
         }
     }
 
     @Override
-    public void onMessageReceived(MessageReceivedEvent event) {
-        String[] message = event.getMessage().getContentRaw().split(" ");
+    public void onMessageReceived(final MessageReceivedEvent event) {
+        final String[] message = event.getMessage().getContentRaw().split(" ");
         if (event.getChannelType().equals(ChannelType.PRIVATE)) {
             if (message[0].equals("?msg")) {
                 if (message.length < 3) {
-                    event.getChannel().sendMessage("Nicht genug Argumente. Nutzung: `?msg <MC Name> <Nachricht>`").queue();
+                    event.getChannel().sendMessage("Not enough arguments. Usage: `?msg <Player Name> <Message>`").queue();
                 } else {
-                    User user = event.getAuthor();
-                    Player player = Bukkit.getPlayer(message[1]);
+                    final User user = event.getAuthor();
+                    final Player player = Bukkit.getPlayer(message[1]);
                     if (player != null) player.sendMessage(ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + user.getName() + " whispers to you: " + SUtil.concatArrayRange(message, 2, message.length));
                 }
             }
@@ -76,9 +76,9 @@ public class SHandler extends ListenerAdapter {
                 eb = new EmbedBuilder();
                 eb.setColor(SUtil.randomColor());
                 eb.setTitle("Online Players", null);
-                List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+                final List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
                 eb.setDescription("There are " + players.size() + " / " + Bukkit.getMaxPlayers() + " players online.");
-                StringBuilder playerList = new StringBuilder();
+                final StringBuilder playerList = new StringBuilder();
                 for (Player player : players) {
                     playerList.append(player.getDisplayName().replaceAll("§[a-z]", "")).append("\n");
                 }
@@ -89,10 +89,9 @@ public class SHandler extends ListenerAdapter {
                 if (DiscordUtil.channels.get(event.getGuild()) == null) break;
                 if (!DiscordUtil.channels.get(event.getGuild()).equals(event.getTextChannel())) break;
                 if (event.getAuthor().isBot()) break; // Ignore all bots.
-                String divider = ChatColor.GRAY + " | " + ChatColor.RESET;
                 String msg = event.getMessage().getContentStripped();
-                if (msg.replaceAll(" ", "").isEmpty()) return; // Usually this is a image/embed, can't send these.
-                Bukkit.broadcastMessage(ChatColor.BLUE + "Discord" + divider + event.getAuthor().getName() + ": " + msg);
+                if (event.getMessage().getAttachments().size() > 0) msg += msg.length() > 0 ? " " : "" + "[file]"; // Show a nice indicator that the person has sent a image.
+                Bukkit.broadcastMessage(ChatColor.BLUE + "Discord" + ChatColor.GRAY + " | " + ChatColor.RESET + event.getAuthor().getName() + ": " + msg);
                 break;
         }
     }

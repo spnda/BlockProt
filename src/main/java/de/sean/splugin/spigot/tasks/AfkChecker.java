@@ -11,8 +11,7 @@ import org.bukkit.entity.Player;
 public class AfkChecker implements Runnable {
     @Override
     public void run() {
-        Bukkit.getOnlinePlayers()
-            .forEach(this::checkPlayer);
+        Bukkit.getOnlinePlayers().forEach(this::checkPlayer);
     }
 
     private void checkPlayer(final Player player) {

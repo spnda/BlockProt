@@ -18,7 +18,7 @@ public class SkipNightTask extends BukkitRunnable {
         if (time < 450 || time > 1000) {
             this.world.setTime(time);
         } else {
-            this.world.getPlayers().forEach(player -> player.sendMessage(SMessages.getRandomMessage("Messages.NightSkipped")));
+            this.world.getPlayers().forEach(player -> player.sendMessage(SMessages.getRandomMessage("messages.nightSkipped")));
             SleepChecker.skippingWorlds.remove(this.world);
             this.world.setStorm(false);
             this.world.setThundering(false);

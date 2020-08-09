@@ -80,7 +80,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClassName = 'de.sean.splugin.App'
+    mainClassName = 'de.sean.splugin.SPlugin'
 }
 
 apply plugin: 'com.github.johnrengelman.shadow'

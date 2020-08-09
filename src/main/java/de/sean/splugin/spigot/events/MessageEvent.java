@@ -1,8 +1,7 @@
 package de.sean.splugin.spigot.events;
 
 /* SPlugin */
-import de.sean.splugin.App;
-import de.sean.splugin.discord.DiscordUtil;
+import de.sean.splugin.SPlugin;
 import de.sean.splugin.util.PlayerType;
 import de.sean.splugin.util.SMessages;
 import de.sean.splugin.util.SUtil;
@@ -17,15 +16,15 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class MessageEvent implements Listener {
     @EventHandler
     public void PlayerChat(AsyncPlayerChatEvent event) {
-        Player player = event.getPlayer();
-        PlayerType pt = PlayerType.getPlayerTypeForPlayer(player.getUniqueId());
-        String message = event.getMessage();
+        final Player player = event.getPlayer();
+        final PlayerType pt = PlayerType.getPlayerTypeForPlayer(player.getUniqueId());
+        final String message = event.getMessage();
 
         /* Chat formatting */
-        String ptString = pt.name;
+        final String ptString = pt.name;
         if (!player.getDisplayName().split("|")[0].equals(ptString)) {
             if (!ptString.equals("")) {
-                String playerNickname = pt.color + ptString + " | " + ChatColor.RESET + player.getName();
+                final String playerNickname = pt.color + ptString + " | " + ChatColor.RESET + player.getName();
                 player.setDisplayName(playerNickname);
                 player.setPlayerListName(playerNickname);
             }
@@ -42,7 +41,6 @@ public class MessageEvent implements Listener {
         }
 
         /* Discord */
-        DiscordUtil discord = App.getInstance().getDiscordUtil();
-        discord.sendMessage("**" + player.getName() + "**: " + message);
+        SPlugin.discord.sendMessage("**" + player.getName() + "**: " + message);
     }
 }

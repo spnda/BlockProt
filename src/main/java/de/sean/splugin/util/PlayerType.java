@@ -31,7 +31,8 @@ public class PlayerType {
             // The PlayerType of a player gets loaded up when they join the server.
             Map<String, Object> roles = config.getConfigurationSection("roles").getValues(false);
             for (Map.Entry<String, Object> pair : roles.entrySet()) {
-                String id = pair.getKey(), name = null;
+                final String id = pair.getKey();
+                String name = null;
                 ChatColor color = null;
                 if (pair.getValue() instanceof MemorySection) {
                     Map<String, Object> role = ((MemorySection) pair.getValue()).getValues(false);
@@ -48,7 +49,7 @@ public class PlayerType {
     }
 
     public static PlayerType registerPlayerType(@NotNull String id, @NotNull String name, @NotNull ChatColor color) {
-        PlayerType playerType = new PlayerType(id, name, color);
+        final PlayerType playerType = new PlayerType(id, name, color);
         if (!playerTypes.contains(playerType)) {
             playerTypes.add(playerType);
             return playerType;
@@ -69,9 +70,7 @@ public class PlayerType {
 
     public static PlayerType getForId(String id) {
         for (PlayerType playerType : playerTypes) {
-            if (playerType.id.equals(id)) {
-                return playerType;
-            }
+            if (playerType.id.equals(id)) return playerType;
         }
         return PlayerType.DEFAULT;
     }

@@ -1,7 +1,7 @@
 package de.sean.splugin.spigot.tasks;
 
 /* SPlugin */
-import de.sean.splugin.App;
+import de.sean.splugin.SPlugin;
 import de.sean.splugin.util.SMessages;
 import de.sean.splugin.util.SUtil;
 
@@ -31,21 +31,19 @@ public class SleepChecker implements Runnable {
     }
 
     private void checkWorld(final World world) {
-        List<Player> players = world.getPlayers();
+        final List<Player> players = world.getPlayers();
         final int amountIgnored = (int) players.stream().filter(SleepChecker::ignorePlayer).count();
         final int amountSleeping = (int) players.stream().filter(LivingEntity::isSleeping).count();
-        final int amountNeeded = Math.max(0, (int)Math.ceil((players.size() - amountIgnored) * 0.5 - amountSleeping));
-        System.out.println("amountIgnored: " + amountIgnored);
-        System.out.println("amountSleeping: " + amountSleeping);
-        System.out.println("amountNeeded: " + amountNeeded);
+        final int amountNeeded = Math.max(0, (int)Math.ceil((players.size() - amountIgnored) * (SPlugin.instance.getConfig().getInt("skipNight.percentage") / 100.0) - amountSleeping));
         if (amountNeeded == 0 && amountSleeping > 0) {
             // More than 50% of players are sleeping
-            players.forEach(player -> SMessages.sendActionBarMessage(player, SMessages.getRandomMessage("Messages.EveryoneSleeping")));
+            players.forEach(player -> SMessages.sendActionBarMessage(player, SMessages.getRandomMessage("messages.everyoneSleeping")));
             skippingWorlds.add(world);
-            new SkipNightTask(world).runTaskTimer(App.getInstance(), 0L, 1L);
-            players.forEach(player -> player.sendMessage(SMessages.getRandomMessage("Messages.SkipNight")));
+            new SkipNightTask(world).runTaskTimer(SPlugin.instance, 0L, 1L);
+            players.forEach(player -> player.sendMessage(SMessages.getRandomMessage("messages.skipNight")));
         } else if (amountNeeded > 0 && amountSleeping > 0) {
-            players.forEach(player -> SMessages.sendActionBarMessage(player, SMessages.getRandomMessage("Messages.Sleeping")));
+            final String message = SMessages.getRandomMessage("messages.sleeping").replace("[sleeping]", Integer.toString(amountSleeping)).replace("[needed]", Integer.toString(amountNeeded));
+            players.forEach(player -> SMessages.sendActionBarMessage(player, message));
         }
     }
 

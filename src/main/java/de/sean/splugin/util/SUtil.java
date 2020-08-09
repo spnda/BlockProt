@@ -1,17 +1,10 @@
 package de.sean.splugin.util;
 
-/* SPlugin */
-import de.sean.splugin.App;
-
 /* Java */
 import java.awt.Color;
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import org.jetbrains.annotations.NotNull;
-
-/* Spigot */
-import org.bukkit.configuration.file.FileConfiguration;
 
 public class SUtil {
     private static final HashMap<UUID, Long> playerLastActivity = new HashMap<>();
@@ -27,7 +20,7 @@ public class SUtil {
 
     @NotNull
     public static String concatArrayRange(String[] arr, int begin, int end) {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         for (int i = begin; i < end; i++) {
             builder.append(arr[i]).append(" ");
         }
@@ -35,17 +28,28 @@ public class SUtil {
     }
 
     public static List<String> parseStringList(String str) {
-        List<String> ret = new ArrayList<>(Arrays.asList(str.replaceAll("^\\[|]$", "").split(",")));
+        final List<String> ret = new ArrayList<>(Arrays.asList(str.replaceAll("^\\[|]$", "").split(",")));
         ret.removeIf(String::isEmpty);
         return ret;
     }
 
-    public static int randomInt(int min, int max)  {
-        return ThreadLocalRandom.current().nextInt(min, max + 1);
+    /**
+     * Returns a pseudorandom {@code int} value between the specified
+     * origin (inclusive) and the specified bound (exclusive).
+     *
+     * @param min the least value returned
+     * @param max the upper bound (exclusive)
+     * @return a pseudorandom {@code int} value between the origin
+     *         (inclusive) and the bound (exclusive)
+     * @throws IllegalArgumentException if {@code origin} is greater than
+     *         or equal to {@code bound}
+     */
+    public static int randomInt(int min, int max) throws IllegalArgumentException {
+        return ThreadLocalRandom.current().nextInt(min, max);
     }
 
     public static Color randomColor() {
-        Color[] colors = {Color.BLACK, Color.BLUE, Color.CYAN, Color.DARK_GRAY, Color.GRAY, Color.LIGHT_GRAY, Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.PINK, Color.RED, Color.WHITE, Color.YELLOW};
-        return colors[randomInt(0, colors.length - 1)];
+        final Color[] colors = {Color.BLACK, Color.BLUE, Color.CYAN, Color.DARK_GRAY, Color.GRAY, Color.LIGHT_GRAY, Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.PINK, Color.RED, Color.WHITE, Color.YELLOW};
+        return colors[randomInt(0, colors.length)];
     }
 }

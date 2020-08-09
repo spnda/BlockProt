@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 public class MoveEvent implements Listener {
     @EventHandler
     public void PlayerMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
+        final Player player = event.getPlayer();
         SUtil.setLastActivityForPlayer(player.getUniqueId(), System.currentTimeMillis());
         if (SUtil.isPlayerAFK(player.getUniqueId())) {
             SUtil.setPlayerAFK(player.getUniqueId(), false);

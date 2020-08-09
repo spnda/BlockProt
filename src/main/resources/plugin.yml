@@ -1,4 +1,4 @@
-main: de.sean.splugin.App
+main: de.sean.splugin.SPlugin
 name: SPlugin
 version: 0.1
 api-version: 1.13

@@ -1,7 +1,7 @@
 package de.sean.splugin.spigot.events;
 
 /* SPlugin */
-import de.sean.splugin.App;
+import de.sean.splugin.SPlugin;
 import de.sean.splugin.discord.DiscordUtil;
 import de.sean.splugin.util.PlayerType;
 import de.sean.splugin.util.SMessages;
@@ -17,7 +17,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class JoinEvent implements Listener {
     @EventHandler
     public void PlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
+        final Player player = event.getPlayer();
 
         /* Format Join Message */
         if (!player.hasPlayedBefore()) {
@@ -34,12 +34,12 @@ public class JoinEvent implements Listener {
         SUtil.setPlayerAFK(player.getUniqueId(), false);
 
         /* Format Player Display Name */
-        String role = App.getInstance().getConfig().getString("players." + player.getUniqueId() + ".role");
-        PlayerType pt = PlayerType.setPlayerTypeForPlayer(player.getUniqueId(), PlayerType.getForId(role));
+        final String role = SPlugin.instance.getConfig().getString("players." + player.getUniqueId() + ".role");
+        final PlayerType pt = PlayerType.setPlayerTypeForPlayer(player.getUniqueId(), PlayerType.getForId(role));
         // Here, we will check if the current display name matches the username.
         // If it doesn't, the player is inside a spigot permission group which has a prefix defined.
         // Therefore, we don't want to add any other prefix to the name.
-        if (pt != null && player.getDisplayName().equals(player.getName())) {
+        if (pt != null && SPlugin.instance.getConfig().getBoolean("feature.showGroup")) {
             String playerNickname, ptString = pt.name;
             playerNickname = pt.color + ptString + " | " + ChatColor.RESET + player.getName();
             player.setDisplayName(playerNickname);
@@ -47,7 +47,7 @@ public class JoinEvent implements Listener {
         }
 
         /* Discord */
-        DiscordUtil discord = App.getInstance().getDiscordUtil();
+        final DiscordUtil discord = SPlugin.discord;
         if (discord.joinMessage) {
             discord.sendMessage(SMessages.getRandomMessage("messages.join").replace("[player]", player.getName()));
         }

@@ -58,9 +58,9 @@ public class SLockUtil {
     }
 
     public static class LockData {
-        public long timeRequested;
-        public UUID uuid;
-        public boolean action;
+        public final long timeRequested;
+        public final UUID uuid;
+        public final boolean action;
 
         public LockData(long timeRequested, UUID uuid, boolean action) {
             this.timeRequested = timeRequested;
@@ -70,7 +70,7 @@ public class SLockUtil {
     }
 
     public static class GivePermData extends LockData {
-        public UUID uuidToGive;
+        public final UUID uuidToGive;
 
         public GivePermData(long timeRequested, UUID uuid, UUID uuidToGive, boolean action) {
             super(timeRequested, uuid, action);

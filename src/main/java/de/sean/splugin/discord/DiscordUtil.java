@@ -1,7 +1,7 @@
 package de.sean.splugin.discord;
 
 /* SPlugin */
-import de.sean.splugin.App;
+import de.sean.splugin.SPlugin;
 
 /* Spigot */
 import org.bukkit.configuration.file.FileConfiguration;
@@ -25,30 +25,26 @@ public class DiscordUtil {
     public final boolean leaveMessage;
 
     public DiscordUtil(FileConfiguration config) throws NullPointerException {
-        Map<String, Object> discord = config.getConfigurationSection("Discord").getValues(true);
         final String token = config.getString("discord.token");
         this.joinMessage = config.getBoolean("discord.joinMessage");
         this.leaveMessage = config.getBoolean("discord.leaveMessage");
         // Only initialize discord stuff if a guild, channel and token are present.
         if (token != null) {
-            JDABuilder builder = new JDABuilder(token);
+            final JDABuilder builder = new JDABuilder(token);
             try {
                 builder.setActivity(Activity.playing("Minecraft"));
-                jda = builder.build();
-                jda.awaitReady();
-                App.getInstance().getLogger().info("Discord has started successfully!");
-
-                // Add event listeners for discord
-                jda.addEventListener(new SHandler());
+                this.jda = builder.build();
+                this.jda.awaitReady();
+                this.jda.addEventListener(new SHandler()); // Add event listeners for discord
+                SPlugin.instance.getLogger().info("Discord has started successfully!");
             } catch (LoginException | InterruptedException e) {
                 e.printStackTrace();
             }
 
-            Map<String, Object> channelsConfig = config.getConfigurationSection("discord.channels").getValues(true);
-            for (Map.Entry<String, Object> pair : channelsConfig.entrySet()) {
-                Guild guild = jda.getGuildById(pair.getKey());
+            for (Map.Entry<String, Object> pair : config.getConfigurationSection("discord.channels").getValues(true).entrySet()) {
+                final Guild guild = jda.getGuildById(pair.getKey());
                 if (guild != null) {
-                    TextChannel channel = guild.getTextChannelById(pair.getValue().toString());
+                    final TextChannel channel = guild.getTextChannelById(pair.getValue().toString());
                     if (channel != null) channels.put(guild, channel);
                 }
             }
@@ -56,7 +52,7 @@ public class DiscordUtil {
     }
 
     public void sendMessage(String message) {
-        for (Map.Entry<Guild, TextChannel> pair : channels.entrySet()) {
+        for (final Map.Entry<Guild, TextChannel> pair : channels.entrySet()) {
             pair.getValue().sendMessage(message).queue();
         }
     }

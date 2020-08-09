@@ -1,12 +1,10 @@
 package de.sean.splugin.spigot.commands;
 
 /* SPlugin */
-
-import de.sean.splugin.App;
+import de.sean.splugin.SPlugin;
 import de.sean.splugin.util.SLockUtil;
 
 /* Java */
-import de.sean.splugin.util.SUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +18,7 @@ import org.bukkit.entity.Player;
 public class LockExecutor implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Player player = Bukkit.getPlayer(sender.getName());
+        final Player player = Bukkit.getPlayer(sender.getName());
         Player newPlayer;
         if (player == null) return false;
         if (args.length == 0 || args[0].equals("private")) {
@@ -52,9 +50,9 @@ public class LockExecutor implements CommandExecutor {
                 SLockUtil.addRemoveLockingForUser(player.getUniqueId());
                 return true;
             case "place":
-                FileConfiguration config = App.getInstance().getConfig();
+                final FileConfiguration config = SPlugin.instance.getConfig();
                 config.set("Players." + player.getUniqueId() + ".NotLockOnPlace", !config.getBoolean("players." + player.getUniqueId() + ".notLockOnPlace"));
-                App.getInstance().saveConfig();
+                SPlugin.instance.saveConfig();
                 break;
             default:
                 return false;

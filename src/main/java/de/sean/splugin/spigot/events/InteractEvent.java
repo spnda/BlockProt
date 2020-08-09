@@ -1,7 +1,7 @@
 package de.sean.splugin.spigot.events;
 
 /* SPlugin */
-import de.sean.splugin.App;
+import de.sean.splugin.SPlugin;
 import de.sean.splugin.util.SLockUtil;
 import de.sean.splugin.util.SMessages;
 import de.sean.splugin.util.SUtil;
@@ -84,7 +84,7 @@ public class InteractEvent implements Listener {
             case POLISHED_BLACKSTONE_STAIRS:
             case POLISHED_BLACKSTONE_BRICK_STAIRS:
                 if (event.getAction() == Action.RIGHT_CLICK_BLOCK
-                        && !App.getInstance().getConfig().getBoolean("DisableChairSitting")
+                        && !SPlugin.instance.getConfig().getBoolean("DisableChairSitting")
                         && player.hasPermission("splugin.sit")) {
                     final Block block = event.getClickedBlock();
                     if (block == null) break;
@@ -106,44 +106,36 @@ public class InteractEvent implements Listener {
                 if (event.getAction() == Action.LEFT_CLICK_BLOCK && player.hasPermission("spigot.lock")) {
                     // The user left clicked to edit the chest
                     DoubleChest doubleChest = null;
-                    BlockState chestState = event.getClickedBlock().getState();
+                    final BlockState chestState = event.getClickedBlock().getState();
                     if (chestState instanceof Chest) {
-                        Chest chest = (Chest) chestState;
-                        Inventory inventory = chest.getInventory();
+                        final Inventory inventory = ((Chest) chestState).getInventory();
                         if (inventory instanceof DoubleChestInventory) {
                             doubleChest = (DoubleChest) inventory.getHolder();
                         }
                     }
 
-                    NBTTileEntity blockTileEntity = new NBTTileEntity(chestState);
-                    NBTCompound blockTile = blockTileEntity.getPersistentDataContainer();
-
-                    String nbt = blockTile.getString(SLockUtil.LOCK_ATTRIBUTE);
-                    List<String> access = SUtil.parseStringList(nbt);
+                    final NBTCompound blockTile = new NBTTileEntity(chestState).getPersistentDataContainer();
+                    final List<String> access = SUtil.parseStringList(blockTile.getString(SLockUtil.LOCK_ATTRIBUTE));
 
                     List<String> newAccess = handleLock(access, event);
-                    blockTile.setString(SLockUtil.LOCK_ATTRIBUTE, access.toString());
+                    blockTile.setString(SLockUtil.LOCK_ATTRIBUTE, newAccess.toString());
 
                     // If we have a double chest we will have to add the NBT Tag to both TileEntities.
                     if (doubleChest != null) {
-                        Location secChest = doubleChest.getLocation();
+                        final Location secChest = doubleChest.getLocation();
                         // If we are targeting the further away chest block, get the closer one
                         // (Closer/Further away from 0, 0, 0)
                         if (event.getClickedBlock().getLocation().getX() > secChest.getX()) secChest.subtract(.5, 0, 0);
                         else if (event.getClickedBlock().getLocation().getZ() > secChest.getZ()) secChest.subtract(0, 0, .5);
                         else secChest.add(.5, 0, .5);
-                        BlockState secChestState = player.getWorld().getBlockAt(secChest).getState();
-                        NBTTileEntity secTileEntity = new NBTTileEntity(secChestState);
-
-                        NBTCompound secTile = secTileEntity.getPersistentDataContainer();
+                        final NBTCompound secTile = new NBTTileEntity(player.getWorld().getBlockAt(secChest).getState()).getPersistentDataContainer();
                         secTile.setString(SLockUtil.LOCK_ATTRIBUTE, access.toString());
                     }
                 } else {
                     // The user right clicked and is trying to access the container
                     NBTTileEntity blockTileEntity = new NBTTileEntity(event.getClickedBlock().getState());
                     try {
-                        NBTCompound blockTile = blockTileEntity.getPersistentDataContainer();
-                        String nbt = blockTile.getString(SLockUtil.LOCK_ATTRIBUTE);
+                        String nbt = blockTileEntity.getPersistentDataContainer().getString(SLockUtil.LOCK_ATTRIBUTE);
                         if (nbt == null) break;
                         List<String> access = SUtil.parseStringList(nbt);
                         if (access.isEmpty()) {
@@ -155,7 +147,7 @@ public class InteractEvent implements Listener {
                             }
                         }
                     } catch (Exception e) {
-                        App.getInstance().getLogger().severe("Tile NBT could not be read. " + e.toString());
+                        SPlugin.instance.getLogger().severe("Tile NBT could not be read. " + e.toString());
                     }
                 }
                 break;
@@ -164,21 +156,18 @@ public class InteractEvent implements Listener {
             case BARREL:
             case SHULKER_BOX:
                 if (event.getAction() == Action.LEFT_CLICK_BLOCK && player.hasPermission("spigot.lock")) {
-                    BlockState state = event.getClickedBlock().getState();
-                    NBTTileEntity blockTileEntity = new NBTTileEntity(state);
-                    NBTCompound blockTile = blockTileEntity.getPersistentDataContainer();
+                    final NBTCompound blockTile = new NBTTileEntity(event.getClickedBlock().getState()).getPersistentDataContainer();
 
-                    String nbt = blockTile.getString(SLockUtil.LOCK_ATTRIBUTE);
-                    List<String> access = SUtil.parseStringList(nbt);
+                    final String nbt = blockTile.getString(SLockUtil.LOCK_ATTRIBUTE);
+                    final List<String> access = SUtil.parseStringList(nbt);
 
-                    List<String> newAccess = handleLock(access, event);
+                    handleLock(access, event);
                     blockTile.setString(SLockUtil.LOCK_ATTRIBUTE, access.toString());
                 } else {
                     // The user right clicked and is trying to access the container
-                    NBTTileEntity blockTile = new NBTTileEntity(event.getClickedBlock().getState());
-                    String nbt = blockTile.getString(SLockUtil.LOCK_ATTRIBUTE);
+                    final String nbt = new NBTTileEntity(event.getClickedBlock().getState()).getString(SLockUtil.LOCK_ATTRIBUTE);
                     if (nbt == null) break;
-                    List<String> access = SUtil.parseStringList(nbt);
+                    final List<String> access = SUtil.parseStringList(nbt);
                     if (access.isEmpty()) {
                         event.setCancelled(false);
                     } else {
@@ -196,10 +185,10 @@ public class InteractEvent implements Listener {
                 Location location = player.getLocation();
                 switch (item.getType()) {
                     case FLINT_AND_STEEL:
-                        App.getInstance().getLogger().info(player.getName() + " used flint and steel at " + location.getX() + ", " + location.getY() + ", " + location.getZ());
+                        SPlugin.instance.getLogger().info(player.getName() + " used flint and steel at " + location.getX() + ", " + location.getY() + ", " + location.getZ());
                         break;
                     case TNT:
-                        App.getInstance().getLogger().info(player.getName() + " placed TNT at " + location.getX() + ", " + location.getY() + ", " + location.getZ());
+                        SPlugin.instance.getLogger().info(player.getName() + " placed TNT at " + location.getX() + ", " + location.getY() + ", " + location.getZ());
                     default:
                         break;
                 }
@@ -208,18 +197,18 @@ public class InteractEvent implements Listener {
     }
 
     private List<String> handleLock(List<String> access, PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        UUID playerUUID = player.getUniqueId();
-        String playerUUIDString = playerUUID.toString();
+        final Player player = event.getPlayer();
+        final UUID playerUUID = player.getUniqueId();
+        final String playerUUIDString = playerUUID.toString();
 
-        SLockUtil.LockData infoData = SLockUtil.info.get(playerUUID);
+        final SLockUtil.LockData infoData = SLockUtil.info.get(playerUUID);
         if (infoData != null) {
             if (System.currentTimeMillis() - infoData.timeRequested <= 120000) {
                 player.sendMessage(ChatColor.GREEN + "Lock Info: \n" + ChatColor.RESET + access.toString());
             }
             SLockUtil.removeUserFromInfo(playerUUID);
         }
-        SLockUtil.LockData removeLockingdata = SLockUtil.removingLocking.get(playerUUID);
+        final SLockUtil.LockData removeLockingdata = SLockUtil.removingLocking.get(playerUUID);
         if (removeLockingdata != null) {
             if (System.currentTimeMillis() - removeLockingdata.timeRequested < 120000) {
                 access.clear();
@@ -228,8 +217,8 @@ public class InteractEvent implements Listener {
         }
         if (access.contains(playerUUIDString)) {
             // Permission granted. Do whatever you want.
-            SLockUtil.LockData data = SLockUtil.locking.get(playerUUID);
-            SLockUtil.GivePermData giveData = SLockUtil.givingPermission.get(playerUUID);
+            final SLockUtil.LockData data = SLockUtil.locking.get(playerUUID);
+            final SLockUtil.GivePermData giveData = SLockUtil.givingPermission.get(playerUUID);
             if (data != null) {
                 // The user requested private/public modification
                 if (!data.action) {
@@ -257,7 +246,7 @@ public class InteractEvent implements Listener {
         } else {
             if (access.size() == 0) {
                 // Nobody owns this
-                SLockUtil.LockData data = SLockUtil.locking.get(playerUUID);
+                final SLockUtil.LockData data = SLockUtil.locking.get(playerUUID);
                 if (data != null) {
                     if (data.action) {
                         access.add(playerUUIDString);

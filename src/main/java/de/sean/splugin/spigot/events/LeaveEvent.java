@@ -1,7 +1,7 @@
 package de.sean.splugin.spigot.events;
 
 /* SPlugin */
-import de.sean.splugin.App;
+import de.sean.splugin.SPlugin;
 import de.sean.splugin.discord.DiscordUtil;
 import de.sean.splugin.util.SMessages;
 import de.sean.splugin.util.SUtil;
@@ -23,7 +23,7 @@ public class LeaveEvent implements Listener {
         SUtil.removePlayerAFK(event.getPlayer().getUniqueId());
 
         /* Discord */
-        DiscordUtil discord = App.getInstance().getDiscordUtil();
+        final DiscordUtil discord = SPlugin.discord;
         if (discord.leaveMessage) {
             discord.sendMessage(SMessages.getRandomMessage("messages.leave").replace("[player]", event.getPlayer().getName()));
         }

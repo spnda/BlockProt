@@ -1,12 +1,11 @@
 package de.sean.splugin.util;
 
 /* SPlugin */
-import de.sean.splugin.App;
+import de.sean.splugin.SPlugin;
 
 /* Java */
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import org.jetbrains.annotations.NotNull;
 
 /* Spigot */
@@ -30,10 +29,10 @@ public class SMessages {
     }
     
     public static String getRandomMessage(final String messageList) {
-        final List<?> messages = App.getInstance().getConfig().getList(messageList, new ArrayList<>());
+        final List<?> messages = SPlugin.instance.getConfig().getList(messageList, new ArrayList<>());
         if (messages != null && messages.size() > 0) {
             if (messages.size() == 1) return (String) messages.get(0);
-            final int index = new Random().nextInt(Math.max(0, messages.size()));
+            final int index = SUtil.randomInt(0, messages.size());
             return (String) messages.get(index);
         }
         // If no messages we're defined, return a empty string

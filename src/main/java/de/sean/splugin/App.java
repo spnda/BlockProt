@@ -54,8 +54,7 @@ public class App extends JavaPlugin {
         if (config.getBoolean("features.afk"))
             Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new AfkChecker(), 0L, 20L);
 
-        PluginManager pm = Bukkit.getServer().getPluginManager();
-        registerEvents(pm);
+        registerEvents(Bukkit.getServer().getPluginManager());
         registerCommands();
 
         /* Discord */
@@ -103,10 +102,6 @@ public class App extends JavaPlugin {
 
     private void registerCommands() {
         getCommand("lock").setExecutor(new LockExecutor());
-    }
-
-    public File getConfigFile() {
-        return new File(getDataFolder() + File.separator + "config.yml");
     }
 
     public DiscordUtil getDiscordUtil() { return discord; }

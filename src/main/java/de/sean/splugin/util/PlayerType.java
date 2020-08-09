@@ -10,8 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class PlayerType {
-    private static List<PlayerType> playerTypes = new ArrayList<>();
-    private static HashMap<UUID, PlayerType> players = new HashMap<>();
+    private static final List<PlayerType> playerTypes = new ArrayList<>();
+    private static final HashMap<UUID, PlayerType> players = new HashMap<>();
 
     public static final PlayerType DEFAULT = registerPlayerType("DEFAULT", "", ChatColor.WHITE);
 
@@ -59,13 +59,11 @@ public class PlayerType {
     }
 
     public static PlayerType setPlayerTypeForPlayer(@NotNull UUID uuid, @NotNull PlayerType playerType) {
-        if (players == null) players = new HashMap<>();
         players.put(uuid, playerType);
         return playerType;
     }
 
     public static PlayerType getPlayerTypeForPlayer(UUID uuid) {
-        if (players == null) players = new HashMap<>();
         return players.get(uuid);
     }
 

@@ -40,20 +40,8 @@ public class SMessages {
         return "";
     }
 
-    public static void sendGlobalActionBarMessage(final String message) {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            sendActionBarMessage(player, message);
-        }
-    }
-
     public static void sendActionBarMessage(final @NotNull Player player, final String message) {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
-    }
-
-    public static void sendGlobalTitleMessage(final String title, final String subtitle) {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            sendTitleMessage(player, title, subtitle);
-        }
     }
 
     public static void sendTitleMessage(final @NotNull Player player, final String title, final String subtitle) {

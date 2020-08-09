@@ -25,14 +25,6 @@ public class SUtil {
     public static void setLastActivityForPlayer(UUID uuid, long time)   {           playerLastActivity.put(uuid, time); }
     public static long getLastActivityForPlayer(UUID uuid)              { return    playerLastActivity.get(uuid); }
 
-    public static void saveConfigFile(FileConfiguration config) {
-        try {
-            config.save(App.getInstance().getConfigFile());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     @NotNull
     public static String concatArrayRange(String[] arr, int begin, int end) {
         StringBuilder builder = new StringBuilder();
@@ -55,9 +47,5 @@ public class SUtil {
     public static Color randomColor() {
         Color[] colors = {Color.BLACK, Color.BLUE, Color.CYAN, Color.DARK_GRAY, Color.GRAY, Color.LIGHT_GRAY, Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.PINK, Color.RED, Color.WHITE, Color.YELLOW};
         return colors[randomInt(0, colors.length - 1)];
-    }
-
-    public static String removePlayerTypeForString(String name) {
-        return name.split("\\|")[1].trim();
     }
 }

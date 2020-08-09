@@ -1,8 +1,21 @@
 # SPlugin Config
 
+# in features you can enable/disable various features from this plugin.
 features:
   skipNight: true # Enable skipping the night when a certain percentage of players sleep.
   afk: true # Enable AFK displaying when players are inactive for 2 minutes
+
+# If you provide a token, the bot will accept commands for the server.
+# If you provide at least one guild and channel combination, the server will stream all
+# discord activity to the server and vice versa.
+discord:
+  token: null # Your discord bot token
+  channels:
+    # GUILD_ID: CHANNEL_ID
+    # You can have 1 channel per guild.
+    # You can define multiple combinations to stream to multiple channels in multiple guilds.
+  joinMessage: false # Whether or not to send a message to discord when a player joins the server.
+  leaveMessage: false # Whether or not to send a message to discord when a player leaves the server.
 
 messages:
   join:

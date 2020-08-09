@@ -120,6 +120,16 @@ public class InteractEvent implements Listener {
                     List<String> newAccess = handleLock(access, event);
                     blockTile.setString(SLockUtil.LOCK_ATTRIBUTE, newAccess.toString());
 
+                    final SLockUtil.LockData redstoneData = SLockUtil.redstone.get(event.getPlayer().getUniqueId());
+                    if (redstoneData != null) {
+                        if (System.currentTimeMillis() - redstoneData.timeRequested < 120000) {
+                            if (access.contains(event.getPlayer().getUniqueId().toString())) {
+                                blockTile.setBoolean(SLockUtil.REDSTONE_ATTRIBUTE, !blockTile.getBoolean(SLockUtil.REDSTONE_ATTRIBUTE));
+                            }
+                        }
+                        SLockUtil.redstone.remove(event.getPlayer().getUniqueId());
+                    }
+
                     // If we have a double chest we will have to add the NBT Tag to both TileEntities.
                     if (doubleChest != null) {
                         final Location secChest = doubleChest.getLocation();

@@ -6,11 +6,13 @@ import java.util.UUID;
 
 public class SLockUtil {
     public static final String LOCK_ATTRIBUTE = "splugin_lock";
+    public static final String REDSTONE_ATTRIBUTE = "splugin_lock_redstone";
 
     public static final HashMap<UUID, LockData> locking = new HashMap<>();
     public static final HashMap<UUID, GivePermData> givingPermission = new HashMap<>();
     public static final HashMap<UUID, LockData> info = new HashMap<>();
     public static final HashMap<UUID, LockData> removingLocking = new HashMap<>();
+    public static final HashMap<UUID, LockData> redstone = new HashMap<>();
 
     public static void addUserToAddLocking(UUID uuid) {
         if (locking.get(uuid) != null) locking.remove(uuid);
@@ -55,6 +57,10 @@ public class SLockUtil {
 
     public static void removeRemoveLockingForUser(UUID uuid) {
         removingLocking.remove(uuid);
+    }
+
+    public static void addUserToRedstone(UUID uuid) {
+        redstone.put(uuid, new LockData(System.currentTimeMillis(), uuid, false)); // action is irrelevant for redstone.
     }
 
     public static class LockData {

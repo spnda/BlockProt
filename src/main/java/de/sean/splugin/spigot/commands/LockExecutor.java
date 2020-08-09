@@ -41,6 +41,9 @@ public class LockExecutor implements CommandExecutor {
             case "public":
                 SLockUtil.addUserToRemoveLocking(player.getUniqueId());
                 return true;
+            case "redstone":
+                SLockUtil.addUserToRedstone(player.getUniqueId());
+                return true;
             case "info":
                 if (!sender.isOp()) return false;
                 SLockUtil.addUserToInfo(player.getUniqueId());

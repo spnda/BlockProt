@@ -48,6 +48,7 @@ public class SHandler extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(final MessageReceivedEvent event) {
+        if (event.getAuthor().isBot()) return;
         final String[] message = event.getMessage().getContentRaw().split(" ");
         if (event.getChannelType().equals(ChannelType.PRIVATE)) {
             if (message[0].equals("?msg")) {

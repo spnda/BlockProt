@@ -84,6 +84,8 @@ public class InteractEvent implements Listener {
             case POLISHED_BLACKSTONE_STAIRS:
             case POLISHED_BLACKSTONE_BRICK_STAIRS:
                 if (event.getAction() == Action.RIGHT_CLICK_BLOCK
+                        && !player.isSneaking()
+                        && event.getItem() == null
                         && !SPlugin.instance.getConfig().getBoolean("DisableChairSitting")
                         && player.hasPermission("splugin.sit")) {
                     final Block block = event.getClickedBlock();

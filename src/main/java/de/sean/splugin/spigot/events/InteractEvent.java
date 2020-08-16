@@ -35,6 +35,8 @@ import org.bukkit.inventory.ItemStack;
 /* NBT API */
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTTileEntity;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class InteractEvent implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -100,6 +102,7 @@ public class InteractEvent implements Listener {
                     }
                     location.add(.5, .075, .4);
                     final Arrow arrow = (Arrow)location.getWorld().spawnEntity(location, EntityType.ARROW);
+                    arrow.addCustomEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 100000, 100000, false, false), true);
                     arrow.setInvulnerable(true);
                     arrow.addPassenger(player);
                 }

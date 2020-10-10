@@ -102,7 +102,7 @@ public class InteractEvent implements Listener {
                     }
                     location.add(.5, .075, .4);
                     final Arrow arrow = (Arrow)location.getWorld().spawnEntity(location, EntityType.ARROW);
-                    arrow.addCustomEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 100000, 100000, false, false), true);
+                    arrow.addCustomEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10000, 255, false, false), true);
                     arrow.setInvulnerable(true);
                     arrow.addPassenger(player);
                 }
@@ -242,6 +242,7 @@ public class InteractEvent implements Listener {
                     event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Zugriff entfernt."));
                 } else {
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Zugriff bereits gegeben."));
+                    SLockUtil.removeUserFromLocking(playerUUID);
                 }
             } else if (giveData != null) {
                 // The user requested add/remove modification

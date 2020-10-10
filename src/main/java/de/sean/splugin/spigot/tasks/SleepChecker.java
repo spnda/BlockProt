@@ -34,7 +34,7 @@ public class SleepChecker implements Runnable {
         final List<Player> players = world.getPlayers();
         final int amountIgnored = (int) players.stream().filter(SleepChecker::ignorePlayer).count();
         final int amountSleeping = (int) players.stream().filter(LivingEntity::isSleeping).count();
-        final int amountNeeded = Math.max(0, (int)Math.ceil((players.size() - amountIgnored) * (SPlugin.instance.getConfig().getInt("skipNight.percentage") / 100.0) - amountSleeping));
+        final int amountNeeded = Math.max(0, (int)Math.ceil(Math.max(0, players.size() - amountIgnored) * (SPlugin.instance.getConfig().getInt("skipNight.percentage") / 100.0) - amountSleeping));
         if (amountNeeded == 0 && amountSleeping > 0) {
             // More than 50% of players are sleeping
             players.forEach(player -> SMessages.sendActionBarMessage(player, SMessages.getRandomMessage("messages.everyoneSleeping")));

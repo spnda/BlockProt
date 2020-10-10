@@ -7,6 +7,8 @@ import de.sean.splugin.util.SUtil;
 /* Java */
 import java.util.ArrayList;
 import java.util.List;
+
+import net.dv8tion.jda.api.hooks.EventListener;
 import org.jetbrains.annotations.NotNull;
 
 /* Spigot */
@@ -22,11 +24,10 @@ import net.dv8tion.jda.api.events.ReconnectedEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.SubscribeEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.EmbedBuilder;
 
-public class SHandler extends ListenerAdapter {
+public class SHandler extends ListenerAdapter implements EventListener {
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         SPlugin.instance.getLogger().info("Discord has started!");
@@ -37,7 +38,7 @@ public class SHandler extends ListenerAdapter {
         // Maybe this will be useful sometime...
     }
 
-    @SubscribeEvent
+    @Override
     public void onGenericEvent(final @NotNull GenericEvent event) {
         // This is purely a thing for myself. Whenever the IP changes my DNS record gets changed.
         // Can be ignored by anyone else.

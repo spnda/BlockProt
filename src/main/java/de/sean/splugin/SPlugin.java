@@ -40,7 +40,7 @@ public class SPlugin extends JavaPlugin {
         PlayerType.loadFromConfig(config);
 
         if (config.getBoolean("features.skipNight"))
-            Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new SleepChecker(), 0L, 20L);
+            Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new SleepChecker(), 0L, 40L);
         if (config.getBoolean("features.afk"))
             Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new AfkChecker(), 0L, 20L);
 

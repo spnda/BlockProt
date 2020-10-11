@@ -19,9 +19,11 @@ buildscript {
     }
 }
 
-
 plugins {
     id 'com.github.johnrengelman.shadow' version '5.2.0'
+
+    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+
     // Apply the java plugin to add support for Java
     id 'java'
 
@@ -85,6 +87,11 @@ application {
 
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
+apply plugin: 'kotlin'
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
 
 // Shadow
 task relocateShadowJar(type: ConfigureShadowRelocation) {

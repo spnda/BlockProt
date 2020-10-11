@@ -6,6 +6,7 @@ import de.sean.splugin.spigot.events.*
 import de.sean.splugin.spigot.tasks.AfkChecker
 import de.sean.splugin.spigot.tasks.SleepChecker
 import de.sean.splugin.util.PlayerType
+import de.sean.splugin.util.SUtil
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.FileConfiguration
 import java.io.BufferedReader
@@ -26,6 +27,11 @@ class SPlugin : org.bukkit.plugin.java.JavaPlugin() {
         if (config.getBoolean("features.afk")) Bukkit.getServer().scheduler.scheduleSyncRepeatingTask(this, AfkChecker(), 0L, 20L)
         registerEvents(Bukkit.getServer().pluginManager)
         registerCommands()
+
+        for (player in Bukkit.getOnlinePlayers()) {
+            SUtil.afkPlayers[player.uniqueId] = false;
+            SUtil.playerLastActivity[player.uniqueId] = System.currentTimeMillis();
+        }
 
         /* Discord */
         discord = DiscordUtil(config)

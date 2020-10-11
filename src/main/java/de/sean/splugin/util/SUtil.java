@@ -4,6 +4,13 @@ package de.sean.splugin.util;
 import java.awt.Color;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 
 public class SUtil {
@@ -51,5 +58,36 @@ public class SUtil {
     public static Color randomColor() {
         final Color[] colors = {Color.BLACK, Color.BLUE, Color.CYAN, Color.DARK_GRAY, Color.GRAY, Color.LIGHT_GRAY, Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.PINK, Color.RED, Color.WHITE, Color.YELLOW};
         return colors[randomInt(0, colors.length)];
+    }
+
+    public static ItemStack getItemStack(int num, Material material, String name) {
+        return getItemStack(num, material, name, Collections.emptyList());
+    }
+
+    public static ItemStack getItemStack(int num, Material material, String name, List<String> lore) {
+        ItemStack stack = new ItemStack(material, num);
+        ItemMeta meta = stack.getItemMeta();
+        meta.setDisplayName(name);
+        meta.setLore(lore);
+        stack.setItemMeta(meta);
+        return stack;
+    }
+
+    public static ItemStack getPlayerSkull(OfflinePlayer player) {
+        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
+        SkullMeta meta = (SkullMeta) skull.getItemMeta();
+        meta.setOwningPlayer(player);
+        meta.setDisplayName(player.getName());
+        skull.setItemMeta(meta);
+        return skull;
+    }
+
+    public static ItemStack getPlayerSkull(Player player) {
+        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
+        SkullMeta meta = (SkullMeta) skull.getItemMeta();
+        meta.setOwningPlayer(player);
+        meta.setDisplayName(player.getDisplayName());
+        skull.setItemMeta(meta);
+        return skull;
     }
 }

@@ -2,7 +2,6 @@ package de.sean.splugin.spigot.events;
 
 /* SPlugin */
 import de.sean.splugin.util.SLockUtil;
-import de.sean.splugin.util.SUtil;
 
 /* Spigot */
 import org.bukkit.Location;

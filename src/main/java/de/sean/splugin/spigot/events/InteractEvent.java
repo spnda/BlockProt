@@ -2,24 +2,22 @@ package de.sean.splugin.spigot.events;
 
 /* SPlugin */
 import de.sean.splugin.SPlugin;
+import de.sean.splugin.spigot.inventories.BlockLockInventory;
+import de.sean.splugin.spigot.inventories.ChestLockInventory;
 import de.sean.splugin.util.SLockUtil;
 import de.sean.splugin.util.SMessages;
 import de.sean.splugin.util.SUtil;
 
 /* Java */
 import java.util.List;
-import java.util.UUID;
 
 /* Spigot */
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
-import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -28,7 +26,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -108,43 +105,29 @@ public class InteractEvent implements Listener {
                 }
                 break;
             case CHEST:
-                if (event.getAction() == Action.LEFT_CLICK_BLOCK && player.hasPermission("spigot.lock")) {
-                    // The user left clicked to edit the chest
-                    DoubleChest doubleChest = null;
+                if (event.getAction() == Action.RIGHT_CLICK_BLOCK && player.isSneaking() && player.hasPermission("spigot.lock")) {
+                    // The user shift-left clicked the chest and is wanting to open the chest edit menu.
                     final BlockState chestState = event.getClickedBlock().getState();
-                    if (chestState instanceof Chest) {
-                        final Inventory inventory = ((Chest) chestState).getInventory();
-                        if (inventory instanceof DoubleChestInventory) {
-                            doubleChest = (DoubleChest) inventory.getHolder();
-                        }
-                    }
-
                     final NBTCompound blockTile = new NBTTileEntity(chestState).getPersistentDataContainer();
-                    final List<String> access = SUtil.parseStringList(blockTile.getString(SLockUtil.LOCK_ATTRIBUTE));
-
-                    List<String> newAccess = handleLock(access, event);
-                    blockTile.setString(SLockUtil.LOCK_ATTRIBUTE, newAccess.toString());
-
-                    final SLockUtil.LockData redstoneData = SLockUtil.redstone.get(event.getPlayer().getUniqueId());
-                    if (redstoneData != null) {
-                        if (System.currentTimeMillis() - redstoneData.timeRequested < 120000) {
-                            if (access.contains(event.getPlayer().getUniqueId().toString())) {
-                                blockTile.setBoolean(SLockUtil.REDSTONE_ATTRIBUTE, !blockTile.getBoolean(SLockUtil.REDSTONE_ATTRIBUTE));
-                            }
+                    final String owner = blockTile.getString(SLockUtil.OWNER_ATTRIBUTE);
+                    final String playerUuid = player.getUniqueId().toString();
+                    // Don't open the menu if the player is not the owner of this chest.
+                    if ((owner == null || owner.isEmpty()) || owner.equals(playerUuid)) {
+                        event.setCancelled(true);
+                        SLockUtil.lock.put(playerUuid, chestState.getBlock());
+                        final boolean redstone = blockTile.getBoolean(SLockUtil.REDSTONE_ATTRIBUTE);
+                        Inventory inv = ChestLockInventory.inventory;
+                        if (owner != null && owner.equals(playerUuid)) {
+                            inv.setItem(0, SUtil.getItemStack(1, Material.CHEST, "Unlock"));
+                            inv.setItem(1, SUtil.getItemStack(1, Material.REDSTONE, redstone ? "Activate Redstone" : "Deactivate Redstone"));
+                            inv.setItem(2, SUtil.getItemStack(1, Material.PLAYER_HEAD, "Add Friends"));
+                            inv.setItem(3, SUtil.getItemStack(1, Material.ZOMBIE_HEAD, "Remove Friends"));
+                        } else {
+                            inv.setItem(0, SUtil.getItemStack(1, Material.CHEST, "Lock"));
+                            for (int i = 1; i < 4; i++) inv.setItem(i, null);
                         }
-                        SLockUtil.redstone.remove(event.getPlayer().getUniqueId());
-                    }
-
-                    // If we have a double chest we will have to add the NBT Tag to both TileEntities.
-                    if (doubleChest != null) {
-                        final Location secChest = doubleChest.getLocation();
-                        // If we are targeting the further away chest block, get the closer one
-                        // (Closer/Further away from 0, 0, 0)
-                        if (event.getClickedBlock().getLocation().getX() > secChest.getX()) secChest.subtract(.5, 0, 0);
-                        else if (event.getClickedBlock().getLocation().getZ() > secChest.getZ()) secChest.subtract(0, 0, .5);
-                        else secChest.add(.5, 0, .5);
-                        final NBTCompound secTile = new NBTTileEntity(player.getWorld().getBlockAt(secChest).getState()).getPersistentDataContainer();
-                        secTile.setString(SLockUtil.LOCK_ATTRIBUTE, access.toString());
+                        inv.setItem(8, SUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, "Back"));
+                        player.openInventory(inv);
                     }
                 } else {
                     // The user right clicked and is trying to access the container
@@ -153,12 +136,10 @@ public class InteractEvent implements Listener {
                         String nbt = blockTileEntity.getPersistentDataContainer().getString(SLockUtil.LOCK_ATTRIBUTE);
                         if (nbt == null) break;
                         List<String> access = SUtil.parseStringList(nbt);
-                        if (access.isEmpty()) {
-                            event.setCancelled(false);
-                        } else {
+                        if (!access.isEmpty()) {
                             if (!access.contains(player.getUniqueId().toString())) {
                                 event.setCancelled(true);
-                                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Kein Zugriff."));
+                                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("No permission."));
                             }
                         }
                     } catch (Exception e) {
@@ -170,14 +151,30 @@ public class InteractEvent implements Listener {
             case HOPPER:
             case BARREL:
             case SHULKER_BOX:
-                if (event.getAction() == Action.LEFT_CLICK_BLOCK && player.hasPermission("spigot.lock")) {
-                    final NBTCompound blockTile = new NBTTileEntity(event.getClickedBlock().getState()).getPersistentDataContainer();
-
-                    final String nbt = blockTile.getString(SLockUtil.LOCK_ATTRIBUTE);
-                    final List<String> access = SUtil.parseStringList(nbt);
-
-                    handleLock(access, event);
-                    blockTile.setString(SLockUtil.LOCK_ATTRIBUTE, access.toString());
+                if (event.getAction() == Action.RIGHT_CLICK_BLOCK && player.isSneaking() && player.hasPermission("spigot.lock")) {
+                    // The user shift-left clicked the chest and is wanting to open the chest edit menu.
+                    final BlockState blockState = event.getClickedBlock().getState();
+                    final NBTCompound blockTile = new NBTTileEntity(blockState).getPersistentDataContainer();
+                    final String owner = blockTile.getString(SLockUtil.OWNER_ATTRIBUTE);
+                    final String playerUuid = player.getUniqueId().toString();
+                    // Don't open the menu if the player is not the owner of this chest.
+                    if ((owner == null || owner.isEmpty()) || owner.equals(playerUuid)) {
+                        event.setCancelled(true);
+                        SLockUtil.lock.put(playerUuid, blockState.getBlock());
+                        final boolean redstone = blockTile.getBoolean(SLockUtil.REDSTONE_ATTRIBUTE);
+                        Inventory inv = BlockLockInventory.inventory;
+                        if (owner != null && owner.equals(playerUuid)) {
+                            inv.setItem(0, SUtil.getItemStack(1, blockState.getType(), "Unlock"));
+                            inv.setItem(1, SUtil.getItemStack(1, Material.REDSTONE, redstone ? "Activate Redstone" : "Deactivate Redstone"));
+                            inv.setItem(2, SUtil.getItemStack(1, Material.PLAYER_HEAD, "Add Friends"));
+                            inv.setItem(3, SUtil.getItemStack(1, Material.ZOMBIE_HEAD, "Remove Friends"));
+                        } else {
+                            inv.setItem(0, SUtil.getItemStack(1, blockState.getType(), "Lock"));
+                            for (int i = 1; i < 4; i++) inv.setItem(i, null);
+                        }
+                        inv.setItem(8, SUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, "Back"));
+                        player.openInventory(inv);
+                    }
                 } else {
                     // The user right clicked and is trying to access the container
                     final String nbt = new NBTTileEntity(event.getClickedBlock().getState()).getString(SLockUtil.LOCK_ATTRIBUTE);
@@ -188,7 +185,7 @@ public class InteractEvent implements Listener {
                     } else {
                         if (!access.contains(player.getUniqueId().toString())) {
                             event.setCancelled(true);
-                            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Kein Zugriff."));
+                            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("No permission."));
                         }
                     }
                 }
@@ -209,72 +206,5 @@ public class InteractEvent implements Listener {
                 }
                 break;
         }
-    }
-
-    private List<String> handleLock(List<String> access, PlayerInteractEvent event) {
-        final Player player = event.getPlayer();
-        final UUID playerUUID = player.getUniqueId();
-        final String playerUUIDString = playerUUID.toString();
-
-        final SLockUtil.LockData infoData = SLockUtil.info.get(playerUUID);
-        if (infoData != null) {
-            if (System.currentTimeMillis() - infoData.timeRequested <= 120000) {
-                player.sendMessage(ChatColor.GREEN + "Lock Info: \n" + ChatColor.RESET + access.toString());
-            }
-            SLockUtil.removeUserFromInfo(playerUUID);
-        }
-        final SLockUtil.LockData removeLockingdata = SLockUtil.removingLocking.get(playerUUID);
-        if (removeLockingdata != null) {
-            if (System.currentTimeMillis() - removeLockingdata.timeRequested < 120000) {
-                access.clear();
-            }
-            SLockUtil.removeRemoveLockingForUser(playerUUID);
-        }
-        if (access.contains(playerUUIDString)) {
-            // Permission granted. Do whatever you want.
-            final SLockUtil.LockData data = SLockUtil.locking.get(playerUUID);
-            final SLockUtil.GivePermData giveData = SLockUtil.givingPermission.get(playerUUID);
-            if (data != null) {
-                // The user requested private/public modification
-                if (!data.action) {
-                    access.remove(playerUUIDString);
-                    SLockUtil.removeUserFromLocking(playerUUID);
-                    event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Zugriff entfernt."));
-                } else {
-                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Zugriff bereits gegeben."));
-                    SLockUtil.removeUserFromLocking(playerUUID);
-                }
-            } else if (giveData != null) {
-                // The user requested add/remove modification
-                if (access.contains(giveData.uuidToGive.toString()) && giveData.action) {
-                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Zugriff ist dem Spieler bereits gegeben."));
-                } else {
-                    if (giveData.action) {
-                        access.add(giveData.uuidToGive.toString());
-                        event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Neuem Spieler Zugriff gegeben."));
-                    } else {
-                        access.remove(giveData.uuidToGive.toString());
-                        event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Spieler Zugriff entfernt."));
-                    }
-                    SLockUtil.removeUserFromGiving(playerUUID);
-                }
-            }
-        } else {
-            if (access.size() == 0) {
-                // Nobody owns this
-                final SLockUtil.LockData data = SLockUtil.locking.get(playerUUID);
-                if (data != null) {
-                    if (data.action) {
-                        access.add(playerUUIDString);
-                        SLockUtil.removeUserFromLocking(playerUUID);
-                        event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Zugriff gegeben."));
-                    }
-                }
-            } else {
-                event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("Kein Zugriff."));
-            }
-        }
-
-        return access;
     }
 }

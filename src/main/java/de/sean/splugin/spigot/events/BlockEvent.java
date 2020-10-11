@@ -78,6 +78,7 @@ public class BlockEvent implements Listener {
                     if (secNBT.contains(uuid)) {
                         // The player placing the new chest has access to the to other chest.
                         final NBTCompound newChestNBT = new NBTTileEntity(block.getState()).getPersistentDataContainer();
+                        newChestNBT.setString(SLockUtil.OWNER_ATTRIBUTE, secNBT.toString());
                         newChestNBT.setString(SLockUtil.LOCK_ATTRIBUTE, secNBT.toString());
                     } else {
                         // The player is trying to place a chest adjacent to a chest locked by another player.
@@ -94,7 +95,7 @@ public class BlockEvent implements Listener {
                 // If no setting has been set, the config will return false, as it is the default value for a primitive boolean.
                 // As we want the automatic locking to be default, we will instead have a setting to not lock a block when placed.
                 if (!config.getBoolean("players." + event.getPlayer().getUniqueId() + ".lockOnPlace")) {
-                    new NBTTileEntity(block.getState()).getPersistentDataContainer().setString(SLockUtil.LOCK_ATTRIBUTE, new ArrayList<String>() {{ add(uuid); }}.toString());
+                    new NBTTileEntity(block.getState()).getPersistentDataContainer().setString(SLockUtil.OWNER_ATTRIBUTE, uuid);
                 }
                 break;
         }

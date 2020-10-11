@@ -62,6 +62,7 @@ public class SPlugin extends JavaPlugin {
         pm.registerEvents(new DismountEvent(), this);       // Handles every entity dismount
         pm.registerEvents(new ExplodeEvent(), this);        // Handles every explosion in the world
         pm.registerEvents(new InteractEvent(), this);       // Handles every block interaction by a player
+        pm.registerEvents(new InventoryEvent(), this);      // Handles every inventory interaction
         pm.registerEvents(new JoinEvent(), this);           // Handles every user join event
         pm.registerEvents(new LeaveEvent(), this);          // Handles every user leave event
         pm.registerEvents(new MessageEvent(), this);        // Handles every chat message event

@@ -2,7 +2,6 @@ package de.sean.splugin.spigot.events;
 
 import de.sean.splugin.SPlugin;
 import de.sean.splugin.spigot.inventories.BlockLockInventory;
-import de.sean.splugin.spigot.inventories.ChestLockInventory;
 import de.sean.splugin.util.SLockUtil;
 import de.sean.splugin.util.SMessages;
 import de.sean.splugin.util.SUtil;
@@ -110,15 +109,16 @@ public class InteractEvent implements Listener {
                         event.setCancelled(true);
                         SLockUtil.lock.put(playerUuid, chestState.getBlock());
                         final boolean redstone = blockTile.getBoolean(SLockUtil.REDSTONE_ATTRIBUTE);
-                        Inventory inv = ChestLockInventory.inventory;
+                        Inventory inv = BlockLockInventory.inventory;
                         if (owner != null && owner.equals(playerUuid)) {
                             inv.setItem(0, SUtil.getItemStack(1, Material.CHEST, "Unlock"));
                             inv.setItem(1, SUtil.getItemStack(1, Material.REDSTONE, redstone ? "Activate Redstone" : "Deactivate Redstone"));
                             inv.setItem(2, SUtil.getItemStack(1, Material.PLAYER_HEAD, "Add Friends"));
                             inv.setItem(3, SUtil.getItemStack(1, Material.ZOMBIE_HEAD, "Remove Friends"));
+                            if (player.isOp()) inv.setItem(4, SUtil.getItemStack(1, Material.OAK_SIGN, "Info"));
                         } else {
                             inv.setItem(0, SUtil.getItemStack(1, Material.CHEST, "Lock"));
-                            for (int i = 1; i < 4; i++) inv.setItem(i, null);
+                            for (int i = 1; i < 5; i++) inv.setItem(i, null);
                         }
                         inv.setItem(8, SUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, "Back"));
                         player.openInventory(inv);
@@ -162,9 +162,10 @@ public class InteractEvent implements Listener {
                             inv.setItem(1, SUtil.getItemStack(1, Material.REDSTONE, redstone ? "Activate Redstone" : "Deactivate Redstone"));
                             inv.setItem(2, SUtil.getItemStack(1, Material.PLAYER_HEAD, "Add Friends"));
                             inv.setItem(3, SUtil.getItemStack(1, Material.ZOMBIE_HEAD, "Remove Friends"));
+                            if (player.isOp()) inv.setItem(4, SUtil.getItemStack(1, Material.OAK_SIGN, "Info"));
                         } else {
                             inv.setItem(0, SUtil.getItemStack(1, blockState.getType(), "Lock"));
-                            for (int i = 1; i < 4; i++) inv.setItem(i, null);
+                            for (int i = 1; i < 5; i++) inv.setItem(i, null);
                         }
                         inv.setItem(8, SUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, "Back"));
                         player.openInventory(inv);

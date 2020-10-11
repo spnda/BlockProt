@@ -41,7 +41,6 @@ public class InventoryEvent implements Listener {
         ItemStack item = event.getCurrentItem();
         if (item == null) return;
         switch (event.getView().getTitle()) {
-            case ChestLockInventory.INVENTORY_NAME:
             case BlockLockInventory.INVENTORY_NAME:
                 Inventory inv;
                 Collection<? extends Player> playersCol = Bukkit.getOnlinePlayers();
@@ -105,12 +104,14 @@ public class InventoryEvent implements Listener {
                         if (block == null) return;
                         blockTile = new NBTTileEntity(block.getState()).getPersistentDataContainer();
                         owner = blockTile.getString(SLockUtil.OWNER_ATTRIBUTE);
-                        inv.setItem(0, SUtil.getPlayerSkull(Bukkit.getPlayer(UUID.fromString(owner))));
                         List<String> access = SUtil.parseStringList(blockTile.getString(SLockUtil.LOCK_ATTRIBUTE));
                         for (int i = 0; i < access.size() && i < 9; i++) {
                             inv.setItem(9 + i, SUtil.getPlayerSkull(Bukkit.getOfflinePlayer(UUID.fromString(access.get(i)))));
                         }
+                        inv.setItem(0, SUtil.getPlayerSkull(Bukkit.getPlayer(UUID.fromString(owner))));
+                        inv.setItem(8, SUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, "Back"));
                         player.openInventory(inv);
+                        break;
                     case BLACK_STAINED_GLASS_PANE:
                         player.closeInventory();
                         break;
@@ -119,7 +120,17 @@ public class InventoryEvent implements Listener {
             case FriendAddInventory.INVENTORY_NAME:
                 if (item.getType().equals(Material.BLACK_STAINED_GLASS_PANE)) {
                     player.closeInventory();
-                    player.openInventory(ChestLockInventory.inventory);
+                    block = SLockUtil.lock.get(player.getUniqueId().toString());
+                    blockTile = new NBTTileEntity(block.getState()).getPersistentDataContainer();
+                    final boolean redstone = blockTile.getBoolean(SLockUtil.REDSTONE_ATTRIBUTE);
+                    inv = BlockLockInventory.inventory;
+                    inv.setItem(0, SUtil.getItemStack(1, block.getState().getType(), "Unlock"));
+                    inv.setItem(1, SUtil.getItemStack(1, Material.REDSTONE, redstone ? "Activate Redstone" : "Deactivate Redstone"));
+                    inv.setItem(2, SUtil.getItemStack(1, Material.PLAYER_HEAD, "Add Friends"));
+                    inv.setItem(3, SUtil.getItemStack(1, Material.ZOMBIE_HEAD, "Remove Friends"));
+                    if (player.isOp()) inv.setItem(4, SUtil.getItemStack(1, Material.OAK_SIGN, "Info"));
+                    inv.setItem(8, SUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, "Back"));
+                    player.openInventory(inv);
                     break;
                 }
                 addFriend(player, item);
@@ -128,11 +139,40 @@ public class InventoryEvent implements Listener {
             case FriendRemoveInventory.INVENTORY_NAME:
                 if (item.getType().equals(Material.BLACK_STAINED_GLASS_PANE)) {
                     player.closeInventory();
-                    player.openInventory(ChestLockInventory.inventory);
+                    block = SLockUtil.lock.get(player.getUniqueId().toString());
+                    blockTile = new NBTTileEntity(block.getState()).getPersistentDataContainer();
+                    final boolean redstone = blockTile.getBoolean(SLockUtil.REDSTONE_ATTRIBUTE);
+                    inv = BlockLockInventory.inventory;
+                    inv.setItem(0, SUtil.getItemStack(1, block.getState().getType(), "Unlock"));
+                    inv.setItem(1, SUtil.getItemStack(1, Material.REDSTONE, redstone ? "Activate Redstone" : "Deactivate Redstone"));
+                    inv.setItem(2, SUtil.getItemStack(1, Material.PLAYER_HEAD, "Add Friends"));
+                    inv.setItem(3, SUtil.getItemStack(1, Material.ZOMBIE_HEAD, "Remove Friends"));
+                    if (player.isOp()) inv.setItem(4, SUtil.getItemStack(1, Material.OAK_SIGN, "Info"));
+                    inv.setItem(8, SUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, "Back"));
+                    player.openInventory(inv);
                     break;
                 }
                 removeFriend(player, item);
                 event.setCancelled(true);
+                break;
+            case BlockInfoInventory.INVENTORY_NAME:
+                if (item.getType().equals(Material.BLACK_STAINED_GLASS_PANE)) {
+                    player.closeInventory();
+                    block = SLockUtil.lock.get(player.getUniqueId().toString());
+                    blockTile = new NBTTileEntity(block.getState()).getPersistentDataContainer();
+                    final boolean redstone = blockTile.getBoolean(SLockUtil.REDSTONE_ATTRIBUTE);
+                    inv = BlockLockInventory.inventory;
+                    inv.setItem(0, SUtil.getItemStack(1, block.getState().getType(), "Unlock"));
+                    inv.setItem(1, SUtil.getItemStack(1, Material.REDSTONE, redstone ? "Activate Redstone" : "Deactivate Redstone"));
+                    inv.setItem(2, SUtil.getItemStack(1, Material.PLAYER_HEAD, "Add Friends"));
+                    inv.setItem(3, SUtil.getItemStack(1, Material.ZOMBIE_HEAD, "Remove Friends"));
+                    if (player.isOp()) inv.setItem(4, SUtil.getItemStack(1, Material.OAK_SIGN, "Info"));
+                    inv.setItem(8, SUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, "Back"));
+                    player.openInventory(inv);
+                    break;
+                }
+                event.setCancelled(true);
+                break;
         }
     }
 

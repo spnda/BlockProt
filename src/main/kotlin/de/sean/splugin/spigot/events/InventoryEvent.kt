@@ -47,7 +47,7 @@ class InventoryEvent : Listener {
                         lockBlock(player)
                         event.isCancelled = true
                     }
-                    Material.REDSTONE -> {
+                    Material.REDSTONE, Material.GUNPOWDER -> {
                         lockRedstoneForBlock(player)
                         event.isCancelled = true
                     }

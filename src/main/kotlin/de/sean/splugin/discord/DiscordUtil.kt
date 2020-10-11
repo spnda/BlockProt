@@ -29,7 +29,7 @@ class DiscordUtil(config: FileConfiguration) {
         leaveMessage = config.getBoolean("discord.leaveMessage")
         // Only initialize discord stuff if a guild, channel and token are present.
         if (token != null) {
-            val builder = JDABuilder(token)
+            val builder = JDABuilder.createDefault(token)
             try {
                 builder.setActivity(Activity.playing("Minecraft"))
                 jda = builder.build()

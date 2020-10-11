@@ -121,7 +121,7 @@ class InventoryEvent : Listener {
                     val redstone: Boolean = blockTile.getBoolean(SLockUtil.REDSTONE_ATTRIBUTE)
                     val inv = BlockLockInventory.inventory
                     inv.setItem(0, getItemStack(1, block.state.type, "Unlock"))
-                    inv.setItem(1, getItemStack(1, Material.REDSTONE, if (redstone) "Activate Redstone" else "Deactivate Redstone"))
+                    inv.setItem(1, getItemStack(1, if (redstone) Material.GUNPOWDER else Material.REDSTONE, if (redstone) "Activate Redstone" else "Deactivate Redstone"))
                     inv.setItem(2, getItemStack(1, Material.PLAYER_HEAD, "Add Friends"))
                     inv.setItem(3, getItemStack(1, Material.ZOMBIE_HEAD, "Remove Friends"))
                     if (player.isOp) inv.setItem(4, getItemStack(1, Material.OAK_SIGN, "Info"))
@@ -139,7 +139,7 @@ class InventoryEvent : Listener {
                     val redstone: Boolean = blockTile.getBoolean(SLockUtil.REDSTONE_ATTRIBUTE)
                     val inv = BlockLockInventory.inventory
                     inv.setItem(0, getItemStack(1, block.state.type, "Unlock"))
-                    inv.setItem(1, getItemStack(1, Material.REDSTONE, if (redstone) "Activate Redstone" else "Deactivate Redstone"))
+                    inv.setItem(1, getItemStack(1, if (redstone) Material.GUNPOWDER else Material.REDSTONE, if (redstone) "Activate Redstone" else "Deactivate Redstone"))
                     inv.setItem(2, getItemStack(1, Material.PLAYER_HEAD, "Add Friends"))
                     inv.setItem(3, getItemStack(1, Material.ZOMBIE_HEAD, "Remove Friends"))
                     if (player.isOp) inv.setItem(4, getItemStack(1, Material.OAK_SIGN, "Info"))
@@ -157,7 +157,7 @@ class InventoryEvent : Listener {
                     val redstone: Boolean = blockTile.getBoolean(SLockUtil.REDSTONE_ATTRIBUTE)
                     val inv = BlockLockInventory.inventory
                     inv.setItem(0, getItemStack(1, block.state.type, "Unlock"))
-                    inv.setItem(1, getItemStack(1, Material.REDSTONE, if (redstone) "Activate Redstone" else "Deactivate Redstone"))
+                    inv.setItem(1, getItemStack(1, if (redstone) Material.GUNPOWDER else Material.REDSTONE, if (redstone) "Activate Redstone" else "Deactivate Redstone"))
                     inv.setItem(2, getItemStack(1, Material.PLAYER_HEAD, "Add Friends"))
                     inv.setItem(3, getItemStack(1, Material.ZOMBIE_HEAD, "Remove Friends"))
                     if (player.isOp) inv.setItem(4, getItemStack(1, Material.OAK_SIGN, "Info"))

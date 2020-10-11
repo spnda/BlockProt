@@ -64,7 +64,7 @@ class InteractEvent : Listener {
                     val inv: Inventory = BlockLockInventory.inventory
                     if (owner != null && (owner == playerUuid)) {
                         inv.setItem(0, getItemStack(1, Material.CHEST, "Unlock"))
-                        inv.setItem(1, getItemStack(1, Material.REDSTONE, if (redstone) "Activate Redstone" else "Deactivate Redstone"))
+                        inv.setItem(1, getItemStack(1, if (redstone) Material.GUNPOWDER else Material.REDSTONE, if (redstone) "Activate Redstone" else "Deactivate Redstone"))
                         inv.setItem(2, getItemStack(1, Material.PLAYER_HEAD, "Add Friends"))
                         inv.setItem(3, getItemStack(1, Material.ZOMBIE_HEAD, "Remove Friends"))
                         if (player.isOp) {
@@ -111,7 +111,7 @@ class InteractEvent : Listener {
                     val inv: Inventory = BlockLockInventory.inventory
                     if (owner != null && (owner == playerUuid)) {
                         inv.setItem(0, getItemStack(1, blockState.type, "Unlock"))
-                        inv.setItem(1, getItemStack(1, Material.REDSTONE, if (redstone) "Activate Redstone" else "Deactivate Redstone"))
+                        inv.setItem(1, getItemStack(1, if (redstone) Material.GUNPOWDER else Material.REDSTONE, if (redstone) "Activate Redstone" else "Deactivate Redstone"))
                         inv.setItem(2, getItemStack(1, Material.PLAYER_HEAD, "Add Friends"))
                         inv.setItem(3, getItemStack(1, Material.ZOMBIE_HEAD, "Remove Friends"))
                         if (player.isOp) {

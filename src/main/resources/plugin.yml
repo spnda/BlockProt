@@ -5,20 +5,8 @@ api-version: 1.13
 dependencies:
   - NBTAPI
 permissions:
-  splugin.votestart:
-    description: Erlaubt einen Spieler eine globale Wahl zu starten.
+  splugin.lock:
+    description: Allows a player to lock a chest/hopper ...
 
-  splugin.vote:
-    description: Erlaubt einen Spieler an einer Wahl teil zu nehmen.
-
-commands:
-  lock:
-    description: Chest/Ofen/... für andere Nutzer sperren
-    usage: /lock <add/remove/private/public>
-
-  wahl:
-    description: Für einen Spieler wählen
-    usage: /wahl <Spielernamen>
-
-  wahlstart:
-    description: Eine Wahl starten
+  splugin.sit:
+    description: Allows a player to sit on stairs ...

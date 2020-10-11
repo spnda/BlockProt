@@ -50,7 +50,7 @@ class InteractEvent : Listener {
                 arrow.isInvulnerable = true
                 arrow.addPassenger(player)
             }
-            Material.CHEST -> if ((event.action == Action.RIGHT_CLICK_BLOCK) && player.isSneaking && player.hasPermission("spigot.lock")) {
+            Material.CHEST -> if ((event.action == Action.RIGHT_CLICK_BLOCK) && player.isSneaking && player.hasPermission("splugin.lock")) {
                 // The user shift-left clicked the chest and is wanting to open the chest edit menu.
                 val chestState = event.clickedBlock!!.state
                 val blockTile = NBTTileEntity(chestState).persistentDataContainer
@@ -67,7 +67,9 @@ class InteractEvent : Listener {
                         inv.setItem(1, getItemStack(1, Material.REDSTONE, if (redstone) "Activate Redstone" else "Deactivate Redstone"))
                         inv.setItem(2, getItemStack(1, Material.PLAYER_HEAD, "Add Friends"))
                         inv.setItem(3, getItemStack(1, Material.ZOMBIE_HEAD, "Remove Friends"))
-                        if (player.isOp) inv.setItem(4, getItemStack(1, Material.OAK_SIGN, "Info"))
+                        if (player.isOp) {
+                            inv.setItem(4, getItemStack(1, Material.OAK_SIGN, "Info"))
+                        }
                     } else {
                         inv.setItem(0, getItemStack(1, Material.CHEST, "Lock"))
                         var i = 1
@@ -95,7 +97,7 @@ class InteractEvent : Listener {
                     SPlugin.instance.logger.severe("Tile NBT could not be read. $e")
                 }
             }
-            Material.FURNACE, Material.HOPPER, Material.BARREL, Material.SHULKER_BOX -> if ((event.action == Action.RIGHT_CLICK_BLOCK) && player.isSneaking && player.hasPermission("spigot.lock")) {
+            Material.FURNACE, Material.HOPPER, Material.BARREL, Material.SHULKER_BOX -> if ((event.action == Action.RIGHT_CLICK_BLOCK) && player.isSneaking && player.hasPermission("splugin.lock")) {
                 // The user shift-left clicked the chest and is wanting to open the chest edit menu.
                 val blockState = event.clickedBlock!!.state
                 val blockTile = NBTTileEntity(blockState).persistentDataContainer
@@ -112,7 +114,9 @@ class InteractEvent : Listener {
                         inv.setItem(1, getItemStack(1, Material.REDSTONE, if (redstone) "Activate Redstone" else "Deactivate Redstone"))
                         inv.setItem(2, getItemStack(1, Material.PLAYER_HEAD, "Add Friends"))
                         inv.setItem(3, getItemStack(1, Material.ZOMBIE_HEAD, "Remove Friends"))
-                        if (player.isOp) inv.setItem(4, getItemStack(1, Material.OAK_SIGN, "Info"))
+                        if (player.isOp) {
+                            inv.setItem(4, getItemStack(1, Material.OAK_SIGN, "Info"))
+                        }
                     } else {
                         inv.setItem(0, getItemStack(1, blockState.type, "Lock"))
                         var i = 1

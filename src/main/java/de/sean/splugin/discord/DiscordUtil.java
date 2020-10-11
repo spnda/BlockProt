@@ -1,19 +1,13 @@
 package de.sean.splugin.discord;
 
-/* SPlugin */
 import de.sean.splugin.SPlugin;
-
-/* Spigot */
-import org.bukkit.configuration.file.FileConfiguration;
-
-/* Discord */
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.bukkit.configuration.file.FileConfiguration;
 
-/* Java */
 import javax.security.auth.login.LoginException;
 import java.util.HashMap;
 import java.util.Map;

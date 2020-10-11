@@ -1,15 +1,10 @@
 package de.sean.splugin.spigot.events;
 
-/* SPlugin */
 import de.sean.splugin.SPlugin;
 import de.sean.splugin.util.SLockUtil;
 import de.sean.splugin.util.SUtil;
-
-/* Java */
-import java.util.ArrayList;
-import java.util.List;
-
-/* Spigot */
+import de.tr7zw.nbtapi.NBTCompound;
+import de.tr7zw.nbtapi.NBTTileEntity;
 import org.bukkit.Location;
 import org.bukkit.block.*;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,9 +14,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-/* NBT API */
-import de.tr7zw.nbtapi.NBTCompound;
-import de.tr7zw.nbtapi.NBTTileEntity;
+import java.util.List;
 
 public class BlockEvent implements Listener {
     @EventHandler

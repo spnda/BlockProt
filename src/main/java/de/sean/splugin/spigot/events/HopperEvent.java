@@ -1,17 +1,12 @@
 package de.sean.splugin.spigot.events;
 
-/* SPlugin */
 import de.sean.splugin.util.SLockUtil;
-
-/* Spigot */
+import de.tr7zw.nbtapi.NBTTileEntity;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryType;
-
-/* NBT-API */
-import de.tr7zw.nbtapi.NBTTileEntity;
 
 public class HopperEvent implements Listener {
     @EventHandler

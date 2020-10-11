@@ -1,12 +1,10 @@
 package de.sean.splugin.util;
 
-/* Spigot */
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
-/* Java */
 import java.util.*;
 
 public class PlayerType {
@@ -38,9 +36,11 @@ public class PlayerType {
                     Map<String, Object> role = ((MemorySection) pair.getValue()).getValues(false);
                     for (Map.Entry<String, Object> rolePair : role.entrySet()) {
                         if (rolePair.getKey().toLowerCase().equals("name")) name = rolePair.getValue().toString();
-                        else if (rolePair.getKey().toLowerCase().equals("color")) color = (ChatColor) ChatColor.class.getField(rolePair.getValue().toString().toUpperCase()).get(null);
+                        else if (rolePair.getKey().toLowerCase().equals("color"))
+                            color = (ChatColor) ChatColor.class.getField(rolePair.getValue().toString().toUpperCase()).get(null);
                     }
-                    if (id != null && name != null) registerPlayerType(id, name, color == null ? ChatColor.WHITE : color);
+                    if (id != null && name != null)
+                        registerPlayerType(id, name, color == null ? ChatColor.WHITE : color);
                 }
             }
         } catch (Exception e) {

@@ -1,17 +1,13 @@
 package de.sean.splugin.spigot.events;
 
-/* SPlugin */
 import de.sean.splugin.SPlugin;
 import de.sean.splugin.spigot.inventories.BlockLockInventory;
 import de.sean.splugin.spigot.inventories.ChestLockInventory;
 import de.sean.splugin.util.SLockUtil;
 import de.sean.splugin.util.SMessages;
 import de.sean.splugin.util.SUtil;
-
-/* Java */
-import java.util.List;
-
-/* Spigot */
+import de.tr7zw.nbtapi.NBTCompound;
+import de.tr7zw.nbtapi.NBTTileEntity;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
@@ -28,12 +24,10 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-/* NBT API */
-import de.tr7zw.nbtapi.NBTCompound;
-import de.tr7zw.nbtapi.NBTTileEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.List;
 
 public class InteractEvent implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)

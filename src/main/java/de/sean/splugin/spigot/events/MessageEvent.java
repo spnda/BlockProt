@@ -1,12 +1,9 @@
 package de.sean.splugin.spigot.events;
 
-/* SPlugin */
 import de.sean.splugin.SPlugin;
 import de.sean.splugin.util.PlayerType;
 import de.sean.splugin.util.SMessages;
 import de.sean.splugin.util.SUtil;
-
-/* Spigot */
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

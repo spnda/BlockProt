@@ -1,7 +1,7 @@
 package de.sean.splugin.spigot.events;
 
-/* SPlugin */
 import de.sean.splugin.util.SLockUtil;
+import de.tr7zw.nbtapi.NBTTileEntity;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
@@ -9,12 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
-/* Java */
 import java.util.Iterator;
-import java.util.List;
-
-/* NBT API */
-import de.tr7zw.nbtapi.NBTTileEntity;
 
 public class ExplodeEvent implements Listener {
     @EventHandler

@@ -1,11 +1,8 @@
 package de.sean.splugin.spigot.tasks;
 
-/* SPlugin */
 import de.sean.splugin.SPlugin;
 import de.sean.splugin.util.SMessages;
 import de.sean.splugin.util.SUtil;
-
-/* Spigot */
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.World;
@@ -13,7 +10,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
-/* Java */
 import java.util.ArrayList;
 import java.util.List;
 

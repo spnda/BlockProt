@@ -1,6 +1,5 @@
 package de.sean.splugin.util;
 
-/* Java */
 import org.bukkit.block.Block;
 
 import java.util.HashMap;

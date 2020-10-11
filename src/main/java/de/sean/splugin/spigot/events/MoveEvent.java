@@ -1,10 +1,7 @@
 package de.sean.splugin.spigot.events;
 
-/* SPlugin */
 import de.sean.splugin.util.SMessages;
 import de.sean.splugin.util.SUtil;
-
-/* Spigot */
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

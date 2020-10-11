@@ -1,6 +1,5 @@
 package de.sean.splugin.spigot.events;
 
-/* Spigot */
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

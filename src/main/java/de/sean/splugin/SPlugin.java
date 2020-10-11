@@ -1,14 +1,17 @@
 package de.sean.splugin;
 
-/* SPlugin */
 import de.sean.splugin.discord.DiscordUtil;
-import de.sean.splugin.spigot.commands.*;
+import de.sean.splugin.spigot.commands.LockExecutor;
 import de.sean.splugin.spigot.events.*;
 import de.sean.splugin.spigot.tasks.AfkChecker;
 import de.sean.splugin.spigot.tasks.SleepChecker;
 import de.sean.splugin.util.PlayerType;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
-/* Java */
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -16,13 +19,6 @@ import java.io.InputStreamReader;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
-import org.jetbrains.annotations.NotNull;
-
-/* Spigot */
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class SPlugin extends JavaPlugin {
     public static DiscordUtil discord;

@@ -1,10 +1,5 @@
 package de.sean.splugin.util;
 
-/* Java */
-import java.awt.Color;
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
-
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -12,6 +7,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
+
+import java.awt.*;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class SUtil {
     private static final HashMap<UUID, Long> playerLastActivity = new HashMap<>();

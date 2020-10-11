@@ -1,10 +1,7 @@
 package de.sean.splugin.spigot.events;
 
-/* SPlugin */
 import de.sean.splugin.SPlugin;
 import de.sean.splugin.util.SMessages;
-
-/* Spigot */
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

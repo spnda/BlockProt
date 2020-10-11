@@ -1,6 +1,5 @@
 package de.sean.splugin.spigot.tasks;
 
-/* Spigot */
 import de.sean.splugin.util.SMessages;
 import org.bukkit.Statistic;
 import org.bukkit.World;

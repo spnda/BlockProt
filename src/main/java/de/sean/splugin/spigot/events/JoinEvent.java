@@ -1,13 +1,10 @@
 package de.sean.splugin.spigot.events;
 
-/* SPlugin */
 import de.sean.splugin.SPlugin;
 import de.sean.splugin.discord.DiscordUtil;
 import de.sean.splugin.util.PlayerType;
 import de.sean.splugin.util.SMessages;
 import de.sean.splugin.util.SUtil;
-
-/* Spigot */
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

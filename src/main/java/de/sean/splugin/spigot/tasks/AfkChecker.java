@@ -1,10 +1,7 @@
 package de.sean.splugin.spigot.tasks;
 
-/* SPlugin */
 import de.sean.splugin.util.SMessages;
 import de.sean.splugin.util.SUtil;
-
-/* Spigot */
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

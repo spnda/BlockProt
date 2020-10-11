@@ -1,19 +1,15 @@
 package de.sean.splugin.util;
 
-/* SPlugin */
 import de.sean.splugin.SPlugin;
-
-/* Java */
-import java.util.ArrayList;
-import java.util.List;
-import org.jetbrains.annotations.NotNull;
-
-/* Spigot */
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SMessages {
     public static void markPlayerAFK(@NotNull Player player) {
@@ -27,7 +23,7 @@ public class SMessages {
         player.setDisplayName(player.getDisplayName().replace(" (AFK)", ""));
         Bukkit.broadcastMessage(player.getDisplayName() + ChatColor.YELLOW + " is no more AFK.");
     }
-    
+
     public static String getRandomMessage(final String messageList) {
         final List<?> messages = SPlugin.instance.getConfig().getList(messageList, new ArrayList<>());
         if (messages != null && messages.size() > 0) {

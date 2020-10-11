@@ -12,7 +12,7 @@ class LockExecutor : CommandExecutor {
         when (args[0]) {
             "place" -> {
                 val config = SPlugin.instance.config
-                config["Players." + player.uniqueId + ".NotLockOnPlace"] = !config.getBoolean("players." + player.uniqueId + ".notLockOnPlace")
+                config["players." + player.uniqueId + ".NotLockOnPlace"] = !config.getBoolean("players." + player.uniqueId + ".notLockOnPlace")
                 SPlugin.instance.saveConfig()
             }
             else -> return false

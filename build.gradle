@@ -1,18 +1,5 @@
-// Shadow
-import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10"
-    }
-}
-
 plugins {
-    id 'com.github.johnrengelman.shadow' version '5.2.0'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'org.jetbrains.kotlin.jvm' version '1.4.10'
     id 'application' // Apply the application plugin to add support for building a CLI application.
 }
@@ -36,10 +23,6 @@ repositories {
 }
 
 dependencies {
-    // Shadow stuff
-    shadow localGroovy()
-    shadow gradleApi()
-
     compile 'org.jdom:jdom2:2.0.6'
     compile 'org.ow2.asm:asm:6.0'
     compile 'org.ow2.asm:asm-commons:9.0'
@@ -62,10 +45,3 @@ application {
 
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'kotlin'
-
-// Shadow
-task relocateShadowJar(type: ConfigureShadowRelocation) {
-    target = tasks.shadowJar
-}
-
-tasks.shadowJar.dependsOn tasks.relocateShadowJar

@@ -46,7 +46,7 @@ dependencies {
     compile 'commons-io:commons-io:2.8.0'
     compile 'org.apache.ant:ant:1.10.9'
     compile 'org.codehaus.plexus:plexus-utils:3.3.0'
-    implementation 'com.google.guava:guava:29.0-jre'
+    implementation 'com.google.guava:guava:30.0-jre'
     testImplementation 'junit:junit:4.12'
 
     compileOnly 'org.spigotmc:spigot-api:1.16.3-R0.1-SNAPSHOT' // Spigot

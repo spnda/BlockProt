@@ -33,7 +33,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.1'
 
     compileOnly 'org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT' // Spigot
-    compile ('net.dv8tion:JDA:4.2.0_216') { exclude module: 'opus-java' } // Discord (4.2.0_216)
+    compile ('net.dv8tion:JDA:4.2.0_217') { exclude module: 'opus-java' } // Discord (4.2.0_217)
     compile 'de.tr7zw:item-nbt-api-plugin:2.6.0' // item-nbt-api
 }
 

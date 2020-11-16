@@ -24,7 +24,7 @@ repositories {
 
 dependencies {
     compile 'org.jdom:jdom2:2.0.6'
-    compile 'org.ow2.asm:asm:6.0'
+    compile 'org.ow2.asm:asm:9.0'
     compile 'org.ow2.asm:asm-commons:9.0'
     compile 'commons-io:commons-io:2.8.0'
     compile 'org.apache.ant:ant:1.10.9'

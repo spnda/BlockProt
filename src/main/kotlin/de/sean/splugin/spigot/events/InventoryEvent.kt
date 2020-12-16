@@ -208,16 +208,16 @@ class InventoryEvent : Listener {
         if (itemStack.type != Material.PLAYER_HEAD) return
         val skull = itemStack.itemMeta as SkullMeta? ?: return
         // Generic player head?
-        val friend = skull.owningPlayer!!.uniqueId.toString()
+        val friend = skull.owningPlayer?.uniqueId.toString()
         val block = SLockUtil.lock[player.uniqueId.toString()] ?: return
         val blockTile = NBTTileEntity(block.state).persistentDataContainer
         val owner = blockTile.getString(SLockUtil.OWNER_ATTRIBUTE)
         // The requesting player is not the owner of this Chest. Ignore this request.
         // We'll still check for this. Though the InteractEvent Handler should already check this for us.
         if (owner != player.uniqueId.toString()) return
-        val access = parseStringList(blockTile.getString(SLockUtil.LOCK_ATTRIBUTE))
+        var access = parseStringList(blockTile.getString(SLockUtil.LOCK_ATTRIBUTE))
         if (!access.contains(friend)) {
-            access.plus(friend)
+            access = access.plus(friend)
             println(access)
             blockTile.setString(SLockUtil.LOCK_ATTRIBUTE, access.toString())
             applyToDoubleChest(block, player, owner, access)
@@ -239,9 +239,9 @@ class InventoryEvent : Listener {
         // The requesting player is not the owner of this Chest. Ignore this request.
         // We'll still check for this. Though the InteractEvent Handler should already check this for us.
         if (owner != player.uniqueId.toString()) return
-        val access = parseStringList(blockTile.getString(SLockUtil.LOCK_ATTRIBUTE))
+        var access = parseStringList(blockTile.getString(SLockUtil.LOCK_ATTRIBUTE))
         if (access.contains(friend)) {
-            access.minus(friend)
+            access = access.minus(friend)
             println(access)
             blockTile.setString(SLockUtil.LOCK_ATTRIBUTE, access.toString())
             applyToDoubleChest(block, player, owner, access)

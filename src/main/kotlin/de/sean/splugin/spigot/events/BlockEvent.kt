@@ -81,7 +81,7 @@ class BlockEvent : Listener {
             }
             Material.FURNACE, Material.HOPPER, Material.BARREL, Material.SHULKER_BOX -> if (!config.getBoolean("players." + event.player.uniqueId + ".lockOnPlace")) {
                 NBTTileEntity(block.state).persistentDataContainer.setString(SLockUtil.OWNER_ATTRIBUTE, uuid)
-            }
+            } else NBTTileEntity(block.state).persistentDataContainer.setString(SLockUtil.OWNER_ATTRIBUTE, "") // Assign a empty string to not have NPEs when reading
             else -> return
         }
     }

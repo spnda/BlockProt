@@ -53,36 +53,46 @@ class InteractEvent : Listener {
             }
             Material.CHEST, Material.FURNACE, Material.HOPPER, Material.BARREL, Material.SHULKER_BOX -> if ((event.action == Action.RIGHT_CLICK_BLOCK) && player.isSneaking && player.hasPermission("splugin.lock")) {
                 // The user shift-left clicked the chest and is wanting to open the chest edit menu.
-                // Check if the user is holding anything in their hand. They might want to place something.
-                if (event.hasItem()) return
                 val blockState = event.clickedBlock!!.state
                 val blockTile = NBTTileEntity(blockState).persistentDataContainer
                 val owner = blockTile.getString(SLockUtil.OWNER_ATTRIBUTE)
                 val playerUuid = player.uniqueId.toString()
                 // Don't open the menu if the player is not the owner of this chest.
                 if ((owner == null || owner.isEmpty()) || (owner == playerUuid)) {
-                    event.isCancelled = true
-                    SLockUtil.lock[playerUuid] = blockState.block
-                    val redstone = blockTile.getBoolean(SLockUtil.REDSTONE_ATTRIBUTE)
-                    val inv: Inventory = BlockLockInventory.inventory
-                    if (owner != null && (owner == playerUuid)) {
-                        inv.setItem(0, getItemStack(1, blockState.type, "Unlock"))
-                        inv.setItem(1, getItemStack(1, if (redstone) Material.GUNPOWDER else Material.REDSTONE, if (redstone) "Activate Redstone" else "Deactivate Redstone"))
-                        inv.setItem(2, getItemStack(1, Material.PLAYER_HEAD, "Add Friends"))
-                        inv.setItem(3, getItemStack(1, Material.ZOMBIE_HEAD, "Remove Friends"))
-                        if (player.isOp) {
-                            inv.setItem(4, getItemStack(1, Material.OAK_SIGN, "Info"))
+                    if (event.item == null) {
+                        event.isCancelled = true
+                        SLockUtil.lock[playerUuid] = blockState.block
+                        val redstone = blockTile.getBoolean(SLockUtil.REDSTONE_ATTRIBUTE)
+                        val inv: Inventory = BlockLockInventory.inventory
+                        if (owner != null && (owner == playerUuid)) {
+                            inv.setItem(0, getItemStack(1, blockState.type, "Unlock"))
+                            inv.setItem(
+                                1,
+                                getItemStack(
+                                    1,
+                                    if (redstone) Material.GUNPOWDER else Material.REDSTONE,
+                                    if (redstone) "Activate Redstone" else "Deactivate Redstone"
+                                )
+                            )
+                            inv.setItem(2, getItemStack(1, Material.PLAYER_HEAD, "Add Friends"))
+                            inv.setItem(3, getItemStack(1, Material.ZOMBIE_HEAD, "Remove Friends"))
+                            if (player.isOp) {
+                                inv.setItem(4, getItemStack(1, Material.OAK_SIGN, "Info"))
+                            }
+                        } else {
+                            inv.setItem(0, getItemStack(1, blockState.type, "Lock"))
+                            var i = 1
+                            while (i < 5) {
+                                inv.setItem(i, null)
+                                i++
+                            }
                         }
-                    } else {
-                        inv.setItem(0, getItemStack(1, blockState.type, "Lock"))
-                        var i = 1
-                        while (i < 5) {
-                            inv.setItem(i, null)
-                            i++
-                        }
+                        inv.setItem(8, getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, "Back"))
+                        player.openInventory(inv)
                     }
-                    inv.setItem(8, getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, "Back"))
-                    player.openInventory(inv)
+                } else {
+                    event.isCancelled = true
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText("No permission."))
                 }
             } else {
                 // The user right clicked and is trying to access the container

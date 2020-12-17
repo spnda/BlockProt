@@ -53,6 +53,8 @@ class InteractEvent : Listener {
             }
             Material.CHEST, Material.FURNACE, Material.HOPPER, Material.BARREL, Material.SHULKER_BOX -> if ((event.action == Action.RIGHT_CLICK_BLOCK) && player.isSneaking && player.hasPermission("splugin.lock")) {
                 // The user shift-left clicked the chest and is wanting to open the chest edit menu.
+                // Check if the user is holding anything in their hand. They might want to place something.
+                if (event.hasItem()) return
                 val blockState = event.clickedBlock!!.state
                 val blockTile = NBTTileEntity(blockState).persistentDataContainer
                 val owner = blockTile.getString(SLockUtil.OWNER_ATTRIBUTE)

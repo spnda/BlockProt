@@ -16,9 +16,6 @@ import java.nio.file.LinkOption
 
 class SPlugin : org.bukkit.plugin.java.JavaPlugin() {
     override fun onEnable() {
-        // When starting also update IP as it might have changed while the server was offline.
-        updateIP()
-
         /* Config */
         this.also { instance = it }.saveDefaultConfig()
         val config: FileConfiguration = instance.config
@@ -52,27 +49,6 @@ class SPlugin : org.bukkit.plugin.java.JavaPlugin() {
         pm.registerEvents(LeaveEvent(), this) // Handles every user leave event
         pm.registerEvents(MessageEvent(), this) // Handles every chat message event
         pm.registerEvents(MoveEvent(), this) // Handles every move of a player
-    }
-
-    fun updateIP() {
-        Thread {
-            val processBuilder = ProcessBuilder("cmd.exe", "/c", "node .")
-            val dir = "./freenom-update"
-            if (!java.nio.file.Files.exists(java.nio.file.FileSystems.getDefault().getPath(dir), LinkOption.NOFOLLOW_LINKS)) return@Thread
-            processBuilder.directory(java.io.File(dir))
-            try {
-                val process: Process = processBuilder.start()
-                val bufferedReader = BufferedReader(InputStreamReader(process.inputStream))
-                var line: String?
-                while (bufferedReader.readLine().also { line = it } != null) println(line)
-                process.waitFor()
-                bufferedReader.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-            }
-        }.start()
     }
 
     private fun registerCommands() {

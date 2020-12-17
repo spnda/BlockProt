@@ -25,14 +25,6 @@ class SHandler : ListenerAdapter(), EventListener {
         // Maybe this will be useful sometime...
     }
 
-    override fun onGenericEvent(event: GenericEvent) {
-        // This is purely a thing for myself. Whenever the IP changes my DNS record gets changed.
-        // Can be ignored by anyone else.
-        if (event is ReconnectedEvent) {
-            SPlugin.instance.updateIP()
-        }
-    }
-
     override fun onMessageReceived(event: MessageReceivedEvent) {
         if (event.author.isBot) return
         val message = event.message.contentRaw.split(" ").toTypedArray()

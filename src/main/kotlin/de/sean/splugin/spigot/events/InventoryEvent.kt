@@ -43,7 +43,7 @@ class InventoryEvent : Listener {
                 val blockTile: NBTCompound
                 val owner: String
                 when (item.type) {
-                    Material.CHEST, Material.FURNACE, Material.HOPPER, Material.BARREL, Material.SHULKER_BOX -> {
+                    Material.CHEST, Material.FURNACE, Material.SMOKER, Material.BLAST_FURNACE, Material.HOPPER, Material.BARREL, Material.SHULKER_BOX -> {
                         lockBlock(player)
                         event.isCancelled = true
                     }

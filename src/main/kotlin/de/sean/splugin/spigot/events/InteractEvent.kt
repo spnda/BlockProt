@@ -51,7 +51,7 @@ class InteractEvent : Listener {
                 arrow.isInvulnerable = true
                 arrow.addPassenger(player)
             }
-            Material.CHEST, Material.FURNACE, Material.HOPPER, Material.BARREL, Material.SHULKER_BOX -> if ((event.action == Action.RIGHT_CLICK_BLOCK) && player.isSneaking && player.hasPermission("splugin.lock")) {
+            Material.CHEST, Material.FURNACE, Material.SMOKER, Material.BLAST_FURNACE, Material.HOPPER, Material.BARREL, Material.SHULKER_BOX -> if ((event.action == Action.RIGHT_CLICK_BLOCK) && player.isSneaking && player.hasPermission("splugin.lock")) {
                 // The user shift-left clicked the chest and is wanting to open the chest edit menu.
                 val blockState = event.clickedBlock!!.state
                 val blockTile = NBTTileEntity(blockState).persistentDataContainer

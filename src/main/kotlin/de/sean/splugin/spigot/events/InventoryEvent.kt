@@ -105,7 +105,7 @@ class InventoryEvent : Listener {
                             inv.setItem(9 + i, getPlayerSkull(Bukkit.getOfflinePlayer(UUID.fromString(access[i]))))
                             i++
                         }
-                        inv.setItem(0, getPlayerSkull(Bukkit.getPlayer(UUID.fromString(owner))!!))
+                        inv.setItem(0, getPlayerSkull(Bukkit.getOfflinePlayer(UUID.fromString(owner))))
                         inv.setItem(8, getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, "Back"))
                         player.openInventory(inv)
                     }
@@ -187,14 +187,14 @@ class InventoryEvent : Listener {
         val block = SLockUtil.lock[player.uniqueId.toString()] ?: return
         val blockTile = NBTTileEntity(block.state).persistentDataContainer
         var owner = blockTile.getString(SLockUtil.OWNER_ATTRIBUTE)
-        if (owner == null || owner == "") {
+        if ((player.isOp && (owner == null || owner == "")) || ((owner == null || owner == "") )) {
             owner = player.uniqueId.toString()
             blockTile.setString(SLockUtil.OWNER_ATTRIBUTE, owner)
             applyToDoubleChest(block, player, owner, null)
             player.closeInventory()
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText("Permission granted."))
             SLockUtil.lock.remove(player.uniqueId.toString())
-        } else if (owner == player.uniqueId.toString()) {
+        } else if ((owner == player.uniqueId.toString()) || (player.isOp && owner != "")) {
             blockTile.setString(SLockUtil.OWNER_ATTRIBUTE, null)
             applyToDoubleChest(block, player, null, null)
             player.closeInventory()

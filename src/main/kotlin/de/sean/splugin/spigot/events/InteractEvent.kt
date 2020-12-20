@@ -58,7 +58,7 @@ class InteractEvent : Listener {
                 val owner = blockTile.getString(SLockUtil.OWNER_ATTRIBUTE)
                 val playerUuid = player.uniqueId.toString()
                 // Don't open the menu if the player is not the owner of this chest.
-                if ((owner == null || owner.isEmpty()) || (owner == playerUuid)) {
+                if ((owner == null || owner.isEmpty()) || (owner == playerUuid) || event.player.isOp) {
                     if (event.item == null) {
                         event.isCancelled = true
                         SLockUtil.lock[playerUuid] = blockState.block
@@ -79,6 +79,19 @@ class InteractEvent : Listener {
                             if (player.isOp) {
                                 inv.setItem(4, getItemStack(1, Material.OAK_SIGN, "Info"))
                             }
+                        } else if (player.isOp && owner != null && owner != "") {
+                            inv.setItem(0, getItemStack(1, blockState.type, "Unlock"));
+                            inv.setItem(
+                                1,
+                                getItemStack(
+                                    1,
+                                    if (redstone) Material.GUNPOWDER else Material.REDSTONE,
+                                    if (redstone) "Activate Redstone" else "Deactivate Redstone"
+                                )
+                            )
+                            inv.setItem(2, getItemStack(1, Material.PLAYER_HEAD, "Add Friends"))
+                            inv.setItem(3, getItemStack(1, Material.ZOMBIE_HEAD, "Remove Friends"))
+                            inv.setItem(4, getItemStack(1, Material.OAK_SIGN, "Info"))
                         } else {
                             inv.setItem(0, getItemStack(1, blockState.type, "Lock"))
                             var i = 1

@@ -13,6 +13,7 @@ import kotlin.collections.HashMap
 object SUtil {
     val playerLastActivity = HashMap<UUID, Long>()
     val afkPlayers = HashMap<UUID, Boolean>()
+    val colors = arrayOf(Color.BLACK, Color.BLUE, Color.CYAN, Color.DARK_GRAY, Color.GRAY, Color.LIGHT_GRAY, Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.PINK, Color.RED, Color.WHITE, Color.YELLOW)
 
     fun concatArrayRange(arr: Array<String>, begin: Int, end: Int): String {
         val builder = StringBuilder()
@@ -45,7 +46,6 @@ object SUtil {
     }
 
     fun randomColor(): Color {
-        val colors = arrayOf(Color.BLACK, Color.BLUE, Color.CYAN, Color.DARK_GRAY, Color.GRAY, Color.LIGHT_GRAY, Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.PINK, Color.RED, Color.WHITE, Color.YELLOW)
         return colors[randomInt(0, colors.size)]
     }
 

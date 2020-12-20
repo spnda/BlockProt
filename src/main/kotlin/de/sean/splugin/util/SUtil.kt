@@ -24,7 +24,7 @@ object SUtil {
     }
 
     fun parseStringList(str: String): List<String> {
-        val ret: MutableList<String> = ArrayList(listOf(*str.replace("^\\[|]$".toRegex(), "").split(",").toTypedArray()))
+        val ret: MutableList<String> = ArrayList(listOf(*str.replace("^\\[|]$".toRegex(), "").split(", ").toTypedArray()))
         ret.removeIf { obj: String -> obj.isEmpty() }
         return ret
     }

@@ -40,3 +40,7 @@ messages:
     - "Everyone is sleeping!"
   sleeping:
     - "[sleeping] are currently sleeping. [needed] to skip the night."
+  afk:
+    - "[player] §eis now AFK" # §e is color coding for yellow
+  not_afk:
+    - "[player] §eis no more AFK."

@@ -11,7 +11,7 @@ import java.util.*
 
 object SMessages {
     fun markPlayerAFK(player: Player) {
-        Bukkit.broadcastMessage(player.displayName + ChatColor.YELLOW + " is now AFK.")
+        Bukkit.broadcastMessage(getRandomMessage("messages.afk").replace("[player]", player.displayName))
         player.setDisplayName(player.displayName + " (AFK)")
         player.setPlayerListName(player.playerListName + " (AFK)")
     }
@@ -19,7 +19,7 @@ object SMessages {
     fun unmarkPlayerAFK(player: Player) {
         player.setPlayerListName(player.playerListName.replace(" (AFK)", ""))
         player.setDisplayName(player.displayName.replace(" (AFK)", ""))
-        Bukkit.broadcastMessage(player.displayName + ChatColor.YELLOW + " is no more AFK.")
+        Bukkit.broadcastMessage(getRandomMessage("messages.not_afk").replace("[player]", player.displayName))
     }
 
     fun getRandomMessage(messageList: String?): String {

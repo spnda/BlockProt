@@ -15,9 +15,14 @@ class ExplodeEvent : Listener {
             val it = e.blockList().iterator()
             while (it.hasNext()) {
                 val b = it.next()
-                if (b.type == Material.CHEST) {
-                    // Someone owns this chest, block its destroying.
-                    if (NBTTileEntity(b.state).getStringList(SLockUtil.LOCK_ATTRIBUTE) != null) it.remove()
+                when (b.type) {
+                    Material.CHEST, Material.FURNACE, Material.SMOKER, Material.BLAST_FURNACE, Material.HOPPER, Material.BARREL,
+                    Material.BLACK_SHULKER_BOX, Material.BLUE_SHULKER_BOX, Material.BROWN_SHULKER_BOX, Material.CYAN_SHULKER_BOX, Material.GRAY_SHULKER_BOX, Material.GREEN_SHULKER_BOX, Material.LIGHT_BLUE_SHULKER_BOX, Material.LIGHT_GRAY_SHULKER_BOX, Material.LIME_SHULKER_BOX, Material.MAGENTA_SHULKER_BOX, Material.ORANGE_SHULKER_BOX, Material.PINK_SHULKER_BOX, Material.PURPLE_SHULKER_BOX, Material.RED_SHULKER_BOX, Material.SHULKER_BOX, Material.WHITE_SHULKER_BOX, Material.YELLOW_SHULKER_BOX
+                    -> {
+                        // Someone owns this block, block its destroying.
+                        if (NBTTileEntity(b.state).getStringList(SLockUtil.LOCK_ATTRIBUTE) != null) it.remove()
+                    }
+                    else -> break
                 }
             }
         } else if (e.entityType == EntityType.CREEPER) {

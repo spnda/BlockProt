@@ -29,7 +29,7 @@ dependencies {
     compile 'commons-io:commons-io:2.8.0'
     compile 'org.apache.ant:ant:1.10.9'
     compile 'org.codehaus.plexus:plexus-utils:3.3.0'
-    implementation 'com.google.guava:guava:30.0-jre'
+    implementation 'com.google.guava:guava:30.1-jre'
     testImplementation 'junit:junit:4.13.1'
 
     compileOnly 'org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT' // Spigot

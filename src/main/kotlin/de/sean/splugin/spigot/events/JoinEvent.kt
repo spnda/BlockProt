@@ -22,7 +22,7 @@ class JoinEvent : Listener {
             // The player is not playing for the first time, just welcome the player.
             sendTitleMessage(player, getRandomMessage("messages.welcomeBack").replace("[player]", player.displayName), "")
         }
-        event.joinMessage = ChatColor.GREEN.toString() + getRandomMessage("messages.join").replace("[player]", event.player.displayName)
+        event.joinMessage = getRandomMessage("messages.join").replace("[player]", event.player.displayName)
 
         /* AFK */
         SUtil.playerLastActivity[player.uniqueId] = System.currentTimeMillis()

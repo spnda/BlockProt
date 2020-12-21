@@ -12,7 +12,7 @@ class LeaveEvent : Listener {
     @EventHandler
     fun playerLeave(event: PlayerQuitEvent) {
         /* Format leave message */
-        event.quitMessage = ChatColor.RED.toString() + getRandomMessage("messages.leave").replace("[player]", event.player.name)
+        event.quitMessage = getRandomMessage("messages.leave").replace("[player]", event.player.name)
 
         /* AFK */
         SUtil.playerLastActivity.remove(event.player.uniqueId)

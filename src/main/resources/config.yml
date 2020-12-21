@@ -23,9 +23,9 @@ discord:
 
 messages:
   join:
-    - "[player] has joined the server!"
+    - "§a[player] has joined the server!" # §a is light green
   leave:
-    - "[player] has left the server!"
+    - "§6[player] has left the server!" # §6 is dark yellow
   death:
     - "[message]..."
   welcome:

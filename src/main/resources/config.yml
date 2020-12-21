@@ -12,6 +12,7 @@ skipNight:
 
 chatFormat:
   format: "§7[player] > §r[message]"
+  discordFormat: "§9[user] > §r[message]"
 
 # If you provide a token, the bot will accept commands for the server.
 # If you provide at least one guild and channel combination, the server will stream all

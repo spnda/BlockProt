@@ -32,8 +32,8 @@ class MessageEvent : Listener {
         val config = SPlugin.instance.config
         if (config.getBoolean("features.chatFormat")) {
             if (config.getString("chatFormat.format") != null) {
-                event.format = config.getString("chatFormat.format")!!
-                    .replace("[player]", "%1\$s").replace("[message]", "%2\$s")
+                val format = config.getString("chatFormat.format") ?: "[player]: [message]"
+                event.format = format.replace("[player]", "%1\$s").replace("[message]", "%2\$s")
             }
         }
 

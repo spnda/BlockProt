@@ -4,9 +4,7 @@ import de.sean.splugin.SPlugin
 import de.sean.splugin.util.SUtil
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.ChannelType
-import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.ReadyEvent
-import net.dv8tion.jda.api.events.ReconnectedEvent
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.EventListener
@@ -69,7 +67,8 @@ class SHandler : ListenerAdapter(), EventListener {
                 if (event.author.isBot) return // Ignore all bots.
                 var msg = event.message.contentStripped
                 if (event.message.attachments.size > 0) msg += if (msg.isNotEmpty()) " " else "" + "[file]" // Show a nice indicator that the person has sent a image.
-                Bukkit.broadcastMessage(ChatColor.BLUE.toString() + "Discord" + ChatColor.GRAY + " | " + ChatColor.RESET + event.author.name + ": " + msg)
+                val format = SPlugin.instance.config.getString("chatFormat.discordFormat") ?: "§9[user]: §r[message]" // If there is no format specified, we'll
+                Bukkit.broadcastMessage(format.replace("[user]", event.author.name).replace("[message]", msg))
             }
         }
     }

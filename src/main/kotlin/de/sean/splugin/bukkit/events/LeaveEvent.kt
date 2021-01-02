@@ -1,9 +1,8 @@
-package de.sean.splugin.spigot.events
+package de.sean.splugin.bukkit.events
 
 import de.sean.splugin.SPlugin
 import de.sean.splugin.util.SMessages.getRandomMessage
 import de.sean.splugin.util.SUtil
-import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerQuitEvent

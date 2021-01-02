@@ -1,6 +1,6 @@
-package de.sean.splugin.spigot.events
+package de.sean.splugin.bukkit.events
 
-import de.sean.splugin.spigot.inventories.*
+import de.sean.splugin.bukkit.inventories.*
 import de.sean.splugin.util.SLockUtil
 import de.sean.splugin.util.SUtil.getItemStack
 import de.sean.splugin.util.SUtil.getPlayerSkull

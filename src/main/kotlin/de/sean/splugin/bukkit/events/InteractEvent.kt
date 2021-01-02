@@ -1,7 +1,7 @@
-package de.sean.splugin.spigot.events
+package de.sean.splugin.bukkit.events
 
 import de.sean.splugin.SPlugin
-import de.sean.splugin.spigot.inventories.BlockLockInventory
+import de.sean.splugin.bukkit.inventories.BlockLockInventory
 import de.sean.splugin.util.SLockUtil
 import de.sean.splugin.util.SMessages.unmarkPlayerAFK
 import de.sean.splugin.util.SUtil

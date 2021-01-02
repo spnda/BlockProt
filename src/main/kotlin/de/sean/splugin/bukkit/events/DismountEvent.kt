@@ -1,4 +1,4 @@
-package de.sean.splugin.spigot.events
+package de.sean.splugin.bukkit.events
 
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player

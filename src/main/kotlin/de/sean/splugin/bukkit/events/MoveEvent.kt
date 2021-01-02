@@ -1,4 +1,4 @@
-package de.sean.splugin.spigot.events
+package de.sean.splugin.bukkit.events
 
 import de.sean.splugin.util.SMessages.unmarkPlayerAFK
 import de.sean.splugin.util.SUtil

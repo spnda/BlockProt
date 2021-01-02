@@ -1,4 +1,4 @@
-package de.sean.splugin.spigot.tasks
+package de.sean.splugin.bukkit.tasks
 
 import de.sean.splugin.util.SMessages.markPlayerAFK
 import de.sean.splugin.util.SUtil

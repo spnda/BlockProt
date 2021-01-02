@@ -1,4 +1,4 @@
-package de.sean.splugin.spigot.events
+package de.sean.splugin.bukkit.events
 
 import de.sean.splugin.util.SLockUtil
 import de.tr7zw.nbtapi.NBTTileEntity

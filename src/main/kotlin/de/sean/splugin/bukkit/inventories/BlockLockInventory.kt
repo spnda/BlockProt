@@ -1,4 +1,4 @@
-package de.sean.splugin.spigot.inventories
+package de.sean.splugin.bukkit.inventories
 
 import org.bukkit.Bukkit
 

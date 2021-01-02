@@ -1,4 +1,4 @@
-package de.sean.splugin.spigot.commands
+package de.sean.splugin.bukkit.commands
 
 import de.sean.splugin.SPlugin
 import org.bukkit.Bukkit

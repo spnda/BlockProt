@@ -1,18 +1,14 @@
 package de.sean.splugin
 
 import de.sean.splugin.discord.DiscordUtil
-import de.sean.splugin.spigot.commands.LockExecutor
-import de.sean.splugin.spigot.events.*
-import de.sean.splugin.spigot.tasks.AfkChecker
-import de.sean.splugin.spigot.tasks.SleepChecker
+import de.sean.splugin.bukkit.commands.LockExecutor
+import de.sean.splugin.bukkit.events.*
+import de.sean.splugin.bukkit.tasks.AfkChecker
+import de.sean.splugin.bukkit.tasks.SleepChecker
 import de.sean.splugin.util.PlayerType
 import de.sean.splugin.util.SUtil
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.FileConfiguration
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStreamReader
-import java.nio.file.LinkOption
 
 class SPlugin : org.bukkit.plugin.java.JavaPlugin() {
     override fun onEnable() {

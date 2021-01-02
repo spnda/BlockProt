@@ -5,6 +5,10 @@
 build
 bin
 
-SToken.java
+# Folders and files used by gradle and IDEs
 .vscode
+.idea
 .settings
+.classpath
+.settings
+.project

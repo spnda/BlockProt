@@ -1,47 +1,38 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'org.jetbrains.kotlin.jvm' version '1.4.21'
-    id 'application' // Apply the application plugin to add support for building a CLI application.
 }
 
-repositories {
-    jcenter()
+allprojects {
+    group 'de.sean.splugin'
 
-    // Spigot
-    maven {
-        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
-
-        // As of Gradle 5.1, you can limit this to only those
-        // dependencies you expect from it
-        content {
-            includeGroup 'org.bukkit'
-            includeGroup 'org.spigotmc'
+    repositories {
+        mavenCentral()
+        
+        maven {
+            name = 'Spigot'
+            url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+            content {
+                includeGroup 'org.bukkit'
+                includeGroup 'org.spigotmc'
+            }
+        }
+        maven {
+            name = 'CodeMC'
+            url = 'https://repo.codemc.org/repository/maven-public' 
+            content {
+                includeGroup 'de.tr7zw'
+            }
         }
     }
-    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
-    maven { url = 'https://repo.codemc.org/repository/maven-public' }
+
+    dependencies {
+
+    }
+
+    apply plugin: 'kotlin'
 }
 
-dependencies {
-    implementation 'org.jdom:jdom2:2.0.6'
-    implementation 'org.ow2.asm:asm:9.0'
-    implementation 'org.ow2.asm:asm-commons:9.0'
-    implementation 'commons-io:commons-io:2.8.0'
-    implementation 'org.apache.ant:ant:1.10.9'
-    implementation 'org.codehaus.plexus:plexus-utils:3.3.0'
-    implementation 'com.google.guava:guava:30.1-jre'
-    testImplementation 'junit:junit:4.13.1'
-
-    compileOnly 'org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT' // Spigot
-    implementation ('net.dv8tion:JDA:4.2.0_224') { exclude module: 'opus-java' } // Discord (4.2.0_224)
-    implementation 'de.tr7zw:item-nbt-api-plugin:2.6.1' // item-nbt-api
+// Delete the unwanted output of the root project
+gradle.buildFinished {
+    project.buildDir.deleteDir()
 }
-
-compileKotlin.kotlinOptions.jvmTarget = "1.8"
-
-application {
-    mainClassName = 'de.sean.splugin.SPlugin'
-}
-
-apply plugin: 'com.github.johnrengelman.shadow'
-apply plugin: 'kotlin'

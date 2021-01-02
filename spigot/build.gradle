@@ -1,0 +1,37 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'application'
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation 'org.jdom:jdom2:2.0.6'
+    implementation 'org.ow2.asm:asm:9.0'
+    implementation 'org.ow2.asm:asm-commons:9.0'
+    implementation 'commons-io:commons-io:2.8.0'
+    implementation 'org.apache.ant:ant:1.10.9'
+    implementation 'org.codehaus.plexus:plexus-utils:3.3.0'
+    implementation 'com.google.guava:guava:30.1-jre'
+    testImplementation 'junit:junit:4.13.1'
+
+    compileOnly 'org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT' // Spigot
+    implementation ('net.dv8tion:JDA:4.2.0_224') { exclude module: 'opus-java' } // Discord (4.2.0_224)
+    implementation 'de.tr7zw:item-nbt-api-plugin:2.6.1' // item-nbt-api
+}
+
+jar {
+    archiveBaseName = "splugin-${project.name}-${project.plugin_version}"
+}
+
+shadowJar {
+    archiveFileName = "splugin-${project.name}-${project.plugin_version}-${classifier}.${extension}"
+}
+
+application {
+    mainClassName = 'de.sean.splugin.SPlugin'
+}
+
+compileKotlin.kotlinOptions.jvmTarget = "1.8"

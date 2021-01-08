@@ -8,6 +8,7 @@ import org.bukkit.Material
 import org.bukkit.block.Barrel
 import org.bukkit.block.Chest
 import org.bukkit.block.DoubleChest
+import org.bukkit.block.TileState
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
@@ -29,6 +30,7 @@ class BlockEvent : Listener {
     @EventHandler
     fun playerBlockBreak(event: BlockBreakEvent) {
         val blockState = event.block.state
+        if (blockState !is TileState) return // We only want to check for Tiles.
         val handler = BlockLockHandler(NBTTileEntity(blockState))
         if (!handler.isOwner(event.player.uniqueId.toString()) && handler.isProtected()) {
             // Prevent unauthorized players from breaking locked blocks.

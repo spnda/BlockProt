@@ -7,8 +7,6 @@ import de.sean.splugin.bukkit.nbt.LockUtil
 import de.sean.splugin.util.ItemUtil.getItemStack
 import de.sean.splugin.util.Vector3f
 import de.tr7zw.nbtapi.NBTTileEntity
-import net.md_5.bungee.api.ChatMessageType
-import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Material
 import org.bukkit.block.Sign
 import org.bukkit.entity.Arrow

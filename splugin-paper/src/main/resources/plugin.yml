@@ -1,0 +1,16 @@
+name: SPlugin
+version: ${project.version}
+main: de.sean.splugin.SPlugin
+api-version: 1.16
+authors: [ spnda ]
+description: A easy to use multifunctional paper plugin
+prefix: SPlugin
+website: https://www.github.com/spnda/SPlugin
+depend:
+  - NBTAPI
+permissions:
+  splugin.lock:
+    description: Allows a player to lock a chest/hopper ...
+
+  splugin.sit:
+    description: Allows a player to sit on stairs ...

@@ -1,0 +1,28 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'application'
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation project(':common')
+
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT' // Paper
+}
+
+jar {
+    setArchivesBaseName("${project.name}-${project.plugin_version}")
+}
+
+shadowJar {
+    archiveFileName = "${project.name}-${project.plugin_version}-${getArchiveClassifier().get()}.${getExtension()}"
+}
+
+application {
+    mainClassName = 'de.sean.splugin.SPlugin'
+}
+
+compileKotlin.kotlinOptions.jvmTarget = "1.8"

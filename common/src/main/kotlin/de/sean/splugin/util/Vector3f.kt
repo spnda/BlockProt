@@ -1,10 +1,6 @@
 package de.sean.splugin.util
 
-class Vector3f(x: Float, y: Float, z: Float) {
-    private var x: Float = x
-    private var y: Float = y
-    private var z: Float = z
-
+class Vector3f constructor(private var x: Float, private var y: Float, private var z: Float) {
     companion object {
         fun fromDouble(x: Double, y: Double, z: Double): Vector3f
             = Vector3f(x.toFloat(), y.toFloat(), z.toFloat())

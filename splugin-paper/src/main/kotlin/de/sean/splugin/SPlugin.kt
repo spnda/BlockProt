@@ -47,7 +47,7 @@ class SPlugin : JavaPlugin() {
         pm.registerEvents(DismountEvent(), this)
         pm.registerEvents(ExplodeEvent(), this)
         pm.registerEvents(HopperEvent(), this)
-        pm.registerEvents(InteractEvent(), this)
+        pm.registerEvents(PaperInteractEvent(), this)
         pm.registerEvents(PaperJoinEvent(), this)
         pm.registerEvents(LeaveEvent(), this)
         pm.registerEvents(MessageEvent(), this)

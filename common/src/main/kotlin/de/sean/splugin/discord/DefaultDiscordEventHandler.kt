@@ -14,7 +14,7 @@ import java.util.logging.Logger
 
 class DefaultDiscordEventHandler : DiscordEventHandler() {
     override fun onReady(event: ReadyEvent) {
-        Logger.getLogger("DefaultDiscordEventHandler").info("Discord has started! ${event.jda.selfUser.name}")
+        Logger.getLogger(this.javaClass.simpleName).info("Discord has started! ${event.jda.selfUser.name}")
     }
 
     override fun onMessageReceived(event: MessageReceivedEvent) {

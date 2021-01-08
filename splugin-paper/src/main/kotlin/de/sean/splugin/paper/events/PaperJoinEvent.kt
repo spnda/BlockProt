@@ -41,6 +41,6 @@ class PaperJoinEvent : Listener {
         }
 
         /* Log the client brand name when a player joins */
-        Logger.getLogger("PaperJoinEvent").info("${player.displayName} has joined with ${player.clientBrandName}")
+        Logger.getLogger(this.javaClass.simpleName).info("${player.displayName} has joined with ${player.clientBrandName}")
     }
 }

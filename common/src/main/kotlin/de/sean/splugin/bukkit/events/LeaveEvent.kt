@@ -13,7 +13,7 @@ class LeaveEvent : Listener {
         val pluginConfig = PluginConfig.instance
 
         /* Format leave message */
-        val quitMessage = pluginConfig.getRandomMessageOrDefault("messages.join", "[player] has left the server!") // Default quit message
+        val quitMessage = pluginConfig.getRandomMessageOrDefault("messages.leave", "[player] has left the server!") // Default quit message
         event.quitMessage = quitMessage.replace("[player]", event.player.name)
 
         /* AFK */

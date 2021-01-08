@@ -16,9 +16,6 @@ dependencies {
     implementation 'com.google.guava:guava:30.1-jre'
     testImplementation 'junit:junit:4.13.1'
 
-    implementation ('net.dv8tion:JDA:4.2.0_224') { exclude module: 'opus-java' } // Discord (4.2.0_224)
-    implementation 'de.tr7zw:item-nbt-api-plugin:2.6.1' // item-nbt-api
-
     // Spigot is the easiest way to build against the Bukkit API and for it to still work with Paper and other Spigot forks
     compileOnly 'org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT' // Spigot
 }

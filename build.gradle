@@ -22,7 +22,7 @@ allprojects {
         }
         maven {
             name = 'CodeMC'
-            url = 'https://repo.codemc.org/repository/maven-public' 
+            url = 'https://repo.codemc.org/repository/maven-public/'
             content {
                 includeGroup 'de.tr7zw'
             }
@@ -30,7 +30,10 @@ allprojects {
     }
 
     dependencies {
-
+        plugins.withType(JavaPlugin) {
+            implementation('net.dv8tion:JDA:4.2.0_224') { exclude module: 'opus-java' } // Discord (4.2.0_224)
+            implementation 'de.tr7zw:item-nbt-api-plugin:2.7.1' // item-nbt-api
+        }
     }
 
     apply plugin: 'kotlin'

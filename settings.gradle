@@ -1,2 +1,3 @@
 rootProject.name = 'splugin'
-include 'spigot'
+include 'common'
+include 'splugin-spigot'

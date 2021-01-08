@@ -1,5 +1,5 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'com.github.johnrengelman.shadow'
     id 'application'
 }
 
@@ -11,14 +11,6 @@ dependencies {
     implementation project(':common')
 
     compileOnly 'org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT' // Spigot
-}
-
-jar {
-    setArchivesBaseName("${project.name}-${project.plugin_version}")
-}
-
-shadowJar {
-    archiveFileName = "${project.name}-${project.plugin_version}-${getArchiveClassifier().get()}.${getExtension()}"
 }
 
 application {

@@ -1,4 +1,13 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+}
+
 plugins {
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'org.jetbrains.kotlin.jvm' version '1.4.21-2'
 }
 
@@ -37,6 +46,14 @@ allprojects {
     }
 
     apply plugin: 'kotlin'
+
+    jar {
+        setArchivesBaseName("${project.name}-${project.plugin_version}")
+    }
+
+    shadowJar {
+        archiveFileName = "${project.name}-${project.plugin_version}-${getArchiveClassifier().get()}.${getExtension()}"
+    }
 }
 
 // Delete the unwanted output of the root project

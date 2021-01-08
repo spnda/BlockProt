@@ -7,13 +7,6 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.jdom:jdom2:2.0.6'
-    implementation 'org.ow2.asm:asm:9.0'
-    implementation 'org.ow2.asm:asm-commons:9.0'
-    implementation 'commons-io:commons-io:2.8.0'
-    implementation 'org.apache.ant:ant:1.10.9'
-    implementation 'org.codehaus.plexus:plexus-utils:3.3.0'
-    implementation 'com.google.guava:guava:30.1-jre'
     testImplementation 'junit:junit:4.13.1'
 
     // Spigot is the easiest way to build against the Bukkit API and for it to still work with Paper and other Spigot forks

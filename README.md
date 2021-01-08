@@ -1,44 +1,21 @@
 # SPlugin
 
-## 🤔 **What is it?**
+SPlugin is a Spigot/Paper plugin designed for a basic survival server.
+It is a lightweight and performant plugin, bringing you some essential features, including the ability to lock blocks 
+and connect your server with Discord.
 
-**_SPlugin_** is a lightweight spigot plugin designed for a basic server infrastructure. 
-Admins can define groups of users, players can lock chests/hoppers... and everything is configurable to the server.
+# 🔨️ Building yourself
 
-## 🔧 Configuration
-
-To further configure discord and in-game settings you will need to add a `config.yml` 
-file into `server/plugins/SPlugin`. When launching, there will be a default config there.
-An example config.yml file:
-```yml
-discord:
-    token: 'DISCORD_BOT_TOKEN'
-    channels:    
-        'GUILD_ID': 'CHANNEL_ID'
-        'GUILD2_ID': 'CHANNEL2_ID'
-messages:
-    join:
-    - '[player] has joined this server!'
-    - '[player] has joined the server.'
-players:
-    - 7bf18cg3-e1c6-4c2f-98sb-0e63f2f4ec9f:
-        role: CITIZEN
-roles:
-    CITIZEN:
-        name: "Citizen"
-        color: "YELLOW"
+SPlugin uses Gradle to handle dependencies as building.
+Make sure you have Java 8 and Git installed, then run
+```batch
+git clone https://github.com/spnda/SPlugin.git
+cd SPlugin/
+gradlew build
 ```
-Example permissions.yml file:
-```yml
-groups:
-    Default:
-        default: true
-        permissions:
-            - splugin.sit
-            - splugin.lock
-```
+All dependencies get shadowed automatically, meaning you won't need to install anything else on your server.
+The compiled JARs for Spigot and Paper can be found in `splugin-spigot/build/libs` and `splugin-paper/build/libs` respectively.
 
-## ▶️ Building yourself
+# 📋 License
 
-Simply clone this repository and use `gradlew build` to build your JAR into `./build/libs/`.
-All dependencies automatically get shadowed which means you won't need to put any dependency JARs anywhere you use this plugin.
+SPlugin is licensed under the MIT license, view `LICENSE` to learn more.

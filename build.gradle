@@ -54,6 +54,18 @@ allprojects {
     shadowJar {
         archiveFileName = "${project.name}-${project.plugin_version}-${getArchiveClassifier().get()}.${getExtension()}"
     }
+
+    task copyVersionToPlugin {
+        if (project.name != project.rootProject.name && project.name != "common") {
+            doFirst {
+                ant.replace(token: "\${project.version}", value: project.plugin_version) {
+                    fileset(dir: "${project.rootDir}/${project.name}/build/resources/main", includes: "plugin.yml")
+                }
+            }
+        }
+    }
+
+    processResources.finalizedBy copyVersionToPlugin
 }
 
 // Delete the unwanted output of the root project

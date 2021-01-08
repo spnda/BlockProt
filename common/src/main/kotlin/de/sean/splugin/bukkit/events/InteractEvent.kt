@@ -125,12 +125,13 @@ class InteractEvent : Listener {
                 }
             }
             else -> {
-                // If it's a flint and steel or TNT being used, log it. This could be a griefing attempt.
+                // Log suspicious activity. This could be a griefing attempt.
                 val item = event.item ?: return
                 val location = player.location
                 when (item.type) {
                     Material.FLINT_AND_STEEL -> Logger.getLogger("InteractEvent").info(player.name + " used flint and steel at " + location.x + ", " + location.y + ", " + location.z)
                     Material.TNT -> Logger.getLogger("InteractEvent").info(player.name + " placed TNT at " + location.x + ", " + location.y + ", " + location.z)
+                    Material.LAVA -> Logger.getLogger("InteractEvent").info(player.name + " placed lava at " + location.x + ", " + location.y + ", " + location.z)
                     else -> {}
                 }
             }

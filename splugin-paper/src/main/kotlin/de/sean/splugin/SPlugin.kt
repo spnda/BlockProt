@@ -2,6 +2,7 @@ package de.sean.splugin
 
 import de.sean.splugin.bukkit.events.*
 import de.sean.splugin.bukkit.tasks.AfkChecker
+import de.sean.splugin.bukkit.tasks.AfkPlayerManager
 import de.sean.splugin.discord.DefaultDiscordEventHandler
 import de.sean.splugin.discord.Discord
 import de.sean.splugin.paper.events.*
@@ -21,6 +22,8 @@ class SPlugin : JavaPlugin() {
         /* Config */
         val config: FileConfiguration = instance.config
         PluginConfig(config)
+
+        AfkPlayerManager.init(config)
 
         if (config.getBoolean("features.afk")) Bukkit.getServer().scheduler.scheduleSyncRepeatingTask(this, AfkChecker(), 0L, 20L)
 

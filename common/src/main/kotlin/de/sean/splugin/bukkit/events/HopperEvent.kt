@@ -18,7 +18,7 @@ class HopperEvent : Listener {
                     // Note: we do not have to check for double chests, as both sides of a chest are individually locked.
                     val sourceLocation = event.source.location ?: return
                     val handler = BlockLockHandler(NBTTileEntity(sourceLocation.block.state))
-                    if (!handler.isRedstoneProtected()) event.isCancelled = true
+                    if (handler.isRedstoneProtected()) event.isCancelled = true
                 }
                 else -> return
             }

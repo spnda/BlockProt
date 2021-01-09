@@ -62,19 +62,20 @@ class PaperInteractEvent : Listener {
             }
             in LockUtil.lockableBlocks -> {
                 if ((event.action == Action.RIGHT_CLICK_BLOCK) && player.isSneaking && player.hasPermission("splugin.lock")) {
-                    // The user shift-left clicked the chest and is wanting to open the chest edit menu.
+                    // The user shift-left clicked the block and is wanting to open the block edit menu.
                     val blockState = event.clickedBlock!!.state
                     val handler = BlockLockHandler(NBTTileEntity(blockState))
                     val owner = handler.getOwner()
                     val playerUuid = player.uniqueId.toString()
-                    // Don't open the menu if the player is not the owner of this chest.
-                    if (owner.isEmpty() || owner == playerUuid || event.player.isOp) {
+                    // Only open the menu if the player is the owner of this block
+                    // or if this block is not protected
+                    if (handler.isNotProtected() || owner == playerUuid || event.player.isOp) {
                         if (event.item == null) {
                             event.isCancelled = true
                             LockUtil.add(playerUuid, Vector3f.fromDouble(blockState.block.location.x, blockState.block.location.y, blockState.block.location.z))
                             val redstone = handler.getRedstone()
                             val inv: Inventory = BlockLockInventory.inventory
-                            if ((owner.isNotEmpty() && owner == playerUuid) || player.isOp) {
+                            if ((owner.isNotEmpty() && owner == playerUuid) || (owner.isNotEmpty() && player.isOp)) {
                                 inv.setItem(0, getItemStack(1, blockState.type, "Unlock"))
                                 inv.setItem(
                                     1,

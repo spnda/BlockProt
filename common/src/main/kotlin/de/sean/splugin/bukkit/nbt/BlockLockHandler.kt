@@ -31,7 +31,7 @@ class BlockLockHandler constructor(private val entity: NBTTileEntity) {
     fun isRedstoneProtected(): Boolean = getRedstone()
 
     fun isOwner(player: String) = getOwner() == player
-    fun canAccess(player: String) = getOwner() == player || getAccess().contains(player)
+    fun canAccess(player: String) = if (isProtected()) (getOwner() == player || getAccess().contains(player)) else getOwner().isEmpty()
 
     fun lockBlock(player: String, isOp: Boolean, doubleChest: NBTTileEntity?): Pair<Boolean, String> {
         var owner = container.getString(OWNER_ATTRIBUTE)

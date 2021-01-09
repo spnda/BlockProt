@@ -19,9 +19,10 @@ class ExplodeEvent : Listener {
                     in LockUtil.lockableBlocks -> {
                         // Someone owns this block, block its destroying.
                         val handler = BlockLockHandler(NBTTileEntity(b.state))
-                        if (handler.getOwner() != "") it.remove()
+                        if (handler.isProtected()) it.remove()
                     }
-                    else -> break
+                    // adding a break here affects the while loop causing it to only check one block
+                    else -> {}
                 }
             }
         } else if (e.entityType == EntityType.CREEPER) {

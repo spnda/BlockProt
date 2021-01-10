@@ -34,16 +34,16 @@ class BlockLockHandler constructor(private val entity: NBTTileEntity) {
     fun canAccess(player: String) = if (isProtected()) (getOwner() == player || getAccess().contains(player)) else getOwner().isEmpty()
 
     fun lockBlock(player: String, isOp: Boolean, doubleChest: NBTTileEntity?): Pair<Boolean, String> {
-        var owner = container.getString(OWNER_ATTRIBUTE)
-        if ((isOp && (owner == null || owner == "")) || (owner == null || owner == "")) {
+        var owner = container.getString(OWNER_ATTRIBUTE) ?: ""
+        if (owner.isEmpty()) {
             // This block is not owned by anyone, this user can claim this block
             owner = player
             container.setString(OWNER_ATTRIBUTE, owner)
-            doubleChest?.persistentDataContainer?.setString(OWNER_ATTRIBUTE, null)
+            doubleChest?.persistentDataContainer?.setString(OWNER_ATTRIBUTE, owner)
             return Pair(true, "Permission granted.")
-        } else if ((owner == player) || (isOp && owner != "")) {
-            container.setString(OWNER_ATTRIBUTE, null)
-            doubleChest?.persistentDataContainer?.setString(OWNER_ATTRIBUTE, null)
+        } else if ((owner == player) || (isOp && owner.isNotEmpty())) {
+            container.setString(OWNER_ATTRIBUTE, "")
+            doubleChest?.persistentDataContainer?.setString(OWNER_ATTRIBUTE, "")
             return Pair(true, "Unlocked.")
         }
         return Pair(false, "No permission.")

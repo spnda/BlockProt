@@ -8,9 +8,9 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 
-class JoinEvent : Listener {
+open class JoinEvent : Listener {
     @EventHandler
-    fun playerJoin(event: PlayerJoinEvent) {
+    open fun playerJoin(event: PlayerJoinEvent) {
         val player = event.player
         val pluginConfig = PluginConfig.instance
 

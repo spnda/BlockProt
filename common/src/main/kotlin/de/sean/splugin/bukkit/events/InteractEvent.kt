@@ -22,7 +22,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.util.logging.Logger
 
-class InteractEvent : Listener {
+open class InteractEvent : Listener {
     companion object {
         val sitableBlocks: List<Material> = mutableListOf(
             Material.PURPUR_STAIRS, Material.OAK_STAIRS, Material.COBBLESTONE_STAIRS, Material.BRICK_STAIRS, Material.STONE_BRICK_STAIRS, Material.NETHER_BRICK_STAIRS, Material.SANDSTONE_STAIRS, Material.SPRUCE_STAIRS, Material.BIRCH_STAIRS, Material.JUNGLE_STAIRS, Material.CRIMSON_STAIRS, Material.WARPED_STAIRS, Material.QUARTZ_STAIRS, Material.ACACIA_STAIRS, Material.DARK_OAK_STAIRS, Material.PRISMARINE_STAIRS, Material.PRISMARINE_BRICK_STAIRS, Material.DARK_PRISMARINE_STAIRS, Material.RED_SANDSTONE_STAIRS, Material.POLISHED_GRANITE_STAIRS, Material.MOSSY_STONE_BRICK_STAIRS, Material.POLISHED_DIORITE_STAIRS, Material.MOSSY_COBBLESTONE_STAIRS, Material.END_STONE_BRICK_STAIRS, Material.STONE_STAIRS, Material.SMOOTH_SANDSTONE_STAIRS, Material.SMOOTH_QUARTZ_STAIRS, Material.GRANITE_STAIRS, Material.ANDESITE_STAIRS, Material.RED_NETHER_BRICK_STAIRS, Material.POLISHED_ANDESITE_STAIRS, Material.DIORITE_STAIRS, Material.BLACKSTONE_STAIRS, Material.POLISHED_BLACKSTONE_STAIRS, Material.POLISHED_BLACKSTONE_BRICK_STAIRS
@@ -30,7 +30,7 @@ class InteractEvent : Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    fun playerInteract(event: PlayerInteractEvent) {
+    open fun playerInteract(event: PlayerInteractEvent) {
         val player = event.player
         AfkPlayerManager.setLastActivity(player.uniqueId, System.currentTimeMillis())
         if (AfkPlayerManager.isAfk(player.uniqueId)) {
@@ -114,13 +114,15 @@ class InteractEvent : Listener {
             }
             else -> {
                 // Log suspicious activity. This could be a griefing attempt.
-                val item = event.item ?: return
-                val location = player.location
-                when (item.type) {
-                    Material.FLINT_AND_STEEL -> Logger.getLogger(this.javaClass.simpleName).info(player.name + " used flint and steel at " + location.x + ", " + location.y + ", " + location.z)
-                    Material.TNT -> Logger.getLogger(this.javaClass.simpleName).info(player.name + " placed TNT at " + location.x + ", " + location.y + ", " + location.z)
-                    Material.LAVA -> Logger.getLogger(this.javaClass.simpleName).info(player.name + " placed lava at " + location.x + ", " + location.y + ", " + location.z)
-                    else -> {}
+                val item = event.item
+                if (item != null) {
+                    val location = player.location
+                    when (item.type) {
+                        Material.FLINT_AND_STEEL -> Logger.getLogger(this.javaClass.simpleName).info(player.name + " used flint and steel at " + location.x + ", " + location.y + ", " + location.z)
+                        Material.TNT -> Logger.getLogger(this.javaClass.simpleName).info(player.name + " placed TNT at " + location.x + ", " + location.y + ", " + location.z)
+                        Material.LAVA -> Logger.getLogger(this.javaClass.simpleName).info(player.name + " placed lava at " + location.x + ", " + location.y + ", " + location.z)
+                        else -> {}
+                    }
                 }
             }
         }

@@ -122,8 +122,8 @@ class InventoryEvent : Listener {
                             inv.setItem(9 + i, getPlayerSkull(Bukkit.getOfflinePlayer(UUID.fromString(access[i]))))
                             i++
                         }
-                        inv.setItem(0, getPlayerSkull(Bukkit.getOfflinePlayer(UUID.fromString(owner))))
-                        inv.setItem(8, getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, "Back"))
+                        if (owner.isNotEmpty()) inv.setItem(0, getPlayerSkull(Bukkit.getOfflinePlayer(UUID.fromString(owner))))
+                        if (access.isNotEmpty()) inv.setItem(8, getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, "Back"))
                         player.openInventory(inv)
                     }
                     Material.BLACK_STAINED_GLASS_PANE -> player.closeInventory()

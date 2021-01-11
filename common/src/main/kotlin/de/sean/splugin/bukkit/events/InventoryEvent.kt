@@ -118,6 +118,7 @@ class InventoryEvent : Listener {
                         owner = handler.getOwner()
                         val access = handler.getAccess()
                         var i = 0
+                        inv.clear() // If any items are still in the inventory from last request, clear them
                         while (i < access.size && i < 9) {
                             inv.setItem(9 + i, getPlayerSkull(Bukkit.getOfflinePlayer(UUID.fromString(access[i]))))
                             i++

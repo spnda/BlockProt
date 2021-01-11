@@ -35,7 +35,8 @@ class PaperInteractEvent : InteractEvent() {
         if (event.clickedBlock == null) return
         when (event.clickedBlock!!.type) {
             in signs -> {
-                event.player.openSign(event.clickedBlock?.state as Sign)
+                if (event.action == Action.RIGHT_CLICK_BLOCK)
+                    event.player.openSign(event.clickedBlock?.state as Sign)
             }
             else -> {}
         }

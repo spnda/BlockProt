@@ -40,7 +40,7 @@ allprojects {
 
     dependencies {
         plugins.withType(JavaPlugin) {
-            implementation('net.dv8tion:JDA:4.2.0_225') { exclude module: 'opus-java' } // Discord (4.2.0_225)
+            implementation('net.dv8tion:JDA:4.2.0_227') { exclude module: 'opus-java' } // Discord (4.2.0_227)
             implementation 'de.tr7zw:item-nbt-api-plugin:2.7.1' // item-nbt-api
         }
     }

@@ -52,7 +52,7 @@ class SPlugin : JavaPlugin() {
         pm.registerEvents(HopperEvent(), this)
         pm.registerEvents(PaperInteractEvent(), this)
         pm.registerEvents(InventoryEvent(), this)
-        pm.registerEvents(PaperJoinEvent(), this)
+        pm.registerEvents(PaperJoinEvent(this), this)
         pm.registerEvents(LeaveEvent(), this)
         pm.registerEvents(MessageEvent(), this)
         pm.registerEvents(MoveEvent(), this)

@@ -11,7 +11,7 @@ import org.bukkit.event.entity.EntityExplodeEvent
 class ExplodeEvent : Listener {
     @EventHandler
     fun onEntityExplode(e: EntityExplodeEvent) {
-        if (e.entityType == EntityType.MINECART_TNT || e.entityType == EntityType.PRIMED_TNT) {
+        if (e.entityType == EntityType.MINECART_TNT || e.entityType == EntityType.PRIMED_TNT || e.entityType == EntityType.ENDER_CRYSTAL || e.entityType == EntityType.FIREBALL || e.entityType == EntityType.SMALL_FIREBALL) {
             val it = e.blockList().iterator()
             while (it.hasNext()) {
                 val b = it.next()

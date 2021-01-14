@@ -35,7 +35,7 @@ class SPlugin : org.bukkit.plugin.java.JavaPlugin() {
     }
 
     private fun registerEvents(pm: PluginManager) {
-        pm.registerEvents(BlockEvent(), this) // Handles the placement/destruction of blocks by players
+        pm.registerEvents(BlockEvent(this), this) // Handles the placement/destruction of blocks by players
         pm.registerEvents(DeathEvent(), this) // Handles every player death event
         pm.registerEvents(DismountEvent(), this) // Handles every entity dismount
         pm.registerEvents(ExplodeEvent(), this) // Handles every explosion in the world

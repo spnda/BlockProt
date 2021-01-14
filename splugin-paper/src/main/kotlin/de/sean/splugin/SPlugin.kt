@@ -45,7 +45,7 @@ class SPlugin : JavaPlugin() {
 
     private fun registerEvents(pm: PluginManager) {
         // register all events
-        pm.registerEvents(BlockEvent(), this)
+        pm.registerEvents(BlockEvent(this), this)
         pm.registerEvents(DeathEvent(), this)
         pm.registerEvents(DismountEvent(), this)
         pm.registerEvents(ExplodeEvent(), this)

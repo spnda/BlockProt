@@ -27,12 +27,15 @@ repositories {
         url = 'https://repo.codemc.org/repository/maven-public/'
         content {
             includeGroup 'de.tr7zw'
+            includeGroup 'org.bstats'
         }
     }
 }
 
 dependencies {
     implementation 'de.tr7zw:item-nbt-api-plugin:2.7.1' // item-nbt-api
+
+    api 'org.bstats:bstats-bukkit:1.8'
 
     compileOnly 'org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT' // Spigot
 }
@@ -47,6 +50,8 @@ shadowJar {
     dependencies {
         exclude(dependency("de.tr7zw:.*:.*"))
     }
+
+    relocate 'org.bstats.bukkit', 'de.sean.blockprot.metrics'
 }
 
 task copyVersionToPlugin {

@@ -1,26 +1,12 @@
 package de.sean.splugin.paper.events
 
 import de.sean.splugin.bukkit.events.InteractEvent
-import de.sean.splugin.bukkit.inventories.BlockLockInventory
-import de.sean.splugin.bukkit.tasks.AfkPlayerManager
-import de.sean.splugin.bukkit.nbt.BlockLockHandler
-import de.sean.splugin.bukkit.nbt.LockUtil
-import de.sean.splugin.util.ItemUtil.getItemStack
-import de.sean.splugin.util.Vector3f
-import de.tr7zw.nbtapi.NBTTileEntity
 import org.bukkit.Material
 import org.bukkit.block.Sign
-import org.bukkit.entity.Arrow
-import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
-import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.inventory.Inventory
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
-import java.util.logging.Logger
 
 class PaperInteractEvent : InteractEvent() {
     companion object {

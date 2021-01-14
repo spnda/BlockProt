@@ -46,13 +46,10 @@ class SPlugin : JavaPlugin() {
 
     private fun registerEvents(pm: PluginManager) {
         // register all events
-        registerEvent(pm, BlockEvent(this))
         registerEvent(pm, DeathEvent())
         registerEvent(pm, DismountEvent())
         registerEvent(pm, ExplodeEvent())
-        registerEvent(pm, HopperEvent())
         registerEvent(pm, PaperInteractEvent())
-        registerEvent(pm, InventoryEvent())
         registerEvent(pm, PaperJoinEvent(this))
         registerEvent(pm, LeaveEvent())
         registerEvent(pm, MessageEvent())

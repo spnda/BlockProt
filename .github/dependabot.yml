@@ -6,7 +6,12 @@
 version: 2
 updates:
   - package-ecosystem: "gradle" # See documentation for possible values
-    directory: "/" # Location of package manifests
+    directory: "/BlockProt" # Location of package manifests
+    schedule:
+      interval: "weekly" # We will just check for updates every week.
+      day: "monday" # Monday is the default
+  - package-ecosystem: "gradle" # See documentation for possible values
+    directory: "/SPlugin" # Location of package manifests
     schedule:
       interval: "weekly" # We will just check for updates every week.
       day: "monday" # Monday is the default

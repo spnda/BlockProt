@@ -1,0 +1,13 @@
+name: BlockProt
+version: ${project.version}
+main: de.sean.blockprot.BlockProt
+api-version: 1.16
+authors: [ spnda ]
+description: A simple block protection plugin
+prefix: BlockProt
+website: https://www.github.com/spnda/SPlugin
+depend:
+  - NBTAPI
+permissions:
+  blockprot.lock:
+    description: Allows a player to lock blocks

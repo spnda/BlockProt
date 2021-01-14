@@ -43,6 +43,10 @@ jar {
 
 shadowJar {
     archiveFileName = "${project.name}-${project.plugin_version}-${getArchiveClassifier().get()}.${getExtension()}"
+
+    dependencies {
+        exclude(dependency("de.tr7zw:.*:.*"))
+    }
 }
 
 task copyVersionToPlugin {

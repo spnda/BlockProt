@@ -23,7 +23,7 @@ open class InteractEvent : Listener {
         if (event.clickedBlock == null) return
         when (event.clickedBlock!!.type) {
             in LockUtil.lockableBlocks -> {
-                if ((event.action == Action.RIGHT_CLICK_BLOCK) && player.isSneaking && player.hasPermission("splugin.lock")) {
+                if ((event.action == Action.RIGHT_CLICK_BLOCK) && player.isSneaking && player.hasPermission("blockprot.lock")) {
                     // The user shift-left clicked the block and is wanting to open the block edit menu.
                     val blockState = event.clickedBlock!!.state
                     val handler = BlockLockHandler(NBTTileEntity(blockState))

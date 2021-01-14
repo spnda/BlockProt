@@ -9,6 +9,7 @@ import de.sean.splugin.paper.events.*
 import de.sean.splugin.util.PluginConfig
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.FileConfiguration
+import org.bukkit.event.Listener
 import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -45,17 +46,21 @@ class SPlugin : JavaPlugin() {
 
     private fun registerEvents(pm: PluginManager) {
         // register all events
-        pm.registerEvents(BlockEvent(this), this)
-        pm.registerEvents(DeathEvent(), this)
-        pm.registerEvents(DismountEvent(), this)
-        pm.registerEvents(ExplodeEvent(), this)
-        pm.registerEvents(HopperEvent(), this)
-        pm.registerEvents(PaperInteractEvent(), this)
-        pm.registerEvents(InventoryEvent(), this)
-        pm.registerEvents(PaperJoinEvent(this), this)
-        pm.registerEvents(LeaveEvent(), this)
-        pm.registerEvents(MessageEvent(), this)
-        pm.registerEvents(MoveEvent(), this)
+        registerEvent(pm, BlockEvent(this))
+        registerEvent(pm, DeathEvent())
+        registerEvent(pm, DismountEvent())
+        registerEvent(pm, ExplodeEvent())
+        registerEvent(pm, HopperEvent())
+        registerEvent(pm, PaperInteractEvent())
+        registerEvent(pm, InventoryEvent())
+        registerEvent(pm, PaperJoinEvent(this))
+        registerEvent(pm, LeaveEvent())
+        registerEvent(pm, MessageEvent())
+        registerEvent(pm, MoveEvent())
+    }
+
+    private fun registerEvent(pm: PluginManager, listener: Listener) {
+        pm.registerEvents(listener, this)
     }
 
     private fun registerCommands() {

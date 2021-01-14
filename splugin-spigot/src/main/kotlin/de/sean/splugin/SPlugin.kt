@@ -8,6 +8,7 @@ import de.sean.splugin.discord.Discord
 import de.sean.splugin.util.PluginConfig
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.FileConfiguration
+import org.bukkit.event.Listener
 import org.bukkit.plugin.PluginManager
 
 class SPlugin : org.bukkit.plugin.java.JavaPlugin() {
@@ -35,16 +36,20 @@ class SPlugin : org.bukkit.plugin.java.JavaPlugin() {
     }
 
     private fun registerEvents(pm: PluginManager) {
-        pm.registerEvents(BlockEvent(this), this) // Handles the placement/destruction of blocks by players
-        pm.registerEvents(DeathEvent(), this) // Handles every player death event
-        pm.registerEvents(DismountEvent(), this) // Handles every entity dismount
-        pm.registerEvents(ExplodeEvent(), this) // Handles every explosion in the world
-        pm.registerEvents(InteractEvent(), this) // Handles every block interaction by a player
-        pm.registerEvents(InventoryEvent(), this) // Handles every inventory interaction
-        pm.registerEvents(JoinEvent(), this) // Handles every user join event
-        pm.registerEvents(LeaveEvent(), this) // Handles every user leave event
-        pm.registerEvents(MessageEvent(), this) // Handles every chat message event
-        pm.registerEvents(MoveEvent(), this) // Handles every move of a player
+        registerEvent(pm, BlockEvent(this)) // Handles the placement/destruction of blocks by players
+        registerEvent(pm, DeathEvent()) // Handles every player death event
+        registerEvent(pm, DismountEvent()) // Handles every entity dismount
+        registerEvent(pm, ExplodeEvent()) // Handles every explosion in the world
+        registerEvent(pm, InteractEvent()) // Handles every block interaction by a player
+        registerEvent(pm, InventoryEvent()) // Handles every inventory interaction
+        registerEvent(pm, JoinEvent()) // Handles every user join event
+        registerEvent(pm, LeaveEvent()) // Handles every user leave event
+        registerEvent(pm, MessageEvent()) // Handles every chat message event
+        registerEvent(pm, MoveEvent()) // Handles every move of a player
+    }
+
+    private fun registerEvent(pm: PluginManager, listener: Listener) {
+        pm.registerEvents(listener, this)
     }
 
     private fun registerCommands() {

@@ -50,9 +50,9 @@ class InventoryEvent : Listener {
                         handler = BlockLockHandler(NBTTileEntity(block.state))
                         val doubleChest = getDoubleChest(block, player.world)
                         val ret = handler.lockBlock(player.uniqueId.toString(), player.isOp, if (doubleChest != null) NBTTileEntity(doubleChest) else null)
-                        if (ret.first) {
+                        if (ret.success) {
                             player.closeInventory()
-                            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.second))
+                            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
                         }
                         event.isCancelled = true
                     }
@@ -62,9 +62,9 @@ class InventoryEvent : Listener {
                         handler = BlockLockHandler(NBTTileEntity(block.state))
                         val doubleChest = getDoubleChest(block, player.world)
                         val ret = handler.lockRedstoneForBlock(player.uniqueId.toString(), if (doubleChest != null) NBTTileEntity(doubleChest) else null)
-                        if (ret.first) {
+                        if (ret.success) {
                             player.closeInventory()
-                            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.second))
+                            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
                         }
                         event.isCancelled = true
                     }
@@ -150,9 +150,9 @@ class InventoryEvent : Listener {
                     val friend = skull.owningPlayer?.uniqueId.toString()
                     val doubleChest = getDoubleChest(block, player.world)
                     val ret = handler.addFriend(player.uniqueId.toString(), friend, if (doubleChest != null) NBTTileEntity(doubleChest) else null)
-                    if (ret.first) {
+                    if (ret.success) {
                         player.closeInventory()
-                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.second))
+                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
                     }
                 }
                 event.isCancelled = true
@@ -176,9 +176,9 @@ class InventoryEvent : Listener {
                     val friend = skull.owningPlayer?.uniqueId.toString()
                     val doubleChest = getDoubleChest(block, player.world)
                     val ret = handler.removeFriend(player.uniqueId.toString(), friend, if (doubleChest != null) NBTTileEntity(doubleChest) else null)
-                    if (ret.first) {
+                    if (ret.success) {
                         player.closeInventory()
-                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.second))
+                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
                     }
                 }
                 event.isCancelled = true

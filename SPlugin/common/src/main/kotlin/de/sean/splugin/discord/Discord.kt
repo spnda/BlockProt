@@ -12,6 +12,8 @@ import javax.security.auth.login.LoginException
 class Discord(config: FileConfiguration) {
     companion object {
         lateinit var instance: Discord
+
+        fun isInitialized(): Boolean = ::instance.isInitialized
     }
 
     private var jda: JDA? = null

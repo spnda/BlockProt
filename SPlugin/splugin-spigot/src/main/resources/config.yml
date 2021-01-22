@@ -20,6 +20,9 @@ discord:
     # You can define multiple combinations to stream to multiple channels in multiple guilds.
   joinMessage: false # Whether or not to send a message to discord when a player joins the server.
   leaveMessage: false # Whether or not to send a message to discord when a player leaves the server.
+  activities:
+    - "Minecraft"
+    - "[players] online!"
 
 messages:
   join:

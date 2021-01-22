@@ -3,6 +3,7 @@ package de.sean.splugin
 import de.sean.splugin.bukkit.events.*
 import de.sean.splugin.bukkit.tasks.AfkChecker
 import de.sean.splugin.bukkit.tasks.AfkPlayerManager
+import de.sean.splugin.bukkit.tasks.DiscordActivityUpdater
 import de.sean.splugin.discord.DefaultDiscordEventHandler
 import de.sean.splugin.discord.Discord
 import de.sean.splugin.util.PluginConfig
@@ -21,6 +22,7 @@ class SPlugin : org.bukkit.plugin.java.JavaPlugin() {
         AfkPlayerManager.init(config)
 
         if (config.getBoolean("features.afk")) Bukkit.getServer().scheduler.scheduleSyncRepeatingTask(this, AfkChecker(), 0L, 20L)
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, DiscordActivityUpdater(config), 0L, 20L * 60L * 5L) // 20L * 60L * 5L, 20 ticks * 60 seconds * 5 => 5 minutes in ticks
 
         /* Events & Commands */
         registerEvents(Bukkit.getServer().pluginManager)

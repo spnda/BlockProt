@@ -70,7 +70,7 @@ class InventoryEvent : Listener {
                     }
                     Material.PLAYER_HEAD -> {
                         player.closeInventory()
-                        inv = FriendAddInventory.inventory
+                        inv = FriendAddInventory.createInventory()
                         inv.clear()
                         block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString()))
                         if (block == null) return
@@ -94,7 +94,7 @@ class InventoryEvent : Listener {
                     }
                     Material.ZOMBIE_HEAD -> {
                         player.closeInventory()
-                        inv = FriendRemoveInventory.inventory
+                        inv = FriendRemoveInventory.createInventory()
                         inv.clear()
                         block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString()))
                         if (block == null) return
@@ -111,7 +111,7 @@ class InventoryEvent : Listener {
                     }
                     Material.OAK_SIGN -> {
                         player.closeInventory()
-                        inv = BlockInfoInventory.inventory
+                        inv = BlockInfoInventory.createInventory()
                         block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString()))
                         if (block == null) return
                         handler = BlockLockHandler(NBTTileEntity(block.state))
@@ -137,7 +137,7 @@ class InventoryEvent : Listener {
                 if (item.type == Material.BLACK_STAINED_GLASS_PANE) {
                     player.closeInventory()
                     val redstone = handler.getRedstone()
-                    val inv = BlockLockInventory.inventory
+                    val inv = BlockLockInventory.createInventory()
                     inv.setItem(0, getItemStack(1, block.state.type, "Unlock"))
                     inv.setItem(1, getItemStack(1, if (redstone) Material.GUNPOWDER else Material.REDSTONE, if (redstone) "Activate Redstone" else "Deactivate Redstone"))
                     inv.setItem(2, getItemStack(1, Material.PLAYER_HEAD, "Add Friends"))
@@ -163,7 +163,7 @@ class InventoryEvent : Listener {
                 if (item.type == Material.BLACK_STAINED_GLASS_PANE) {
                     player.closeInventory()
                     val redstone = handler.getRedstone()
-                    val inv = BlockLockInventory.inventory
+                    val inv = BlockLockInventory.createInventory()
                     inv.setItem(0, getItemStack(1, block.state.type, "Unlock"))
                     inv.setItem(1, getItemStack(1, if (redstone) Material.GUNPOWDER else Material.REDSTONE, if (redstone) "Activate Redstone" else "Deactivate Redstone"))
                     inv.setItem(2, getItemStack(1, Material.PLAYER_HEAD, "Add Friends"))
@@ -189,7 +189,7 @@ class InventoryEvent : Listener {
                     val block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString())) ?: return
                     val handler = BlockLockHandler(NBTTileEntity(block.state))
                     val redstone = handler.getRedstone()
-                    val inv = BlockLockInventory.inventory
+                    val inv = BlockLockInventory.createInventory()
                     inv.setItem(0, getItemStack(1, block.state.type, "Unlock"))
                     inv.setItem(1, getItemStack(1, if (redstone) Material.GUNPOWDER else Material.REDSTONE, if (redstone) "Activate Redstone" else "Deactivate Redstone"))
                     inv.setItem(2, getItemStack(1, Material.PLAYER_HEAD, "Add Friends"))

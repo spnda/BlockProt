@@ -36,7 +36,7 @@ open class InteractEvent : Listener {
                             event.isCancelled = true
                             LockUtil.add(playerUuid, Vector3f.fromDouble(blockState.block.location.x, blockState.block.location.y, blockState.block.location.z))
                             val redstone = handler.getRedstone()
-                            val inv: Inventory = BlockLockInventory.inventory
+                            val inv: Inventory = BlockLockInventory.createInventory()
                             if ((owner.isNotEmpty() && owner == playerUuid) || (owner.isNotEmpty() && player.isOp)) {
                                 inv.setItem(0, getItemStack(1, blockState.type, "Unlock"))
                                 inv.setItem(

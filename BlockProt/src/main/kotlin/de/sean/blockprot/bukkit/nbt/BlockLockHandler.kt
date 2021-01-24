@@ -43,7 +43,9 @@ class BlockLockHandler constructor(entity: NBTTileEntity) {
             return LockReturnValue(true, "Permission granted.")
         } else if ((owner == player) || (isOp && owner.isNotEmpty())) {
             container.setString(OWNER_ATTRIBUTE, "")
+            container.setString(LOCK_ATTRIBUTE, "") // Also clear the friends
             doubleChest?.persistentDataContainer?.setString(OWNER_ATTRIBUTE, "")
+            doubleChest?.persistentDataContainer?.setString(LOCK_ATTRIBUTE, "") // Also clear the friends
             return LockReturnValue(true, "Unlocked.")
         }
         return LockReturnValue(false, "No permission.")

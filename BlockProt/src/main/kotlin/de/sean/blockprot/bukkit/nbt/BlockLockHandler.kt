@@ -1,15 +1,12 @@
 package de.sean.blockprot.bukkit.nbt
 
+import de.sean.blockprot.bukkit.nbt.LockUtil.LOCK_ATTRIBUTE
+import de.sean.blockprot.bukkit.nbt.LockUtil.OWNER_ATTRIBUTE
+import de.sean.blockprot.bukkit.nbt.LockUtil.REDSTONE_ATTRIBUTE
 import de.tr7zw.nbtapi.NBTTileEntity
 import java.util.ArrayList
 
 class BlockLockHandler constructor(entity: NBTTileEntity) {
-    companion object {
-        const val OWNER_ATTRIBUTE = "splugin_owner"
-        const val LOCK_ATTRIBUTE = "splugin_lock"
-        const val REDSTONE_ATTRIBUTE = "splugin_lock_redstone"
-    }
-
     private val container = entity.persistentDataContainer
 
     private fun parseStringList(str: String): List<String> {

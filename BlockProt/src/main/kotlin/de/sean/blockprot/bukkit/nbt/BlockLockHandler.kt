@@ -71,7 +71,7 @@ class BlockLockHandler constructor(entity: NBTTileEntity) {
         if (!access.contains(newFriend)) {
             access = access.plus(newFriend)
             container.setString(LOCK_ATTRIBUTE, access.toString())
-            doubleChest?.setString(LOCK_ATTRIBUTE, access.toString())
+            doubleChest?.persistentDataContainer?.setString(LOCK_ATTRIBUTE, access.toString())
             return LockReturnValue(true, "Permission granted.")
         }
         return LockReturnValue(false, "Friend already added.")
@@ -85,7 +85,7 @@ class BlockLockHandler constructor(entity: NBTTileEntity) {
         if (access.contains(friend)) {
             access = access.minus(friend)
             container.setString(LOCK_ATTRIBUTE, access.toString())
-            doubleChest?.setString(LOCK_ATTRIBUTE, access.toString())
+            doubleChest?.persistentDataContainer?.setString(LOCK_ATTRIBUTE, access.toString())
             return LockReturnValue(true, "Permission removed.")
         }
         return LockReturnValue(false, "Friend does not exist")

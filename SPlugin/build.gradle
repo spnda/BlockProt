@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 buildscript {
     repositories {
         maven {
@@ -54,17 +56,11 @@ allprojects {
         archiveFileName = "${project.name}-${project.plugin_version}-${getArchiveClassifier().get()}.${getExtension()}"
     }
 
-    task copyVersionToPlugin {
-        if (project.name != project.rootProject.name && project.name != "common") {
-            doFirst {
-                ant.replace(token: "\${project.version}", value: project.plugin_version) {
-                    fileset(dir: "${project.rootDir}/${project.name}/build/resources/main", includes: "plugin.yml")
-                }
-            }
+    processResources {
+        from(sourceSets.main.resources.srcDirs) {
+            filter ReplaceTokens, tokens: [version: project.plugin_version]
         }
     }
-
-    processResources.finalizedBy copyVersionToPlugin
 }
 
 // Delete the unwanted output of the root project

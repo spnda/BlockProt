@@ -1,5 +1,5 @@
 name: SPlugin
-version: ${project.version}
+version: @version@
 main: de.sean.splugin.SPlugin
 api-version: 1.16
 authors: [ spnda ]

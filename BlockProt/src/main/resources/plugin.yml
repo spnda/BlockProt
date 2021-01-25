@@ -1,11 +1,11 @@
 name: BlockProt
-version: ${project.version}
+version: @version@
 main: de.sean.blockprot.BlockProt
 api-version: 1.16
 authors: [ spnda ]
 description: A simple block protection plugin
 prefix: BlockProt
-website: https://www.github.com/spnda/SPlugin
+website: https://www.github.com/spnda/BukkitPlugins
 depend:
   - NBTAPI
 permissions:

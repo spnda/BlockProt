@@ -10,7 +10,7 @@ repositories {
 dependencies {
     implementation project(':common')
 
-    compileOnly 'org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT' // Spigot
+    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT' // Spigot
 }
 
 application {

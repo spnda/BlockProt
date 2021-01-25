@@ -39,7 +39,7 @@ dependencies {
 
     api 'org.bstats:bstats-bukkit:1.8'
 
-    compileOnly 'org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT' // Spigot
+    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT' // Spigot
 }
 
 jar {

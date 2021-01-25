@@ -37,7 +37,7 @@ repositories {
 dependencies {
     implementation 'de.tr7zw:item-nbt-api-plugin:2.7.1' // item-nbt-api
 
-    api 'org.bstats:bstats-bukkit:1.8'
+    api 'org.bstats:bstats-bukkit:2.1.0'
 
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT' // Spigot
 }

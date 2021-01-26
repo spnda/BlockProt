@@ -1,6 +1,7 @@
 package de.sean.blockprot
 
 import de.sean.blockprot.bukkit.events.*
+import de.sean.blockprot.bukkit.tasks.UpdateChecker
 import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
@@ -16,6 +17,9 @@ class BlockProt : JavaPlugin() {
 
     override fun onEnable() {
         this.also { instance = it }.saveDefaultConfig()
+
+        /* Check for updates */
+        Bukkit.getScheduler().runTaskAsynchronously(this, UpdateChecker(description))
 
         /* bStats Metrics */
         metrics = Metrics(this, pluginId)

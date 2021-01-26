@@ -18,7 +18,7 @@ class DoubleChestLocker(private val newHandler: BlockLockHandler, val block: Blo
             return
         }
         val oldChestHandler = BlockLockHandler(NBTTileEntity(doubleChest))
-        if (oldChestHandler.getOwner() != player.uniqueId.toString()) {
+        if (oldChestHandler.isProtected() && oldChestHandler.getOwner() != player.uniqueId.toString()) {
             callback.accept(false)
         } else {
             newHandler.setOwner(oldChestHandler.getOwner())

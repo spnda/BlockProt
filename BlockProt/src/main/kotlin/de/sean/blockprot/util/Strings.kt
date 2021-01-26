@@ -29,6 +29,11 @@ object Strings {
     val BLOCK_LOCK_REDSTONE_ACTIVATE = getString("inventories.block_lock.items.redstone.activate", "Activate Redstone")
     val BLOCK_LOCK_REDSTONE_DEACTIVATE = getString("inventories.block_lock.items.redstone.deactivate", "Deactivate Redstone")
 
+    // Permissions
+    val BLOCKPROT_LOCK = "blockprot.lock"
+    val BLOCKPROT_INFO = "blockprot.info"
+    val BLOCKPROT_ADMIN = "blockprot.admin"
+
     /**
      * Get a message from the config by string entry. If it cannot be found and
      * default is not null, default is returned

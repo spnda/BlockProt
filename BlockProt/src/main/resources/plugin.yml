@@ -11,3 +11,7 @@ depend:
 permissions:
   blockprot.lock:
     description: Allows a player to lock blocks
+  blockprot.info:
+    description: Allows a player to view info on any locked blocks
+  blockprot.admin:
+    description: Allows a player to unlock and edit other blocks that do not belong to them

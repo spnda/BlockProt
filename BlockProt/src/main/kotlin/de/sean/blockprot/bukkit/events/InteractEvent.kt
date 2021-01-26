@@ -6,6 +6,7 @@ import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.util.ItemUtil.getItemStack
 import de.sean.blockprot.util.Strings
 import de.sean.blockprot.util.Vector3f
+import de.sean.blockprot.util.createBaseInventory
 import de.tr7zw.nbtapi.NBTTileEntity
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -24,7 +25,7 @@ open class InteractEvent : Listener {
         if (event.clickedBlock == null) return
         when (event.clickedBlock!!.type) {
             in LockUtil.lockableBlocks -> {
-                if ((event.action == Action.RIGHT_CLICK_BLOCK) && player.isSneaking && player.hasPermission("blockprot.lock")) {
+                if ((event.action == Action.RIGHT_CLICK_BLOCK) && player.isSneaking && player.hasPermission(Strings.BLOCKPROT_LOCK)) {
                     // The user shift-left clicked the block and is wanting to open the block edit menu.
                     val blockState = event.clickedBlock!!.state
                     val handler = BlockLockHandler(NBTTileEntity(blockState))
@@ -32,28 +33,14 @@ open class InteractEvent : Listener {
                     val playerUuid = player.uniqueId.toString()
                     // Only open the menu if the player is the owner of this block
                     // or if this block is not protected
-                    if (handler.isNotProtected() || owner == playerUuid || event.player.isOp) {
+                    if (handler.isNotProtected() || owner == playerUuid || event.player.isOp || player.hasPermission(Strings.BLOCKPROT_INFO) || player.hasPermission(Strings.BLOCKPROT_ADMIN)) {
                         if (event.item == null) {
                             event.isCancelled = true
                             LockUtil.add(playerUuid, Vector3f.fromDouble(blockState.block.location.x, blockState.block.location.y, blockState.block.location.z))
                             val redstone = handler.getRedstone()
-                            val inv: Inventory = BlockLockInventory.createInventory()
-                            if ((owner.isNotEmpty() && owner == playerUuid) || (owner.isNotEmpty() && player.isOp)) {
-                                inv.setItem(0, getItemStack(1, blockState.type, Strings.UNLOCK))
-                                inv.setItem(
-                                    1,
-                                    getItemStack(
-                                        1,
-                                        if (redstone) Material.GUNPOWDER else Material.REDSTONE,
-                                        if (redstone) Strings.BLOCK_LOCK_REDSTONE_ACTIVATE
-                                        else Strings.BLOCK_LOCK_REDSTONE_DEACTIVATE
-                                    )
-                                )
-                                inv.setItem(2, getItemStack(1, Material.PLAYER_HEAD, Strings.BLOCK_LOCK_ADD_FRIENDS))
-                                inv.setItem(3, getItemStack(1, Material.ZOMBIE_HEAD, Strings.BLOCK_LOCK_REMOVE_FRIENDS))
-                                if (player.isOp) {
-                                    inv.setItem(4, getItemStack(1, Material.OAK_SIGN, Strings.BLOCK_LOCK_INFO))
-                                }
+                            var inv: Inventory = BlockLockInventory.createInventory()
+                            if ((owner.isNotEmpty() && owner == playerUuid) || (owner.isNotEmpty() && (player.isOp || player.hasPermission(Strings.BLOCKPROT_INFO) || player.hasPermission(Strings.BLOCKPROT_ADMIN)))) {
+                               inv = createBaseInventory(player, blockState.type, handler)
                             } else {
                                 inv.setItem(0, getItemStack(1, blockState.type, Strings.LOCK))
                                 var i = 1

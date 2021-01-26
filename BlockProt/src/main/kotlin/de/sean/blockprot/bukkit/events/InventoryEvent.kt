@@ -7,6 +7,7 @@ import de.sean.blockprot.util.ItemUtil.getItemStack
 import de.sean.blockprot.util.ItemUtil.getPlayerSkull
 import de.sean.blockprot.util.Strings
 import de.sean.blockprot.util.Vector3f
+import de.sean.blockprot.util.createBaseInventory
 import de.tr7zw.nbtapi.NBTTileEntity
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -138,13 +139,7 @@ class InventoryEvent : Listener {
                 if (item.type == Material.BLACK_STAINED_GLASS_PANE) {
                     player.closeInventory()
                     val redstone = handler.getRedstone()
-                    val inv = BlockLockInventory.createInventory()
-                    inv.setItem(0, getItemStack(1, block.state.type, Strings.UNLOCK))
-                    inv.setItem(1, getItemStack(1, if (redstone) Material.GUNPOWDER else Material.REDSTONE, if (redstone) Strings.BLOCK_LOCK_REDSTONE_ACTIVATE else Strings.BLOCK_LOCK_REDSTONE_DEACTIVATE))
-                    inv.setItem(2, getItemStack(1, Material.PLAYER_HEAD, Strings.BLOCK_LOCK_ADD_FRIENDS))
-                    inv.setItem(3, getItemStack(1, Material.ZOMBIE_HEAD, Strings.BLOCK_LOCK_REMOVE_FRIENDS))
-                    if (player.isOp) inv.setItem(4, getItemStack(1, Material.OAK_SIGN, Strings.BLOCK_LOCK_INFO))
-                    inv.setItem(8, getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, Strings.BACK))
+                    val inv = createBaseInventory(player, block.state.type, handler)
                     player.openInventory(inv)
                 } else if (item.type == Material.PLAYER_HEAD) {
                     val skull = item.itemMeta as SkullMeta? ?: return // Generic player head?
@@ -164,13 +159,7 @@ class InventoryEvent : Listener {
                 if (item.type == Material.BLACK_STAINED_GLASS_PANE) {
                     player.closeInventory()
                     val redstone = handler.getRedstone()
-                    val inv = BlockLockInventory.createInventory()
-                    inv.setItem(0, getItemStack(1, block.state.type, Strings.UNLOCK))
-                    inv.setItem(1, getItemStack(1, if (redstone) Material.GUNPOWDER else Material.REDSTONE, if (redstone) Strings.BLOCK_LOCK_REDSTONE_ACTIVATE else Strings.BLOCK_LOCK_REDSTONE_DEACTIVATE))
-                    inv.setItem(2, getItemStack(1, Material.PLAYER_HEAD, Strings.BLOCK_LOCK_ADD_FRIENDS))
-                    inv.setItem(3, getItemStack(1, Material.ZOMBIE_HEAD, Strings.BLOCK_LOCK_REMOVE_FRIENDS))
-                    if (player.isOp) inv.setItem(4, getItemStack(1, Material.OAK_SIGN, Strings.BLOCK_LOCK_INFO))
-                    inv.setItem(8, getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, Strings.BACK))
+                    val inv = createBaseInventory(player, block.state.type, handler)
                     player.openInventory(inv)
                 } else if (item.type == Material.PLAYER_HEAD) {
                     val skull = item.itemMeta as SkullMeta? ?: return // Generic player head?
@@ -190,13 +179,7 @@ class InventoryEvent : Listener {
                     val block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString())) ?: return
                     val handler = BlockLockHandler(NBTTileEntity(block.state))
                     val redstone = handler.getRedstone()
-                    val inv = BlockLockInventory.createInventory()
-                    inv.setItem(0, getItemStack(1, block.state.type, Strings.UNLOCK))
-                    inv.setItem(1, getItemStack(1, if (redstone) Material.GUNPOWDER else Material.REDSTONE, if (redstone) Strings.BLOCK_LOCK_REDSTONE_ACTIVATE else Strings.BLOCK_LOCK_REDSTONE_DEACTIVATE))
-                    inv.setItem(2, getItemStack(1, Material.PLAYER_HEAD, Strings.BLOCK_LOCK_ADD_FRIENDS))
-                    inv.setItem(3, getItemStack(1, Material.ZOMBIE_HEAD, Strings.BLOCK_LOCK_REMOVE_FRIENDS))
-                    if (player.isOp) inv.setItem(4, getItemStack(1, Material.OAK_SIGN, Strings.BLOCK_LOCK_INFO))
-                    inv.setItem(8, getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, Strings.BACK))
+                    val inv = createBaseInventory(player, block.state.type, handler)
                     player.openInventory(inv)
                 }
                 event.isCancelled = true

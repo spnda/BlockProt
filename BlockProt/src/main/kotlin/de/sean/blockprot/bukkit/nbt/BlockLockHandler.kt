@@ -3,6 +3,7 @@ package de.sean.blockprot.bukkit.nbt
 import de.sean.blockprot.bukkit.nbt.LockUtil.LOCK_ATTRIBUTE
 import de.sean.blockprot.bukkit.nbt.LockUtil.OWNER_ATTRIBUTE
 import de.sean.blockprot.bukkit.nbt.LockUtil.REDSTONE_ATTRIBUTE
+import de.sean.blockprot.util.Strings
 import de.tr7zw.nbtapi.NBTTileEntity
 import java.util.ArrayList
 
@@ -37,15 +38,15 @@ class BlockLockHandler constructor(entity: NBTTileEntity) {
             owner = player
             container.setString(OWNER_ATTRIBUTE, owner)
             doubleChest?.persistentDataContainer?.setString(OWNER_ATTRIBUTE, owner)
-            return LockReturnValue(true, "Permission granted.")
+            return LockReturnValue(true, Strings.PERMISSION_GRANTED)
         } else if ((owner == player) || (isOp && owner.isNotEmpty())) {
             container.setString(OWNER_ATTRIBUTE, "")
             container.setString(LOCK_ATTRIBUTE, "") // Also clear the friends
             doubleChest?.persistentDataContainer?.setString(OWNER_ATTRIBUTE, "")
             doubleChest?.persistentDataContainer?.setString(LOCK_ATTRIBUTE, "") // Also clear the friends
-            return LockReturnValue(true, "Unlocked.")
+            return LockReturnValue(true, Strings.UNLOCKED)
         }
-        return LockReturnValue(false, "No permission.")
+        return LockReturnValue(false, Strings.NO_PERMISSION)
     }
 
     fun lockRedstoneForBlock(player: String, doubleChest: NBTTileEntity?): LockReturnValue {
@@ -54,38 +55,41 @@ class BlockLockHandler constructor(entity: NBTTileEntity) {
             val redstone = container.getBoolean(REDSTONE_ATTRIBUTE)
             container.setBoolean(REDSTONE_ATTRIBUTE, !redstone) // Just flip the boolean value
             doubleChest?.persistentDataContainer?.setBoolean(REDSTONE_ATTRIBUTE, !redstone)
-            return LockReturnValue(true, if (redstone) "Redstone protection removed." else "Redstone protection added.")
+            return if (redstone)
+                LockReturnValue(true, Strings.REDSTONE_ADDED)
+            else
+                LockReturnValue(true, Strings.REDSTONE_REMOVED)
         }
-        return LockReturnValue(false, "No permission.")
+        return LockReturnValue(false, Strings.NO_PERMISSION)
     }
 
     fun addFriend(player: String, newFriend: String, doubleChest: NBTTileEntity?): LockReturnValue {
         val owner = container.getString(OWNER_ATTRIBUTE)
         // This theoretically shouldn't happen, though we will still check for it just to be sure
-        if (owner != player) return LockReturnValue(false, "No permission.")
+        if (owner != player) return LockReturnValue(false, Strings.NO_PERMISSION)
         var access = parseStringList(container.getString(LOCK_ATTRIBUTE))
         // This is a new friend to add. Don't add them if they've already got access
         if (!access.contains(newFriend)) {
             access = access.plus(newFriend)
             container.setString(LOCK_ATTRIBUTE, access.toString())
             doubleChest?.persistentDataContainer?.setString(LOCK_ATTRIBUTE, access.toString())
-            return LockReturnValue(true, "Permission granted.")
+            return LockReturnValue(true, Strings.FRIEND_ADDED)
         }
-        return LockReturnValue(false, "Friend already added.")
+        return LockReturnValue(false, Strings.FRIEND_ALREADY_ADDED)
     }
 
     fun removeFriend(player: String, friend: String, doubleChest: NBTTileEntity?): LockReturnValue {
         val owner = container.getString(OWNER_ATTRIBUTE)
         // This theoretically shouldn't happen, though we will still check for it just to be sure
-        if (owner != player) return LockReturnValue(false, "No permission.")
+        if (owner != player) return LockReturnValue(false, Strings.NO_PERMISSION)
         var access = parseStringList(container.getString(LOCK_ATTRIBUTE))
         if (access.contains(friend)) {
             access = access.minus(friend)
             container.setString(LOCK_ATTRIBUTE, access.toString())
             doubleChest?.persistentDataContainer?.setString(LOCK_ATTRIBUTE, access.toString())
-            return LockReturnValue(true, "Permission removed.")
+            return LockReturnValue(true, Strings.FRIEND_REMOVED)
         }
-        return LockReturnValue(false, "Friend does not exist")
+        return LockReturnValue(false, Strings.FRIEND_CANT_BE_REMOVED)
     }
 
     data class LockReturnValue(val success: Boolean, val message: String)

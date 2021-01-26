@@ -4,6 +4,7 @@ import de.sean.blockprot.bukkit.inventories.BlockLockInventory
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.util.ItemUtil.getItemStack
+import de.sean.blockprot.util.Strings
 import de.sean.blockprot.util.Vector3f
 import de.tr7zw.nbtapi.NBTTileEntity
 import net.md_5.bungee.api.ChatMessageType
@@ -38,41 +39,42 @@ open class InteractEvent : Listener {
                             val redstone = handler.getRedstone()
                             val inv: Inventory = BlockLockInventory.createInventory()
                             if ((owner.isNotEmpty() && owner == playerUuid) || (owner.isNotEmpty() && player.isOp)) {
-                                inv.setItem(0, getItemStack(1, blockState.type, "Unlock"))
+                                inv.setItem(0, getItemStack(1, blockState.type, Strings.UNLOCK))
                                 inv.setItem(
                                     1,
                                     getItemStack(
                                         1,
                                         if (redstone) Material.GUNPOWDER else Material.REDSTONE,
-                                        if (redstone) "Activate Redstone" else "Deactivate Redstone"
+                                        if (redstone) Strings.BLOCK_LOCK_REDSTONE_ACTIVATE
+                                        else Strings.BLOCK_LOCK_REDSTONE_DEACTIVATE
                                     )
                                 )
-                                inv.setItem(2, getItemStack(1, Material.PLAYER_HEAD, "Add Friends"))
-                                inv.setItem(3, getItemStack(1, Material.ZOMBIE_HEAD, "Remove Friends"))
+                                inv.setItem(2, getItemStack(1, Material.PLAYER_HEAD, Strings.BLOCK_LOCK_ADD_FRIENDS))
+                                inv.setItem(3, getItemStack(1, Material.ZOMBIE_HEAD, Strings.BLOCK_LOCK_REMOVE_FRIENDS))
                                 if (player.isOp) {
-                                    inv.setItem(4, getItemStack(1, Material.OAK_SIGN, "Info"))
+                                    inv.setItem(4, getItemStack(1, Material.OAK_SIGN, Strings.BLOCK_LOCK_INFO))
                                 }
                             } else {
-                                inv.setItem(0, getItemStack(1, blockState.type, "Lock"))
+                                inv.setItem(0, getItemStack(1, blockState.type, Strings.LOCK))
                                 var i = 1
                                 while (i < 5) {
                                     inv.setItem(i, null)
                                     i++
                                 }
                             }
-                            inv.setItem(8, getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, "Back"))
+                            inv.setItem(8, getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, Strings.BACK))
                             player.openInventory(inv)
                         }
                     } else {
                         event.isCancelled = true
-                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText("No permission."))
+                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(Strings.NO_PERMISSION))
                     }
                 } else {
                     // The user right clicked and is trying to access the container
                     val handler = BlockLockHandler(NBTTileEntity(event.clickedBlock?.state))
                     if (!handler.canAccess(player.uniqueId.toString())) {
                         event.isCancelled = true
-                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText("No permission."))
+                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(Strings.NO_PERMISSION))
                     }
                 }
             }

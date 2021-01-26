@@ -1,0 +1,42 @@
+# BlockProt Config
+
+inventories:
+  back: "Back"
+  block_info: # Info inventory for server admins
+    name: "Block Info"
+  add_friend:
+    name: "Add Friend"
+  remove_friend:
+    name: "Remove Friend"
+  block_lock: # The inventory with all buttons
+    name: "Block Lock"
+    items:
+      add_friends: "Add Friends"
+      remove_friends: "Remove Friends"
+      info: "Info"
+      lock:
+        lock: "Lock"
+        unlock: "Unlock"
+      redstone:
+        activate: "Activate Redstone"
+        deactivate: "Deactivate Redstone"
+
+messages:
+  permission_granted: # When a user locks a block
+    text: "Permission granted."
+  unlocked: # When a block gets unlocked
+    text: "Unlocked."
+  no_permission:
+    text: "No permission."
+  friend_added:
+    text: "Friend added."
+  friend_removed:
+    text: "Friend removed."
+  friend_already_added:
+    text: "Friend already added."
+  friend_cant_be_removed:
+    text: "Friend cannot be removed."
+  redstone_added:
+    text: "Redstone protection added."
+  redstone_removed:
+    text: "Redstone protection removed."

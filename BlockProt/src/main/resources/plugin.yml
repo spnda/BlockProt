@@ -1,7 +1,7 @@
 name: BlockProt
 version: @version@
 main: de.sean.blockprot.BlockProt
-api-version: 1.16
+api-version: 1.14
 authors: [ spnda ]
 description: A simple block protection plugin
 prefix: BlockProt

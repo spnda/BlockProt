@@ -53,7 +53,7 @@ shadowJar {
         exclude(dependency("de.tr7zw:.*:.*"))
     }
 
-    relocate 'org.bstats.bukkit', 'de.sean.blockprot.metrics'
+    relocate 'org.bstats', 'de.sean.blockprot.metrics'
 }
 
 processResources {

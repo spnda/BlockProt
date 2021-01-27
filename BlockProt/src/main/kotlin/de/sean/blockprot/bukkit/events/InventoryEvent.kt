@@ -138,7 +138,6 @@ class InventoryEvent : Listener {
                 val handler = BlockLockHandler(NBTTileEntity(block.state))
                 if (item.type == Material.BLACK_STAINED_GLASS_PANE) {
                     player.closeInventory()
-                    val redstone = handler.getRedstone()
                     val inv = createBaseInventory(player, block.state.type, handler)
                     player.openInventory(inv)
                 } else if (item.type == Material.PLAYER_HEAD) {
@@ -158,7 +157,6 @@ class InventoryEvent : Listener {
                 val handler = BlockLockHandler(NBTTileEntity(block.state))
                 if (item.type == Material.BLACK_STAINED_GLASS_PANE) {
                     player.closeInventory()
-                    val redstone = handler.getRedstone()
                     val inv = createBaseInventory(player, block.state.type, handler)
                     player.openInventory(inv)
                 } else if (item.type == Material.PLAYER_HEAD) {
@@ -178,7 +176,6 @@ class InventoryEvent : Listener {
                     player.closeInventory()
                     val block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString())) ?: return
                     val handler = BlockLockHandler(NBTTileEntity(block.state))
-                    val redstone = handler.getRedstone()
                     val inv = createBaseInventory(player, block.state.type, handler)
                     player.openInventory(inv)
                 }

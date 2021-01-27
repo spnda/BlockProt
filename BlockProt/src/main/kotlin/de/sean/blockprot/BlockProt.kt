@@ -12,7 +12,7 @@ class BlockProt : JavaPlugin() {
     companion object {
         lateinit var instance: BlockProt
         lateinit var metrics: Metrics
-        const val pluginId: Int = 9999;
+        const val pluginId: Int = 9999
     }
 
     override fun onEnable() {

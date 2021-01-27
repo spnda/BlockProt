@@ -30,23 +30,23 @@ object Strings {
     val BLOCK_LOCK_REDSTONE_DEACTIVATE = getString("inventories.block_lock.items.redstone.deactivate", "Deactivate Redstone")
 
     // Permissions
-    val BLOCKPROT_LOCK = "blockprot.lock"
-    val BLOCKPROT_INFO = "blockprot.info"
-    val BLOCKPROT_ADMIN = "blockprot.admin"
+    const val BLOCKPROT_LOCK = "blockprot.lock"
+    const val BLOCKPROT_INFO = "blockprot.info"
+    const val BLOCKPROT_ADMIN = "blockprot.admin"
 
     /**
      * Get a message from the config by string entry. If it cannot be found and
      * default is not null, default is returned
      */
     private fun getMessage(location: String, default: String?): String {
-        val string = BlockProt.instance.config.getString("messages.$location.text");
+        val string = BlockProt.instance.config.getString("messages.$location.text")
         if (string == null || string.isEmpty())
             return default ?: ""
         return string
     }
 
     fun getString(location: String, default: String?): String {
-        val string = BlockProt.instance.config.getString(location);
+        val string = BlockProt.instance.config.getString(location)
         if (string == null || string.isEmpty())
             return default ?: ""
         return string

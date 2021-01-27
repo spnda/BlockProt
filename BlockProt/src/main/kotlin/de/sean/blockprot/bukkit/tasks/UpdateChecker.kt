@@ -56,10 +56,10 @@ class UpdateChecker(private val description: PluginDescriptionFile) : Runnable {
             for (i in 0..length) {
                 val part = if (i < parts.size) parts[i].toInt() else 0
                 val otherPart = if (i < other.parts.size) other.parts[i].toInt() else 0
-                if (part < otherPart) return -1;
-                if (part > otherPart) return 1;
+                if (part < otherPart) return -1
+                if (part > otherPart) return 1
             }
-            return 0;
+            return 0
         }
 
         override operator fun equals(other: Any?): Boolean {

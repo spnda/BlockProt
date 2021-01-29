@@ -4,7 +4,6 @@ import de.sean.blockprot.BlockProt
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.tasks.DoubleChestLocker
-import de.tr7zw.nbtapi.NBTTileEntity
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.block.Barrel
@@ -22,7 +21,7 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
     fun blockBurn(event: BlockBurnEvent) {
         val blockState = event.block.state
         if (!(blockState is Chest || blockState is Barrel)) return
-        val handler = BlockLockHandler(NBTTileEntity(blockState))
+        val handler = BlockLockHandler(event.block)
         // If the block is protected by any user, prevent it from burning down.
         if (handler.isProtected()) {
             event.isCancelled = true
@@ -33,7 +32,7 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
     fun playerBlockBreak(event: BlockBreakEvent) {
         val blockState = event.block.state
         if (blockState !is TileState) return // We only want to check for Tiles.
-        val handler = BlockLockHandler(NBTTileEntity(blockState))
+        val handler = BlockLockHandler(event.block)
         if (!handler.isOwner(event.player.uniqueId.toString()) && handler.isProtected()) {
             // Prevent unauthorized players from breaking locked blocks.
             event.isCancelled = true
@@ -47,7 +46,7 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
         val uuid = event.player.uniqueId.toString()
         when (block.type) {
             Material.CHEST -> {
-                val handler = BlockLockHandler(NBTTileEntity(block.state))
+                val handler = BlockLockHandler(block)
 
                 // After placing, it takes 1 tick for the chests to connect.
                 Bukkit.getScheduler().runTaskLater(plugin, DoubleChestLocker(handler, block, event.player) { allowed ->
@@ -62,9 +61,9 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                     handler.lockBlock(event.player.uniqueId.toString(), event.player.isOp, null)
                 }
             }
-            in LockUtil.lockableBlocks -> if (!config.getBoolean("players." + event.player.uniqueId + ".lockOnPlace")) {
-                BlockLockHandler(NBTTileEntity(block.state)).setOwner(uuid)
-            } else BlockLockHandler(NBTTileEntity(block.state)).setOwner("") // Assign a empty string to not have NPEs when reading
+            in LockUtil.lockableTileEntities -> if (!config.getBoolean("players." + event.player.uniqueId + ".lockOnPlace")) {
+                BlockLockHandler(block).setOwner(uuid)
+            } else BlockLockHandler(block).setOwner("") // Assign a empty string to not have NPEs when reading
             else -> return
         }
     }

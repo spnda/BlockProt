@@ -1,9 +1,7 @@
 package de.sean.blockprot.bukkit.tasks
 
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
-import de.tr7zw.nbtapi.NBTTileEntity
 import org.bukkit.block.Block
-import org.bukkit.block.BlockState
 import org.bukkit.block.Chest
 import org.bukkit.block.DoubleChest
 import org.bukkit.entity.Player
@@ -17,7 +15,7 @@ class DoubleChestLocker(private val newHandler: BlockLockHandler, val block: Blo
             callback.accept(true)
             return
         }
-        val oldChestHandler = BlockLockHandler(NBTTileEntity(doubleChest))
+        val oldChestHandler = BlockLockHandler(doubleChest)
         if (oldChestHandler.isProtected() && oldChestHandler.getOwner() != player.uniqueId.toString()) {
             callback.accept(false)
         } else {
@@ -28,7 +26,7 @@ class DoubleChestLocker(private val newHandler: BlockLockHandler, val block: Blo
         }
     }
 
-    private fun getDoubleChest(): BlockState? {
+    private fun getDoubleChest(): Block? {
         var doubleChest: DoubleChest? = null
         val chestState = block.state
         if (chestState is Chest) {
@@ -46,6 +44,6 @@ class DoubleChestLocker(private val newHandler: BlockLockHandler, val block: Blo
             else -> second.add(.5, 0.0, .5)
         }
 
-        return player.world.getBlockAt(second).state
+        return player.world.getBlockAt(second)
     }
 }

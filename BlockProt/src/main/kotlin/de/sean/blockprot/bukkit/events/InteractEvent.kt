@@ -7,10 +7,10 @@ import de.sean.blockprot.util.ItemUtil.getItemStack
 import de.sean.blockprot.util.Strings
 import de.sean.blockprot.util.Vector3f
 import de.sean.blockprot.util.createBaseInventory
-import de.tr7zw.nbtapi.NBTTileEntity
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Material
+import org.bukkit.block.Block
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -24,11 +24,11 @@ open class InteractEvent : Listener {
         val player = event.player
         if (event.clickedBlock == null) return
         when (event.clickedBlock!!.type) {
-            in LockUtil.lockableBlocks -> {
-                if ((event.action == Action.RIGHT_CLICK_BLOCK) && player.isSneaking && player.hasPermission(Strings.BLOCKPROT_LOCK)) {
+            in LockUtil.lockableTileEntities, in LockUtil.lockableBlocks -> {
+                if (event.action == Action.RIGHT_CLICK_BLOCK && player.isSneaking && player.hasPermission(Strings.BLOCKPROT_LOCK)) {
                     // The user shift-left clicked the block and is wanting to open the block edit menu.
                     val blockState = event.clickedBlock!!.state
-                    val handler = BlockLockHandler(NBTTileEntity(blockState))
+                    val handler = BlockLockHandler(event.clickedBlock!!)
                     val owner = handler.getOwner()
                     val playerUuid = player.uniqueId.toString()
                     // Only open the menu if the player is the owner of this block
@@ -39,7 +39,7 @@ open class InteractEvent : Listener {
                             LockUtil.add(playerUuid, Vector3f.fromDouble(blockState.block.location.x, blockState.block.location.y, blockState.block.location.z))
                             var inv: Inventory = BlockLockInventory.createInventory()
                             if ((owner.isNotEmpty() && owner == playerUuid) || (owner.isNotEmpty() && (player.isOp || player.hasPermission(Strings.BLOCKPROT_INFO) || player.hasPermission(Strings.BLOCKPROT_ADMIN)))) {
-                               inv = createBaseInventory(player, blockState.type, handler)
+                                inv = createBaseInventory(player, blockState.type, handler)
                             } else {
                                 inv.setItem(0, getItemStack(1, blockState.type, Strings.LOCK))
                                 var i = 1
@@ -53,14 +53,22 @@ open class InteractEvent : Listener {
                         }
                     } else {
                         event.isCancelled = true
-                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(Strings.NO_PERMISSION))
+                        player.spigot().sendMessage(
+                            ChatMessageType.ACTION_BAR,
+                            *TextComponent.fromLegacyText(Strings.NO_PERMISSION)
+                        )
                     }
                 } else {
                     // The user right clicked and is trying to access the container
-                    val handler = BlockLockHandler(NBTTileEntity(event.clickedBlock?.state))
-                    if (!handler.canAccess(player.uniqueId.toString())) {
-                        event.isCancelled = true
-                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(Strings.NO_PERMISSION))
+                    if (event.clickedBlock != null) {
+                        val handler = BlockLockHandler(event.clickedBlock as Block)
+                        if (!handler.canAccess(player.uniqueId.toString())) {
+                            event.isCancelled = true
+                            player.spigot().sendMessage(
+                                ChatMessageType.ACTION_BAR,
+                                *TextComponent.fromLegacyText(Strings.NO_PERMISSION)
+                            )
+                        }
                     }
                 }
             }

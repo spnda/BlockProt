@@ -46,10 +46,10 @@ class InventoryEvent : Listener {
                 val handler: BlockLockHandler
                 val owner: String
                 when (item.type) {
-                    in LockUtil.lockableBlocks -> {
+                    in LockUtil.lockableTileEntities, in LockUtil.lockableBlocks -> {
                         block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString()))
                         if (block == null) return
-                        handler = BlockLockHandler(NBTTileEntity(block.state))
+                        handler = BlockLockHandler(block)
                         val doubleChest = getDoubleChest(block, player.world)
                         val ret = handler.lockBlock(player.uniqueId.toString(), player.isOp, if (doubleChest != null) NBTTileEntity(doubleChest) else null)
                         if (ret.success) {
@@ -61,7 +61,7 @@ class InventoryEvent : Listener {
                     Material.REDSTONE, Material.GUNPOWDER -> {
                         block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString()))
                         if (block == null) return
-                        handler = BlockLockHandler(NBTTileEntity(block.state))
+                        handler = BlockLockHandler(block)
                         val doubleChest = getDoubleChest(block, player.world)
                         val ret = handler.lockRedstoneForBlock(player.uniqueId.toString(), if (doubleChest != null) NBTTileEntity(doubleChest) else null)
                         if (ret.success) {
@@ -76,7 +76,7 @@ class InventoryEvent : Listener {
                         inv.clear()
                         block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString()))
                         if (block == null) return
-                        handler = BlockLockHandler(NBTTileEntity(block.state))
+                        handler = BlockLockHandler(block)
                         owner = handler.getOwner()
                         val currentFriends = handler.getAccess() // All players that already have access
                         val possibleFriends = playersCol.toTypedArray() // All players online
@@ -100,7 +100,7 @@ class InventoryEvent : Listener {
                         inv.clear()
                         block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString()))
                         if (block == null) return
-                        handler = BlockLockHandler(NBTTileEntity(block.state))
+                        handler = BlockLockHandler(block)
                         val friends = handler.getAccess()
                         var i = 0
                         while (i < 9 * 3 - 2 && i < friends.size) {
@@ -116,7 +116,7 @@ class InventoryEvent : Listener {
                         inv = BlockInfoInventory.createInventory()
                         block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString()))
                         if (block == null) return
-                        handler = BlockLockHandler(NBTTileEntity(block.state))
+                        handler = BlockLockHandler(block)
                         owner = handler.getOwner()
                         val access = handler.getAccess()
                         var i = 0
@@ -135,7 +135,7 @@ class InventoryEvent : Listener {
             }
             FriendAddInventory.INVENTORY_NAME -> {
                 val block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString())) ?: return
-                val handler = BlockLockHandler(NBTTileEntity(block.state))
+                val handler = BlockLockHandler(block)
                 if (item.type == Material.BLACK_STAINED_GLASS_PANE) {
                     player.closeInventory()
                     val inv = createBaseInventory(player, block.state.type, handler)
@@ -154,7 +154,7 @@ class InventoryEvent : Listener {
             }
             FriendRemoveInventory.INVENTORY_NAME -> {
                 val block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString())) ?: return
-                val handler = BlockLockHandler(NBTTileEntity(block.state))
+                val handler = BlockLockHandler(block)
                 if (item.type == Material.BLACK_STAINED_GLASS_PANE) {
                     player.closeInventory()
                     val inv = createBaseInventory(player, block.state.type, handler)
@@ -175,7 +175,7 @@ class InventoryEvent : Listener {
                 if (item.type == Material.BLACK_STAINED_GLASS_PANE) {
                     player.closeInventory()
                     val block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString())) ?: return
-                    val handler = BlockLockHandler(NBTTileEntity(block.state))
+                    val handler = BlockLockHandler(block)
                     val inv = createBaseInventory(player, block.state.type, handler)
                     player.openInventory(inv)
                 }

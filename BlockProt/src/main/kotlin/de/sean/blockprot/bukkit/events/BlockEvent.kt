@@ -20,7 +20,7 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
     @EventHandler
     fun blockBurn(event: BlockBurnEvent) {
         val blockState = event.block.state
-        if (!(blockState is Chest || blockState is Barrel)) return
+        if (!LockUtil.isLockable(blockState)) return
         val handler = BlockLockHandler(event.block)
         // If the block is protected by any user, prevent it from burning down.
         if (handler.isProtected()) {
@@ -31,7 +31,7 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
     @EventHandler
     fun playerBlockBreak(event: BlockBreakEvent) {
         val blockState = event.block.state
-        if (blockState !is TileState) return // We only want to check for Tiles.
+        if (!LockUtil.isLockable(blockState)) return // We only want to check for Tiles.
         val handler = BlockLockHandler(event.block)
         if (!handler.isOwner(event.player.uniqueId.toString()) && handler.isProtected()) {
             // Prevent unauthorized players from breaking locked blocks.
@@ -61,6 +61,7 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                     handler.lockBlock(event.player.uniqueId.toString(), event.player.isOp, null)
                 }
             }
+            // We won't lock normal blocks on placing.
             in LockUtil.lockableTileEntities -> if (!config.getBoolean("players." + event.player.uniqueId + ".lockOnPlace")) {
                 BlockLockHandler(block).setOwner(uuid)
             } else BlockLockHandler(block).setOwner("") // Assign a empty string to not have NPEs when reading

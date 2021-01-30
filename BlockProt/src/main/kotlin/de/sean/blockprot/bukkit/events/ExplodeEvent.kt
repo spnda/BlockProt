@@ -33,7 +33,7 @@ class ExplodeEvent : Listener {
         while (it.hasNext()) {
             val b = it.next()
             when (b.type) {
-                in LockUtil.lockableTileEntities -> {
+                in LockUtil.lockableTileEntities, in LockUtil.lockableBlocks -> {
                     // Someone owns this block, block its destroying.
                     val handler = BlockLockHandler(b)
                     if (handler.isProtected()) it.remove()

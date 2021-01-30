@@ -31,6 +31,7 @@ class BlockProt : JavaPlugin() {
         registerEvent(pm, HopperEvent())
         registerEvent(pm, InteractEvent())
         registerEvent(pm, InventoryEvent())
+        registerEvent(pm, RedstoneEvent())
 
         super.onEnable()
     }

@@ -18,6 +18,8 @@ import org.bukkit.block.Block
 import org.bukkit.block.BlockState
 import org.bukkit.block.Chest
 import org.bukkit.block.DoubleChest
+import org.bukkit.block.data.Bisected
+import org.bukkit.block.data.type.Door
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -53,6 +55,7 @@ class InventoryEvent : Listener {
                         val doubleChest = getDoubleChest(block, player.world)
                         val ret = handler.lockBlock(player.uniqueId.toString(), player.isOp, if (doubleChest != null) NBTTileEntity(doubleChest) else null)
                         if (ret.success) {
+                            applyToDoor(handler, block)
                             player.closeInventory()
                             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
                         }
@@ -65,6 +68,7 @@ class InventoryEvent : Listener {
                         val doubleChest = getDoubleChest(block, player.world)
                         val ret = handler.lockRedstoneForBlock(player.uniqueId.toString(), if (doubleChest != null) NBTTileEntity(doubleChest) else null)
                         if (ret.success) {
+                            applyToDoor(handler, block)
                             player.closeInventory()
                             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
                         }
@@ -146,6 +150,7 @@ class InventoryEvent : Listener {
                     val doubleChest = getDoubleChest(block, player.world)
                     val ret = handler.addFriend(player.uniqueId.toString(), friend, if (doubleChest != null) NBTTileEntity(doubleChest) else null)
                     if (ret.success) {
+                        applyToDoor(handler, block)
                         player.closeInventory()
                         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
                     }
@@ -165,6 +170,7 @@ class InventoryEvent : Listener {
                     val doubleChest = getDoubleChest(block, player.world)
                     val ret = handler.removeFriend(player.uniqueId.toString(), friend, if (doubleChest != null) NBTTileEntity(doubleChest) else null)
                     if (ret.success) {
+                        applyToDoor(handler, block)
                         player.closeInventory()
                         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
                     }
@@ -181,6 +187,24 @@ class InventoryEvent : Listener {
                 }
                 event.isCancelled = true
             }
+        }
+    }
+
+    /**
+     * Copy the data over from
+     */
+    private fun applyToDoor(doorHandler: BlockLockHandler, block: Block) {
+        if (block.type in listOf(Material.ACACIA_DOOR, Material.BIRCH_DOOR, Material.CRIMSON_DOOR, Material.DARK_OAK_DOOR, Material.JUNGLE_DOOR, Material.OAK_DOOR, Material.SPRUCE_DOOR, Material.WARPED_DOOR)) {
+            val blockState = block.state
+            val door = blockState.blockData as Door
+            var other = blockState.location
+            other = if (door.half == Bisected.Half.TOP) other.subtract(0.0, 1.0, 0.0);
+            else other.add(0.0, 1.0, 0.0);
+            val otherDoor = blockState.world.getBlockAt(other)
+            val otherDoorHandler = BlockLockHandler(otherDoor)
+            otherDoorHandler.setOwner(doorHandler.getOwner())
+            otherDoorHandler.setAccess(doorHandler.getAccess())
+            otherDoorHandler.setRedstone(doorHandler.getRedstone())
         }
     }
 

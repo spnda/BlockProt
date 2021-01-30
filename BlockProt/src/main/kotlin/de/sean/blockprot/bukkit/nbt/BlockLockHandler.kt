@@ -17,7 +17,7 @@ class BlockLockHandler constructor(block: Block) {
         when (block.type) {
             in LockUtil.lockableBlocks -> container = NBTBlock(block).data
             in LockUtil.lockableTileEntities -> container = NBTTileEntity(block.state).persistentDataContainer
-            else -> throw RuntimeException("Given block is not a lockable block/tile entity")
+            else -> throw RuntimeException("Given block ${block.type} is not a lockable block/tile entity")
         }
     }
 
@@ -29,15 +29,23 @@ class BlockLockHandler constructor(block: Block) {
 
     fun getOwner(): String = container.getString(OWNER_ATTRIBUTE) ?: ""
     fun getAccess() = parseStringList(container.getString(LOCK_ATTRIBUTE))
+
+    /**
+     * If true, redstone should be allowed for this block and should not be blocked
+     */
     fun getRedstone(): Boolean = container.getBoolean(REDSTONE_ATTRIBUTE)
 
     fun setOwner(string: String) = container.setString(OWNER_ATTRIBUTE, string)
     fun setAccess(list: List<String>) = container.setString(LOCK_ATTRIBUTE, list.toString())
+
+    /**
+     * If true, redstone should be allowed for this block and should not be blocked
+     */
     fun setRedstone(redstone: Boolean) = container.setBoolean(REDSTONE_ATTRIBUTE, redstone)
 
     fun isNotProtected() = getOwner().isEmpty() && getAccess().isEmpty()
     fun isProtected() = !isNotProtected()
-    fun isRedstoneProtected(): Boolean = getRedstone()
+    fun isRedstoneProtected(): Boolean = !getRedstone()
 
     fun isOwner(player: String) = getOwner() == player
     fun canAccess(player: String) = if (isProtected()) (getOwner() == player || getAccess().contains(player)) else getOwner().isEmpty()

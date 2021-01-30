@@ -21,9 +21,9 @@ fun createBaseInventory(player: Player, material: Material, handler: BlockLockHa
             1,
             ItemUtil.getItemStack(
                 1,
-                if (redstone) Material.GUNPOWDER else Material.REDSTONE,
-                if (redstone) Strings.BLOCK_LOCK_REDSTONE_ACTIVATE
-                else Strings.BLOCK_LOCK_REDSTONE_DEACTIVATE
+                if (redstone) Material.REDSTONE else Material.GUNPOWDER,
+                if (redstone) Strings.BLOCK_LOCK_REDSTONE_DEACTIVATE
+                else Strings.BLOCK_LOCK_REDSTONE_ACTIVATE
             )
         )
         inv.setItem(2, ItemUtil.getItemStack(1, Material.PLAYER_HEAD, Strings.BLOCK_LOCK_ADD_FRIENDS))

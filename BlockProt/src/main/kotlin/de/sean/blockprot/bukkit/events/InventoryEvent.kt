@@ -198,8 +198,8 @@ class InventoryEvent : Listener {
             val blockState = block.state
             val door = blockState.blockData as Door
             var other = blockState.location
-            other = if (door.half == Bisected.Half.TOP) other.subtract(0.0, 1.0, 0.0);
-            else other.add(0.0, 1.0, 0.0);
+            other = if (door.half == Bisected.Half.TOP) other.subtract(0.0, 1.0, 0.0)
+            else other.add(0.0, 1.0, 0.0)
             val otherDoor = blockState.world.getBlockAt(other)
             val otherDoorHandler = BlockLockHandler(otherDoor)
             otherDoorHandler.setOwner(doorHandler.getOwner())

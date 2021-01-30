@@ -31,9 +31,13 @@ class BlockLockHandler constructor(block: Block) {
     fun getAccess() = parseStringList(container.getString(LOCK_ATTRIBUTE))
 
     /**
-     * If true, redstone should be allowed for this block and should not be blocked
+     * If true, redstone should be allowed for this block and should not be blocked.
+     * The default value is true
      */
-    fun getRedstone(): Boolean = container.getBoolean(REDSTONE_ATTRIBUTE)
+    fun getRedstone(): Boolean {
+        return if (!container.hasKey(REDSTONE_ATTRIBUTE)) true // Default value
+        else container.getBoolean(REDSTONE_ATTRIBUTE)
+    }
 
     fun setOwner(string: String) = container.setString(OWNER_ATTRIBUTE, string)
     fun setAccess(list: List<String>) = container.setString(LOCK_ATTRIBUTE, list.toString())
@@ -45,7 +49,6 @@ class BlockLockHandler constructor(block: Block) {
 
     fun isNotProtected() = getOwner().isEmpty() && getAccess().isEmpty()
     fun isProtected() = !isNotProtected()
-    fun isRedstoneProtected(): Boolean = !getRedstone()
 
     fun isOwner(player: String) = getOwner() == player
     fun canAccess(player: String) = if (isProtected()) (getOwner() == player || getAccess().contains(player)) else getOwner().isEmpty()

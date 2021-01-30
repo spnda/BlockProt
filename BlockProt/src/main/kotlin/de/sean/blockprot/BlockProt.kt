@@ -5,8 +5,6 @@ import de.sean.blockprot.bukkit.events.*
 import de.sean.blockprot.bukkit.tasks.UpdateChecker
 import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
-import org.bukkit.command.CommandExecutor
-import org.bukkit.command.TabCompleter
 import org.bukkit.command.TabExecutor
 import org.bukkit.event.Listener
 import org.bukkit.plugin.PluginManager

@@ -2,6 +2,7 @@ package de.sean.blockprot.bukkit.tasks
 
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
+import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
 import org.bukkit.plugin.PluginDescriptionFile
 import java.io.BufferedReader
@@ -10,7 +11,7 @@ import java.io.InputStreamReader
 import java.net.URL
 import java.util.stream.Collectors
 
-class UpdateChecker(private val description: PluginDescriptionFile) : Runnable {
+class UpdateChecker(private val sendToChat: Boolean, private val description: PluginDescriptionFile) : Runnable {
     override fun run() {
         try {
             // Documentation for API at https://github.com/SpigotMC/XenforoResourceManagerAPI
@@ -24,16 +25,24 @@ class UpdateChecker(private val description: PluginDescriptionFile) : Runnable {
             val latest: SpigotResource = Gson().fromJson(response, SpigotResource::class.java)
             when {
                 Version(latest.currentVersion) > Version(description.version) ->
-                    Bukkit.getLogger().warning("${description.name} is outdated. Current: ${description.version} / Newest: ${latest.currentVersion}.")
+                    log("${description.name} is outdated. Current: ${description.version} / Newest: ${latest.currentVersion}.")
                 Version(latest.currentVersion) < Version(description.version) ->
-                    Bukkit.getLogger().info("${description.name} is on Version ${description.version}, even though latest is ${latest.currentVersion}.")
+                    log("${description.name} is on Version ${description.version}, even though latest is ${latest.currentVersion}.")
                 else ->
-                    Bukkit.getLogger().info("${description.name} is up to date. (${latest.currentVersion}).")
+                    log("${description.name} is up to date. (${latest.currentVersion}).")
             }
         } catch (e: IOException) {
             e.printStackTrace()
             return
         }
+    }
+
+    private fun log(content: String) {
+        if (sendToChat) {
+            // Always send the message as gold text
+            Bukkit.spigot().broadcast(*TextComponent.fromLegacyText("§6$content"))
+        }
+        Bukkit.getLogger().info(content)
     }
 
     /**

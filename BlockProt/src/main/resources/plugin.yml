@@ -15,3 +15,7 @@ permissions:
     description: Allows a player to view info on any locked blocks
   blockprot.admin:
     description: Allows a player to unlock and edit other blocks that do not belong to them
+commands:
+  blockprot:
+    description: The main blockprot command
+    usage: "§c/blockprot [update]" # Red error message

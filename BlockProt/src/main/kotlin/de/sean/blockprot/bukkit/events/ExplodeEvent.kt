@@ -20,13 +20,7 @@ class ExplodeEvent : Listener {
 
     @EventHandler
     fun onEntityExplode(e: EntityExplodeEvent) {
-        if (e.entityType == EntityType.CREEPER) {
-            // We don't want mob griefing but villagers use mob griefing to work
-            // So we'll just prevent creepers from destroying blocks like this.
-            e.isCancelled = true
-        } else {
-            checkBlocks(e.blockList().iterator())
-        }
+        checkBlocks(e.blockList().iterator())
     }
 
     private fun checkBlocks(it: MutableIterator<Block>) {

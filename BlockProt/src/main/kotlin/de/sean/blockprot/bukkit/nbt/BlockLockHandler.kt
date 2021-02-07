@@ -1,3 +1,5 @@
+@file:Suppress("LiftReturnOrAssignment")
+
 package de.sean.blockprot.bukkit.nbt
 
 import de.sean.blockprot.bukkit.nbt.LockUtil.LOCK_ATTRIBUTE
@@ -8,6 +10,7 @@ import de.tr7zw.nbtapi.NBTBlock
 import de.tr7zw.nbtapi.NBTCompound
 import de.tr7zw.nbtapi.NBTTileEntity
 import org.bukkit.block.Block
+import org.bukkit.entity.Player
 import java.util.ArrayList
 
 class BlockLockHandler constructor(block: Block) {
@@ -53,15 +56,16 @@ class BlockLockHandler constructor(block: Block) {
     fun isOwner(player: String) = getOwner() == player
     fun canAccess(player: String) = if (isProtected()) (getOwner() == player || getAccess().contains(player)) else getOwner().isEmpty()
 
-    fun lockBlock(player: String, isOp: Boolean, doubleChest: NBTTileEntity?): LockReturnValue {
+    fun lockBlock(player: Player, isOp: Boolean, doubleChest: NBTTileEntity?): LockReturnValue {
         var owner = container.getString(OWNER_ATTRIBUTE) ?: ""
+        val playerUuid = player.uniqueId.toString()
         if (owner.isEmpty()) {
             // This block is not owned by anyone, this user can claim this block
-            owner = player
+            owner = playerUuid
             container.setString(OWNER_ATTRIBUTE, owner)
             doubleChest?.persistentDataContainer?.setString(OWNER_ATTRIBUTE, owner)
             return LockReturnValue(true, Strings.PERMISSION_GRANTED)
-        } else if ((owner == player) || (isOp && owner.isNotEmpty())) {
+        } else if ((owner == playerUuid) || (isOp && owner.isNotEmpty()) || player.hasPermission(Strings.BLOCKPROT_ADMIN)) {
             container.setString(OWNER_ATTRIBUTE, "")
             container.setString(LOCK_ATTRIBUTE, "") // Also clear the friends
             doubleChest?.persistentDataContainer?.setString(OWNER_ATTRIBUTE, "")

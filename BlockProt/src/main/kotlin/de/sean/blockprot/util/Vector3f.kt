@@ -6,10 +6,6 @@ class Vector3f constructor(private var x: Float, private var y: Float, private v
             = Vector3f(x.toFloat(), y.toFloat(), z.toFloat())
     }
 
-    fun getX() = x
-    fun getY() = y
-    fun getZ() = z
-
     fun getXInt() = x.toInt()
     fun getYInt() = y.toInt()
     fun getZInt() = z.toInt()

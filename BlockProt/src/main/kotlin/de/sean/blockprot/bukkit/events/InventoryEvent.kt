@@ -53,7 +53,7 @@ class InventoryEvent : Listener {
                         if (block == null) return
                         handler = BlockLockHandler(block)
                         val doubleChest = getDoubleChest(block, player.world)
-                        val ret = handler.lockBlock(player.uniqueId.toString(), player.isOp, if (doubleChest != null) NBTTileEntity(doubleChest) else null)
+                        val ret = handler.lockBlock(player, player.isOp, if (doubleChest != null) NBTTileEntity(doubleChest) else null)
                         if (ret.success) {
                             applyToDoor(handler, block)
                             player.closeInventory()

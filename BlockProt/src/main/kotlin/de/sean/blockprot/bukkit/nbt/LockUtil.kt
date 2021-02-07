@@ -4,6 +4,7 @@ import de.sean.blockprot.util.Vector3f
 import de.tr7zw.nbtapi.utils.MinecraftVersion
 import org.bukkit.Material
 import org.bukkit.block.BlockState
+import org.bukkit.event.inventory.InventoryType
 import kotlin.collections.HashMap
 
 object LockUtil {
@@ -14,6 +15,11 @@ object LockUtil {
     val lockableTileEntities: List<Material> = mutableListOf(
         Material.CHEST, Material.TRAPPED_CHEST, Material.FURNACE, Material.SMOKER, Material.BLAST_FURNACE, Material.HOPPER, Material.BARREL, Material.BREWING_STAND,
         Material.BLACK_SHULKER_BOX, Material.BLUE_SHULKER_BOX, Material.BROWN_SHULKER_BOX, Material.CYAN_SHULKER_BOX, Material.GRAY_SHULKER_BOX, Material.GREEN_SHULKER_BOX, Material.LIGHT_BLUE_SHULKER_BOX, Material.LIGHT_GRAY_SHULKER_BOX, Material.LIME_SHULKER_BOX, Material.MAGENTA_SHULKER_BOX, Material.ORANGE_SHULKER_BOX, Material.PINK_SHULKER_BOX, Material.PURPLE_SHULKER_BOX, Material.RED_SHULKER_BOX, Material.SHULKER_BOX, Material.WHITE_SHULKER_BOX, Material.YELLOW_SHULKER_BOX
+    )
+
+    val lockableInventories: List<InventoryType> = mutableListOf(
+        InventoryType.CHEST, InventoryType.FURNACE, InventoryType.SMOKER, InventoryType.BLAST_FURNACE, InventoryType.HOPPER,
+        InventoryType.BARREL, InventoryType.BREWING, InventoryType.SHULKER_BOX
     )
 
     /**

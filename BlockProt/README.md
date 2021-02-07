@@ -2,7 +2,7 @@
 
 ![BlockProt CI](https://github.com/spnda/BukkitPlugins/workflows/BlockProt%20CI/badge.svg?branch=master&event=push)
 
-BlockProt is a lightweight Spigot/Paper plugin that gives players the abilit to protect chests, furnaces and many more blocks.
+BlockProt is a lightweight Spigot/Paper plugin that gives players the ability to protect chests, furnaces and many more blocks.
 
 # 🔨️ Building yourself
 

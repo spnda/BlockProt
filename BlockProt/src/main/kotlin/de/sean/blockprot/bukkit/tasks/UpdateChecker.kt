@@ -61,7 +61,7 @@ class UpdateChecker(private val sendToChat: Boolean, private val description: Pl
         private val parts = version.split(".")
 
         operator fun compareTo(other: Version): Int {
-            val length = Math.max(parts.size, other.parts.size)
+            val length = parts.size.coerceAtLeast(other.parts.size)
             for (i in 0..length) {
                 val part = if (i < parts.size) parts[i].toInt() else 0
                 val otherPart = if (i < other.parts.size) other.parts[i].toInt() else 0

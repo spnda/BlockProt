@@ -6,7 +6,6 @@ import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.util.ItemUtil.getItemStack
 import de.sean.blockprot.util.Strings
 import de.sean.blockprot.util.Vector3f
-import de.sean.blockprot.util.createBaseInventory
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Material
@@ -39,7 +38,7 @@ open class InteractEvent : Listener {
                             LockUtil.add(playerUuid, Vector3f.fromDouble(blockState.block.location.x, blockState.block.location.y, blockState.block.location.z))
                             var inv: Inventory = BlockLockInventory.createInventory()
                             if ((owner.isNotEmpty() && owner == playerUuid) || (owner.isNotEmpty() && (player.isOp || player.hasPermission(Strings.BLOCKPROT_INFO) || player.hasPermission(Strings.BLOCKPROT_ADMIN)))) {
-                                inv = createBaseInventory(player, blockState.type, handler)
+                                inv = BlockLockInventory.createInventoryAndFill(player, blockState.type, handler)
                             } else {
                                 inv.setItem(0, getItemStack(1, blockState.type, Strings.LOCK))
                                 var i = 1

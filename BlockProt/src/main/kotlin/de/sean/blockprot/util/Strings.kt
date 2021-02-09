@@ -22,6 +22,7 @@ object Strings {
     val LOCK = getString("inventories.block_lock.items.lock.lock", "Lock")
     val UNLOCK = getString("inventories.block_lock.items.lock.unlock", "Unlock")
     val BACK = getString("inventories.back", "Back")
+    val SEARCH = getString("inventories.friend_add.items.search", "Search")
 
     val BLOCK_LOCK_INFO = getString("inventories.block_lock.items.info", "Info")
     val BLOCK_LOCK_ADD_FRIENDS = getString("inventories.block_lock.items.add_friends", "Add Friends")

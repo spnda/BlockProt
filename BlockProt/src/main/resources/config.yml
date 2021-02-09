@@ -6,6 +6,8 @@ inventories:
     name: "Block Info"
   add_friend:
     name: "Add Friend"
+    items:
+      search: "Search"
   remove_friend:
     name: "Remove Friend"
   block_lock: # The inventory with all buttons

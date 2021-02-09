@@ -7,7 +7,6 @@ import de.sean.blockprot.util.ItemUtil.getItemStack
 import de.sean.blockprot.util.ItemUtil.getPlayerSkull
 import de.sean.blockprot.util.Strings
 import de.sean.blockprot.util.Vector3f
-import de.sean.blockprot.util.createBaseInventory
 import de.tr7zw.nbtapi.NBTTileEntity
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -90,10 +89,11 @@ class InventoryEvent : Listener {
                             if (!currentFriends.contains(possible) && possible != owner) friendsToAdd.add(possibleFriend)
                         }
                         var i = 0
-                        while (i < 9 * 3 - 2 && i < friendsToAdd.size) {
+                        while (i < 9 * 3 - 3 && i < friendsToAdd.size) {
                             inv.setItem(i, getPlayerSkull(friendsToAdd[i]))
                             i++
                         }
+                        inv.setItem(9 * 3 - 2, getItemStack(1, Material.MAP, Strings.SEARCH))
                         inv.setItem(9 * 3 - 1, getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, Strings.BACK))
                         player.openInventory(inv)
                         event.isCancelled = true
@@ -140,20 +140,32 @@ class InventoryEvent : Listener {
             FriendAddInventory.INVENTORY_NAME -> {
                 val block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString())) ?: return
                 val handler = BlockLockHandler(block)
-                if (item.type == Material.BLACK_STAINED_GLASS_PANE) {
-                    player.closeInventory()
-                    val inv = createBaseInventory(player, block.state.type, handler)
-                    player.openInventory(inv)
-                } else if (item.type == Material.PLAYER_HEAD) {
-                    val skull = item.itemMeta as SkullMeta? ?: return // Generic player head?
-                    val friend = skull.owningPlayer?.uniqueId.toString()
-                    val doubleChest = getDoubleChest(block, player.world)
-                    val ret = handler.addFriend(player.uniqueId.toString(), friend, if (doubleChest != null) NBTTileEntity(doubleChest) else null)
-                    if (ret.success) {
-                        applyToDoor(handler, block)
+                when (item.type) {
+                    Material.BLACK_STAINED_GLASS_PANE -> {
                         player.closeInventory()
-                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
+                        val inv = BlockLockInventory.createInventoryAndFill(player, block.state.type, handler)
+                        player.openInventory(inv)
                     }
+                    Material.PLAYER_HEAD -> {
+                        val skull = item.itemMeta as SkullMeta? ?: return // Generic player head?
+                        val friend = skull.owningPlayer?.uniqueId.toString()
+                        val doubleChest = getDoubleChest(block, player.world)
+                        val ret = handler.addFriend(
+                            player.uniqueId.toString(),
+                            friend,
+                            if (doubleChest != null) NBTTileEntity(doubleChest) else null
+                        )
+                        if (ret.success) {
+                            applyToDoor(handler, block)
+                            player.closeInventory()
+                            player.spigot()
+                                .sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
+                        }
+                    }
+                    Material.MAP -> {
+                        FriendSearchInventory.openAnvilInventory(player)
+                    }
+                    else -> {}
                 }
                 event.isCancelled = true
             }
@@ -162,7 +174,7 @@ class InventoryEvent : Listener {
                 val handler = BlockLockHandler(block)
                 if (item.type == Material.BLACK_STAINED_GLASS_PANE) {
                     player.closeInventory()
-                    val inv = createBaseInventory(player, block.state.type, handler)
+                    val inv = BlockLockInventory.createInventoryAndFill(player, block.state.type, handler)
                     player.openInventory(inv)
                 } else if (item.type == Material.PLAYER_HEAD) {
                     val skull = item.itemMeta as SkullMeta? ?: return // Generic player head?
@@ -182,8 +194,39 @@ class InventoryEvent : Listener {
                     player.closeInventory()
                     val block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString())) ?: return
                     val handler = BlockLockHandler(block)
-                    val inv = createBaseInventory(player, block.state.type, handler)
+                    val inv = BlockLockInventory.createInventoryAndFill(player, block.state.type, handler)
                     player.openInventory(inv)
+                }
+                event.isCancelled = true
+            }
+            FriendSearchResultInventory.INVENTORY_NAME -> {
+                when (item.type) {
+                    Material.BLACK_STAINED_GLASS_PANE -> {
+                        // Go back to the search if nothing was found
+                        FriendSearchInventory.openAnvilInventory(player)
+                    }
+                    Material.PLAYER_HEAD -> {
+                        val block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString())) ?: return
+                        val handler = BlockLockHandler(block)
+                        val skull = item.itemMeta as SkullMeta? ?: return // Generic player head?
+                        val friend = skull.owningPlayer?.uniqueId.toString()
+                        val doubleChest = getDoubleChest(block, player.world)
+                        val ret = handler.addFriend(
+                            player.uniqueId.toString(),
+                            friend,
+                            if (doubleChest != null) NBTTileEntity(doubleChest) else null
+                        )
+                        if (ret.success) {
+                            applyToDoor(handler, block)
+                            player.spigot()
+                                .sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
+                        }
+                        player.closeInventory()
+                    }
+                    Material.BARRIER -> {
+                        player.closeInventory()
+                    }
+                    else -> {}
                 }
                 event.isCancelled = true
             }
@@ -191,7 +234,7 @@ class InventoryEvent : Listener {
     }
 
     /**
-     * Copy the data over from
+     * Copy the data over from the top/bottom door to the other half
      */
     private fun applyToDoor(doorHandler: BlockLockHandler, block: Block) {
         if (block.type in listOf(Material.ACACIA_DOOR, Material.BIRCH_DOOR, Material.CRIMSON_DOOR, Material.DARK_OAK_DOOR, Material.JUNGLE_DOOR, Material.OAK_DOOR, Material.SPRUCE_DOOR, Material.WARPED_DOOR)) {

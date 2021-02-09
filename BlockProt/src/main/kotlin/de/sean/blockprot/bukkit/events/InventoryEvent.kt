@@ -74,7 +74,6 @@ class InventoryEvent : Listener {
                         event.isCancelled = true
                     }
                     Material.PLAYER_HEAD -> {
-                        player.closeInventory()
                         inv = FriendAddInventory.createInventory()
                         inv.clear()
                         block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString()))
@@ -95,11 +94,11 @@ class InventoryEvent : Listener {
                         }
                         inv.setItem(9 * 3 - 2, getItemStack(1, Material.MAP, Strings.SEARCH))
                         inv.setItem(9 * 3 - 1, getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, Strings.BACK))
+                        player.closeInventory()
                         player.openInventory(inv)
                         event.isCancelled = true
                     }
                     Material.ZOMBIE_HEAD -> {
-                        player.closeInventory()
                         inv = FriendRemoveInventory.createInventory()
                         inv.clear()
                         block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString()))
@@ -112,6 +111,7 @@ class InventoryEvent : Listener {
                             i++
                         }
                         inv.setItem(9 * 3 - 1, getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, Strings.BACK))
+                        player.closeInventory()
                         player.openInventory(inv)
                         event.isCancelled = true
                     }

@@ -1,13 +1,13 @@
 name: BlockProt CI
 
 on:
-  push:
-    branches: [ master ]
-    paths:
-      - 'BlockProt/src/**'
-      - '**.gradle'
-    ignore-paths:
-      - 'SPlugin/**'
+  # push:
+  #   branches: [ master ]
+  #   paths:
+  #     - 'BlockProt/src/**'
+  #     - '**.gradle'
+  #   ignore-paths:
+  #     - 'SPlugin/**'
   pull_request:
     branches: [ master ]
     paths:

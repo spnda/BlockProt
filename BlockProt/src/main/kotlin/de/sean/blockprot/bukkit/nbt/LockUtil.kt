@@ -42,5 +42,9 @@ object LockUtil {
         lock[player] = location
     }
 
+    fun remove(player: String) {
+        lock.remove(player)
+    }
+
     fun get(player: String) = lock[player]
 }

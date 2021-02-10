@@ -1,6 +1,7 @@
 package de.sean.blockprot.bukkit.inventories
 
 import de.sean.blockprot.BlockProt
+import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.util.Strings
 import net.wesjd.anvilgui.AnvilGUI
 import org.bukkit.Bukkit
@@ -29,13 +30,15 @@ object FriendSearchInventory {
                 return@onComplete AnvilGUI.Response.close()
             }
             .onClose { player ->
-                val inv = playerNames[player.uniqueId] ?: return@onClose
-                player.openInventory(inv)
+                // If the user is closing, the user hasn't completed the translation yet.
+                val inv = playerNames[player.uniqueId]
+                if (inv != null) player.openInventory(inv)
+                else LockUtil.remove(player.uniqueId.toString())
             }
             .text("Name")
             .title(INVENTORY_NAME)
             .plugin(BlockProt.instance)
-            .preventClose()
+            // .preventClose() // Allow the user to close
             .open(requestingPlayer)
     }
 }

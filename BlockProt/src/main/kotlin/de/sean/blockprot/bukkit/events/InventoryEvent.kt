@@ -1,5 +1,6 @@
 package de.sean.blockprot.bukkit.events
 
+import de.sean.blockprot.BlockProt
 import de.sean.blockprot.bukkit.inventories.*
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
@@ -26,6 +27,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.DoubleChestInventory
 import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 import java.util.*
 
@@ -105,10 +107,19 @@ class InventoryEvent : Listener {
                         if (block == null) return
                         handler = BlockLockHandler(block)
                         val friends = handler.getAccess()
-                        var i = 0
-                        while (i < 9 * 3 - 2 && i < friends.size) {
-                            inv.setItem(i, getPlayerSkull(Bukkit.getOfflinePlayer(UUID.fromString(friends[i]))))
-                            i++
+                        // Get the skulls asynchronously and add them one after each other.
+                        Bukkit.getScheduler().runTaskAsynchronously(BlockProt.instance) { _ ->
+                            var i = 0
+                            val skulls: MutableList<ItemStack> = ArrayList()
+                            while (i < 9 * 3 - 2 && i < friends.size) {
+                                val skull = getPlayerSkull(Bukkit.getOfflinePlayer(UUID.fromString(friends[i])))
+                                skulls.add(skull)
+                                i++
+                            }
+                            Bukkit.getScheduler().runTask(BlockProt.instance) { _ ->
+                                for (skull in skulls.indices)
+                                    inv.setItem(skull, skulls[skull])
+                            }
                         }
                         inv.setItem(9 * 3 - 1, getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, Strings.BACK))
                         player.closeInventory()

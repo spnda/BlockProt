@@ -10,6 +10,10 @@ inventories:
       search: "Search"
   remove_friend:
     name: "Remove Friend"
+  friend_search:
+    name: "Search Players"
+  friend_search_result:
+    name: "Players found"
   block_lock: # The inventory with all buttons
     name: "Block Lock"
     items:

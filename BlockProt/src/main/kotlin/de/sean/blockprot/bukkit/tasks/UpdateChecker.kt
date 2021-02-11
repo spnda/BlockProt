@@ -29,7 +29,7 @@ class UpdateChecker(private val sendToChat: Boolean, private val description: Pl
                 Version(latest.currentVersion) < Version(description.version) ->
                     log("${description.name} is on Version ${description.version}, even though latest is ${latest.currentVersion}.")
                 else ->
-                    log("${description.name} is up to date. (${latest.currentVersion}).")
+                    log("${description.name} is up to date. (${latest.currentVersion}).", LogSeverity.LOG)
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -37,12 +37,17 @@ class UpdateChecker(private val sendToChat: Boolean, private val description: Pl
         }
     }
 
-    private fun log(content: String) {
+    enum class LogSeverity {
+        LOG, WARN
+    }
+
+    private fun log(content: String, severity: LogSeverity = LogSeverity.WARN) {
         if (sendToChat) {
             // Always send the message as gold text
             Bukkit.spigot().broadcast(*TextComponent.fromLegacyText("§6$content"))
         }
-        Bukkit.getLogger().info(content)
+        if (severity == LogSeverity.WARN) Bukkit.getLogger().warning(content)
+        else Bukkit.getLogger().info(content)
     }
 
     /**

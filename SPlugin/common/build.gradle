@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'junit:junit:4.13.2'
 
     // Spigot is the easiest way to build against the Bukkit API and for it to still work with Paper and other Spigot forks
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT' // Spigot

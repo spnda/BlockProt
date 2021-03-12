@@ -4,10 +4,12 @@ import de.sean.blockprot.BlockProt
 import de.sean.blockprot.bukkit.inventories.*
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
+import de.sean.blockprot.util.ItemUtil
 import de.sean.blockprot.util.ItemUtil.getItemStack
 import de.sean.blockprot.util.ItemUtil.getPlayerSkull
 import de.sean.blockprot.util.Strings
 import de.sean.blockprot.util.Vector3f
+import de.tr7zw.nbtapi.NBTEntity
 import de.tr7zw.nbtapi.NBTTileEntity
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -240,6 +242,26 @@ class InventoryEvent : Listener {
                     else -> {}
                 }
                 event.isCancelled = true
+            }
+            UserSettingsInventory.INVENTORY_NAME -> {
+                when (item.type) {
+                    Material.BARRIER -> {
+                        // Lock on place button, default value is true
+                        val nbtEntity = NBTEntity(player).persistentDataContainer
+                        nbtEntity.setBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE, !nbtEntity.getBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE))
+                        val lockOnPlace = nbtEntity.getBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE)
+                        Bukkit.getLogger().info(lockOnPlace.toString())
+                        event.inventory.setItem(0, getItemStack(
+                            1,
+                            Material.BARRIER,
+                            if (lockOnPlace) Strings.USER_SETTINGS_LOCK_ON_PLACE_DEACTIVATE
+                            else Strings.USER_SETTINGS_LOCK_ON_PLACE_ACTIVATE
+                        ))
+                        event.isCancelled = true
+                    }
+                    Material.BLACK_STAINED_GLASS_PANE -> player.closeInventory()
+                    else -> {}
+                }
             }
         }
     }

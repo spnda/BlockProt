@@ -26,6 +26,12 @@ inventories:
       redstone:
         activate: "Activate Redstone"
         deactivate: "Deactivate Redstone"
+  user_settings:
+    name: "User Settings"
+    items:
+      lock_on_place:
+        activate: "Always lock on placing"
+        deactivate: "Never lock on placing"
 
 messages:
   permission_granted: # When a user locks a block

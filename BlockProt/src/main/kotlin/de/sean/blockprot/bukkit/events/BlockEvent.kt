@@ -4,6 +4,7 @@ import de.sean.blockprot.BlockProt
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.tasks.DoubleChestLocker
+import de.tr7zw.nbtapi.NBTEntity
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
@@ -36,7 +37,6 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
 
     @EventHandler
     fun playerBlockPlace(event: BlockPlaceEvent) {
-        val config = BlockProt.instance.config
         val block = event.blockPlaced
         val playerUuid = event.player.uniqueId.toString()
         when (block.type) {
@@ -52,14 +52,20 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                     }
                 }, 1)
 
-                if (!config.getBoolean("players.$playerUuid.lockOnPlace")) {
+                val nbtEntity = NBTEntity(event.player).persistentDataContainer
+                if (nbtEntity.getBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE) != false) {
                     handler.lockBlock(event.player, event.player.isOp, null)
                 }
             }
             // We won't lock normal blocks on placing.
-            in LockUtil.lockableTileEntities -> if (!config.getBoolean("players.$playerUuid.lockOnPlace")) {
-                BlockLockHandler(block).setOwner(playerUuid)
-            } else BlockLockHandler(block).setOwner("") // Assign a empty string to not have NPEs when reading
+            in LockUtil.lockableTileEntities -> {
+                val nbtEntity = NBTEntity(event.player).persistentDataContainer
+                // Assign a empty string for no owner to not have NPEs when reading
+                print(nbtEntity.getBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE))
+                BlockLockHandler(block).setOwner(
+                    if (nbtEntity.getBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE) != false) playerUuid else ""
+                )
+            }
             else -> return
         }
     }

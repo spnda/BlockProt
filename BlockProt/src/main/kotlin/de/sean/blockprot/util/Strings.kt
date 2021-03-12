@@ -30,6 +30,9 @@ object Strings {
     val BLOCK_LOCK_REDSTONE_ACTIVATE = getString("inventories.block_lock.items.redstone.activate", "Activate Redstone")
     val BLOCK_LOCK_REDSTONE_DEACTIVATE = getString("inventories.block_lock.items.redstone.deactivate", "Deactivate Redstone")
 
+    val USER_SETTINGS_LOCK_ON_PLACE_ACTIVATE = getString("inventories.user_settings.items.lock_on_place.activate", "Always lock on placing")
+    val USER_SETTINGS_LOCK_ON_PLACE_DEACTIVATE = getString("inventories.user_settings.items.lock_on_place.deactivate", "Never lock on placing")
+
     // Permissions
     const val BLOCKPROT_LOCK = "blockprot.lock"
     const val BLOCKPROT_INFO = "blockprot.info"

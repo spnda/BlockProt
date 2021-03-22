@@ -42,7 +42,7 @@ allprojects {
 
     dependencies {
         plugins.withType(JavaPlugin) {
-            implementation('net.dv8tion:JDA:4.2.0_236') { exclude module: 'opus-java' } // Discord (4.2.0_236)
+            implementation('net.dv8tion:JDA:4.2.0_245') { exclude module: 'opus-java' } // Discord (4.2.0_245)
         }
     }
 

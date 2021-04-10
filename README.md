@@ -1,16 +1,15 @@
 # BlockProt
 
-![BlockProt CI](https://github.com/spnda/BukkitPlugins/workflows/BlockProt%20CI/badge.svg?branch=master&event=push)
+![BlockProt CI](https://github.com/spnda/BlockProt/workflows/CI/badge.svg?branch=master&event=push)
 
 BlockProt is a lightweight Spigot/Paper plugin that gives players the ability to protect chests, furnaces and many more blocks.
 
 # 🔨️ Building yourself
 
 SPlugin uses Gradle to handle dependencies as building.
-Make sure you have Java 8 and Git installed, then run
+Make sure you have atleast Java 8 and Git installed, then run
 ```batch
 git clone https://github.com/spnda/BlockProt.git
-cd BlockProt/
 gradlew build
 ```
 All dependencies get shadowed automatically, meaning you won't need to install anything else on your server.

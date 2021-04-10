@@ -3,6 +3,10 @@ name: CI
 on:
   push:
     branches: [ master ]
+    paths:
+      - 'src/**'
+      - '**.gradle'
+      - '**.properties'
   pull_request:
     branches: [ master ]
 

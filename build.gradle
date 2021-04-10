@@ -15,7 +15,6 @@ plugins {
 }
 
 repositories {
-    jcenter()
     maven {
         name = 'Spigot'
         url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
@@ -33,6 +32,7 @@ repositories {
             includeGroup 'net.wesjd'
         }
     }
+    mavenCentral()
 }
 
 dependencies {
@@ -51,7 +51,7 @@ jar {
 }
 
 shadowJar {
-    archiveFileName = "${project.name}-${project.plugin_version}-${getArchiveClassifier().get()}.${getExtension()}"
+    archiveFileName = "${project.name}-${project.plugin_version}-${getArchiveClassifier().get()}.${getArchiveExtension()}"
 
     dependencies {
         exclude(dependency("de.tr7zw:.*:.*"))
@@ -62,6 +62,7 @@ shadowJar {
 
 processResources {
     from(sourceSets.main.resources.srcDirs) {
+        it.setDuplicatesStrategy(DuplicatesStrategy.INCLUDE)
         filter ReplaceTokens, tokens: [version: project.plugin_version]
     }
 }

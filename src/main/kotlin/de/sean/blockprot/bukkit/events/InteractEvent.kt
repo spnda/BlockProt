@@ -1,6 +1,7 @@
 package de.sean.blockprot.bukkit.events
 
 import de.sean.blockprot.bukkit.inventories.BlockLockInventory
+import de.sean.blockprot.bukkit.inventories.InventoryState
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.util.ItemUtil.getItemStack
@@ -35,7 +36,7 @@ open class InteractEvent : Listener {
                     if (handler.isNotProtected() || owner == playerUuid || event.player.isOp || player.hasPermission(Strings.BLOCKPROT_INFO) || player.hasPermission(Strings.BLOCKPROT_ADMIN)) {
                         if (event.item == null) {
                             event.isCancelled = true
-                            LockUtil.add(playerUuid, Vector3f.fromDouble(blockState.block.location.x, blockState.block.location.y, blockState.block.location.z))
+                            InventoryState.set(player.uniqueId, InventoryState(blockState.block))
                             var inv: Inventory = BlockLockInventory.createInventory()
                             if ((owner.isNotEmpty() && owner == playerUuid) || (owner.isNotEmpty() && (player.isOp || player.hasPermission(Strings.BLOCKPROT_INFO) || player.hasPermission(Strings.BLOCKPROT_ADMIN)))) {
                                 inv = BlockLockInventory.createInventoryAndFill(player, blockState.type, handler)

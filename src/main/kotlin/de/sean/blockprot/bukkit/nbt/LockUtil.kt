@@ -36,16 +36,4 @@ object LockUtil {
     fun isLockable(blockState: BlockState) = isLockableBlock(blockState) && isLockableTileEntity(blockState)
     fun isLockableBlock(blockState: BlockState) = blockState.type in lockableBlocks
     fun isLockableTileEntity(blockState: BlockState) = blockState.type in lockableTileEntities
-
-    private val lock = HashMap<String, Vector3f>()
-
-    fun add(player: String, location: Vector3f) {
-        lock[player] = location
-    }
-
-    fun remove(player: String) {
-        lock.remove(player)
-    }
-
-    fun get(player: String) = lock[player]
 }

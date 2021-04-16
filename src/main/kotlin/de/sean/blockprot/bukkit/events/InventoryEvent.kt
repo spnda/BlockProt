@@ -52,7 +52,7 @@ class InventoryEvent : Listener {
                 val owner: String
                 when (item.type) {
                     in LockUtil.lockableTileEntities, in LockUtil.lockableBlocks -> {
-                        block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString()))
+                        block = InventoryState.get(player.uniqueId)?.block
                         if (block == null) return
                         handler = BlockLockHandler(block)
                         val doubleChest = getDoubleChest(block, player.world)
@@ -65,7 +65,7 @@ class InventoryEvent : Listener {
                         event.isCancelled = true
                     }
                     Material.REDSTONE, Material.GUNPOWDER -> {
-                        block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString()))
+                        block = InventoryState.get(player.uniqueId)?.block
                         if (block == null) return
                         handler = BlockLockHandler(block)
                         val doubleChest = getDoubleChest(block, player.world)
@@ -80,7 +80,7 @@ class InventoryEvent : Listener {
                     Material.PLAYER_HEAD -> {
                         inv = FriendAddInventory.createInventory()
                         inv.clear()
-                        block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString()))
+                        block = InventoryState.get(player.uniqueId)?.block
                         if (block == null) return
                         handler = BlockLockHandler(block)
                         owner = handler.getOwner()
@@ -105,7 +105,7 @@ class InventoryEvent : Listener {
                     Material.ZOMBIE_HEAD -> {
                         inv = FriendRemoveInventory.createInventory()
                         inv.clear()
-                        block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString()))
+                        block = InventoryState.get(player.uniqueId)?.block
                         if (block == null) return
                         handler = BlockLockHandler(block)
                         val friends = handler.getAccess()
@@ -131,7 +131,7 @@ class InventoryEvent : Listener {
                     Material.OAK_SIGN -> {
                         player.closeInventory()
                         inv = BlockInfoInventory.createInventory()
-                        block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString()))
+                        block = InventoryState.get(player.uniqueId)?.block
                         if (block == null) return
                         handler = BlockLockHandler(block)
                         owner = handler.getOwner()
@@ -151,7 +151,7 @@ class InventoryEvent : Listener {
                 }
             }
             FriendAddInventory.INVENTORY_NAME -> {
-                val block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString())) ?: return
+                val block = InventoryState.get(player.uniqueId)?.block ?: return
                 val handler = BlockLockHandler(block)
                 when (item.type) {
                     Material.BLACK_STAINED_GLASS_PANE -> {
@@ -183,7 +183,7 @@ class InventoryEvent : Listener {
                 event.isCancelled = true
             }
             FriendRemoveInventory.INVENTORY_NAME -> {
-                val block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString())) ?: return
+                val block = InventoryState.get(player.uniqueId)?.block ?: return
                 val handler = BlockLockHandler(block)
                 if (item.type == Material.BLACK_STAINED_GLASS_PANE) {
                     player.closeInventory()
@@ -205,7 +205,7 @@ class InventoryEvent : Listener {
             BlockInfoInventory.INVENTORY_NAME -> {
                 if (item.type == Material.BLACK_STAINED_GLASS_PANE) {
                     player.closeInventory()
-                    val block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString())) ?: return
+                    val block = InventoryState.get(player.uniqueId)?.block ?: return
                     val handler = BlockLockHandler(block)
                     val inv = BlockLockInventory.createInventoryAndFill(player, block.state.type, handler)
                     player.openInventory(inv)
@@ -219,7 +219,7 @@ class InventoryEvent : Listener {
                         FriendSearchInventory.openAnvilInventory(player)
                     }
                     Material.PLAYER_HEAD -> {
-                        val block = getBlockFromLocation(player, LockUtil.get(player.uniqueId.toString())) ?: return
+                        val block = InventoryState.get(player.uniqueId)?.block ?: return
                         val handler = BlockLockHandler(block)
                         val skull = item.itemMeta as SkullMeta? ?: return // Generic player head?
                         val friend = skull.owningPlayer?.uniqueId.toString()

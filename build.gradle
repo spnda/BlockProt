@@ -51,7 +51,7 @@ jar {
 }
 
 shadowJar {
-    archiveFileName = "${project.name}-${project.plugin_version}-${getArchiveClassifier().get()}.${getArchiveExtension()}"
+    archiveFileName = "${project.name}-${project.plugin_version}-${getArchiveClassifier().get()}.jar"
 
     dependencies {
         exclude(dependency("de.tr7zw:.*:.*"))

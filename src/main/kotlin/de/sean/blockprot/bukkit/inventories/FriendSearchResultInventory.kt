@@ -17,8 +17,7 @@ object FriendSearchResultInventory {
     private fun createInventory() = Bukkit.createInventory(null, 9 * 3, INVENTORY_NAME)
 
     fun createInventoryAndFill(player: Player, players: List<OfflinePlayer>): Inventory? {
-        val location = LockUtil.get(player.uniqueId.toString()) ?: return null
-        val block = player.world.getBlockAt(location.getXInt(), location.getYInt(), location.getZInt())
+        val block = InventoryState.get(player.uniqueId)?.block ?: return null
         val handler = BlockLockHandler(block)
         val friends = handler.getAccess()
 

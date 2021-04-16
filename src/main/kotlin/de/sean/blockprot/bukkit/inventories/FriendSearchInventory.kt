@@ -51,7 +51,7 @@ object FriendSearchInventory {
                 // If the user is closing, the user hasn't completed the translation yet.
                 val inv = playerNames[player.uniqueId]
                 if (inv != null) player.openInventory(inv)
-                else LockUtil.remove(player.uniqueId.toString())
+                else InventoryState.remove(player.uniqueId)
             }
             .text("Name")
             .title(INVENTORY_NAME)

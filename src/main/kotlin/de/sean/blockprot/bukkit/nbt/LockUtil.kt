@@ -1,11 +1,9 @@
 package de.sean.blockprot.bukkit.nbt
 
-import de.sean.blockprot.util.Vector3f
 import de.tr7zw.nbtapi.utils.MinecraftVersion
 import org.bukkit.Material
 import org.bukkit.block.BlockState
 import org.bukkit.event.inventory.InventoryType
-import kotlin.collections.HashMap
 
 object LockUtil {
     const val OWNER_ATTRIBUTE = "splugin_owner"

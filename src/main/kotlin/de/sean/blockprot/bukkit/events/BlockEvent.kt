@@ -1,6 +1,5 @@
 package de.sean.blockprot.bukkit.events
 
-import de.sean.blockprot.BlockProt
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.tasks.DoubleChestLocker
@@ -44,17 +43,23 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                 val handler = BlockLockHandler(block)
 
                 // After placing, it takes 1 tick for the chests to connect.
-                Bukkit.getScheduler().runTaskLater(plugin, DoubleChestLocker(handler, block, event.player) { allowed ->
-                    if (!allowed) {
-                        // We can't cancel the event 1 tick later, its already executed. We'll just need to destroy the block and drop it.
-                        val location = block.location
-                        event.player.world.getBlockAt(location).breakNaturally() // Let it break and drop itself
-                    }
-                }, 1)
+                Bukkit.getScheduler().runTaskLater(
+                    plugin,
+                    DoubleChestLocker(handler, block, event.player) { allowed ->
+                        if (!allowed) {
+                            // We can't cancel the event 1 tick later, its already executed. We'll just need to destroy the block and drop it.
+                            val location = block.location
+                            event.player.world.getBlockAt(location).breakNaturally() // Let it break and drop itself
+                        }
+                    },
+                    1
+                )
 
                 val nbtEntity = NBTEntity(event.player).persistentDataContainer
                 if (nbtEntity.getBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE) != false) {
                     handler.lockBlock(event.player, event.player.isOp, null)
+                    val friends = BlockLockHandler.parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
+                    handler.setAccess(friends)
                 }
             }
             // We won't lock normal blocks on placing.

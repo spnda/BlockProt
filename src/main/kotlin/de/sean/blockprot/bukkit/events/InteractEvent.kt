@@ -6,7 +6,6 @@ import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.util.ItemUtil.getItemStack
 import de.sean.blockprot.util.Strings
-import de.sean.blockprot.util.Vector3f
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Material

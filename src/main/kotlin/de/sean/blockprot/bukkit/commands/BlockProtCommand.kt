@@ -3,9 +3,7 @@ package de.sean.blockprot.bukkit.commands
 import de.sean.blockprot.BlockProt
 import de.sean.blockprot.bukkit.inventories.InventoryState
 import de.sean.blockprot.bukkit.inventories.UserSettingsInventory
-import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.tasks.UpdateChecker
-import de.tr7zw.nbtapi.NBTEntity
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender

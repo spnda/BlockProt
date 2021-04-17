@@ -1,7 +1,6 @@
 package de.sean.blockprot.bukkit.inventories
 
 import de.sean.blockprot.BlockProt
-import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.util.Strings
 import net.wesjd.anvilgui.AnvilGUI
 import org.apache.commons.lang.StringUtils

@@ -1,14 +1,11 @@
 package de.sean.blockprot.bukkit.events
 
-import de.sean.blockprot.BlockProt
 import de.sean.blockprot.bukkit.inventories.*
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
-import de.sean.blockprot.util.ItemUtil
 import de.sean.blockprot.util.ItemUtil.getItemStack
 import de.sean.blockprot.util.ItemUtil.getPlayerSkull
 import de.sean.blockprot.util.Strings
-import de.sean.blockprot.util.Vector3f
 import de.tr7zw.nbtapi.NBTEntity
 import de.tr7zw.nbtapi.NBTTileEntity
 import net.md_5.bungee.api.ChatMessageType
@@ -29,14 +26,13 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.DoubleChestInventory
 import org.bukkit.inventory.Inventory
-import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 import java.util.*
 
 class InventoryEvent : Listener {
     @EventHandler
     fun onInventoryClose(event: InventoryCloseEvent?) {
-        //SLockUtil.lock.remove(event.getPlayer().getUniqueId().toString());
+        // SLockUtil.lock.remove(event.getPlayer().getUniqueId().toString());
     }
 
     @EventHandler
@@ -277,20 +273,23 @@ class InventoryEvent : Listener {
                         nbtEntity.setBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE, !nbtEntity.getBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE))
                         val lockOnPlace = nbtEntity.getBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE)
                         Bukkit.getLogger().info(lockOnPlace.toString())
-                        event.inventory.setItem(0, getItemStack(
-                            1,
-                            Material.BARRIER,
-                            if (lockOnPlace) Strings.USER_SETTINGS_LOCK_ON_PLACE_DEACTIVATE
-                            else Strings.USER_SETTINGS_LOCK_ON_PLACE_ACTIVATE
-                        ))
+                        event.inventory.setItem(
+                            0,
+                            getItemStack(
+                                1,
+                                Material.BARRIER,
+                                if (lockOnPlace) Strings.USER_SETTINGS_LOCK_ON_PLACE_DEACTIVATE
+                                else Strings.USER_SETTINGS_LOCK_ON_PLACE_ACTIVATE
+                            )
+                        )
                         event.isCancelled = true
                     }
                     Material.PLAYER_HEAD -> {
                         val state = InventoryState.get(player.uniqueId) ?: return
                         state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH
                         val currentFriends = BlockLockHandler.parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
-                        val friendsToAdd
-                            = FriendAddInventory.filterFriendsList(currentFriends, Bukkit.getOnlinePlayers().toList(), player.uniqueId.toString())
+                        val friendsToAdd =
+                            FriendAddInventory.filterFriendsList(currentFriends, Bukkit.getOnlinePlayers().toList(), player.uniqueId.toString())
                         val inv = FriendAddInventory.createInventoryAndFill(friendsToAdd)
                         player.closeInventory()
                         player.openInventory(inv)

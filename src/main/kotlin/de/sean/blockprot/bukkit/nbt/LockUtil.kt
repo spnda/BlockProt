@@ -12,6 +12,7 @@ object LockUtil {
     const val LOCK_ATTRIBUTE = "splugin_lock"
     const val REDSTONE_ATTRIBUTE = "splugin_lock_redstone"
     const val LOCK_ON_PLACE_ATTRIBUTE = "splugin_lock_on_place"
+    const val DEFAULT_FRIENDS_ATTRIBUTE = "blockprot_default_friends"
 
     val lockableTileEntities: List<Material> = mutableListOf(
         Material.CHEST, Material.TRAPPED_CHEST, Material.FURNACE, Material.SMOKER, Material.BLAST_FURNACE, Material.HOPPER, Material.BARREL, Material.BREWING_STAND,

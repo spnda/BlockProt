@@ -14,6 +14,14 @@ import org.bukkit.entity.Player
 import java.util.ArrayList
 
 class BlockLockHandler constructor(block: Block) {
+    companion object {
+        fun parseStringList(str: String): List<String> {
+            val ret: MutableList<String> = ArrayList(listOf(*str.replace("^\\[|]$".toRegex(), "").split(", ").toTypedArray()))
+            ret.removeIf { obj: String -> obj.isEmpty() }
+            return ret
+        }
+    }
+
     private var container: NBTCompound
 
     init {
@@ -22,12 +30,6 @@ class BlockLockHandler constructor(block: Block) {
             in LockUtil.lockableTileEntities -> container = NBTTileEntity(block.state).persistentDataContainer
             else -> throw RuntimeException("Given block ${block.type} is not a lockable block/tile entity")
         }
-    }
-
-    private fun parseStringList(str: String): List<String> {
-        val ret: MutableList<String> = ArrayList(listOf(*str.replace("^\\[|]$".toRegex(), "").split(", ").toTypedArray()))
-        ret.removeIf { obj: String -> obj.isEmpty() }
-        return ret
     }
 
     fun getOwner(): String = container.getString(OWNER_ATTRIBUTE) ?: ""

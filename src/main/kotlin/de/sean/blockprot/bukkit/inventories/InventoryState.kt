@@ -8,7 +8,21 @@ import kotlin.collections.HashMap
  * Storage for the current state and location of each player's
  * interactions with this plugin's menus.
  */
-data class InventoryState(val block: Block) {
+data class InventoryState(val block: Block?) {
+    enum class FriendSearchState {
+        FRIEND_SEARCH,
+        DEFAULT_FRIEND_SEARCH,
+    }
+
+    /**
+     * The current state of the friend search mechanism.
+     * When adding default friends this should be [FriendSearchState.DEFAULT_FRIEND_SEARCH],
+     * which will then add the new friends to the current players NBT.
+     * When adding friends for a single block this should be [FriendSearchState.FRIEND_SEARCH],
+     * which will then add the new friends to [block]'s NBT.
+     */
+    var friendSearchState: FriendSearchState = FriendSearchState.FRIEND_SEARCH
+
     companion object {
         /**
          * HashMap containing the current InventoryState of each player.

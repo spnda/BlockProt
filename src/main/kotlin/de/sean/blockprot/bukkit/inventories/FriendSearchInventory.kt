@@ -13,7 +13,7 @@ import java.util.*
 object FriendSearchInventory {
     private val INVENTORY_NAME = Strings.getString("inventories.friend_search.name", "Search Players")
 
-    private val playerNames = emptyMap<UUID, Inventory?>().toMutableMap()
+    private val playerInventories = emptyMap<UUID, Inventory?>().toMutableMap()
 
     private fun compareStrings(s1: String, s2: String): Double {
         var longer = s1; var shorter = s2
@@ -44,12 +44,12 @@ object FriendSearchInventory {
                     }
                 }
 
-                playerNames[player.uniqueId] = FriendSearchResultInventory.createInventoryAndFill(player, players)
+                playerInventories[player.uniqueId] = FriendSearchResultInventory.createInventoryAndFill(player, players)
                 return@onComplete AnvilGUI.Response.close()
             }
             .onClose { player ->
                 // If the user is closing, the user hasn't completed the translation yet.
-                val inv = playerNames[player.uniqueId]
+                val inv = playerInventories[player.uniqueId]
                 if (inv != null) player.openInventory(inv)
                 else InventoryState.remove(player.uniqueId)
             }

@@ -5,6 +5,7 @@ import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.util.ItemUtil
 import de.sean.blockprot.util.Strings
+import de.tr7zw.nbtapi.NBTEntity
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.OfflinePlayer
@@ -17,14 +18,24 @@ object FriendSearchResultInventory {
     private fun createInventory() = Bukkit.createInventory(null, 9 * 3, INVENTORY_NAME)
 
     fun createInventoryAndFill(player: Player, players: List<OfflinePlayer>): Inventory? {
-        val block = InventoryState.get(player.uniqueId)?.block ?: return null
-        val handler = BlockLockHandler(block)
-        val friends = handler.getAccess()
+        val state = InventoryState.get(player.uniqueId) ?: return null
 
-        val inv = createInventory()
+        // The already existing friends we want to add to.
+        val friends: List<String> = when (state.friendSearchState) {
+            InventoryState.FriendSearchState.FRIEND_SEARCH -> {
+                val block = state.block ?: return null
+                val handler = BlockLockHandler(block)
+                handler.getAccess()
+            }
+            InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
+                val playerNBT = NBTEntity(player).persistentDataContainer
+                BlockLockHandler.parseStringList(playerNBT.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
+            }
+        }
 
         // To not delay when the inventory opens, we'll asynchronously get the items after the inventory has been opened
         // and later add them to the inventory.
+        val inv = createInventory()
         Bukkit.getScheduler().runTaskAsynchronously(BlockProt.instance) { _ ->
             val items: MutableList<ItemStack> = ArrayList()
             // Only show the 9 * 3 - 2 most relevant players. Don't show any more.

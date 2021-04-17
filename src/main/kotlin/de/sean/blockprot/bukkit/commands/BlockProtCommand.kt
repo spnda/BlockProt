@@ -1,6 +1,7 @@
 package de.sean.blockprot.bukkit.commands
 
 import de.sean.blockprot.BlockProt
+import de.sean.blockprot.bukkit.inventories.InventoryState
 import de.sean.blockprot.bukkit.inventories.UserSettingsInventory
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.tasks.UpdateChecker
@@ -39,6 +40,7 @@ class BlockProtCommand : TabExecutor {
                 val player = Bukkit.getPlayer(sender.name)
 
                 return if (player != null) {
+                    InventoryState.set(player.uniqueId, InventoryState(null))
                     player.openInventory(UserSettingsInventory.createInventoryAndFill(player))
                     true
                 } else false

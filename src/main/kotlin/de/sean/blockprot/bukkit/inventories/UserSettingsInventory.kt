@@ -23,6 +23,16 @@ object UserSettingsInventory {
             if (lockOnPlace) Strings.USER_SETTINGS_LOCK_ON_PLACE_DEACTIVATE
             else Strings.USER_SETTINGS_LOCK_ON_PLACE_ACTIVATE
         ))
+        inv.setItem(1, ItemUtil.getItemStack(
+            1,
+            Material.PLAYER_HEAD,
+            Strings.BLOCK_LOCK_ADD_FRIENDS
+        ))
+        inv.setItem(2, ItemUtil.getItemStack(
+            1,
+            Material.ZOMBIE_HEAD,
+            Strings.BLOCK_LOCK_REMOVE_FRIENDS
+        ))
         inv.setItem(8, ItemUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, Strings.BACK))
         return inv
     }

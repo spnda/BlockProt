@@ -78,52 +78,22 @@ class InventoryEvent : Listener {
                         event.isCancelled = true
                     }
                     Material.PLAYER_HEAD -> {
-                        inv = FriendAddInventory.createInventory()
-                        inv.clear()
                         block = InventoryState.get(player.uniqueId)?.block
                         if (block == null) return
                         handler = BlockLockHandler(block)
                         owner = handler.getOwner()
-                        val currentFriends = handler.getAccess() // All players that already have access
-                        val possibleFriends = playersCol.toTypedArray() // All players online
-                        val friendsToAdd: MutableList<Player> = ArrayList() // New list of everyone that doesn't have access *yet*
-                        for (possibleFriend in possibleFriends) {
-                            val possible = possibleFriend.uniqueId.toString()
-                            if (!currentFriends.contains(possible) && possible != owner) friendsToAdd.add(possibleFriend)
-                        }
-                        var i = 0
-                        while (i < 9 * 3 - 3 && i < friendsToAdd.size) {
-                            inv.setItem(i, getPlayerSkull(friendsToAdd[i]))
-                            i++
-                        }
-                        inv.setItem(9 * 3 - 2, getItemStack(1, Material.MAP, Strings.SEARCH))
-                        inv.setItem(9 * 3 - 1, getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, Strings.BACK))
+                        val friendsToAdd = FriendAddInventory.filterFriendsList(handler.getAccess(), playersCol.toList(), owner)
+                        inv = FriendAddInventory.createInventoryAndFill(friendsToAdd)
                         player.closeInventory()
                         player.openInventory(inv)
                         event.isCancelled = true
                     }
                     Material.ZOMBIE_HEAD -> {
-                        inv = FriendRemoveInventory.createInventory()
-                        inv.clear()
                         block = InventoryState.get(player.uniqueId)?.block
                         if (block == null) return
                         handler = BlockLockHandler(block)
                         val friends = handler.getAccess()
-                        // Get the skulls asynchronously and add them one after each other.
-                        Bukkit.getScheduler().runTaskAsynchronously(BlockProt.instance) { _ ->
-                            var i = 0
-                            val skulls: MutableList<ItemStack> = ArrayList()
-                            while (i < 9 * 3 - 2 && i < friends.size) {
-                                val skull = getPlayerSkull(Bukkit.getOfflinePlayer(UUID.fromString(friends[i])))
-                                skulls.add(skull)
-                                i++
-                            }
-                            Bukkit.getScheduler().runTask(BlockProt.instance) { _ ->
-                                for (skull in skulls.indices)
-                                    inv.setItem(skull, skulls[skull])
-                            }
-                        }
-                        inv.setItem(9 * 3 - 1, getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, Strings.BACK))
+                        inv = FriendRemoveInventory.createInventoryAndFill(friends)
                         player.closeInventory()
                         player.openInventory(inv)
                         event.isCancelled = true
@@ -151,28 +121,48 @@ class InventoryEvent : Listener {
                 }
             }
             FriendAddInventory.INVENTORY_NAME -> {
-                val block = InventoryState.get(player.uniqueId)?.block ?: return
-                val handler = BlockLockHandler(block)
+                val state = InventoryState.get(player.uniqueId) ?: return
                 when (item.type) {
                     Material.BLACK_STAINED_GLASS_PANE -> {
                         player.closeInventory()
-                        val inv = BlockLockInventory.createInventoryAndFill(player, block.state.type, handler)
+                        val inv = when (state.friendSearchState) {
+                            InventoryState.FriendSearchState.FRIEND_SEARCH -> {
+                                if (state.block == null) return
+                                BlockLockInventory.createInventoryAndFill(player, state.block.state.type, BlockLockHandler(state.block))
+                            }
+                            InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
+                                UserSettingsInventory.createInventoryAndFill(player)
+                            }
+                        }
                         player.openInventory(inv)
                     }
                     Material.PLAYER_HEAD -> {
                         val skull = item.itemMeta as SkullMeta? ?: return // Generic player head?
                         val friend = skull.owningPlayer?.uniqueId.toString()
-                        val doubleChest = getDoubleChest(block, player.world)
-                        val ret = handler.addFriend(
-                            player.uniqueId.toString(),
-                            friend,
-                            if (doubleChest != null) NBTTileEntity(doubleChest) else null
-                        )
-                        if (ret.success) {
-                            applyToDoor(handler, block)
-                            player.closeInventory()
-                            player.spigot()
-                                .sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
+                        when (state.friendSearchState) {
+                            InventoryState.FriendSearchState.FRIEND_SEARCH -> {
+                                if (state.block == null) return
+                                val handler = BlockLockHandler(state.block)
+                                val doubleChest = getDoubleChest(state.block, player.world)
+                                val ret = handler.addFriend(
+                                    player.uniqueId.toString(),
+                                    friend,
+                                    if (doubleChest != null) NBTTileEntity(doubleChest) else null
+                                )
+                                if (ret.success) {
+                                    applyToDoor(handler, state.block)
+                                    player.closeInventory()
+                                    player.spigot()
+                                        .sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
+                                }
+                            }
+                            InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
+                                val playerNBT = NBTEntity(player).persistentDataContainer
+                                var currentFriendList = BlockLockHandler.parseStringList(playerNBT.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
+                                currentFriendList = currentFriendList.plus(friend)
+                                playerNBT.setString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE, currentFriendList.toString())
+                                player.closeInventory()
+                            }
                         }
                     }
                     Material.MAP -> {
@@ -183,22 +173,46 @@ class InventoryEvent : Listener {
                 event.isCancelled = true
             }
             FriendRemoveInventory.INVENTORY_NAME -> {
-                val block = InventoryState.get(player.uniqueId)?.block ?: return
-                val handler = BlockLockHandler(block)
-                if (item.type == Material.BLACK_STAINED_GLASS_PANE) {
-                    player.closeInventory()
-                    val inv = BlockLockInventory.createInventoryAndFill(player, block.state.type, handler)
-                    player.openInventory(inv)
-                } else if (item.type == Material.PLAYER_HEAD) {
-                    val skull = item.itemMeta as SkullMeta? ?: return // Generic player head?
-                    val friend = skull.owningPlayer?.uniqueId.toString()
-                    val doubleChest = getDoubleChest(block, player.world)
-                    val ret = handler.removeFriend(player.uniqueId.toString(), friend, if (doubleChest != null) NBTTileEntity(doubleChest) else null)
-                    if (ret.success) {
-                        applyToDoor(handler, block)
+                val state = InventoryState.get(player.uniqueId) ?: return
+                when (item.type) {
+                    Material.BLACK_STAINED_GLASS_PANE -> {
                         player.closeInventory()
-                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
+                        val inv = when (state.friendSearchState) {
+                            InventoryState.FriendSearchState.FRIEND_SEARCH -> {
+                                if (state.block == null) return
+                                BlockLockInventory.createInventoryAndFill(player, state.block.state.type, BlockLockHandler(state.block))
+                            }
+                            InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
+                                UserSettingsInventory.createInventoryAndFill(player)
+                            }
+                        }
+                        player.openInventory(inv)
                     }
+                    Material.PLAYER_HEAD -> {
+                        val skull = item.itemMeta as SkullMeta? ?: return // Generic player head?
+                        val friend = skull.owningPlayer?.uniqueId.toString()
+                        when (state.friendSearchState) {
+                            InventoryState.FriendSearchState.FRIEND_SEARCH -> {
+                                if (state.block == null) return
+                                val handler = BlockLockHandler(state.block)
+                                val doubleChest = getDoubleChest(state.block, player.world)
+                                val ret = handler.removeFriend(player.uniqueId.toString(), friend, if (doubleChest != null) NBTTileEntity(doubleChest) else null)
+                                if (ret.success) {
+                                    applyToDoor(handler, state.block)
+                                    player.closeInventory()
+                                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
+                                }
+                            }
+                            InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
+                                val playerNBT = NBTEntity(player).persistentDataContainer
+                                var currentFriendList = BlockLockHandler.parseStringList(playerNBT.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
+                                currentFriendList = currentFriendList.minus(friend)
+                                playerNBT.setString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE, currentFriendList.toString())
+                                player.closeInventory()
+                            }
+                        }
+                    }
+                    else -> {}
                 }
                 event.isCancelled = true
             }
@@ -219,22 +233,34 @@ class InventoryEvent : Listener {
                         FriendSearchInventory.openAnvilInventory(player)
                     }
                     Material.PLAYER_HEAD -> {
-                        val block = InventoryState.get(player.uniqueId)?.block ?: return
-                        val handler = BlockLockHandler(block)
+                        val state = InventoryState.get(player.uniqueId) ?: return
                         val skull = item.itemMeta as SkullMeta? ?: return // Generic player head?
                         val friend = skull.owningPlayer?.uniqueId.toString()
-                        val doubleChest = getDoubleChest(block, player.world)
-                        val ret = handler.addFriend(
-                            player.uniqueId.toString(),
-                            friend,
-                            if (doubleChest != null) NBTTileEntity(doubleChest) else null
-                        )
-                        if (ret.success) {
-                            applyToDoor(handler, block)
-                            player.spigot()
-                                .sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
+                        when (state.friendSearchState) {
+                            InventoryState.FriendSearchState.FRIEND_SEARCH -> {
+                                if (state.block == null) return
+                                val handler = BlockLockHandler(state.block)
+                                val doubleChest = getDoubleChest(state.block, player.world)
+                                val ret = handler.addFriend(
+                                    player.uniqueId.toString(),
+                                    friend,
+                                    if (doubleChest != null) NBTTileEntity(doubleChest) else null
+                                )
+                                if (ret.success) {
+                                    applyToDoor(handler, state.block)
+                                    player.spigot()
+                                        .sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
+                                }
+                                player.closeInventory()
+                            }
+                            InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
+                                val playerNBT = NBTEntity(player).persistentDataContainer
+                                var currentFriendList = BlockLockHandler.parseStringList(playerNBT.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
+                                currentFriendList = currentFriendList.plus(friend)
+                                playerNBT.setString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE, currentFriendList.toString())
+                                player.closeInventory()
+                            }
                         }
-                        player.closeInventory()
                     }
                     Material.BARRIER -> {
                         player.closeInventory()
@@ -244,10 +270,10 @@ class InventoryEvent : Listener {
                 event.isCancelled = true
             }
             UserSettingsInventory.INVENTORY_NAME -> {
+                val nbtEntity = NBTEntity(player).persistentDataContainer
                 when (item.type) {
                     Material.BARRIER -> {
                         // Lock on place button, default value is true
-                        val nbtEntity = NBTEntity(player).persistentDataContainer
                         nbtEntity.setBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE, !nbtEntity.getBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE))
                         val lockOnPlace = nbtEntity.getBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE)
                         Bukkit.getLogger().info(lockOnPlace.toString())
@@ -257,6 +283,27 @@ class InventoryEvent : Listener {
                             if (lockOnPlace) Strings.USER_SETTINGS_LOCK_ON_PLACE_DEACTIVATE
                             else Strings.USER_SETTINGS_LOCK_ON_PLACE_ACTIVATE
                         ))
+                        event.isCancelled = true
+                    }
+                    Material.PLAYER_HEAD -> {
+                        val state = InventoryState.get(player.uniqueId) ?: return
+                        state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH
+                        val currentFriends = BlockLockHandler.parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
+                        val friendsToAdd
+                            = FriendAddInventory.filterFriendsList(currentFriends, Bukkit.getOnlinePlayers().toList(), player.uniqueId.toString())
+                        val inv = FriendAddInventory.createInventoryAndFill(friendsToAdd)
+                        player.closeInventory()
+                        player.openInventory(inv)
+                        InventoryState.set(player.uniqueId, state)
+                        event.isCancelled = true
+                    }
+                    Material.ZOMBIE_HEAD -> {
+                        val state = InventoryState.get(player.uniqueId) ?: return
+                        state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH
+                        val currentFriends = BlockLockHandler.parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
+                        val inv = FriendRemoveInventory.createInventoryAndFill(currentFriends)
+                        player.closeInventory()
+                        player.openInventory(inv)
                         event.isCancelled = true
                     }
                     Material.BLACK_STAINED_GLASS_PANE -> player.closeInventory()
@@ -282,11 +329,6 @@ class InventoryEvent : Listener {
             otherDoorHandler.setAccess(doorHandler.getAccess())
             otherDoorHandler.setRedstone(doorHandler.getRedstone())
         }
-    }
-
-    private fun getBlockFromLocation(player: Player, location: Vector3f?): Block? {
-        if (location == null) return null
-        return player.world.getBlockAt(location.getXInt(), location.getYInt(), location.getZInt())
     }
 
     private fun getDoubleChest(block: Block, world: World): BlockState? {

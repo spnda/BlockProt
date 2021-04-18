@@ -15,7 +15,8 @@ object FriendSearchInventory {
     private val playerInventories = emptyMap<UUID, Inventory?>().toMutableMap()
 
     private fun compareStrings(s1: String, s2: String): Double {
-        var longer = s1; var shorter = s2
+        var longer = s1;
+        var shorter = s2
         if (s1.length < s2.length) {
             longer = s2; shorter = s1
         }

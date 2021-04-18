@@ -2,9 +2,15 @@ package de.sean.blockprot.bukkit.nbt
 
 import de.tr7zw.nbtapi.utils.MinecraftVersion
 import org.bukkit.Material
+import org.bukkit.World
+import org.bukkit.block.Block
 import org.bukkit.block.BlockState
+import org.bukkit.block.Chest
+import org.bukkit.block.DoubleChest
+import org.bukkit.block.data.Bisected
+import org.bukkit.block.data.type.Door
 import org.bukkit.event.inventory.InventoryType
-import java.util.ArrayList
+import org.bukkit.inventory.DoubleChestInventory
 
 object LockUtil {
     const val OWNER_ATTRIBUTE = "splugin_owner"
@@ -44,5 +50,48 @@ object LockUtil {
         val ret: MutableList<String> = ArrayList(listOf(*str.replace("^\\[|]$".toRegex(), "").split(", ").toTypedArray()))
         ret.removeIf { obj: String -> obj.isEmpty() }
         return ret
+    }
+
+    /**
+     * Copy the data over from the top/bottom door to the other half
+     */
+    fun applyToDoor(doorHandler: BlockLockHandler, block: Block) {
+        if (block.type in listOf(Material.ACACIA_DOOR, Material.BIRCH_DOOR, Material.CRIMSON_DOOR, Material.DARK_OAK_DOOR, Material.JUNGLE_DOOR, Material.OAK_DOOR, Material.SPRUCE_DOOR, Material.WARPED_DOOR)) {
+            val blockState = block.state
+            val door = blockState.blockData as Door
+            var other = blockState.location
+            other = if (door.half == Bisected.Half.TOP) other.subtract(0.0, 1.0, 0.0)
+            else other.add(0.0, 1.0, 0.0)
+            val otherDoor = blockState.world.getBlockAt(other)
+            val otherDoorHandler = BlockLockHandler(otherDoor)
+            otherDoorHandler.setOwner(doorHandler.getOwner())
+            otherDoorHandler.setAccess(doorHandler.getAccess())
+            otherDoorHandler.setRedstone(doorHandler.getRedstone())
+        }
+    }
+
+    /**
+     * Get the BlockState of the double chest of given [block].
+     * @return The BlockState of the double chest, null if given [block] was not a chest.
+     */
+    fun getDoubleChest(block: Block, world: World): BlockState? {
+        var doubleChest: DoubleChest? = null
+        val chestState = block.state
+        if (chestState is Chest) {
+            val inventory = chestState.inventory
+            if (inventory is DoubleChestInventory) {
+                doubleChest = inventory.holder
+            }
+        }
+        if (doubleChest == null) return null
+        val second = doubleChest.location
+
+        when {
+            block.x > second.x -> second.subtract(.5, 0.0, 0.0)
+            block.z > second.z -> second.subtract(0.0, 0.0, .5)
+            else -> second.add(.5, 0.0, .5)
+        }
+
+        return world.getBlockAt(second).state
     }
 }

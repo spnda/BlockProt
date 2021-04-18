@@ -8,7 +8,12 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.DoubleChestInventory
 import java.util.function.Consumer
 
-class DoubleChestLocker(private val newHandler: BlockLockHandler, val block: Block, private val player: Player, private val callback: Consumer<Boolean>) : Runnable {
+class DoubleChestLocker(
+    private val newHandler: BlockLockHandler,
+    val block: Block,
+    private val player: Player,
+    private val callback: Consumer<Boolean>
+) : Runnable {
     override fun run() {
         val doubleChest = getDoubleChest()
         if (doubleChest == null) {

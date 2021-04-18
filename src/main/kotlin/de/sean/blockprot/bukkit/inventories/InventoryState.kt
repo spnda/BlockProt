@@ -2,7 +2,6 @@ package de.sean.blockprot.bukkit.inventories
 
 import org.bukkit.block.Block
 import java.util.*
-import kotlin.collections.HashMap
 
 /**
  * Storage for the current state and location of each player's

@@ -14,9 +14,9 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-object FriendSearchResultInventory {
-    val INVENTORY_NAME = Strings.getString("inventories.friend_search_result.name", "Players found")
-    private fun createInventory() = Bukkit.createInventory(null, 9 * 3, INVENTORY_NAME)
+object FriendSearchResultInventory : BlockProtInventory {
+    override val size = 9 * 3
+    override val inventoryName = Strings.getString("inventories.friend_search_result.name", "Players found")
 
     fun createInventoryAndFill(player: Player, players: List<OfflinePlayer>): Inventory? {
         val state = InventoryState.get(player.uniqueId) ?: return null

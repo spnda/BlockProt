@@ -41,7 +41,7 @@ class InventoryEvent : Listener {
         val player = event.whoClicked as Player
         val item = event.currentItem ?: return
         when (event.view.title) {
-            BlockLockInventory.INVENTORY_NAME -> {
+            BlockLockInventory.inventoryName -> {
                 val inv: Inventory
                 val playersCol = Bukkit.getOnlinePlayers()
                 val block: Block?
@@ -117,7 +117,7 @@ class InventoryEvent : Listener {
                     else -> player.closeInventory()
                 }
             }
-            FriendAddInventory.INVENTORY_NAME -> {
+            FriendAddInventory.inventoryName -> {
                 val state = InventoryState.get(player.uniqueId) ?: return
                 when (item.type) {
                     Material.BLACK_STAINED_GLASS_PANE -> {
@@ -169,7 +169,7 @@ class InventoryEvent : Listener {
                 }
                 event.isCancelled = true
             }
-            FriendRemoveInventory.INVENTORY_NAME -> {
+            FriendRemoveInventory.inventoryName -> {
                 val state = InventoryState.get(player.uniqueId) ?: return
                 when (item.type) {
                     Material.BLACK_STAINED_GLASS_PANE -> {
@@ -213,7 +213,7 @@ class InventoryEvent : Listener {
                 }
                 event.isCancelled = true
             }
-            BlockInfoInventory.INVENTORY_NAME -> {
+            BlockInfoInventory.inventoryName -> {
                 if (item.type == Material.BLACK_STAINED_GLASS_PANE) {
                     player.closeInventory()
                     val block = InventoryState.get(player.uniqueId)?.block ?: return
@@ -223,7 +223,7 @@ class InventoryEvent : Listener {
                 }
                 event.isCancelled = true
             }
-            FriendSearchResultInventory.INVENTORY_NAME -> {
+            FriendSearchResultInventory.inventoryName -> {
                 when (item.type) {
                     Material.BLACK_STAINED_GLASS_PANE -> {
                         // Go back to the search if nothing was found
@@ -266,7 +266,7 @@ class InventoryEvent : Listener {
                 }
                 event.isCancelled = true
             }
-            UserSettingsInventory.INVENTORY_NAME -> {
+            UserSettingsInventory.inventoryName -> {
                 val nbtEntity = NBTEntity(player).persistentDataContainer
                 when (item.type) {
                     Material.BARRIER -> {

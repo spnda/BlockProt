@@ -8,9 +8,9 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import java.util.ArrayList
 
-object FriendAddInventory {
-    val INVENTORY_NAME = Strings.getString("inventories.add_friend.name", "Add Friend")
-    fun createInventory() = Bukkit.createInventory(null, 9 * 3, INVENTORY_NAME)
+object FriendAddInventory : BlockProtInventory {
+    override val size = 9 * 3
+    override val inventoryName = Strings.getString("inventories.add_friend.name", "Add Friend")
 
     fun filterFriendsList(current: List<String>, allPlayers: List<Player>, self: String): MutableList<Player> {
         val ret: MutableList<Player> = ArrayList()

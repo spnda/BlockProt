@@ -9,9 +9,9 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-object FriendRemoveInventory {
-    val INVENTORY_NAME = Strings.getString("inventories.remove_friend.name", "Remove Friend")
-    fun createInventory() = Bukkit.createInventory(null, 9 * 3, INVENTORY_NAME)
+object FriendRemoveInventory : BlockProtInventory {
+    override val size = 9 * 3
+    override val inventoryName: String = Strings.getString("inventories.remove_friend.name", "Remove Friend")
 
     fun createInventoryAndFill(friendsToRemove: List<String>): Inventory {
         val inv = createInventory()

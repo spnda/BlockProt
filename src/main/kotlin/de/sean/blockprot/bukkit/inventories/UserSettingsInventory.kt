@@ -9,9 +9,9 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 
-object UserSettingsInventory {
-    val INVENTORY_NAME = Strings.getString("inventories.user_settings.name", "User Settings")
-    fun createInventory() = Bukkit.createInventory(null, 9 * 1, INVENTORY_NAME)
+object UserSettingsInventory : BlockProtInventory {
+    override val size = 9 * 1
+    override val inventoryName = Strings.getString("inventories.user_settings.name", "User Settings")
 
     fun createInventoryAndFill(player: Player): Inventory {
         val inv = createInventory()

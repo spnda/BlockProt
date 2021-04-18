@@ -10,7 +10,7 @@ import org.bukkit.inventory.Inventory
 import java.util.*
 
 object FriendSearchInventory {
-    private val INVENTORY_NAME = Strings.getString("inventories.friend_search.name", "Search Players")
+    private val inventoryName = Strings.getString("inventories.friend_search.name", "Search Players")
 
     private val playerInventories = emptyMap<UUID, Inventory?>().toMutableMap()
 
@@ -53,7 +53,7 @@ object FriendSearchInventory {
                 else InventoryState.remove(player.uniqueId)
             }
             .text("Name")
-            .title(INVENTORY_NAME)
+            .title(inventoryName)
             .plugin(BlockProt.instance)
             // .preventClose() // Allow the user to close
             .open(requestingPlayer)

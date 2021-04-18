@@ -2,6 +2,7 @@ package de.sean.blockprot.bukkit.events
 
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
+import de.sean.blockprot.bukkit.nbt.LockUtil.parseStringList
 import de.sean.blockprot.bukkit.tasks.DoubleChestLocker
 import de.tr7zw.nbtapi.NBTEntity
 import org.bukkit.Bukkit
@@ -58,7 +59,7 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                 val nbtEntity = NBTEntity(event.player).persistentDataContainer
                 if (nbtEntity.getBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE) != false) {
                     handler.lockBlock(event.player, event.player.isOp, null)
-                    val friends = BlockLockHandler.parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
+                    val friends = parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
                     handler.setAccess(friends)
                 }
             }

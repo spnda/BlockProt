@@ -5,23 +5,15 @@ package de.sean.blockprot.bukkit.nbt
 import de.sean.blockprot.bukkit.nbt.LockUtil.LOCK_ATTRIBUTE
 import de.sean.blockprot.bukkit.nbt.LockUtil.OWNER_ATTRIBUTE
 import de.sean.blockprot.bukkit.nbt.LockUtil.REDSTONE_ATTRIBUTE
+import de.sean.blockprot.bukkit.nbt.LockUtil.parseStringList
 import de.sean.blockprot.util.Strings
 import de.tr7zw.nbtapi.NBTBlock
 import de.tr7zw.nbtapi.NBTCompound
 import de.tr7zw.nbtapi.NBTTileEntity
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
-import java.util.ArrayList
 
 class BlockLockHandler constructor(block: Block) {
-    companion object {
-        fun parseStringList(str: String): List<String> {
-            val ret: MutableList<String> = ArrayList(listOf(*str.replace("^\\[|]$".toRegex(), "").split(", ").toTypedArray()))
-            ret.removeIf { obj: String -> obj.isEmpty() }
-            return ret
-        }
-    }
-
     private var container: NBTCompound
 
     init {

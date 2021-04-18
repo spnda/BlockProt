@@ -3,6 +3,7 @@ package de.sean.blockprot.bukkit.events
 import de.sean.blockprot.bukkit.inventories.*
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
+import de.sean.blockprot.bukkit.nbt.LockUtil.parseStringList
 import de.sean.blockprot.util.ItemUtil.getItemStack
 import de.sean.blockprot.util.ItemUtil.getPlayerSkull
 import de.sean.blockprot.util.Strings
@@ -154,7 +155,7 @@ class InventoryEvent : Listener {
                             }
                             InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
                                 val playerNBT = NBTEntity(player).persistentDataContainer
-                                var currentFriendList = BlockLockHandler.parseStringList(playerNBT.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
+                                var currentFriendList = parseStringList(playerNBT.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
                                 currentFriendList = currentFriendList.plus(friend)
                                 playerNBT.setString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE, currentFriendList.toString())
                                 player.closeInventory()
@@ -201,7 +202,7 @@ class InventoryEvent : Listener {
                             }
                             InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
                                 val playerNBT = NBTEntity(player).persistentDataContainer
-                                var currentFriendList = BlockLockHandler.parseStringList(playerNBT.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
+                                var currentFriendList = parseStringList(playerNBT.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
                                 currentFriendList = currentFriendList.minus(friend)
                                 playerNBT.setString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE, currentFriendList.toString())
                                 player.closeInventory()
@@ -251,7 +252,7 @@ class InventoryEvent : Listener {
                             }
                             InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
                                 val playerNBT = NBTEntity(player).persistentDataContainer
-                                var currentFriendList = BlockLockHandler.parseStringList(playerNBT.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
+                                var currentFriendList = parseStringList(playerNBT.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
                                 currentFriendList = currentFriendList.plus(friend)
                                 playerNBT.setString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE, currentFriendList.toString())
                                 player.closeInventory()
@@ -287,7 +288,7 @@ class InventoryEvent : Listener {
                     Material.PLAYER_HEAD -> {
                         val state = InventoryState.get(player.uniqueId) ?: return
                         state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH
-                        val currentFriends = BlockLockHandler.parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
+                        val currentFriends = parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
                         val friendsToAdd =
                             FriendAddInventory.filterFriendsList(currentFriends, Bukkit.getOnlinePlayers().toList(), player.uniqueId.toString())
                         val inv = FriendAddInventory.createInventoryAndFill(friendsToAdd)
@@ -299,7 +300,7 @@ class InventoryEvent : Listener {
                     Material.ZOMBIE_HEAD -> {
                         val state = InventoryState.get(player.uniqueId) ?: return
                         state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH
-                        val currentFriends = BlockLockHandler.parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
+                        val currentFriends = parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
                         val inv = FriendRemoveInventory.createInventoryAndFill(currentFriends)
                         player.closeInventory()
                         player.openInventory(inv)

@@ -4,6 +4,7 @@ import de.tr7zw.nbtapi.utils.MinecraftVersion
 import org.bukkit.Material
 import org.bukkit.block.BlockState
 import org.bukkit.event.inventory.InventoryType
+import java.util.ArrayList
 
 object LockUtil {
     const val OWNER_ATTRIBUTE = "splugin_owner"
@@ -35,4 +36,13 @@ object LockUtil {
     fun isLockable(blockState: BlockState) = isLockableBlock(blockState) && isLockableTileEntity(blockState)
     fun isLockableBlock(blockState: BlockState) = blockState.type in lockableBlocks
     fun isLockableTileEntity(blockState: BlockState) = blockState.type in lockableTileEntities
+
+    /**
+     * Parse a comma-separated list from a String
+     */
+    fun parseStringList(str: String): List<String> {
+        val ret: MutableList<String> = ArrayList(listOf(*str.replace("^\\[|]$".toRegex(), "").split(", ").toTypedArray()))
+        ret.removeIf { obj: String -> obj.isEmpty() }
+        return ret
+    }
 }

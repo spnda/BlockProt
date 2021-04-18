@@ -3,6 +3,7 @@ package de.sean.blockprot.bukkit.inventories
 import de.sean.blockprot.BlockProt
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
+import de.sean.blockprot.bukkit.nbt.LockUtil.parseStringList
 import de.sean.blockprot.util.ItemUtil
 import de.sean.blockprot.util.Strings
 import de.tr7zw.nbtapi.NBTEntity
@@ -29,7 +30,7 @@ object FriendSearchResultInventory {
             }
             InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
                 val playerNBT = NBTEntity(player).persistentDataContainer
-                BlockLockHandler.parseStringList(playerNBT.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
+                parseStringList(playerNBT.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
             }
         }
 

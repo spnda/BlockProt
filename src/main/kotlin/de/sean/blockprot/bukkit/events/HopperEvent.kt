@@ -29,20 +29,18 @@ class HopperEvent : Listener {
 
     /**
      * Get the block from a InventoryHolder, instead of just getting the block by location as before.
-     *
-     * TODO: This needs improvement and should be dynamic, as in adapting to `ListUtil.lockableInventories`.
      */
     private fun getBlock(holder: InventoryHolder): Block? {
-        when (holder) {
-            is Chest -> return holder.block
-            is Furnace -> return holder.block
-            is Smoker -> return holder.block
-            is BlastFurnace -> return holder.block
-            is Hopper -> return holder.block
-            is Barrel -> return holder.block
-            is BrewingStand -> return holder.block
-            is ShulkerBox -> return holder.block
-            else -> return null
+        return when (holder) {
+            is Chest -> holder.block
+            is Furnace -> holder.block
+            is Smoker -> holder.block
+            is BlastFurnace -> holder.block
+            is Hopper -> holder.block
+            is Barrel -> holder.block
+            is BrewingStand -> holder.block
+            is ShulkerBox -> holder.block
+            else -> null
         }
     }
 }

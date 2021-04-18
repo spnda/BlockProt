@@ -72,13 +72,17 @@ class BlockLockHandler constructor(val block: Block) {
     fun lockRedstoneForBlock(player: String, doubleChest: NBTTileEntity?): LockReturnValue {
         val owner = container.getString(OWNER_ATTRIBUTE)
         if (owner == player) {
-            val redstone = container.getBoolean(REDSTONE_ATTRIBUTE)
-            container.setBoolean(REDSTONE_ATTRIBUTE, !redstone) // Just flip the boolean value
+            val redstone: Boolean
+            if (!container.hasKey(REDSTONE_ATTRIBUTE)) {
+                /* We assume that our current value is true, and we'll therefore change it off */
+                redstone = false
+                container.setBoolean(REDSTONE_ATTRIBUTE, redstone)
+            } else {
+                redstone = container.getBoolean(REDSTONE_ATTRIBUTE)
+                container.setBoolean(REDSTONE_ATTRIBUTE, !redstone) // Just flip the boolean value
+            }
             doubleChest?.persistentDataContainer?.setBoolean(REDSTONE_ATTRIBUTE, !redstone)
-            return if (redstone)
-                LockReturnValue(true, Strings.REDSTONE_ADDED)
-            else
-                LockReturnValue(true, Strings.REDSTONE_REMOVED)
+            return LockReturnValue(true, if (redstone) Strings.REDSTONE_ADDED else Strings.REDSTONE_REMOVED)
         }
         return LockReturnValue(false, Strings.NO_PERMISSION)
     }

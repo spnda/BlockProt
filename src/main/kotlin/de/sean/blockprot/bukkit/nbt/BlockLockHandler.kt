@@ -13,7 +13,7 @@ import de.tr7zw.nbtapi.NBTTileEntity
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
 
-class BlockLockHandler constructor(block: Block) {
+class BlockLockHandler constructor(val block: Block) {
     private var container: NBTCompound
 
     init {

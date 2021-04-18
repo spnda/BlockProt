@@ -1,11 +1,9 @@
 package de.sean.blockprot.bukkit.tasks
 
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
+import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
 import org.bukkit.block.Block
-import org.bukkit.block.Chest
-import org.bukkit.block.DoubleChest
 import org.bukkit.entity.Player
-import org.bukkit.inventory.DoubleChestInventory
 import java.util.function.Consumer
 
 class DoubleChestLocker(
@@ -15,12 +13,12 @@ class DoubleChestLocker(
     private val callback: Consumer<Boolean>
 ) : Runnable {
     override fun run() {
-        val doubleChest = getDoubleChest()
+        val doubleChest = getDoubleChest(block, player.world)
         if (doubleChest == null) {
             callback.accept(true)
             return
         }
-        val oldChestHandler = BlockLockHandler(doubleChest)
+        val oldChestHandler = BlockLockHandler(doubleChest.block)
         if (oldChestHandler.isProtected() && oldChestHandler.getOwner() != player.uniqueId.toString()) {
             callback.accept(false)
         } else {
@@ -29,26 +27,5 @@ class DoubleChestLocker(
             newHandler.setRedstone(oldChestHandler.getRedstone())
             callback.accept(true)
         }
-    }
-
-    private fun getDoubleChest(): Block? {
-        var doubleChest: DoubleChest? = null
-        val chestState = block.state
-        if (chestState is Chest) {
-            val inventory = chestState.inventory
-            if (inventory is DoubleChestInventory) {
-                doubleChest = inventory.holder
-            }
-        }
-        if (doubleChest == null) return null
-        val second = doubleChest.location
-
-        when {
-            block.x > second.x -> second.subtract(.5, 0.0, 0.0)
-            block.z > second.z -> second.subtract(0.0, 0.0, .5)
-            else -> second.add(.5, 0.0, .5)
-        }
-
-        return player.world.getBlockAt(second)
     }
 }

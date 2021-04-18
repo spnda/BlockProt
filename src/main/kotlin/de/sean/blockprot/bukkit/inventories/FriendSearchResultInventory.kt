@@ -3,15 +3,12 @@ package de.sean.blockprot.bukkit.inventories
 import de.sean.blockprot.BlockProt
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
-import de.sean.blockprot.bukkit.nbt.LockUtil.applyToDoor
 import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
 import de.sean.blockprot.bukkit.nbt.LockUtil.parseStringList
 import de.sean.blockprot.util.ItemUtil
 import de.sean.blockprot.util.Strings
 import de.tr7zw.nbtapi.NBTEntity
 import de.tr7zw.nbtapi.NBTTileEntity
-import net.md_5.bungee.api.ChatMessageType
-import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.OfflinePlayer
@@ -42,23 +39,18 @@ object FriendSearchResultInventory : BlockProtInventory {
                         if (state.block == null) return
                         val handler = BlockLockHandler(state.block)
                         val doubleChest = getDoubleChest(state.block, player.world)
-                        val ret = handler.addFriend(
-                            player.uniqueId.toString(),
-                            friend,
-                            if (doubleChest != null) NBTTileEntity(doubleChest) else null
-                        )
-                        if (ret.success) {
-                            applyToDoor(handler, state.block)
-                            player.spigot()
-                                .sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
+                        applyChangesAndExit(handler, player) {
+                            handler.addFriend(
+                                player.uniqueId.toString(),
+                                friend,
+                                if (doubleChest != null) NBTTileEntity(doubleChest) else null
+                            )
                         }
-                        player.closeInventory()
                     }
                     InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
-                        val playerNBT = NBTEntity(player).persistentDataContainer
-                        var currentFriendList = parseStringList(playerNBT.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
-                        currentFriendList = currentFriendList.plus(friend)
-                        playerNBT.setString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE, currentFriendList.toString())
+                        modifyFriends(player) {
+                            it.add(friend)
+                        }
                         player.closeInventory()
                     }
                 }

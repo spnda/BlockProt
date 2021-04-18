@@ -2,13 +2,10 @@ package de.sean.blockprot.bukkit.inventories
 
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
-import de.sean.blockprot.bukkit.nbt.LockUtil.applyToDoor
 import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
 import de.sean.blockprot.util.ItemUtil
 import de.sean.blockprot.util.Strings
 import de.tr7zw.nbtapi.NBTTileEntity
-import net.md_5.bungee.api.ChatMessageType
-import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.block.Block
@@ -36,7 +33,7 @@ object BlockLockInventory : BlockProtInventory {
             in LockUtil.lockableTileEntities, in LockUtil.lockableBlocks -> {
                 handler = BlockLockHandler(block)
                 val doubleChest = getDoubleChest(block, player.world)
-                applyChangesAndExit(handler, block, player) {
+                applyChangesAndExit(handler, player) {
                     handler.lockBlock(
                         player,
                         player.isOp,
@@ -48,7 +45,7 @@ object BlockLockInventory : BlockProtInventory {
             Material.REDSTONE, Material.GUNPOWDER -> {
                 handler = BlockLockHandler(block)
                 val doubleChest = getDoubleChest(block, player.world)
-                applyChangesAndExit(handler, block, player) {
+                applyChangesAndExit(handler, player) {
                     handler.lockRedstoneForBlock(
                         player.uniqueId.toString(),
                         if (doubleChest != null) NBTTileEntity(doubleChest) else null
@@ -94,15 +91,6 @@ object BlockLockInventory : BlockProtInventory {
             }
             Material.BLACK_STAINED_GLASS_PANE -> player.closeInventory()
             else -> player.closeInventory()
-        }
-    }
-
-    private fun applyChangesAndExit(handler: BlockLockHandler, block: Block, player: Player, func: () -> BlockLockHandler.LockReturnValue) {
-        val ret = func()
-        if (ret.success) {
-            applyToDoor(handler, block)
-            player.closeInventory()
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
         }
     }
 

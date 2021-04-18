@@ -85,7 +85,7 @@ object UserSettingsInventory : BlockProtInventory {
             ItemUtil.getItemStack(
                 1,
                 Material.PLAYER_HEAD,
-                Strings.BLOCK_LOCK_ADD_FRIENDS
+                Strings.USER_SETTINGS_ADD_FRIENDS
             )
         )
         inv.setItem(
@@ -93,7 +93,7 @@ object UserSettingsInventory : BlockProtInventory {
             ItemUtil.getItemStack(
                 1,
                 Material.ZOMBIE_HEAD,
-                Strings.BLOCK_LOCK_REMOVE_FRIENDS
+                Strings.USER_SETTINGS_REMOVE_FRIENDS
             )
         )
         inv.setItem(8, ItemUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, Strings.BACK))

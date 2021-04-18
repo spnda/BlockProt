@@ -32,6 +32,8 @@ object Strings {
 
     val USER_SETTINGS_LOCK_ON_PLACE_ACTIVATE = getString("inventories.user_settings.items.lock_on_place.activate", "Always lock on placing")
     val USER_SETTINGS_LOCK_ON_PLACE_DEACTIVATE = getString("inventories.user_settings.items.lock_on_place.deactivate", "Never lock on placing")
+    val USER_SETTINGS_ADD_FRIENDS = getString("inventories.user_settings.items.add_friends", "Add Friends")
+    val USER_SETTINGS_REMOVE_FRIENDS = getString("inventories.user_settings.items.remove_friends", "Remove Friends")
 
     // Permissions
     const val BLOCKPROT_LOCK = "blockprot.lock"

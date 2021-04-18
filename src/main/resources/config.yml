@@ -32,6 +32,8 @@ inventories:
       lock_on_place:
         activate: "Always lock on placing"
         deactivate: "Never lock on placing"
+      add_friends: "Add Friends"
+      remove_friends: "Remove Friends"
 
 messages:
   permission_granted: # When a user locks a block

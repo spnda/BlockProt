@@ -36,29 +36,23 @@ object BlockLockInventory : BlockProtInventory {
             in LockUtil.lockableTileEntities, in LockUtil.lockableBlocks -> {
                 handler = BlockLockHandler(block)
                 val doubleChest = getDoubleChest(block, player.world)
-                val ret = handler.lockBlock(
-                    player,
-                    player.isOp,
-                    if (doubleChest != null) NBTTileEntity(doubleChest) else null
-                )
-                if (ret.success) {
-                    applyToDoor(handler, block)
-                    player.closeInventory()
-                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
+                applyChangesAndExit(handler, block, player) {
+                    handler.lockBlock(
+                        player,
+                        player.isOp,
+                        if (doubleChest != null) NBTTileEntity(doubleChest) else null
+                    )
                 }
                 event.isCancelled = true
             }
             Material.REDSTONE, Material.GUNPOWDER -> {
                 handler = BlockLockHandler(block)
                 val doubleChest = getDoubleChest(block, player.world)
-                val ret = handler.lockRedstoneForBlock(
-                    player.uniqueId.toString(),
-                    if (doubleChest != null) NBTTileEntity(doubleChest) else null
-                )
-                if (ret.success) {
-                    applyToDoor(handler, block)
-                    player.closeInventory()
-                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
+                applyChangesAndExit(handler, block, player) {
+                    handler.lockRedstoneForBlock(
+                        player.uniqueId.toString(),
+                        if (doubleChest != null) NBTTileEntity(doubleChest) else null
+                    )
                 }
                 event.isCancelled = true
             }
@@ -100,6 +94,15 @@ object BlockLockInventory : BlockProtInventory {
             }
             Material.BLACK_STAINED_GLASS_PANE -> player.closeInventory()
             else -> player.closeInventory()
+        }
+    }
+
+    private fun applyChangesAndExit(handler: BlockLockHandler, block: Block, player: Player, func: () -> BlockLockHandler.LockReturnValue) {
+        val ret = func()
+        if (ret.success) {
+            applyToDoor(handler, block)
+            player.closeInventory()
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
         }
     }
 

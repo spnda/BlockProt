@@ -1,14 +1,15 @@
 package de.sean.blockprot.bukkit.inventories
 
+import de.sean.blockprot.BlockProt
+import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
-import de.sean.blockprot.util.Strings
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
 object BlockInfoInventory : BlockProtInventory {
     override val size = 9 * 3
-    override val inventoryName = Strings.getString("inventories.block_info.name", "Block Info")
+    override val inventoryName = BlockProt.translator.get(TranslationKey.INVENTORIES__BLOCK_INFO)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
         val player = event.whoClicked as Player

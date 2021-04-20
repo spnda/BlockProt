@@ -1,8 +1,9 @@
 package de.sean.blockprot.bukkit.inventories
 
+import de.sean.blockprot.BlockProt
+import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.util.ItemUtil
-import de.sean.blockprot.util.Strings
 import de.tr7zw.nbtapi.NBTEntity
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -12,7 +13,7 @@ import org.bukkit.inventory.Inventory
 
 object UserSettingsInventory : BlockProtInventory {
     override val size = 9 * 1
-    override val inventoryName = Strings.getString("inventories.user_settings.name", "User Settings")
+    override val inventoryName = BlockProt.translator.get(TranslationKey.INVENTORIES__USER_SETTINGS)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
         val player = event.whoClicked as Player
@@ -21,19 +22,19 @@ object UserSettingsInventory : BlockProtInventory {
         when (item.type) {
             Material.BARRIER -> {
                 // Lock on place button, default value is true
+                val lockOnPlace = !nbtEntity.getBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE)
                 nbtEntity.setBoolean(
                     LockUtil.LOCK_ON_PLACE_ATTRIBUTE,
-                    !nbtEntity.getBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE)
+                    lockOnPlace
                 )
-                val lockOnPlace = nbtEntity.getBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE)
                 Bukkit.getLogger().info(lockOnPlace.toString())
                 event.inventory.setItem(
                     0,
                     ItemUtil.getItemStack(
                         1,
                         Material.BARRIER,
-                        if (lockOnPlace) Strings.USER_SETTINGS_LOCK_ON_PLACE_DEACTIVATE
-                        else Strings.USER_SETTINGS_LOCK_ON_PLACE_ACTIVATE
+                        if (lockOnPlace) BlockProt.translator.get(TranslationKey.INVENTORIES__LOCK_ON_PLACE__DEACTIVATE)
+                        else BlockProt.translator.get(TranslationKey.INVENTORIES__LOCK_ON_PLACE__ACTIVATE)
                     )
                 )
             }
@@ -76,8 +77,8 @@ object UserSettingsInventory : BlockProtInventory {
             ItemUtil.getItemStack(
                 1,
                 Material.BARRIER,
-                if (lockOnPlace) Strings.USER_SETTINGS_LOCK_ON_PLACE_DEACTIVATE
-                else Strings.USER_SETTINGS_LOCK_ON_PLACE_ACTIVATE
+                if (lockOnPlace) BlockProt.translator.get(TranslationKey.INVENTORIES__LOCK_ON_PLACE__DEACTIVATE)
+                else BlockProt.translator.get(TranslationKey.INVENTORIES__LOCK_ON_PLACE__ACTIVATE)
             )
         )
         inv.setItem(
@@ -85,7 +86,7 @@ object UserSettingsInventory : BlockProtInventory {
             ItemUtil.getItemStack(
                 1,
                 Material.PLAYER_HEAD,
-                Strings.USER_SETTINGS_ADD_FRIENDS
+                BlockProt.translator.get(TranslationKey.INVENTORIES__FRIENDS__ADD)
             )
         )
         inv.setItem(
@@ -93,10 +94,10 @@ object UserSettingsInventory : BlockProtInventory {
             ItemUtil.getItemStack(
                 1,
                 Material.ZOMBIE_HEAD,
-                Strings.USER_SETTINGS_REMOVE_FRIENDS
+                BlockProt.translator.get(TranslationKey.INVENTORIES__FRIENDS__REMOVE)
             )
         )
-        inv.setItem(8, ItemUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, Strings.BACK))
+        inv.setItem(8, ItemUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, BlockProt.translator.get(TranslationKey.INVENTORIES__BACK)))
         return inv
     }
 }

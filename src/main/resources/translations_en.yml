@@ -1,0 +1,33 @@
+# Reference translation file for English
+# All colour codes can be used, as found here: https://www.spigotmc.org/wiki/textcosmetics-colors-and-formats/
+# We would be very happy if you submit your translations onto the
+# GitHub repository: https://github.com/spnda/BlockProt/pulls
+inventories:
+    back: "Back"
+    block_lock: "Block Lock"
+    user_settings: "User Settings"
+    block_info: "Block Info"
+    lock: "Lock"
+    unlock: "Unlock"
+    redstone:
+        activate: "Activate Redstone"
+        deactivate: "Deactivate Redstone"
+    lock_on_place:
+        activate: "Always lock on placing"
+        deactivate: "Never lock on placing"
+    friends:
+        add: "Add Friends"
+        remove: "Remove Friends"
+        search: "Search Players"
+        result: "Players found"
+
+messages:
+    permission_granted: "Permission granted."
+    unlocked: "Unlocked."
+    no_permission: "No permission."
+    friend_added: "Friend added."
+    friend_removed: "Friend removed."
+    friend_already_added: "Friend already added."
+    friend_cant_be_removed: "Friend cannot be removed."
+    redstone_added: "Redstone protection added."
+    redstone_removed: "Redstone protection removed."

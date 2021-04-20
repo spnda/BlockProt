@@ -1,12 +1,12 @@
 package de.sean.blockprot.bukkit.inventories
 
 import de.sean.blockprot.BlockProt
+import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
 import de.sean.blockprot.bukkit.nbt.LockUtil.parseStringList
 import de.sean.blockprot.util.ItemUtil
-import de.sean.blockprot.util.Strings
 import de.tr7zw.nbtapi.NBTEntity
 import de.tr7zw.nbtapi.NBTTileEntity
 import org.bukkit.Bukkit
@@ -20,7 +20,7 @@ import org.bukkit.inventory.meta.SkullMeta
 
 object FriendSearchResultInventory : BlockProtInventory {
     override val size = 9 * 3
-    override val inventoryName = Strings.getString("inventories.friend_search_result.name", "Players found")
+    override val inventoryName = BlockProt.translator.get(TranslationKey.INVENTORIES__FRIENDS__SEARCH_RESULT)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
         val player = event.whoClicked as Player

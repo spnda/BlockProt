@@ -2,11 +2,12 @@
 
 package de.sean.blockprot.bukkit.nbt
 
+import de.sean.blockprot.BlockProt
+import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.bukkit.nbt.LockUtil.LOCK_ATTRIBUTE
 import de.sean.blockprot.bukkit.nbt.LockUtil.OWNER_ATTRIBUTE
 import de.sean.blockprot.bukkit.nbt.LockUtil.REDSTONE_ATTRIBUTE
 import de.sean.blockprot.bukkit.nbt.LockUtil.parseStringList
-import de.sean.blockprot.util.Strings
 import de.tr7zw.nbtapi.NBTBlock
 import de.tr7zw.nbtapi.NBTCompound
 import de.tr7zw.nbtapi.NBTTileEntity
@@ -58,15 +59,15 @@ class BlockLockHandler constructor(val block: Block) {
             owner = playerUuid
             container.setString(OWNER_ATTRIBUTE, owner)
             doubleChest?.persistentDataContainer?.setString(OWNER_ATTRIBUTE, owner)
-            return LockReturnValue(true, Strings.PERMISSION_GRANTED)
-        } else if ((owner == playerUuid) || (isOp && owner.isNotEmpty()) || player.hasPermission(Strings.BLOCKPROT_ADMIN)) {
+            return LockReturnValue(true, BlockProt.translator.get(TranslationKey.MESSAGES__PERMISSION_GRANTED))
+        } else if ((owner == playerUuid) || (isOp && owner.isNotEmpty()) || player.hasPermission(LockUtil.PERMISSION_ADMIN)) {
             container.setString(OWNER_ATTRIBUTE, "")
             container.setString(LOCK_ATTRIBUTE, "") // Also clear the friends
             doubleChest?.persistentDataContainer?.setString(OWNER_ATTRIBUTE, "")
             doubleChest?.persistentDataContainer?.setString(LOCK_ATTRIBUTE, "") // Also clear the friends
-            return LockReturnValue(true, Strings.UNLOCKED)
+            return LockReturnValue(true, BlockProt.translator.get(TranslationKey.MESSAGES__UNLOCKED))
         }
-        return LockReturnValue(false, Strings.NO_PERMISSION)
+        return LockReturnValue(false, BlockProt.translator.get(TranslationKey.MESSAGES__NO_PERMISSION))
     }
 
     fun lockRedstoneForBlock(player: String, doubleChest: NBTTileEntity?): LockReturnValue {
@@ -82,38 +83,42 @@ class BlockLockHandler constructor(val block: Block) {
                 container.setBoolean(REDSTONE_ATTRIBUTE, !redstone) // Just flip the boolean value
             }
             doubleChest?.persistentDataContainer?.setBoolean(REDSTONE_ATTRIBUTE, !redstone)
-            return LockReturnValue(true, if (redstone) Strings.REDSTONE_ADDED else Strings.REDSTONE_REMOVED)
+            return LockReturnValue(
+                true,
+                if (redstone) BlockProt.translator.get(TranslationKey.MESSAGES__REDSTONE_ADDED)
+                else BlockProt.translator.get(TranslationKey.MESSAGES__REDSTONE_REMOVED)
+            )
         }
-        return LockReturnValue(false, Strings.NO_PERMISSION)
+        return LockReturnValue(false, BlockProt.translator.get(TranslationKey.MESSAGES__NO_PERMISSION))
     }
 
     fun addFriend(player: String, newFriend: String, doubleChest: NBTTileEntity?): LockReturnValue {
         val owner = container.getString(OWNER_ATTRIBUTE)
         // This theoretically shouldn't happen, though we will still check for it just to be sure
-        if (owner != player) return LockReturnValue(false, Strings.NO_PERMISSION)
+        if (owner != player) return LockReturnValue(false, BlockProt.translator.get(TranslationKey.MESSAGES__NO_PERMISSION))
         var access = parseStringList(container.getString(LOCK_ATTRIBUTE))
         // This is a new friend to add. Don't add them if they've already got access
         if (!access.contains(newFriend)) {
             access = access.plus(newFriend)
             container.setString(LOCK_ATTRIBUTE, access.toString())
             doubleChest?.persistentDataContainer?.setString(LOCK_ATTRIBUTE, access.toString())
-            return LockReturnValue(true, Strings.FRIEND_ADDED)
+            return LockReturnValue(true, BlockProt.translator.get(TranslationKey.MESSAGES__FRIEND_ADDED))
         }
-        return LockReturnValue(false, Strings.FRIEND_ALREADY_ADDED)
+        return LockReturnValue(false, BlockProt.translator.get(TranslationKey.MESSAGES__FRIEND_ALREADY_ADDED))
     }
 
     fun removeFriend(player: String, friend: String, doubleChest: NBTTileEntity?): LockReturnValue {
         val owner = container.getString(OWNER_ATTRIBUTE)
         // This theoretically shouldn't happen, though we will still check for it just to be sure
-        if (owner != player) return LockReturnValue(false, Strings.NO_PERMISSION)
+        if (owner != player) return LockReturnValue(false, BlockProt.translator.get(TranslationKey.MESSAGES__NO_PERMISSION))
         var access = parseStringList(container.getString(LOCK_ATTRIBUTE))
         if (access.contains(friend)) {
             access = access.minus(friend)
             container.setString(LOCK_ATTRIBUTE, access.toString())
             doubleChest?.persistentDataContainer?.setString(LOCK_ATTRIBUTE, access.toString())
-            return LockReturnValue(true, Strings.FRIEND_REMOVED)
+            return LockReturnValue(true, BlockProt.translator.get(TranslationKey.MESSAGES__FRIEND_REMOVED))
         }
-        return LockReturnValue(false, Strings.FRIEND_CANT_BE_REMOVED)
+        return LockReturnValue(false, BlockProt.translator.get(TranslationKey.MESSAGES__FRIEND_CANT_BE_REMOVED))
     }
 
     data class LockReturnValue(val success: Boolean, val message: String)

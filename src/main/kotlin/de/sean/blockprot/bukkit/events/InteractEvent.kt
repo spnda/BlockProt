@@ -1,11 +1,12 @@
 package de.sean.blockprot.bukkit.events
 
+import de.sean.blockprot.BlockProt
+import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.bukkit.inventories.BlockLockInventory
 import de.sean.blockprot.bukkit.inventories.InventoryState
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.util.ItemUtil.getItemStack
-import de.sean.blockprot.util.Strings
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Material
@@ -24,7 +25,7 @@ open class InteractEvent : Listener {
         if (event.clickedBlock == null) return
         when (event.clickedBlock!!.type) {
             in LockUtil.lockableTileEntities, in LockUtil.lockableBlocks -> {
-                if (event.action == Action.RIGHT_CLICK_BLOCK && player.isSneaking && player.hasPermission(Strings.BLOCKPROT_LOCK)) {
+                if (event.action == Action.RIGHT_CLICK_BLOCK && player.isSneaking && player.hasPermission(LockUtil.PERMISSION_LOCK)) {
                     // The user shift-left clicked the block and is wanting to open the block edit menu.
                     val blockState = event.clickedBlock!!.state
                     val handler = BlockLockHandler(event.clickedBlock!!)
@@ -32,29 +33,29 @@ open class InteractEvent : Listener {
                     val playerUuid = player.uniqueId.toString()
                     // Only open the menu if the player is the owner of this block
                     // or if this block is not protected
-                    if (handler.isNotProtected() || owner == playerUuid || event.player.isOp || player.hasPermission(Strings.BLOCKPROT_INFO) || player.hasPermission(Strings.BLOCKPROT_ADMIN)) {
+                    if (handler.isNotProtected() || owner == playerUuid || event.player.isOp || player.hasPermission(LockUtil.PERMISSION_INFO) || player.hasPermission(LockUtil.PERMISSION_ADMIN)) {
                         if (event.item == null) {
                             event.isCancelled = true
                             InventoryState.set(player.uniqueId, InventoryState(blockState.block))
                             var inv: Inventory = BlockLockInventory.createInventory()
-                            if ((owner.isNotEmpty() && owner == playerUuid) || (owner.isNotEmpty() && (player.isOp || player.hasPermission(Strings.BLOCKPROT_INFO) || player.hasPermission(Strings.BLOCKPROT_ADMIN)))) {
+                            if ((owner.isNotEmpty() && owner == playerUuid) || (owner.isNotEmpty() && (player.isOp || player.hasPermission(LockUtil.PERMISSION_INFO) || player.hasPermission(LockUtil.PERMISSION_ADMIN)))) {
                                 inv = BlockLockInventory.createInventoryAndFill(player, blockState.type, handler)
                             } else {
-                                inv.setItem(0, getItemStack(1, blockState.type, Strings.LOCK))
+                                inv.setItem(0, getItemStack(1, blockState.type, BlockProt.translator.get(TranslationKey.INVENTORIES__LOCK)))
                                 var i = 1
                                 while (i < 5) {
                                     inv.setItem(i, null)
                                     i++
                                 }
                             }
-                            inv.setItem(8, getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, Strings.BACK))
+                            inv.setItem(8, getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, BlockProt.translator.get(TranslationKey.INVENTORIES__BACK)))
                             player.openInventory(inv)
                         }
                     } else {
                         event.isCancelled = true
                         player.spigot().sendMessage(
                             ChatMessageType.ACTION_BAR,
-                            *TextComponent.fromLegacyText(Strings.NO_PERMISSION)
+                            *TextComponent.fromLegacyText(BlockProt.translator.get(TranslationKey.MESSAGES__NO_PERMISSION))
                         )
                     }
                 } else {
@@ -65,7 +66,7 @@ open class InteractEvent : Listener {
                             event.isCancelled = true
                             player.spigot().sendMessage(
                                 ChatMessageType.ACTION_BAR,
-                                *TextComponent.fromLegacyText(Strings.NO_PERMISSION)
+                                *TextComponent.fromLegacyText(BlockProt.translator.get(TranslationKey.MESSAGES__NO_PERMISSION))
                             )
                         }
                     }

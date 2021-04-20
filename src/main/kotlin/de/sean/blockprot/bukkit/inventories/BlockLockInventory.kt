@@ -1,10 +1,11 @@
 package de.sean.blockprot.bukkit.inventories
 
+import de.sean.blockprot.BlockProt
+import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
 import de.sean.blockprot.util.ItemUtil
-import de.sean.blockprot.util.Strings
 import de.tr7zw.nbtapi.NBTTileEntity
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -16,7 +17,7 @@ import java.util.*
 
 object BlockLockInventory : BlockProtInventory {
     override val size = 9 * 1
-    override val inventoryName = Strings.getString("inventories.block_lock.name", "Block Lock")
+    override val inventoryName = BlockProt.translator.get(TranslationKey.INVENTORIES__BLOCK_LOCK)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
         val player = event.whoClicked as Player
@@ -86,7 +87,10 @@ object BlockLockInventory : BlockProtInventory {
                     0,
                     ItemUtil.getPlayerSkull(Bukkit.getOfflinePlayer(UUID.fromString(owner)))
                 )
-                inv.setItem(8, ItemUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, Strings.BACK))
+                inv.setItem(
+                    8,
+                    ItemUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, BlockProt.translator.get(TranslationKey.INVENTORIES__BACK))
+                )
                 player.openInventory(inv)
             }
             Material.BLACK_STAINED_GLASS_PANE -> player.closeInventory()
@@ -99,24 +103,24 @@ object BlockLockInventory : BlockProtInventory {
         val playerUuid = player.uniqueId.toString()
         val owner = handler.getOwner()
         val redstone = handler.getRedstone()
-        if (owner == playerUuid || player.isOp || player.hasPermission(Strings.BLOCKPROT_ADMIN))
-            inv.setItem(0, ItemUtil.getItemStack(1, material, Strings.UNLOCK))
+        if (owner == playerUuid || player.isOp || player.hasPermission(LockUtil.PERMISSION_ADMIN))
+            inv.setItem(0, ItemUtil.getItemStack(1, material, BlockProt.translator.get(TranslationKey.INVENTORIES__UNLOCK)))
         if (owner == playerUuid) {
             inv.setItem(
                 1,
                 ItemUtil.getItemStack(
                     1,
                     if (redstone) Material.REDSTONE else Material.GUNPOWDER,
-                    if (redstone) Strings.BLOCK_LOCK_REDSTONE_DEACTIVATE
-                    else Strings.BLOCK_LOCK_REDSTONE_ACTIVATE
+                    if (redstone) BlockProt.translator.get(TranslationKey.INVENTORIES__REDSTONE__DEACTIVATE)
+                    else BlockProt.translator.get(TranslationKey.INVENTORIES__REDSTONE__ACTIVATE)
                 )
             )
-            inv.setItem(2, ItemUtil.getItemStack(1, Material.PLAYER_HEAD, Strings.BLOCK_LOCK_ADD_FRIENDS))
-            inv.setItem(3, ItemUtil.getItemStack(1, Material.ZOMBIE_HEAD, Strings.BLOCK_LOCK_REMOVE_FRIENDS))
+            inv.setItem(2, ItemUtil.getItemStack(1, Material.PLAYER_HEAD, BlockProt.translator.get(TranslationKey.INVENTORIES__FRIENDS__ADD)))
+            inv.setItem(3, ItemUtil.getItemStack(1, Material.ZOMBIE_HEAD, BlockProt.translator.get(TranslationKey.INVENTORIES__FRIENDS__REMOVE)))
         }
-        if (player.isOp || player.hasPermission(Strings.BLOCKPROT_INFO) || player.hasPermission(Strings.BLOCKPROT_ADMIN))
-            inv.setItem(7, ItemUtil.getItemStack(1, Material.OAK_SIGN, Strings.BLOCK_LOCK_INFO))
-        inv.setItem(8, ItemUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, Strings.BACK))
+        if (player.isOp || player.hasPermission(LockUtil.PERMISSION_INFO) || player.hasPermission(LockUtil.PERMISSION_ADMIN))
+            inv.setItem(7, ItemUtil.getItemStack(1, Material.OAK_SIGN, BlockProt.translator.get(TranslationKey.INVENTORIES__BLOCK_INFO)))
+        inv.setItem(8, ItemUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, BlockProt.translator.get(TranslationKey.INVENTORIES__BACK)))
         return inv
     }
 }

@@ -1,10 +1,10 @@
 package de.sean.blockprot.bukkit.inventories
 
 import de.sean.blockprot.BlockProt
+import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
 import de.sean.blockprot.util.ItemUtil
-import de.sean.blockprot.util.Strings
 import de.tr7zw.nbtapi.NBTTileEntity
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -17,7 +17,7 @@ import java.util.*
 
 object FriendRemoveInventory : BlockProtInventory {
     override val size = 9 * 3
-    override val inventoryName: String = Strings.getString("inventories.remove_friend.name", "Remove Friend")
+    override val inventoryName: String = BlockProt.translator.get(TranslationKey.INVENTORIES__FRIENDS__REMOVE)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
         val player = event.whoClicked as Player
@@ -87,7 +87,7 @@ object FriendRemoveInventory : BlockProtInventory {
                     inv.setItem(skull, skulls[skull])
             }
         }
-        inv.setItem(9 * 3 - 1, ItemUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, Strings.BACK))
+        inv.setItem(9 * 3 - 1, ItemUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, BlockProt.translator.get(TranslationKey.INVENTORIES__BACK)))
         return inv
     }
 }

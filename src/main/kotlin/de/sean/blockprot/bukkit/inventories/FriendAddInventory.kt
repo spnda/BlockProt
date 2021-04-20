@@ -1,9 +1,10 @@
 package de.sean.blockprot.bukkit.inventories
 
+import de.sean.blockprot.BlockProt
+import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
 import de.sean.blockprot.util.ItemUtil
-import de.sean.blockprot.util.Strings
 import de.tr7zw.nbtapi.NBTTileEntity
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -13,7 +14,7 @@ import org.bukkit.inventory.meta.SkullMeta
 
 object FriendAddInventory : BlockProtInventory {
     override val size = 9 * 3
-    override val inventoryName = Strings.getString("inventories.add_friend.name", "Add Friend")
+    override val inventoryName = BlockProt.translator.get(TranslationKey.INVENTORIES__FRIENDS__ADD)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
         val player = event.whoClicked as Player
@@ -86,8 +87,8 @@ object FriendAddInventory : BlockProtInventory {
             inv.setItem(i, ItemUtil.getPlayerSkull(friendsToAdd[i]))
             i++
         }
-        inv.setItem(9 * 3 - 2, ItemUtil.getItemStack(1, Material.MAP, Strings.SEARCH))
-        inv.setItem(9 * 3 - 1, ItemUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, Strings.BACK))
+        inv.setItem(9 * 3 - 2, ItemUtil.getItemStack(1, Material.MAP, BlockProt.translator.get(TranslationKey.INVENTORIES__FRIENDS__SEARCH)))
+        inv.setItem(9 * 3 - 1, ItemUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, BlockProt.translator.get(TranslationKey.INVENTORIES__BACK)))
         return inv
     }
 }

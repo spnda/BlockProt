@@ -66,7 +66,8 @@ object FriendRemoveInventory : BlockProtInventory {
                     }
                 }
             }
-            else -> {}
+            else -> {
+            }
         }
         event.isCancelled = true
     }
@@ -87,7 +88,14 @@ object FriendRemoveInventory : BlockProtInventory {
                     inv.setItem(skull, skulls[skull])
             }
         }
-        inv.setItem(9 * 3 - 1, ItemUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, BlockProt.translator.get(TranslationKey.INVENTORIES__BACK)))
+        inv.setItem(
+            9 * 3 - 1,
+            ItemUtil.getItemStack(
+                1,
+                Material.BLACK_STAINED_GLASS_PANE,
+                BlockProt.translator.get(TranslationKey.INVENTORIES__BACK)
+            )
+        )
         return inv
     }
 }

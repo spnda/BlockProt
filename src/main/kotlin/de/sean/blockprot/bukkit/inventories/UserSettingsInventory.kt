@@ -97,7 +97,14 @@ object UserSettingsInventory : BlockProtInventory {
                 BlockProt.translator.get(TranslationKey.INVENTORIES__FRIENDS__REMOVE)
             )
         )
-        inv.setItem(8, ItemUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, BlockProt.translator.get(TranslationKey.INVENTORIES__BACK)))
+        inv.setItem(
+            8,
+            ItemUtil.getItemStack(
+                1,
+                Material.BLACK_STAINED_GLASS_PANE,
+                BlockProt.translator.get(TranslationKey.INVENTORIES__BACK)
+            )
+        )
         return inv
     }
 }

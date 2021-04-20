@@ -58,7 +58,8 @@ object FriendSearchResultInventory : BlockProtInventory {
             Material.BARRIER -> {
                 player.closeInventory()
             }
-            else -> {}
+            else -> {
+            }
         }
         event.isCancelled = true
     }
@@ -89,7 +90,10 @@ object FriendSearchResultInventory : BlockProtInventory {
             val max = players.size.coerceAtMost(9 * 3 - 2)
             while (playersIndex < max) {
                 // Only add to the inventory if this is not a friend (yet)
-                if (!friends.contains(players[playersIndex].uniqueId.toString()) && players[playersIndex].uniqueId != player.uniqueId) {
+                if (
+                    !friends.contains(players[playersIndex].uniqueId.toString()) &&
+                    players[playersIndex].uniqueId != player.uniqueId
+                ) {
                     items.add(ItemUtil.getPlayerSkull(players[playersIndex]))
                 }
                 playersIndex += 1

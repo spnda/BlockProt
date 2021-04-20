@@ -10,4 +10,3 @@ updates:
     schedule:
       interval: "monthly" # We will just check for updates every month.
       day: "monday" # Monday is the default
-      

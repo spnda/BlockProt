@@ -89,7 +89,11 @@ object BlockLockInventory : BlockProtInventory {
                 )
                 inv.setItem(
                     8,
-                    ItemUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, BlockProt.translator.get(TranslationKey.INVENTORIES__BACK))
+                    ItemUtil.getItemStack(
+                        1,
+                        Material.BLACK_STAINED_GLASS_PANE,
+                        BlockProt.translator.get(TranslationKey.INVENTORIES__BACK)
+                    )
                 )
                 player.openInventory(inv)
             }
@@ -104,7 +108,10 @@ object BlockLockInventory : BlockProtInventory {
         val owner = handler.getOwner()
         val redstone = handler.getRedstone()
         if (owner == playerUuid || player.isOp || player.hasPermission(LockUtil.PERMISSION_ADMIN))
-            inv.setItem(0, ItemUtil.getItemStack(1, material, BlockProt.translator.get(TranslationKey.INVENTORIES__UNLOCK)))
+            inv.setItem(
+                0,
+                ItemUtil.getItemStack(1, material, BlockProt.translator.get(TranslationKey.INVENTORIES__UNLOCK))
+            )
         if (owner == playerUuid) {
             inv.setItem(
                 1,
@@ -115,12 +122,44 @@ object BlockLockInventory : BlockProtInventory {
                     else BlockProt.translator.get(TranslationKey.INVENTORIES__REDSTONE__ACTIVATE)
                 )
             )
-            inv.setItem(2, ItemUtil.getItemStack(1, Material.PLAYER_HEAD, BlockProt.translator.get(TranslationKey.INVENTORIES__FRIENDS__ADD)))
-            inv.setItem(3, ItemUtil.getItemStack(1, Material.ZOMBIE_HEAD, BlockProt.translator.get(TranslationKey.INVENTORIES__FRIENDS__REMOVE)))
+            inv.setItem(
+                2,
+                ItemUtil.getItemStack(
+                    1,
+                    Material.PLAYER_HEAD,
+                    BlockProt.translator.get(TranslationKey.INVENTORIES__FRIENDS__ADD)
+                )
+            )
+            inv.setItem(
+                3,
+                ItemUtil.getItemStack(
+                    1,
+                    Material.ZOMBIE_HEAD,
+                    BlockProt.translator.get(TranslationKey.INVENTORIES__FRIENDS__REMOVE)
+                )
+            )
         }
-        if (player.isOp || player.hasPermission(LockUtil.PERMISSION_INFO) || player.hasPermission(LockUtil.PERMISSION_ADMIN))
-            inv.setItem(7, ItemUtil.getItemStack(1, Material.OAK_SIGN, BlockProt.translator.get(TranslationKey.INVENTORIES__BLOCK_INFO)))
-        inv.setItem(8, ItemUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, BlockProt.translator.get(TranslationKey.INVENTORIES__BACK)))
+        if (player.isOp ||
+            player.hasPermission(LockUtil.PERMISSION_INFO) ||
+            player.hasPermission(LockUtil.PERMISSION_ADMIN)
+        ) {
+            inv.setItem(
+                7,
+                ItemUtil.getItemStack(
+                    1,
+                    Material.OAK_SIGN,
+                    BlockProt.translator.get(TranslationKey.INVENTORIES__BLOCK_INFO)
+                )
+            )
+        }
+        inv.setItem(
+            8,
+            ItemUtil.getItemStack(
+                1,
+                Material.BLACK_STAINED_GLASS_PANE,
+                BlockProt.translator.get(TranslationKey.INVENTORIES__BACK)
+            )
+        )
         return inv
     }
 }

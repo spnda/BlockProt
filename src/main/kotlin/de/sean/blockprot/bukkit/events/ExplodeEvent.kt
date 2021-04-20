@@ -32,7 +32,8 @@ class ExplodeEvent : Listener {
                     if (handler.isProtected()) it.remove()
                 }
                 // adding a break here affects the while loop causing it to only check one block
-                else -> {}
+                else -> {
+                }
             }
         }
     }

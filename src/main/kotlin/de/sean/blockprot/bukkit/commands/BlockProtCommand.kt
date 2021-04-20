@@ -11,7 +11,12 @@ import org.bukkit.command.TabExecutor
 import java.util.*
 
 class BlockProtCommand : TabExecutor {
-    override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): MutableList<String> {
+    override fun onTabComplete(
+        sender: CommandSender,
+        command: Command,
+        alias: String,
+        args: Array<out String>
+    ): MutableList<String> {
         if (args.size <= 1) {
             val list = mutableListOf("settings")
             if (sender.isOp) {

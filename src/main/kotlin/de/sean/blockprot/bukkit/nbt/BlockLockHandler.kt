@@ -49,7 +49,8 @@ class BlockLockHandler constructor(val block: Block) {
     fun isProtected() = !isNotProtected()
 
     fun isOwner(player: String) = getOwner() == player
-    fun canAccess(player: String) = if (isProtected()) (getOwner() == player || getAccess().contains(player)) else getOwner().isEmpty()
+    fun canAccess(player: String) =
+        if (isProtected()) (getOwner() == player || getAccess().contains(player)) else getOwner().isEmpty()
 
     fun lockBlock(player: Player, isOp: Boolean, doubleChest: NBTTileEntity?): LockReturnValue {
         var owner = container.getString(OWNER_ATTRIBUTE) ?: ""
@@ -60,7 +61,10 @@ class BlockLockHandler constructor(val block: Block) {
             container.setString(OWNER_ATTRIBUTE, owner)
             doubleChest?.persistentDataContainer?.setString(OWNER_ATTRIBUTE, owner)
             return LockReturnValue(true, BlockProt.translator.get(TranslationKey.MESSAGES__PERMISSION_GRANTED))
-        } else if ((owner == playerUuid) || (isOp && owner.isNotEmpty()) || player.hasPermission(LockUtil.PERMISSION_ADMIN)) {
+        } else if ((owner == playerUuid) ||
+            (isOp && owner.isNotEmpty()) ||
+            player.hasPermission(LockUtil.PERMISSION_ADMIN)
+        ) {
             container.setString(OWNER_ATTRIBUTE, "")
             container.setString(LOCK_ATTRIBUTE, "") // Also clear the friends
             doubleChest?.persistentDataContainer?.setString(OWNER_ATTRIBUTE, "")
@@ -95,7 +99,10 @@ class BlockLockHandler constructor(val block: Block) {
     fun addFriend(player: String, newFriend: String, doubleChest: NBTTileEntity?): LockReturnValue {
         val owner = container.getString(OWNER_ATTRIBUTE)
         // This theoretically shouldn't happen, though we will still check for it just to be sure
-        if (owner != player) return LockReturnValue(false, BlockProt.translator.get(TranslationKey.MESSAGES__NO_PERMISSION))
+        if (owner != player) return LockReturnValue(
+            false,
+            BlockProt.translator.get(TranslationKey.MESSAGES__NO_PERMISSION)
+        )
         var access = parseStringList(container.getString(LOCK_ATTRIBUTE))
         // This is a new friend to add. Don't add them if they've already got access
         if (!access.contains(newFriend)) {
@@ -110,7 +117,10 @@ class BlockLockHandler constructor(val block: Block) {
     fun removeFriend(player: String, friend: String, doubleChest: NBTTileEntity?): LockReturnValue {
         val owner = container.getString(OWNER_ATTRIBUTE)
         // This theoretically shouldn't happen, though we will still check for it just to be sure
-        if (owner != player) return LockReturnValue(false, BlockProt.translator.get(TranslationKey.MESSAGES__NO_PERMISSION))
+        if (owner != player) return LockReturnValue(
+            false,
+            BlockProt.translator.get(TranslationKey.MESSAGES__NO_PERMISSION)
+        )
         var access = parseStringList(container.getString(LOCK_ATTRIBUTE))
         if (access.contains(friend)) {
             access = access.minus(friend)

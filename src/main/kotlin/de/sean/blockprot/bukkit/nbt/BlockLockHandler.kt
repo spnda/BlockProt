@@ -96,7 +96,7 @@ class BlockLockHandler constructor(val block: Block) {
         return LockReturnValue(false, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION))
     }
 
-    fun addFriend(player: String, newFriend: String, doubleChest: NBTTileEntity?): LockReturnValue {
+    fun modifyFriends(player: String, friend: String, modifyAction: FriendModifyAction, doubleChest: NBTTileEntity?): LockReturnValue {
         val owner = container.getString(OWNER_ATTRIBUTE)
         // This theoretically shouldn't happen, though we will still check for it just to be sure
         if (owner != player) return LockReturnValue(
@@ -104,30 +104,28 @@ class BlockLockHandler constructor(val block: Block) {
             Translator.get(TranslationKey.MESSAGES__NO_PERMISSION)
         )
         var access = parseStringList(container.getString(LOCK_ATTRIBUTE))
-        // This is a new friend to add. Don't add them if they've already got access
-        if (!access.contains(newFriend)) {
-            access = access.plus(newFriend)
-            container.setString(LOCK_ATTRIBUTE, access.toString())
-            doubleChest?.persistentDataContainer?.setString(LOCK_ATTRIBUTE, access.toString())
-            return LockReturnValue(true, Translator.get(TranslationKey.MESSAGES__FRIEND_ADDED))
-        }
-        return LockReturnValue(false, Translator.get(TranslationKey.MESSAGES__FRIEND_ALREADY_ADDED))
-    }
-
-    fun removeFriend(player: String, friend: String, doubleChest: NBTTileEntity?): LockReturnValue {
-        val owner = container.getString(OWNER_ATTRIBUTE)
-        // This theoretically shouldn't happen, though we will still check for it just to be sure
-        if (owner != player) return LockReturnValue(
-            false,
-            Translator.get(TranslationKey.MESSAGES__NO_PERMISSION)
-        )
-        var access = parseStringList(container.getString(LOCK_ATTRIBUTE))
-        if (access.contains(friend)) {
-            access = access.minus(friend)
-            container.setString(LOCK_ATTRIBUTE, access.toString())
-            doubleChest?.persistentDataContainer?.setString(LOCK_ATTRIBUTE, access.toString())
-            return LockReturnValue(true, Translator.get(TranslationKey.MESSAGES__FRIEND_REMOVED))
+        when (modifyAction) {
+            FriendModifyAction.ADD_FRIEND -> {
+                if (!access.contains(friend)) {
+                    access = access.plus(friend)
+                    container.setString(LOCK_ATTRIBUTE, access.toString())
+                    doubleChest?.persistentDataContainer?.setString(LOCK_ATTRIBUTE, access.toString())
+                    return LockReturnValue(true, Translator.get(TranslationKey.MESSAGES__FRIEND_ADDED))
+                }
+            }
+            FriendModifyAction.REMOVE_FRIEND -> {
+                if (access.contains(friend)) {
+                    access = access.minus(friend)
+                    container.setString(LOCK_ATTRIBUTE, access.toString())
+                    doubleChest?.persistentDataContainer?.setString(LOCK_ATTRIBUTE, access.toString())
+                    return LockReturnValue(true, Translator.get(TranslationKey.MESSAGES__FRIEND_REMOVED))
+                }
+            }
         }
         return LockReturnValue(false, Translator.get(TranslationKey.MESSAGES__FRIEND_CANT_BE_REMOVED))
+    }
+
+    enum class FriendModifyAction {
+        ADD_FRIEND, REMOVE_FRIEND;
     }
 }

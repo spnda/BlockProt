@@ -48,9 +48,10 @@ object FriendAddInventory : BlockProtInventory {
                         val handler = BlockLockHandler(state.block)
                         val doubleChest = getDoubleChest(state.block, player.world)
                         applyChangesAndExit(handler, player) {
-                            handler.addFriend(
+                            handler.modifyFriends(
                                 player.uniqueId.toString(),
                                 friend,
+                                BlockLockHandler.FriendModifyAction.ADD_FRIEND,
                                 if (doubleChest != null) NBTTileEntity(doubleChest) else null
                             )
                         }

@@ -52,9 +52,10 @@ object FriendRemoveInventory : BlockProtInventory {
                         val handler = BlockLockHandler(state.block)
                         val doubleChest = getDoubleChest(state.block, player.world)
                         applyChangesAndExit(handler, player) {
-                            handler.removeFriend(
+                            handler.modifyFriends(
                                 player.uniqueId.toString(),
                                 friend,
+                                BlockLockHandler.FriendModifyAction.REMOVE_FRIEND,
                                 if (doubleChest != null) NBTTileEntity(doubleChest) else null
                             )
                         }

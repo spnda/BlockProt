@@ -131,5 +131,7 @@ class BlockLockHandler constructor(val block: Block) {
         return LockReturnValue(false, BlockProt.translator.get(TranslationKey.MESSAGES__FRIEND_CANT_BE_REMOVED))
     }
 
-    data class LockReturnValue(val success: Boolean, val message: String)
+    enum class FriendModifyAction {
+        ADD_FRIEND, REMOVE_FRIEND;
+    }
 }

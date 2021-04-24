@@ -1,6 +1,7 @@
 package de.sean.blockprot.bukkit.inventories
 
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
+import de.sean.blockprot.bukkit.nbt.LockReturnValue
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.tr7zw.nbtapi.NBTEntity
 import net.md_5.bungee.api.ChatMessageType
@@ -23,7 +24,7 @@ interface BlockProtInventory {
         playerNBT.setString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE, currentFriendList.toString())
     }
 
-    fun applyChangesAndExit(handler: BlockLockHandler, player: Player, func: () -> BlockLockHandler.LockReturnValue) {
+    fun applyChangesAndExit(handler: BlockLockHandler, player: Player, func: () -> LockReturnValue) {
         val ret = func()
         if (ret.success) {
             LockUtil.applyToDoor(handler, handler.block)

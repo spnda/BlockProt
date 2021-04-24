@@ -21,7 +21,7 @@ import org.bukkit.inventory.meta.SkullMeta
 
 object FriendSearchResultInventory : BlockProtInventory {
     override val size = 9 * 3
-    override val inventoryName = Translator.get(TranslationKey.INVENTORIES__FRIENDS__SEARCH_RESULT)
+    override val inventoryName = Translator.get(TranslationKey.INVENTORIES__FRIENDS__RESULT)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
         val player = event.whoClicked as Player

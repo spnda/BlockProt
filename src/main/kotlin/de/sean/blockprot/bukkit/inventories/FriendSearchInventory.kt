@@ -2,6 +2,7 @@ package de.sean.blockprot.bukkit.inventories
 
 import de.sean.blockprot.BlockProt
 import de.sean.blockprot.TranslationKey
+import de.sean.blockprot.Translator
 import net.wesjd.anvilgui.AnvilGUI
 import org.apache.commons.lang.StringUtils
 import org.bukkit.Bukkit
@@ -10,7 +11,7 @@ import org.bukkit.inventory.Inventory
 import java.util.*
 
 object FriendSearchInventory {
-    private val inventoryName = BlockProt.translator.get(TranslationKey.INVENTORIES__FRIENDS__SEARCH)
+    private val inventoryName = Translator.get(TranslationKey.INVENTORIES__FRIENDS__SEARCH)
 
     private val playerInventories = emptyMap<UUID, Inventory?>().toMutableMap()
 

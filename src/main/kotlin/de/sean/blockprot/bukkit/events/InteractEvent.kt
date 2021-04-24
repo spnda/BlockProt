@@ -1,7 +1,7 @@
 package de.sean.blockprot.bukkit.events
 
-import de.sean.blockprot.BlockProt
 import de.sean.blockprot.TranslationKey
+import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.inventories.BlockLockInventory
 import de.sean.blockprot.bukkit.inventories.InventoryState
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
@@ -57,7 +57,7 @@ open class InteractEvent : Listener {
                                     getItemStack(
                                         1,
                                         blockState.type,
-                                        BlockProt.translator.get(TranslationKey.INVENTORIES__LOCK)
+                                        Translator.get(TranslationKey.INVENTORIES__LOCK)
                                     )
                                 )
                                 var i = 1
@@ -71,7 +71,7 @@ open class InteractEvent : Listener {
                                 getItemStack(
                                     1,
                                     Material.BLACK_STAINED_GLASS_PANE,
-                                    BlockProt.translator.get(TranslationKey.INVENTORIES__BACK)
+                                    Translator.get(TranslationKey.INVENTORIES__BACK)
                                 )
                             )
                             player.openInventory(inv)
@@ -81,7 +81,7 @@ open class InteractEvent : Listener {
                         player.spigot().sendMessage(
                             ChatMessageType.ACTION_BAR,
                             *TextComponent.fromLegacyText(
-                                BlockProt.translator.get(TranslationKey.MESSAGES__NO_PERMISSION)
+                                Translator.get(TranslationKey.MESSAGES__NO_PERMISSION)
                             )
                         )
                     }
@@ -94,7 +94,7 @@ open class InteractEvent : Listener {
                             player.spigot().sendMessage(
                                 ChatMessageType.ACTION_BAR,
                                 *TextComponent.fromLegacyText(
-                                    BlockProt.translator.get(TranslationKey.MESSAGES__NO_PERMISSION)
+                                    Translator.get(TranslationKey.MESSAGES__NO_PERMISSION)
                                 )
                             )
                         }

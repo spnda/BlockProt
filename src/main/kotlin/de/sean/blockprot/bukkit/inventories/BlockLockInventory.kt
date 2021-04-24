@@ -1,7 +1,7 @@
 package de.sean.blockprot.bukkit.inventories
 
-import de.sean.blockprot.BlockProt
 import de.sean.blockprot.TranslationKey
+import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
@@ -17,7 +17,7 @@ import java.util.*
 
 object BlockLockInventory : BlockProtInventory {
     override val size = 9 * 1
-    override val inventoryName = BlockProt.translator.get(TranslationKey.INVENTORIES__BLOCK_LOCK)
+    override val inventoryName = Translator.get(TranslationKey.INVENTORIES__BLOCK_LOCK)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
         val player = event.whoClicked as Player
@@ -92,7 +92,7 @@ object BlockLockInventory : BlockProtInventory {
                     ItemUtil.getItemStack(
                         1,
                         Material.BLACK_STAINED_GLASS_PANE,
-                        BlockProt.translator.get(TranslationKey.INVENTORIES__BACK)
+                        Translator.get(TranslationKey.INVENTORIES__BACK)
                     )
                 )
                 player.openInventory(inv)
@@ -110,7 +110,7 @@ object BlockLockInventory : BlockProtInventory {
         if (owner == playerUuid || player.isOp || player.hasPermission(LockUtil.PERMISSION_ADMIN))
             inv.setItem(
                 0,
-                ItemUtil.getItemStack(1, material, BlockProt.translator.get(TranslationKey.INVENTORIES__UNLOCK))
+                ItemUtil.getItemStack(1, material, Translator.get(TranslationKey.INVENTORIES__UNLOCK))
             )
         if (owner == playerUuid) {
             inv.setItem(
@@ -118,8 +118,8 @@ object BlockLockInventory : BlockProtInventory {
                 ItemUtil.getItemStack(
                     1,
                     if (redstone) Material.REDSTONE else Material.GUNPOWDER,
-                    if (redstone) BlockProt.translator.get(TranslationKey.INVENTORIES__REDSTONE__DEACTIVATE)
-                    else BlockProt.translator.get(TranslationKey.INVENTORIES__REDSTONE__ACTIVATE)
+                    if (redstone) Translator.get(TranslationKey.INVENTORIES__REDSTONE__DEACTIVATE)
+                    else Translator.get(TranslationKey.INVENTORIES__REDSTONE__ACTIVATE)
                 )
             )
             inv.setItem(
@@ -127,7 +127,7 @@ object BlockLockInventory : BlockProtInventory {
                 ItemUtil.getItemStack(
                     1,
                     Material.PLAYER_HEAD,
-                    BlockProt.translator.get(TranslationKey.INVENTORIES__FRIENDS__ADD)
+                    Translator.get(TranslationKey.INVENTORIES__FRIENDS__ADD)
                 )
             )
             inv.setItem(
@@ -135,7 +135,7 @@ object BlockLockInventory : BlockProtInventory {
                 ItemUtil.getItemStack(
                     1,
                     Material.ZOMBIE_HEAD,
-                    BlockProt.translator.get(TranslationKey.INVENTORIES__FRIENDS__REMOVE)
+                    Translator.get(TranslationKey.INVENTORIES__FRIENDS__REMOVE)
                 )
             )
         }
@@ -148,7 +148,7 @@ object BlockLockInventory : BlockProtInventory {
                 ItemUtil.getItemStack(
                     1,
                     Material.OAK_SIGN,
-                    BlockProt.translator.get(TranslationKey.INVENTORIES__BLOCK_INFO)
+                    Translator.get(TranslationKey.INVENTORIES__BLOCK_INFO)
                 )
             )
         }
@@ -157,7 +157,7 @@ object BlockLockInventory : BlockProtInventory {
             ItemUtil.getItemStack(
                 1,
                 Material.BLACK_STAINED_GLASS_PANE,
-                BlockProt.translator.get(TranslationKey.INVENTORIES__BACK)
+                Translator.get(TranslationKey.INVENTORIES__BACK)
             )
         )
         return inv

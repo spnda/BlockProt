@@ -16,7 +16,6 @@ class BlockProt : JavaPlugin() {
     companion object {
         lateinit var instance: BlockProt
         lateinit var metrics: Metrics
-        lateinit var translator: Translator
         const val pluginId: Int = 9999
     }
 
@@ -24,7 +23,7 @@ class BlockProt : JavaPlugin() {
         val file = File(dataFolder, fileName)
         if (!file.exists()) throw RuntimeException("Could not load any translations. Possibly corrupt?")
         val config = YamlConfiguration.loadConfiguration(file)
-        translator = Translator(config)
+        Translator.init(config)
     }
 
     override fun onEnable() {

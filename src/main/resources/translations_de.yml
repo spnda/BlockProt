@@ -1,0 +1,30 @@
+# German translation file
+inventories:
+  back: "Zurück"
+  block_lock: "Block Sperren"
+  user_settings: "Nutzereinstellungen"
+  block_info: "Informationen"
+  lock: "Sperren"
+  unlock: "Entsperren"
+  redstone:
+    activate: "Redstone aktivieren"
+    deactivate: "Redstone deaktivieren"
+  lock_on_place:
+    activate: "Immer automatisch sperren"
+    deactivate: "Nie automatisch sperren"
+  friends:
+    add: "Freunde hinzufügen"
+    remove: "Freunde entfernen"
+    search: "Spieler suchen"
+    result: "Spieler gefunden"
+
+messages:
+  permission_granted: "Erlaubnis erteilt."
+  unlocked: "Entsperrt."
+  no_permission: "Fehlende Berechtigung."
+  friend_added: "Freund hinzugefügt."
+  friend_removed: "Freund entfernt."
+  friend_already_added: "Freund bereits hinzugefügt."
+  friend_cant_be_removed: "Freund kann nicht entfernt werden."
+  redstone_added: "Redstone-Schutz hinzugefügt."
+  redstone_removed: "Redstone-Schutz entfernt."

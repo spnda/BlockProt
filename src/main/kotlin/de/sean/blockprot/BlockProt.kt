@@ -17,11 +17,22 @@ class BlockProt : JavaPlugin() {
         lateinit var instance: BlockProt
         lateinit var metrics: Metrics
         const val pluginId: Int = 9999
+        const val defaultLanguageFile = "translations_en.yml"
     }
 
     private fun loadTranslation(fileName: String) {
-        val file = File(dataFolder, fileName)
-        if (!file.exists()) throw RuntimeException("Could not load any translations. Possibly corrupt?")
+        var file = File(dataFolder, fileName)
+        /* Only save the resource if it exists inside the JAR and it has not
+         * been saved to the dataFolder yet. */
+        val resource = this.getResource(fileName)
+        if (resource == null && !file.exists()) {
+            Bukkit.getLogger().warning("Could not find language file: $fileName. Defaulting to $defaultLanguageFile")
+            this.saveResource(defaultLanguageFile, true)
+            file = File(dataFolder, defaultLanguageFile)
+        } else if (resource != null && !file.exists()) {
+            this.saveResource(fileName, true)
+            if (!file.exists()) throw RuntimeException("Could not load language file: $fileName")
+        }
         val config = YamlConfiguration.loadConfiguration(file)
         Translator.init(config)
     }
@@ -32,9 +43,8 @@ class BlockProt : JavaPlugin() {
         /* Save all translation files into the plugin directory. */
         var languageFileName = config.get("language_file")
         if (languageFileName == null || languageFileName !is String) {
-            languageFileName = "translations_en.yml"
+            languageFileName = defaultLanguageFile
         }
-        this.saveResource(languageFileName, true)
         loadTranslation(languageFileName)
 
         /* Check for updates */

@@ -2,6 +2,7 @@ package de.sean.blockprot.bukkit.tasks
 
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
+import de.sean.blockprot.util.SemanticVersion
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
 import org.bukkit.plugin.PluginDescriptionFile
@@ -23,10 +24,11 @@ class UpdateChecker(private val sendToChat: Boolean, private val description: Pl
             val response: String = reader.lines().collect(Collectors.joining(System.lineSeparator()))
             // Use Gson to parse the given JSON from the API to a SpigotResource class.
             val latest: SpigotResource = Gson().fromJson(response, SpigotResource::class.java)
+            val latestVersion = latest.asSemanticVersion()
             when {
-                Version(latest.currentVersion) > Version(description.version) ->
+                latestVersion > SemanticVersion(description.version) ->
                     log("${description.name} is outdated. Current: ${description.version} / Newest: ${latest.currentVersion}.")
-                Version(latest.currentVersion) < Version(description.version) ->
+                latestVersion < SemanticVersion(description.version) ->
                     log("${description.name} is on Version ${description.version}, even though latest is ${latest.currentVersion}.")
                 else ->
                     log("${description.name} is up to date. (${latest.currentVersion}).", LogSeverity.LOG)
@@ -57,40 +59,9 @@ class UpdateChecker(private val sendToChat: Boolean, private val description: Pl
         @SerializedName("id") val id: String?,
         @SerializedName("current_version") val currentVersion: String,
         @SerializedName("tag") val tag: String,
-    )
-
-    /**
-     * A semantic versioning helper class to compare two versions
-     */
-    class Version(version: String) {
-        private val parts = version.split(".")
-
-        operator fun compareTo(other: Version): Int {
-            try {
-                val length = parts.size.coerceAtLeast(other.parts.size)
-                for (i in 0..length) {
-                    val part = if (i < parts.size) parts[i].toInt() else 0
-                    val otherPart = if (i < other.parts.size) other.parts[i].toInt() else 0
-                    if (part < otherPart) return -1
-                    if (part > otherPart) return 1
-                }
-            } catch (e: Exception) {
-                // Current version might not be semantic versioning.
-                // If so, just print it to console if there are any issues parsing
-                e.printStackTrace()
-            }
-            return 0
-        }
-
-        override operator fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (other == null) return false
-            if (other !is Version) return false
-            return this.compareTo(other) == 0
-        }
-
-        override fun hashCode(): Int {
-            return parts.hashCode()
+    ) {
+        fun asSemanticVersion(): SemanticVersion {
+            return SemanticVersion(currentVersion)
         }
     }
 }

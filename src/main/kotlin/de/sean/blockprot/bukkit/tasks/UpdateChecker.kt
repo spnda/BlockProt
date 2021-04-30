@@ -2,9 +2,8 @@ package de.sean.blockprot.bukkit.tasks
 
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
+import de.sean.blockprot.util.BlockProtLogger
 import de.sean.blockprot.util.SemanticVersion
-import net.md_5.bungee.api.chat.TextComponent
-import org.bukkit.Bukkit
 import org.bukkit.plugin.PluginDescriptionFile
 import java.io.BufferedReader
 import java.io.IOException
@@ -31,7 +30,7 @@ class UpdateChecker(private val sendToChat: Boolean, private val description: Pl
                 latestVersion < SemanticVersion(description.version) ->
                     log("${description.name} is on Version ${description.version}, even though latest is ${latest.currentVersion}.")
                 else ->
-                    log("${description.name} is up to date. (${latest.currentVersion}).", LogSeverity.LOG)
+                    log("${description.name} is up to date. (${latest.currentVersion}).", BlockProtLogger.LogSeverity.LOG)
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -39,17 +38,12 @@ class UpdateChecker(private val sendToChat: Boolean, private val description: Pl
         }
     }
 
-    enum class LogSeverity {
-        LOG, WARN
-    }
-
-    private fun log(content: String, severity: LogSeverity = LogSeverity.WARN) {
+    private fun log(content: String, severity: BlockProtLogger.LogSeverity = BlockProtLogger.LogSeverity.WARN) {
         if (sendToChat) {
-            // Always send the message as gold text
-            Bukkit.spigot().broadcast(*TextComponent.fromLegacyText("§6$content"))
+            BlockProtLogger.sendMessage(content)
+        } else {
+            BlockProtLogger.log(content, severity)
         }
-        if (severity == LogSeverity.WARN) Bukkit.getLogger().warning(content)
-        else Bukkit.getLogger().info(content)
     }
 
     /**

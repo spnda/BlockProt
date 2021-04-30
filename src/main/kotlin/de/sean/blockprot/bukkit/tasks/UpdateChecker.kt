@@ -2,8 +2,13 @@ package de.sean.blockprot.bukkit.tasks
 
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
-import de.sean.blockprot.util.BlockProtLogger
+import de.sean.blockprot.util.BlockProtMessenger
 import de.sean.blockprot.util.SemanticVersion
+import net.md_5.bungee.api.chat.ClickEvent
+import net.md_5.bungee.api.chat.HoverEvent
+import net.md_5.bungee.api.chat.TextComponent
+import net.md_5.bungee.api.chat.hover.content.Text
+import org.bukkit.Bukkit
 import org.bukkit.plugin.PluginDescriptionFile
 import java.io.BufferedReader
 import java.io.IOException
@@ -26,11 +31,11 @@ class UpdateChecker(private val sendToChat: Boolean, private val description: Pl
             val latestVersion = latest.asSemanticVersion()
             when {
                 latestVersion > SemanticVersion(description.version) ->
-                    log("${description.name} is outdated. Current: ${description.version} / Newest: ${latest.currentVersion}.")
+                    log("${description.name} is outdated. Current: ${description.version} / Newest: ${latest.currentVersion}.", true)
                 latestVersion < SemanticVersion(description.version) ->
-                    log("${description.name} is on Version ${description.version}, even though latest is ${latest.currentVersion}.")
+                    log("${description.name} is on Version ${description.version}, even though latest is ${latest.currentVersion}.", true)
                 else ->
-                    log("${description.name} is up to date. (${latest.currentVersion}).", BlockProtLogger.LogSeverity.LOG)
+                    log("${description.name} is up to date. (${latest.currentVersion}).", false, BlockProtMessenger.LogSeverity.LOG)
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -38,11 +43,16 @@ class UpdateChecker(private val sendToChat: Boolean, private val description: Pl
         }
     }
 
-    private fun log(content: String, severity: BlockProtLogger.LogSeverity = BlockProtLogger.LogSeverity.WARN) {
+    private fun log(content: String, isOutdated: Boolean, severity: BlockProtMessenger.LogSeverity = BlockProtMessenger.LogSeverity.WARN) {
         if (sendToChat) {
-            BlockProtLogger.sendMessage(content)
+            val message = TextComponent(content)
+            if (isOutdated) {
+                message.clickEvent = ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.spigotmc.org/resources/blockprot.87829/")
+                message.hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, Text("Visit the website to update!"))
+            }
+            Bukkit.spigot().broadcast(message)
         } else {
-            BlockProtLogger.log(content, severity)
+            BlockProtMessenger.log(content, severity)
         }
     }
 

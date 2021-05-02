@@ -23,7 +23,10 @@ object LockUtil {
     const val PERMISSION_INFO = "blockprot.info"
     const val PERMISSION_ADMIN = "blockprot.admin"
 
-    val lockableTileEntities: List<Material> = mutableListOf(
+    /**
+     * A list of *all* lockable tile entities.
+     */
+    val lockableTileEntities: MutableList<Material> = mutableListOf(
         Material.CHEST,
         Material.TRAPPED_CHEST,
         Material.FURNACE,
@@ -32,6 +35,13 @@ object LockUtil {
         Material.HOPPER,
         Material.BARREL,
         Material.BREWING_STAND,
+    )
+
+    /**
+     * A list of all available shulker boxes, so we
+     * can save the protection state even after breaking.
+     */
+    val shulkerBoxes: List<Material> = mutableListOf(
         Material.BLACK_SHULKER_BOX,
         Material.BLUE_SHULKER_BOX,
         Material.BROWN_SHULKER_BOX,
@@ -82,7 +92,14 @@ object LockUtil {
         Material.WARPED_FENCE_GATE,
     ) else mutableListOf()
 
-    fun isLockable(blockState: BlockState) = isLockableBlock(blockState) && isLockableTileEntity(blockState)
+    init {
+        lockableTileEntities.addAll(shulkerBoxes)
+    }
+
+    /**
+     * Whether the given [blockState] is either a lockable block or a lockable tile entity.
+     */
+    fun isLockable(blockState: BlockState) = isLockableBlock(blockState) || isLockableTileEntity(blockState)
     fun isLockableBlock(blockState: BlockState) = blockState.type in lockableBlocks
     fun isLockableTileEntity(blockState: BlockState) = blockState.type in lockableTileEntities
 

@@ -48,7 +48,7 @@ class BlockProt : JavaPlugin() {
         loadTranslation(languageFileName)
 
         /* Check for updates */
-        Bukkit.getScheduler().runTaskAsynchronously(this, UpdateChecker(false, description))
+        Bukkit.getScheduler().runTaskAsynchronously(this, UpdateChecker(emptyList(), description))
 
         /* bStats Metrics */
         metrics = Metrics(this, pluginId)
@@ -60,6 +60,7 @@ class BlockProt : JavaPlugin() {
         registerEvent(pm, HopperEvent())
         registerEvent(pm, InteractEvent())
         registerEvent(pm, InventoryEvent())
+        registerEvent(pm, JoinEvent())
         registerEvent(pm, RedstoneEvent())
 
         registerCommand("blockprot", BlockProtCommand())

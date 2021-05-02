@@ -36,7 +36,7 @@ class BlockProtCommand : TabExecutor {
         when (args[0]) {
             "update" -> if (sender.isOp) {
                 Bukkit.getScheduler()
-                    .runTaskAsynchronously(BlockProt.instance, UpdateChecker(true, BlockProt.instance.description))
+                    .runTaskAsynchronously(BlockProt.instance, UpdateChecker(Bukkit.getOnlinePlayers().toList(), BlockProt.instance.description))
                 return true
             }
             "settings" -> {

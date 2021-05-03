@@ -68,20 +68,12 @@ object LockUtil {
 
     /**
      * We can only lock normal blocks after 1.16.4. Therefore, in all versions prior this list will
-     * be empty.
+     * be empty. Doors are separately listed inside of [lockableDoors].
      */
-    val lockableBlocks: List<Material> = if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_16_R3)) mutableListOf(
+    val lockableBlocks: MutableList<Material> = if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_16_R3)) mutableListOf(
         Material.ANVIL,
         Material.CHIPPED_ANVIL,
         Material.DAMAGED_ANVIL,
-        Material.ACACIA_DOOR,
-        Material.BIRCH_DOOR,
-        Material.CRIMSON_DOOR,
-        Material.DARK_OAK_DOOR,
-        Material.JUNGLE_DOOR,
-        Material.OAK_DOOR,
-        Material.SPRUCE_DOOR,
-        Material.WARPED_DOOR,
         Material.ACACIA_FENCE_GATE,
         Material.BIRCH_FENCE_GATE,
         Material.CRIMSON_FENCE_GATE,
@@ -92,8 +84,23 @@ object LockUtil {
         Material.WARPED_FENCE_GATE,
     ) else mutableListOf()
 
+    /**
+     * Doors are separate for LockUtil#applyToDoor and also only work after 1.16.4 Spigot.
+     */
+    val lockableDoors: MutableList<Material> = if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_16_R3)) mutableListOf(
+        Material.ACACIA_DOOR,
+        Material.BIRCH_DOOR,
+        Material.CRIMSON_DOOR,
+        Material.DARK_OAK_DOOR,
+        Material.JUNGLE_DOOR,
+        Material.OAK_DOOR,
+        Material.SPRUCE_DOOR,
+        Material.WARPED_DOOR,
+    ) else mutableListOf()
+
     init {
         lockableTileEntities.addAll(shulkerBoxes)
+        lockableBlocks.addAll(lockableDoors)
     }
 
     /**
@@ -117,17 +124,7 @@ object LockUtil {
      * Copy the data over from the top/bottom door to the other half
      */
     fun applyToDoor(doorHandler: BlockLockHandler, block: Block) {
-        if (block.type in listOf(
-                Material.ACACIA_DOOR,
-                Material.BIRCH_DOOR,
-                Material.CRIMSON_DOOR,
-                Material.DARK_OAK_DOOR,
-                Material.JUNGLE_DOOR,
-                Material.OAK_DOOR,
-                Material.SPRUCE_DOOR,
-                Material.WARPED_DOOR
-            )
-        ) {
+        if (block.type in lockableDoors) {
             val blockState = block.state
             val door = blockState.blockData as Door
             var other = blockState.location

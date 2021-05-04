@@ -87,6 +87,11 @@ object FriendSearchResultInventory : BlockProtInventory {
         val inv = createInventory()
         Bukkit.getScheduler().runTaskAsynchronously(BlockProt.instance) { _ ->
             val items: MutableList<ItemStack> = ArrayList()
+            // We create a cache inventory, because doing Inventory#setItem with a skull
+            // calls the Mojang API and the resulting network call might lock the main thread
+            // for too long. Therefore, we'll do those calls in a inventory that acts as a
+            // cache, basically, so that the network calls don't happen on the main thread.
+            val cacheInventory = Bukkit.createInventory(null, 9 * 3)
             // Only show the 9 * 3 - 2 most relevant players. Don't show any more.
             var playersIndex = 0
             val max = players.size.coerceAtMost(9 * 3 - 2)
@@ -97,6 +102,7 @@ object FriendSearchResultInventory : BlockProtInventory {
                     players[playersIndex].uniqueId != player.uniqueId
                 ) {
                     items.add(ItemUtil.getPlayerSkull(players[playersIndex]))
+                    cacheInventory.addItem(items.last())
                 }
                 playersIndex += 1
             }

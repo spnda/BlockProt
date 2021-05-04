@@ -39,7 +39,7 @@ object FriendSearchInventory {
                     // If they're less than 30% similar, we should still check if it possibly contains the search criteria
                     // and still add that user.
                     when {
-                        it.name == null -> false
+                        it.name == null || it.uniqueId == player.uniqueId -> false
                         compareStrings(it.name!!, text) > 0.3 -> true
                         else -> it.name!!.contains(text, ignoreCase = true)
                     }

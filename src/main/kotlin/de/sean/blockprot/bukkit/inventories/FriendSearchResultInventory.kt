@@ -66,6 +66,10 @@ object FriendSearchResultInventory : BlockProtInventory {
         event.isCancelled = true
     }
 
+    /**
+     * Create an inventory for given [player]. [players] should be a list of all players,
+     * excluding [player].
+     */
     fun createInventoryAndFill(player: Player, players: List<OfflinePlayer>): Inventory? {
         val state = InventoryState.get(player.uniqueId) ?: return null
 
@@ -82,34 +86,29 @@ object FriendSearchResultInventory : BlockProtInventory {
             }
         }
 
-        // To not delay when the inventory opens, we'll asynchronously get the items after the inventory has been opened
-        // and later add them to the inventory.
+        // To not delay when the inventory opens, we'll asynchronously get the items after
+        // the inventory has been opened and later add them to the inventory. In the meantime,
+        // we'll show the same amount of skeleton heads.
         val inv = createInventory()
+        val maxPlayers = players.size.coerceAtMost(9 * 3 - 2)
+        for (i in 0 until maxPlayers) {
+            inv.setItem(i, ItemUtil.getItemStack(1, Material.SKELETON_SKULL, players[i].name))
+        }
         Bukkit.getScheduler().runTaskAsynchronously(BlockProt.instance) { _ ->
             val items: MutableList<ItemStack> = ArrayList()
-            // We create a cache inventory, because doing Inventory#setItem with a skull
-            // calls the Mojang API and the resulting network call might lock the main thread
-            // for too long. Therefore, we'll do those calls in a inventory that acts as a
-            // cache, basically, so that the network calls don't happen on the main thread.
-            val cacheInventory = Bukkit.createInventory(null, 9 * 3)
             // Only show the 9 * 3 - 2 most relevant players. Don't show any more.
             var playersIndex = 0
-            val max = players.size.coerceAtMost(9 * 3 - 2)
-            while (playersIndex < max) {
+            while (playersIndex < maxPlayers && playersIndex < players.size) {
                 // Only add to the inventory if this is not a friend (yet)
+                val newFriend = players[playersIndex]
                 if (
-                    !friends.contains(players[playersIndex].uniqueId.toString()) &&
-                    players[playersIndex].uniqueId != player.uniqueId
+                    !friends.contains(newFriend.uniqueId.toString()) &&
+                    newFriend.uniqueId != player.uniqueId
                 ) {
-                    items.add(ItemUtil.getPlayerSkull(players[playersIndex]))
-                    cacheInventory.addItem(items.last())
+                    items.add(ItemUtil.getPlayerSkull(newFriend))
+                    inv.setItem(playersIndex, items[playersIndex])
                 }
                 playersIndex += 1
-            }
-            Bukkit.getScheduler().runTask(BlockProt.instance) { _ ->
-                for (item in items.indices) {
-                    inv.setItem(item, items[item])
-                }
             }
         }
         inv.setItem(9 * 3 - 1, ItemUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, null, null))

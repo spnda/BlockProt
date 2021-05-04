@@ -45,6 +45,7 @@ open class InteractEvent : Listener {
                         if (event.item == null) {
                             event.isCancelled = true
                             InventoryState.set(player.uniqueId, InventoryState(blockState.block))
+                            InventoryState.get(player.uniqueId)?.friendSearchState = InventoryState.FriendSearchState.FRIEND_SEARCH
                             var inv: Inventory = BlockLockInventory.createInventory()
                             if (
                                 (owner.isNotEmpty() && owner == playerUuid) ||

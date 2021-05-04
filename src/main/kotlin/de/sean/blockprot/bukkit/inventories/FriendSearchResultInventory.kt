@@ -16,7 +16,6 @@ import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
-import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 
 object FriendSearchResultInventory : BlockProtInventory {
@@ -95,7 +94,6 @@ object FriendSearchResultInventory : BlockProtInventory {
             inv.setItem(i, ItemUtil.getItemStack(1, Material.SKELETON_SKULL, players[i].name))
         }
         Bukkit.getScheduler().runTaskAsynchronously(BlockProt.instance) { _ ->
-            val items: MutableList<ItemStack> = ArrayList()
             // Only show the 9 * 3 - 2 most relevant players. Don't show any more.
             var playersIndex = 0
             while (playersIndex < maxPlayers && playersIndex < players.size) {
@@ -105,8 +103,7 @@ object FriendSearchResultInventory : BlockProtInventory {
                     !friends.contains(newFriend.uniqueId.toString()) &&
                     newFriend.uniqueId != player.uniqueId
                 ) {
-                    items.add(ItemUtil.getPlayerSkull(newFriend))
-                    inv.setItem(playersIndex, items[playersIndex])
+                    inv.setItem(playersIndex, ItemUtil.getPlayerSkull(newFriend))
                 }
                 playersIndex += 1
             }

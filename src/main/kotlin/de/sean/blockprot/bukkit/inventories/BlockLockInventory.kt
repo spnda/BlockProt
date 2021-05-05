@@ -66,7 +66,7 @@ object BlockLockInventory : BlockProtInventory {
             Material.ZOMBIE_HEAD -> {
                 handler = BlockLockHandler(block)
                 val friends = handler.getAccess()
-                inv = FriendRemoveInventory.createInventoryAndFill(friends)
+                inv = FriendRemoveInventory.createInventoryAndFill(player, friends)
                 player.closeInventory()
                 player.openInventory(inv)
                 event.isCancelled = true

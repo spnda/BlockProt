@@ -57,7 +57,7 @@ object UserSettingsInventory : BlockProtInventory {
                 if (state == null) return
                 state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH
                 val currentFriends = LockUtil.parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
-                val inv = FriendRemoveInventory.createInventoryAndFill(currentFriends)
+                val inv = FriendRemoveInventory.createInventoryAndFill(player, currentFriends)
                 player.closeInventory()
                 player.openInventory(inv)
             }

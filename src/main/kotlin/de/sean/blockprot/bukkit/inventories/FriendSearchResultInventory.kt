@@ -16,7 +16,6 @@ import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
-import org.bukkit.inventory.meta.SkullMeta
 
 object FriendSearchResultInventory : BlockProtInventory {
     override val size = 9 * 3
@@ -32,8 +31,8 @@ object FriendSearchResultInventory : BlockProtInventory {
             }
             Material.PLAYER_HEAD -> {
                 if (state == null) return
-                val skull = item.itemMeta as SkullMeta? ?: return // Generic player head?
-                val friend = skull.owningPlayer?.uniqueId.toString()
+                val index = findItemIndex(event.inventory, item)
+                val friend = state.friendResultCache[index]
                 when (state.friendSearchState) {
                     InventoryState.FriendSearchState.FRIEND_SEARCH -> {
                         if (state.block == null) return
@@ -42,7 +41,7 @@ object FriendSearchResultInventory : BlockProtInventory {
                         applyChangesAndExit(handler, player) {
                             handler.modifyFriends(
                                 player.uniqueId.toString(),
-                                friend,
+                                friend.uniqueId.toString(),
                                 BlockLockHandler.FriendModifyAction.ADD_FRIEND,
                                 if (doubleChest != null) NBTTileEntity(doubleChest) else null
                             )
@@ -50,7 +49,7 @@ object FriendSearchResultInventory : BlockProtInventory {
                     }
                     InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
                         modifyFriends(player) {
-                            it.add(friend)
+                            it.add(friend.uniqueId.toString())
                         }
                         player.closeInventory()
                     }
@@ -85,26 +84,31 @@ object FriendSearchResultInventory : BlockProtInventory {
             }
         }
 
+        // We'll filter all doubled friends out of the list and add them to the current InventoryState.
+        val foundPlayers = players.filter {
+            when {
+                friends.contains(it.uniqueId.toString()) -> false
+                else -> true
+            }
+        }
+        state.friendResultCache.clear()
+        state.friendResultCache.addAll(foundPlayers)
+
         // To not delay when the inventory opens, we'll asynchronously get the items after
         // the inventory has been opened and later add them to the inventory. In the meantime,
         // we'll show the same amount of skeleton heads.
         val inv = createInventory()
-        val maxPlayers = players.size.coerceAtMost(9 * 3 - 2)
+        val maxPlayers = foundPlayers.size.coerceAtMost(9 * 3 - 2)
         for (i in 0 until maxPlayers) {
-            inv.setItem(i, ItemUtil.getItemStack(1, Material.SKELETON_SKULL, players[i].name))
+            inv.setItem(i, ItemUtil.getItemStack(1, Material.SKELETON_SKULL, foundPlayers[i].name))
         }
         Bukkit.getScheduler().runTaskAsynchronously(BlockProt.instance) { _ ->
             // Only show the 9 * 3 - 2 most relevant players. Don't show any more.
             var playersIndex = 0
-            while (playersIndex < maxPlayers && playersIndex < players.size) {
+            while (playersIndex < maxPlayers && playersIndex < foundPlayers.size) {
                 // Only add to the inventory if this is not a friend (yet)
-                val newFriend = players[playersIndex]
-                if (
-                    !friends.contains(newFriend.uniqueId.toString()) &&
-                    newFriend.uniqueId != player.uniqueId
-                ) {
-                    inv.setItem(playersIndex, ItemUtil.getPlayerSkull(newFriend))
-                }
+                val newFriend = foundPlayers[playersIndex]
+                inv.setItem(playersIndex, ItemUtil.getPlayerSkull(newFriend))
                 playersIndex += 1
             }
         }

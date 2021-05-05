@@ -12,7 +12,6 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
-import org.bukkit.inventory.meta.SkullMeta
 import java.util.*
 
 object FriendRemoveInventory : BlockProtInventory {
@@ -43,8 +42,8 @@ object FriendRemoveInventory : BlockProtInventory {
             }
             Material.PLAYER_HEAD -> {
                 if (state == null) return
-                val skull = item.itemMeta as SkullMeta? ?: return // Generic player head?
-                val friend = skull.owningPlayer?.uniqueId.toString()
+                val index = findItemIndex(event.inventory, item)
+                val friend = state.friendResultCache[index]
                 when (state.friendSearchState) {
                     InventoryState.FriendSearchState.FRIEND_SEARCH -> {
                         if (state.block == null) return
@@ -53,7 +52,7 @@ object FriendRemoveInventory : BlockProtInventory {
                         applyChangesAndExit(handler, player) {
                             handler.modifyFriends(
                                 player.uniqueId.toString(),
-                                friend,
+                                friend.uniqueId.toString(),
                                 BlockLockHandler.FriendModifyAction.REMOVE_FRIEND,
                                 if (doubleChest != null) NBTTileEntity(doubleChest) else null
                             )
@@ -61,7 +60,7 @@ object FriendRemoveInventory : BlockProtInventory {
                     }
                     InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
                         modifyFriends(player) {
-                            it.remove(friend)
+                            it.remove(friend.uniqueId.toString())
                         }
                         player.closeInventory()
                     }
@@ -73,20 +72,15 @@ object FriendRemoveInventory : BlockProtInventory {
         event.isCancelled = true
     }
 
-    fun createInventoryAndFill(friendsToRemove: List<String>): Inventory {
+    fun createInventoryAndFill(player: Player, friendsToRemove: List<String>): Inventory {
         val inv = createInventory()
-        // Get the skulls asynchronously and add them one after each other.
-        Bukkit.getScheduler().runTaskAsynchronously(BlockProt.instance) { _ ->
-            var i = 0
-            while (i < 9 * 3 - 2 && i < friendsToRemove.size) {
-                val skull = ItemUtil.getPlayerSkull(Bukkit.getOfflinePlayer(UUID.fromString(friendsToRemove[i])))
-                inv.setItem(i, skull)
-                i++
-            }
-        }
+        val state = InventoryState.get(player.uniqueId) ?: return inv
 
+        state.friendResultCache.clear()
         for (i in friendsToRemove.indices) {
-            inv.setItem(i, ItemUtil.getItemStack(1, Material.SKELETON_SKULL, null))
+            val offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(friendsToRemove[i]))
+            inv.setItem(i, ItemUtil.getItemStack(1, Material.SKELETON_SKULL, offlinePlayer.name))
+            state.friendResultCache.add(offlinePlayer)
         }
         inv.setItem(
             9 * 3 - 1,
@@ -96,6 +90,17 @@ object FriendRemoveInventory : BlockProtInventory {
                 Translator.get(TranslationKey.INVENTORIES__BACK)
             )
         )
+
+        // Get the skulls asynchronously and add them one after each other.
+        Bukkit.getScheduler().runTaskAsynchronously(BlockProt.instance) { _ ->
+            var i = 0
+            while (i < 9 * 3 - 2 && i < state.friendResultCache.size) {
+                val skull = ItemUtil.getPlayerSkull(state.friendResultCache[i])
+                inv.setItem(i, skull)
+                i++
+            }
+        }
+
         return inv
     }
 }

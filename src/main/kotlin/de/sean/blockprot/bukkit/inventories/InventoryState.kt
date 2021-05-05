@@ -1,5 +1,6 @@
 package de.sean.blockprot.bukkit.inventories
 
+import org.bukkit.OfflinePlayer
 import org.bukkit.block.Block
 import java.util.*
 
@@ -21,6 +22,8 @@ data class InventoryState(val block: Block?) {
      * which will then add the new friends to [block]'s NBT.
      */
     var friendSearchState: FriendSearchState = FriendSearchState.FRIEND_SEARCH
+
+    var friendResultCache: MutableList<OfflinePlayer> = mutableListOf()
 
     companion object {
         /**

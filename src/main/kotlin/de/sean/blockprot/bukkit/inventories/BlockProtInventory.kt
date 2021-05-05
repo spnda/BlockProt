@@ -10,6 +10,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.ItemStack
 
 interface BlockProtInventory {
     val size: Int
@@ -31,5 +32,18 @@ interface BlockProtInventory {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
         }
         player.closeInventory()
+    }
+
+    /**
+     * Finds the index of the first item in [inventory] where [ItemStack.equals(item)]
+     * results in true. Returns -1 if no item was found.
+     */
+    fun findItemIndex(inventory: Inventory, item: ItemStack): Int {
+        for (i in inventory.contents.indices) {
+            if (inventory.contents[i].equals(item)) {
+                return i
+            }
+        }
+        return -1
     }
 }

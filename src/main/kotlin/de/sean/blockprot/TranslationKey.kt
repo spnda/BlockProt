@@ -1,5 +1,7 @@
 package de.sean.blockprot
 
+import java.util.*
+
 /**
  * A translation key for a single string in a translations_xx.yml file.
  * Double underscores are replaced with dots when querying for YAML keys.
@@ -36,6 +38,6 @@ enum class TranslationKey {
      * whereas [TranslationKey.INVENTORIES__BLOCK_LOCK] becomes "inventories.block_lock".
      */
     override fun toString(): String {
-        return name.replace("__", ".").toLowerCase()
+        return name.replace("__", ".").lowercase(Locale.getDefault())
     }
 }

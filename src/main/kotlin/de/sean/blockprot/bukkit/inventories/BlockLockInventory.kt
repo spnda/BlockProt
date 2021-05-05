@@ -13,7 +13,6 @@ import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
-import java.util.*
 
 object BlockLockInventory : BlockProtInventory {
     override val size = 9 * 1
@@ -73,28 +72,7 @@ object BlockLockInventory : BlockProtInventory {
             }
             Material.OAK_SIGN -> {
                 player.closeInventory()
-                inv = BlockInfoInventory.createInventory()
-                handler = BlockLockHandler(block)
-                owner = handler.getOwner()
-                val access = handler.getAccess()
-                var i = 0
-                inv.clear() // If any items are still in the inventory from last request, clear them
-                while (i < access.size && i < 9) {
-                    inv.setItem(9 + i, ItemUtil.getPlayerSkull(Bukkit.getOfflinePlayer(UUID.fromString(access[i]))))
-                    i++
-                }
-                if (owner.isNotEmpty()) inv.setItem(
-                    0,
-                    ItemUtil.getPlayerSkull(Bukkit.getOfflinePlayer(UUID.fromString(owner)))
-                )
-                inv.setItem(
-                    8,
-                    ItemUtil.getItemStack(
-                        1,
-                        Material.BLACK_STAINED_GLASS_PANE,
-                        Translator.get(TranslationKey.INVENTORIES__BACK)
-                    )
-                )
+                inv = BlockInfoInventory.createInventoryAndFill(player, BlockLockHandler(block))
                 player.openInventory(inv)
             }
             Material.BLACK_STAINED_GLASS_PANE -> player.closeInventory()

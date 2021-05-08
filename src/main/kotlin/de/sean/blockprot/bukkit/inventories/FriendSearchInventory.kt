@@ -17,13 +17,7 @@ object FriendSearchInventory {
         AnvilGUI.Builder()
             .onComplete { player: Player, searchQuery: String ->
                 playerInventories[player.uniqueId] = FriendSearchResultInventory.createInventoryAndFill(player, searchQuery)
-                return@onComplete AnvilGUI.Response.close()
-            }
-            .onClose { player ->
-                // If the user is closing, the user hasn't completed the translation yet.
-                val inv = playerInventories[player.uniqueId]
-                if (inv != null) player.openInventory(inv)
-                else InventoryState.remove(player.uniqueId)
+                return@onComplete AnvilGUI.Response.openInventory(playerInventories[player.uniqueId])
             }
             .text("Name")
             .title(inventoryName)

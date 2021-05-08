@@ -26,8 +26,31 @@ object FriendSearchResultInventory : BlockProtInventory {
         val item = event.currentItem ?: return
         when (item.type) {
             Material.BLACK_STAINED_GLASS_PANE -> {
-                // Go back to the search if nothing was found
-                FriendSearchInventory.openAnvilInventory(player)
+                // As in the anvil inventory we cannot differentiate between
+                // pressing Escape to go back, or closing it to go to the result
+                // inventory, we won't return to the anvil inventory and instead
+                // go right back to the FriendAddInventory.
+                if (state == null) {
+                    player.closeInventory()
+                    return
+                }
+                val currentFriends: List<String> = when (state.friendSearchState) {
+                    InventoryState.FriendSearchState.FRIEND_SEARCH -> when (state.block) {
+                        null -> emptyList()
+                        else -> BlockLockHandler(state.block).getAccess()
+                    }
+                    InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
+                        val nbtEntity = NBTEntity(player).persistentDataContainer
+                        parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
+                    }
+                }
+                val friendsToAdd = FriendAddInventory.filterFriendsList(
+                    currentFriends,
+                    Bukkit.getOnlinePlayers().toList(),
+                    player.uniqueId.toString()
+                )
+                val inv = FriendAddInventory.createInventoryAndFill(friendsToAdd)
+                player.openInventory(inv)
             }
             Material.PLAYER_HEAD -> {
                 if (state == null) return

@@ -132,7 +132,10 @@ object FriendSearchResultInventory : BlockProtInventory {
                 playersIndex += 1
             }
         }
-        inv.setItem(9 * 3 - 1, ItemUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, null, null))
+        inv.setItem(
+            9 * 3 - 1,
+            ItemUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, Translator.get(TranslationKey.INVENTORIES__BACK), null)
+        )
         return inv
     }
 }

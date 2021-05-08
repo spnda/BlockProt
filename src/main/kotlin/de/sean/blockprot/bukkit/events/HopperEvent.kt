@@ -40,6 +40,7 @@ class HopperEvent : Listener {
             is Barrel -> holder.block
             is BrewingStand -> holder.block
             is ShulkerBox -> holder.block
+            is DoubleChest -> holder.world?.getBlockAt(holder.location)
             else -> null
         }
     }

@@ -10,8 +10,10 @@ inventories:
   lock: "Lock"
   unlock: "Unlock"
   redstone:
-    activate: "Activate Redstone"
-    deactivate: "Deactivate Redstone"
+    allowed: "Redstone allowed"
+    disallowed: "Redstone disallowed"
+    allow: "Allow redstone"
+    disallow: "Disallow redstone"
   lock_on_place:
     activate: "Always lock on placing"
     deactivate: "Never lock on placing"

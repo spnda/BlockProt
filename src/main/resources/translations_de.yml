@@ -7,8 +7,10 @@ inventories:
   lock: "Sperren"
   unlock: "Entsperren"
   redstone:
-    activate: "Redstone aktivieren"
-    deactivate: "Redstone deaktivieren"
+    allowed: "Redstone erlaubt"
+    disallowed: "Redstone nicht erlaubt"
+    allow: "Redstone erlauben"
+    disallow: "Redstone nicht erlauben"
   lock_on_place:
     activate: "Immer automatisch sperren"
     deactivate: "Nie automatisch sperren"

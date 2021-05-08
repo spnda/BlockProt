@@ -13,8 +13,10 @@ enum class TranslationKey {
     INVENTORIES__USER_SETTINGS,
     INVENTORIES__LOCK,
     INVENTORIES__UNLOCK,
-    INVENTORIES__REDSTONE__ACTIVATE,
-    INVENTORIES__REDSTONE__DEACTIVATE,
+    INVENTORIES__REDSTONE__ALLOWED,
+    INVENTORIES__REDSTONE__DISALLOWED,
+    INVENTORIES__REDSTONE__DISALLOW,
+    INVENTORIES__REDSTONE__ALLOW,
     INVENTORIES__LOCK_ON_PLACE__ACTIVATE,
     INVENTORIES__LOCK_ON_PLACE__DEACTIVATE,
     INVENTORIES__FRIENDS__ADD,
@@ -38,6 +40,6 @@ enum class TranslationKey {
      * whereas [TranslationKey.INVENTORIES__BLOCK_LOCK] becomes "inventories.block_lock".
      */
     override fun toString(): String {
-        return name.replace("__", ".").lowercase(Locale.getDefault())
+        return name.replace("__", ".").lowercase(Locale.ENGLISH)
     }
 }

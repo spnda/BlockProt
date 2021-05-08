@@ -34,6 +34,7 @@ object BlockInfoInventory : BlockProtInventory {
         val state = InventoryState.get(player.uniqueId) ?: return inv
         val owner = handler.getOwner()
         val access = handler.getAccess()
+        val redstone = handler.getRedstone()
 
         inv.clear()
         state.friendResultCache.clear()
@@ -46,6 +47,15 @@ object BlockInfoInventory : BlockProtInventory {
         if (owner.isNotEmpty()) inv.setItem(
             0,
             ItemUtil.getPlayerSkull(Bukkit.getOfflinePlayer(UUID.fromString(owner)))
+        )
+        inv.setItem(
+            1,
+            ItemUtil.getItemStack(
+                1,
+                if (redstone) Material.REDSTONE else Material.GUNPOWDER,
+                if (redstone) Translator.get(TranslationKey.INVENTORIES__REDSTONE__ALLOWED)
+                else Translator.get(TranslationKey.INVENTORIES__REDSTONE__DISALLOWED)
+            )
         )
         inv.setItem(
             8,

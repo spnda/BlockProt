@@ -96,8 +96,8 @@ object BlockLockInventory : BlockProtInventory {
                 ItemUtil.getItemStack(
                     1,
                     if (redstone) Material.REDSTONE else Material.GUNPOWDER,
-                    if (redstone) Translator.get(TranslationKey.INVENTORIES__REDSTONE__DEACTIVATE)
-                    else Translator.get(TranslationKey.INVENTORIES__REDSTONE__ACTIVATE)
+                    if (redstone) Translator.get(TranslationKey.INVENTORIES__REDSTONE__DISALLOW)
+                    else Translator.get(TranslationKey.INVENTORIES__REDSTONE__ALLOW)
                 )
             )
             inv.setItem(

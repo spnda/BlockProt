@@ -67,9 +67,9 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                     1
                 )
 
-                val nbtEntity = NBTEntity(event.player).persistentDataContainer
-                if (nbtEntity.getBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE) != false) {
+                if (LockUtil.shouldLockOnPlace(event.player)) {
                     handler.lockBlock(event.player, event.player.isOp, null)
+                    val nbtEntity = NBTEntity(event.player).persistentDataContainer
                     val friends = parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
                     handler.setAccess(friends)
                 }
@@ -80,10 +80,9 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                 // We only try to lock the block if it isn't locked already.
                 // Shulker boxes might already be locked, from previous placing.
                 if (handler.isNotProtected()) {
-                    val nbtEntity = NBTEntity(event.player).persistentDataContainer
                     // Assign a empty string for no owner to not have NPEs when reading
                     BlockLockHandler(block).setOwner(
-                        if (nbtEntity.getBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE) != false) playerUuid else ""
+                        if (LockUtil.shouldLockOnPlace(event.player)) playerUuid else ""
                     )
                 }
             }

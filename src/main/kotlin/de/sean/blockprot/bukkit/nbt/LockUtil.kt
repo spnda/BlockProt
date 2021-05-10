@@ -1,5 +1,6 @@
 package de.sean.blockprot.bukkit.nbt
 
+import de.tr7zw.nbtapi.NBTEntity
 import de.tr7zw.nbtapi.utils.MinecraftVersion
 import org.bukkit.Material
 import org.bukkit.World
@@ -9,6 +10,7 @@ import org.bukkit.block.Chest
 import org.bukkit.block.DoubleChest
 import org.bukkit.block.data.Bisected
 import org.bukkit.block.data.type.Door
+import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.DoubleChestInventory
 
@@ -161,5 +163,18 @@ object LockUtil {
         }
 
         return world.getBlockAt(second).state
+    }
+
+    /**
+     * Check if the given [player] wants their blocks to be locked when
+     * placed.
+     */
+    fun shouldLockOnPlace(player: Player): Boolean {
+        val nbtEntity = NBTEntity(player).persistentDataContainer
+        return if (nbtEntity.hasKey(LOCK_ON_PLACE_ATTRIBUTE)) {
+            nbtEntity.getBoolean(LOCK_ON_PLACE_ATTRIBUTE) != false
+        } else {
+            true
+        }
     }
 }

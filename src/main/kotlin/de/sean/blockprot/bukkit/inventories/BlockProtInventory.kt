@@ -37,7 +37,7 @@ interface BlockProtInventory {
             LockUtil.applyToDoor(handler, handler.block)
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
         }
-        player.closeInventory()
+        if (exit) player.closeInventory()
     }
 
     /**

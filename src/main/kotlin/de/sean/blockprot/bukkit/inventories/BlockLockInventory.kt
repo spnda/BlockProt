@@ -43,12 +43,24 @@ object BlockLockInventory : BlockProtInventory {
             }
             Material.REDSTONE, Material.GUNPOWDER -> {
                 val doubleChest = getDoubleChest(block, player.world)
-                applyChanges(block, player, exit = true) {
-                    it.lockRedstoneForBlock(
+                var redstone = true
+                applyChanges(block, player, exit = false) {
+                    val ret = it.lockRedstoneForBlock(
                         player.uniqueId.toString(),
                         if (doubleChest != null) NBTTileEntity(doubleChest) else null
                     )
+                    redstone = it.getRedstone()
+                    return@applyChanges ret
                 }
+                event.inventory.setItem(
+                    1,
+                    ItemUtil.getItemStack(
+                        1,
+                        if (redstone) Material.REDSTONE else Material.GUNPOWDER,
+                        if (redstone) Translator.get(TranslationKey.INVENTORIES__REDSTONE__DISALLOW)
+                        else Translator.get(TranslationKey.INVENTORIES__REDSTONE__ALLOW)
+                    )
+                )
                 event.isCancelled = true
             }
             Material.PLAYER_HEAD -> {

@@ -83,14 +83,14 @@ class BlockLockHandler constructor(val block: Block) {
                 redstone = false
                 container.setBoolean(REDSTONE_ATTRIBUTE, redstone)
             } else {
-                redstone = container.getBoolean(REDSTONE_ATTRIBUTE)
-                container.setBoolean(REDSTONE_ATTRIBUTE, !redstone) // Just flip the boolean value
+                redstone = !container.getBoolean(REDSTONE_ATTRIBUTE)
+                container.setBoolean(REDSTONE_ATTRIBUTE, redstone) // Just flip the boolean value
             }
             doubleChest?.persistentDataContainer?.setBoolean(REDSTONE_ATTRIBUTE, !redstone)
             return LockReturnValue(
                 true,
-                if (redstone) Translator.get(TranslationKey.MESSAGES__REDSTONE_ADDED)
-                else Translator.get(TranslationKey.MESSAGES__REDSTONE_REMOVED)
+                if (redstone) Translator.get(TranslationKey.MESSAGES__REDSTONE_REMOVED)
+                else Translator.get(TranslationKey.MESSAGES__REDSTONE_ADDED)
             )
         }
         return LockReturnValue(false, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION))

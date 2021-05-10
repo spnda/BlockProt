@@ -21,8 +21,8 @@ interface BlockProtInventory {
 
     fun modifyFriends(player: Player, modify: (MutableList<String>) -> Unit) {
         val playerNBT = NBTEntity(player).persistentDataContainer
-        val currentFriendList = LockUtil.parseStringList(playerNBT.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
-        modify(currentFriendList.toMutableList())
+        val currentFriendList = LockUtil.parseStringList(playerNBT.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE)).toMutableList()
+        modify(currentFriendList)
         playerNBT.setString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE, currentFriendList.toString())
     }
 

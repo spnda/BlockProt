@@ -97,9 +97,8 @@ class BlockLockHandler constructor(val block: Block) {
     }
 
     fun modifyFriends(player: String, friend: String, modifyAction: FriendModifyAction, doubleChest: NBTTileEntity?): LockReturnValue {
-        val owner = container.getString(OWNER_ATTRIBUTE)
         // This theoretically shouldn't happen, though we will still check for it just to be sure
-        if (owner != player) return LockReturnValue(
+        if (container.getString(OWNER_ATTRIBUTE) != player) return LockReturnValue(
             false,
             Translator.get(TranslationKey.MESSAGES__NO_PERMISSION)
         )
@@ -126,9 +125,5 @@ class BlockLockHandler constructor(val block: Block) {
                 }
             }
         }
-    }
-
-    enum class FriendModifyAction {
-        ADD_FRIEND, REMOVE_FRIEND;
     }
 }

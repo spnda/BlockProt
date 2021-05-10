@@ -3,6 +3,7 @@ package de.sean.blockprot.bukkit.inventories
 import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
+import de.sean.blockprot.bukkit.nbt.FriendModifyAction
 import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
 import de.sean.blockprot.util.ItemUtil
 import de.tr7zw.nbtapi.NBTTileEntity
@@ -50,7 +51,7 @@ object FriendAddInventory : BlockProtInventory {
                             it.modifyFriends(
                                 player.uniqueId.toString(),
                                 friend,
-                                BlockLockHandler.FriendModifyAction.ADD_FRIEND,
+                                FriendModifyAction.ADD_FRIEND,
                                 if (doubleChest != null) NBTTileEntity(doubleChest) else null
                             )
                         }

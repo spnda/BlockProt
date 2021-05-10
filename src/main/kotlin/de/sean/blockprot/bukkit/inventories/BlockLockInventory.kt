@@ -19,15 +19,13 @@ object BlockLockInventory : BlockProtInventory {
     override val inventoryName = Translator.get(TranslationKey.INVENTORIES__BLOCK_LOCK)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
-        val player = event.whoClicked as Player
+        if (state?.block == null) return
+        val block: Block = state.block
         val item = event.currentItem ?: return
-        val inv: Inventory
-        val playersCol = Bukkit.getOnlinePlayers()
-        val handler: BlockLockHandler
-        val owner: String
 
-        if (state == null) return
-        val block: Block = state.block ?: return
+        val player = event.whoClicked as Player
+        val inv: Inventory
+        val handler: BlockLockHandler
 
         when (item.type) {
             in LockUtil.lockableTileEntities, in LockUtil.lockableBlocks -> {
@@ -65,8 +63,8 @@ object BlockLockInventory : BlockProtInventory {
             }
             Material.PLAYER_HEAD -> {
                 handler = BlockLockHandler(block)
-                owner = handler.getOwner()
-                val friendsToAdd = FriendAddInventory.filterFriendsList(handler.getAccess(), playersCol.toList(), owner)
+                val owner = handler.getOwner()
+                val friendsToAdd = FriendAddInventory.filterFriendsList(handler.getAccess(), Bukkit.getOnlinePlayers().toList(), owner)
                 inv = FriendAddInventory.createInventoryAndFill(friendsToAdd)
                 player.closeInventory()
                 player.openInventory(inv)

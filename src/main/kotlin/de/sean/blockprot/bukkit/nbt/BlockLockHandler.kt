@@ -111,6 +111,8 @@ class BlockLockHandler constructor(val block: Block) {
                     container.setString(LOCK_ATTRIBUTE, access.toString())
                     doubleChest?.persistentDataContainer?.setString(LOCK_ATTRIBUTE, access.toString())
                     return LockReturnValue(true, Translator.get(TranslationKey.MESSAGES__FRIEND_ADDED))
+                } else {
+                    return LockReturnValue(false, Translator.get(TranslationKey.MESSAGES__FRIEND_ALREADY_ADDED))
                 }
             }
             FriendModifyAction.REMOVE_FRIEND -> {
@@ -119,10 +121,11 @@ class BlockLockHandler constructor(val block: Block) {
                     container.setString(LOCK_ATTRIBUTE, access.toString())
                     doubleChest?.persistentDataContainer?.setString(LOCK_ATTRIBUTE, access.toString())
                     return LockReturnValue(true, Translator.get(TranslationKey.MESSAGES__FRIEND_REMOVED))
+                } else {
+                    return LockReturnValue(false, Translator.get(TranslationKey.MESSAGES__FRIEND_CANT_BE_REMOVED))
                 }
             }
         }
-        return LockReturnValue(false, Translator.get(TranslationKey.MESSAGES__FRIEND_CANT_BE_REMOVED))
     }
 
     enum class FriendModifyAction {

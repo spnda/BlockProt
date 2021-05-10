@@ -7,6 +7,7 @@ import de.tr7zw.nbtapi.NBTEntity
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
+import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
@@ -25,8 +26,13 @@ interface BlockProtInventory {
         playerNBT.setString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE, currentFriendList.toString())
     }
 
-    fun applyChangesAndExit(handler: BlockLockHandler, player: Player, func: () -> LockReturnValue) {
-        val ret = func()
+    /**
+     * Apply changes and create a handler with a callback in which the caller can freely use
+     * the given handler. If [exit] is true, the players inventory will be closed.
+     */
+    fun applyChanges(block: Block, player: Player, exit: Boolean, func: (handler: BlockLockHandler) -> LockReturnValue) {
+        val handler = BlockLockHandler(block)
+        val ret = func(handler)
         if (ret.success) {
             LockUtil.applyToDoor(handler, handler.block)
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))

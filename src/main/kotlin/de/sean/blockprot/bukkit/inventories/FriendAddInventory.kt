@@ -45,10 +45,9 @@ object FriendAddInventory : BlockProtInventory {
                 when (state.friendSearchState) {
                     InventoryState.FriendSearchState.FRIEND_SEARCH -> {
                         if (state.block == null) return
-                        val handler = BlockLockHandler(state.block)
                         val doubleChest = getDoubleChest(state.block, player.world)
-                        applyChangesAndExit(handler, player) {
-                            handler.modifyFriends(
+                        applyChanges(state.block, player, exit = true) {
+                            it.modifyFriends(
                                 player.uniqueId.toString(),
                                 friend,
                                 BlockLockHandler.FriendModifyAction.ADD_FRIEND,

@@ -31,10 +31,9 @@ object BlockLockInventory : BlockProtInventory {
 
         when (item.type) {
             in LockUtil.lockableTileEntities, in LockUtil.lockableBlocks -> {
-                handler = BlockLockHandler(block)
                 val doubleChest = getDoubleChest(block, player.world)
-                applyChangesAndExit(handler, player) {
-                    handler.lockBlock(
+                applyChanges(block, player, exit = true) {
+                    it.lockBlock(
                         player,
                         player.isOp,
                         if (doubleChest != null) NBTTileEntity(doubleChest) else null
@@ -43,10 +42,9 @@ object BlockLockInventory : BlockProtInventory {
                 event.isCancelled = true
             }
             Material.REDSTONE, Material.GUNPOWDER -> {
-                handler = BlockLockHandler(block)
                 val doubleChest = getDoubleChest(block, player.world)
-                applyChangesAndExit(handler, player) {
-                    handler.lockRedstoneForBlock(
+                applyChanges(block, player, exit = true) {
+                    it.lockRedstoneForBlock(
                         player.uniqueId.toString(),
                         if (doubleChest != null) NBTTileEntity(doubleChest) else null
                     )

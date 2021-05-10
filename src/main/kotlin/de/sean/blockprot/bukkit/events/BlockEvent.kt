@@ -72,6 +72,9 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                     val nbtEntity = NBTEntity(event.player).persistentDataContainer
                     val friends = parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
                     handler.setAccess(friends)
+                    if (LockUtil.disallowRedstoneOnPlace()) {
+                        handler.setRedstone(true)
+                    }
                 }
             }
             // We won't lock normal blocks on placing.
@@ -81,9 +84,12 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                 // Shulker boxes might already be locked, from previous placing.
                 if (handler.isNotProtected()) {
                     // Assign a empty string for no owner to not have NPEs when reading
-                    BlockLockHandler(block).setOwner(
+                    handler.setOwner(
                         if (LockUtil.shouldLockOnPlace(event.player)) playerUuid else ""
                     )
+                    if (LockUtil.disallowRedstoneOnPlace()) {
+                        handler.setRedstone(true)
+                    }
                 }
             }
             else -> return

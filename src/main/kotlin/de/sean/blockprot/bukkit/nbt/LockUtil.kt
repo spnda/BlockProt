@@ -1,5 +1,6 @@
 package de.sean.blockprot.bukkit.nbt
 
+import de.sean.blockprot.BlockProt
 import de.tr7zw.nbtapi.NBTEntity
 import de.tr7zw.nbtapi.utils.MinecraftVersion
 import org.bukkit.Material
@@ -173,6 +174,19 @@ object LockUtil {
         val nbtEntity = NBTEntity(player).persistentDataContainer
         return if (nbtEntity.hasKey(LOCK_ON_PLACE_ATTRIBUTE)) {
             nbtEntity.getBoolean(LOCK_ON_PLACE_ATTRIBUTE) != false
+        } else {
+            true
+        }
+    }
+
+    /**
+     * Checks the config if the "redstone_disallowed_by_default" key is
+     * set to true. If it was not found, it defaults to false.
+     */
+    fun disallowRedstoneOnPlace(): Boolean {
+        val config = BlockProt.instance.config
+        return if (config.contains("redstone_disallowed_by_default")) {
+            config.getBoolean("redstone_disallowed_by_default")
         } else {
             true
         }

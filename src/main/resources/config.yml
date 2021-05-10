@@ -10,3 +10,7 @@ language_file: translations_en.yml
 # If set to "false", no message will be sent but /blockprot update
 # will still work.
 notify_op_of_updates: false
+
+# If set to "true", redstone will be automatically disallowed on every
+# placed block, if the player has lock on place enabled.
+redstone_disallowed_by_default: false

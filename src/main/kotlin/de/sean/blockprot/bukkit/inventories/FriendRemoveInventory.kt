@@ -5,9 +5,7 @@ import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.FriendModifyAction
-import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
 import de.sean.blockprot.util.ItemUtil
-import de.tr7zw.nbtapi.NBTTileEntity
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -15,7 +13,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 import java.util.*
 
-object FriendRemoveInventory : BlockProtInventory {
+object FriendRemoveInventory : BlockFriendModifyInventory {
     override val size = 9 * 3
     override val inventoryName: String = Translator.get(TranslationKey.INVENTORIES__FRIENDS__REMOVE)
 
@@ -45,25 +43,7 @@ object FriendRemoveInventory : BlockProtInventory {
                 if (state == null) return
                 val index = findItemIndex(event.inventory, item)
                 val friend = state.friendResultCache[index]
-                when (state.friendSearchState) {
-                    InventoryState.FriendSearchState.FRIEND_SEARCH -> {
-                        if (state.block == null) return
-                        val doubleChest = getDoubleChest(state.block, player.world)
-                        applyChanges(state.block, player, exit = true) {
-                            it.modifyFriends(
-                                player.uniqueId.toString(),
-                                friend.uniqueId.toString(),
-                                FriendModifyAction.REMOVE_FRIEND,
-                                if (doubleChest != null) NBTTileEntity(doubleChest) else null
-                            )
-                        }
-                    }
-                    InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
-                        modifyFriends(player, exit = true) {
-                            it.remove(friend.uniqueId.toString())
-                        }
-                    }
-                }
+                modifyFriendsForAction(state, player, friend, FriendModifyAction.REMOVE_FRIEND, exit = true)
             }
             else -> {
                 player.closeInventory()

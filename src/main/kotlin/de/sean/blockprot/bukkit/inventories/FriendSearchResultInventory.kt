@@ -6,11 +6,9 @@ import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.FriendModifyAction
 import de.sean.blockprot.bukkit.nbt.LockUtil
-import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
 import de.sean.blockprot.bukkit.nbt.LockUtil.parseStringList
 import de.sean.blockprot.util.ItemUtil
 import de.tr7zw.nbtapi.NBTEntity
-import de.tr7zw.nbtapi.NBTTileEntity
 import org.apache.commons.lang.StringUtils
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -18,7 +16,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 
-object FriendSearchResultInventory : BlockProtInventory {
+object FriendSearchResultInventory : BlockFriendModifyInventory {
     override val size = 9 * 3
     override val inventoryName = Translator.get(TranslationKey.INVENTORIES__FRIENDS__RESULT)
 
@@ -57,25 +55,7 @@ object FriendSearchResultInventory : BlockProtInventory {
                 if (state == null) return
                 val index = findItemIndex(event.inventory, item)
                 val friend = state.friendResultCache[index]
-                when (state.friendSearchState) {
-                    InventoryState.FriendSearchState.FRIEND_SEARCH -> {
-                        if (state.block == null) return
-                        val doubleChest = getDoubleChest(state.block, player.world)
-                        applyChanges(state.block, player, exit = true) {
-                            it.modifyFriends(
-                                player.uniqueId.toString(),
-                                friend.uniqueId.toString(),
-                                FriendModifyAction.ADD_FRIEND,
-                                if (doubleChest != null) NBTTileEntity(doubleChest) else null
-                            )
-                        }
-                    }
-                    InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
-                        modifyFriends(player, exit = true) {
-                            it.add(friend.uniqueId.toString())
-                        }
-                    }
-                }
+                modifyFriendsForAction(state, player, friend, FriendModifyAction.ADD_FRIEND, exit = true)
             }
             else -> {
                 player.closeInventory()

@@ -19,6 +19,9 @@ interface BlockProtInventory {
     fun createInventory(): Inventory = Bukkit.createInventory(null, size, inventoryName)
     fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?)
 
+    /**
+     * Modify the friends list in the [player]'s NBT at [LockUtil.DEFAULT_FRIENDS_ATTRIBUTE].
+     */
     fun modifyFriends(player: Player, exit: Boolean, modify: (MutableList<String>) -> Unit) {
         val playerNBT = NBTEntity(player).persistentDataContainer
         val currentFriendList = LockUtil.parseStringList(playerNBT.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE)).toMutableList()

@@ -4,16 +4,14 @@ import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.FriendModifyAction
-import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
 import de.sean.blockprot.util.ItemUtil
-import de.tr7zw.nbtapi.NBTTileEntity
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.meta.SkullMeta
 
-object FriendAddInventory : BlockProtInventory {
+object FriendAddInventory : BlockFriendModifyInventory {
     override val size = 9 * 3
     override val inventoryName = Translator.get(TranslationKey.INVENTORIES__FRIENDS__ADD)
 
@@ -42,26 +40,8 @@ object FriendAddInventory : BlockProtInventory {
             Material.PLAYER_HEAD -> {
                 if (state == null) return
                 val skull = item.itemMeta as SkullMeta? ?: return // Generic player head?
-                val friend = skull.owningPlayer?.uniqueId.toString()
-                when (state.friendSearchState) {
-                    InventoryState.FriendSearchState.FRIEND_SEARCH -> {
-                        if (state.block == null) return
-                        val doubleChest = getDoubleChest(state.block, player.world)
-                        applyChanges(state.block, player, exit = true) {
-                            it.modifyFriends(
-                                player.uniqueId.toString(),
-                                friend,
-                                FriendModifyAction.ADD_FRIEND,
-                                if (doubleChest != null) NBTTileEntity(doubleChest) else null
-                            )
-                        }
-                    }
-                    InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
-                        modifyFriends(player, exit = true) {
-                            it.add(friend)
-                        }
-                    }
-                }
+                val friend = skull.owningPlayer ?: return
+                modifyFriendsForAction(state, player, friend, FriendModifyAction.ADD_FRIEND, exit = true)
             }
             Material.MAP -> {
                 FriendSearchInventory.openAnvilInventory(player)

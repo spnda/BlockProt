@@ -66,6 +66,8 @@ object FriendRemoveInventory : BlockProtInventory {
                 }
             }
             else -> {
+                player.closeInventory()
+                InventoryState.remove(player.uniqueId)
             }
         }
         event.isCancelled = true

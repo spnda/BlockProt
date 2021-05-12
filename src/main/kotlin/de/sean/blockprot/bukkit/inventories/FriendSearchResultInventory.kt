@@ -77,10 +77,9 @@ object FriendSearchResultInventory : BlockProtInventory {
                     }
                 }
             }
-            Material.BARRIER -> {
-                player.closeInventory()
-            }
             else -> {
+                player.closeInventory()
+                InventoryState.remove(player.uniqueId)
             }
         }
         event.isCancelled = true

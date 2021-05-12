@@ -24,7 +24,10 @@ interface BlockProtInventory {
         val currentFriendList = LockUtil.parseStringList(playerNBT.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE)).toMutableList()
         modify(currentFriendList)
         playerNBT.setString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE, currentFriendList.toString())
-        if (exit) player.closeInventory()
+        if (exit) {
+            player.closeInventory()
+            InventoryState.remove(player.uniqueId)
+        }
     }
 
     /**
@@ -38,7 +41,10 @@ interface BlockProtInventory {
             LockUtil.applyToDoor(handler, handler.block)
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, *TextComponent.fromLegacyText(ret.message))
         }
-        if (exit) player.closeInventory()
+        if (exit) {
+            player.closeInventory()
+            InventoryState.remove(player.uniqueId)
+        }
     }
 
     /**

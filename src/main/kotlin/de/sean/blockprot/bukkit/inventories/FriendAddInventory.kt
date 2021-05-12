@@ -67,6 +67,8 @@ object FriendAddInventory : BlockProtInventory {
                 FriendSearchInventory.openAnvilInventory(player)
             }
             else -> {
+                player.closeInventory()
+                InventoryState.remove(player.uniqueId)
             }
         }
         event.isCancelled = true

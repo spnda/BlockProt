@@ -61,8 +61,9 @@ object UserSettingsInventory : BlockProtInventory {
                 player.closeInventory()
                 player.openInventory(inv)
             }
-            Material.BLACK_STAINED_GLASS_PANE -> player.closeInventory()
-            else -> {
+            else -> { // This also includes Material.BLACK_STAINED_GLASS_PANE
+                player.closeInventory()
+                InventoryState.remove(player.uniqueId)
             }
         }
         event.isCancelled = true

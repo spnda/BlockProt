@@ -83,8 +83,10 @@ object BlockLockInventory : BlockProtInventory {
                 inv = BlockInfoInventory.createInventoryAndFill(player, BlockLockHandler(block))
                 player.openInventory(inv)
             }
-            Material.BLACK_STAINED_GLASS_PANE -> player.closeInventory()
-            else -> player.closeInventory()
+            else -> { // This also includes Material.BLACK_STAINED_GLASS_PANE
+                player.closeInventory()
+                InventoryState.remove(player.uniqueId)
+            }
         }
     }
 

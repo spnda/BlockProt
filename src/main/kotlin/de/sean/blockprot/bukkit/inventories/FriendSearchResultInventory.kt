@@ -71,10 +71,9 @@ object FriendSearchResultInventory : BlockProtInventory {
                         }
                     }
                     InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
-                        modifyFriends(player) {
+                        modifyFriends(player, exit = true) {
                             it.add(friend.uniqueId.toString())
                         }
-                        player.closeInventory()
                     }
                 }
             }

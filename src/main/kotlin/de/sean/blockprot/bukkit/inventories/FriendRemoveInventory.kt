@@ -59,10 +59,9 @@ object FriendRemoveInventory : BlockProtInventory {
                         }
                     }
                     InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
-                        modifyFriends(player) {
+                        modifyFriends(player, exit = true) {
                             it.remove(friend.uniqueId.toString())
                         }
-                        player.closeInventory()
                     }
                 }
             }

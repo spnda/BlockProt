@@ -1,5 +1,6 @@
 package de.sean.blockprot.bukkit.inventories
 
+import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.FriendModifyAction
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.tr7zw.nbtapi.NBTTileEntity
@@ -31,5 +32,23 @@ interface BlockFriendModifyInventory : BlockProtInventory {
                 }
             }
         }
+    }
+
+    fun exitModifyInventory(player: Player, state: InventoryState) {
+        player.closeInventory()
+        val inv = when (state.friendSearchState) {
+            InventoryState.FriendSearchState.FRIEND_SEARCH -> {
+                if (state.block == null) return
+                BlockLockInventory.createInventoryAndFill(
+                    player,
+                    state.block.state.type,
+                    BlockLockHandler(state.block)
+                )
+            }
+            InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
+                UserSettingsInventory.createInventoryAndFill(player)
+            }
+        }
+        player.openInventory(inv)
     }
 }

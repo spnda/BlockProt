@@ -3,7 +3,6 @@ package de.sean.blockprot.bukkit.inventories
 import de.sean.blockprot.BlockProt
 import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
-import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.FriendModifyAction
 import de.sean.blockprot.util.ItemUtil
 import org.bukkit.Bukkit
@@ -23,21 +22,7 @@ object FriendRemoveInventory : BlockFriendModifyInventory {
         when (item.type) {
             Material.BLACK_STAINED_GLASS_PANE -> {
                 if (state == null) return
-                player.closeInventory()
-                val inv = when (state.friendSearchState) {
-                    InventoryState.FriendSearchState.FRIEND_SEARCH -> {
-                        if (state.block == null) return
-                        BlockLockInventory.createInventoryAndFill(
-                            player,
-                            state.block.state.type,
-                            BlockLockHandler(state.block)
-                        )
-                    }
-                    InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
-                        UserSettingsInventory.createInventoryAndFill(player)
-                    }
-                }
-                player.openInventory(inv)
+                exitModifyInventory(player, state)
             }
             Material.PLAYER_HEAD -> {
                 if (state == null) return

@@ -6,8 +6,6 @@ authors: [ spnda ]
 description: A simple block protection plugin
 prefix: BlockProt
 website: https://www.github.com/spnda/BukkitPlugins
-depend:
-  - NBTAPI
 permissions:
   blockprot.lock:
     description: Allows a player to lock blocks

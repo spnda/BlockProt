@@ -57,10 +57,7 @@ jar {
 shadowJar {
     archiveFileName = "${project.name}-${project.plugin_version}-${getArchiveClassifier().get()}.jar"
 
-    dependencies {
-        exclude(dependency("de.tr7zw:.*:.*"))
-    }
-
+    relocate 'de.tr7zw', 'de.sean.blockprot.nbtapi'
     relocate 'org.bstats', 'de.sean.blockprot.metrics'
 }
 

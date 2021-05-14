@@ -25,6 +25,7 @@ object LockUtil {
     const val PERMISSION_LOCK = "blockprot.lock"
     const val PERMISSION_INFO = "blockprot.info"
     const val PERMISSION_ADMIN = "blockprot.admin"
+    const val PERMISSION_BYPASS = "blockprot.bypass"
 
     /**
      * A list of *all* lockable tile entities.

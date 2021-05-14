@@ -90,7 +90,7 @@ open class InteractEvent : Listener {
                     // The user right clicked and is trying to access the container
                     if (event.clickedBlock != null) {
                         val handler = BlockLockHandler(event.clickedBlock as Block)
-                        if (!handler.canAccess(player.uniqueId.toString())) {
+                        if (!(handler.canAccess(player.uniqueId.toString()) || player.hasPermission(LockUtil.PERMISSION_BYPASS))) {
                             event.isCancelled = true
                             player.spigot().sendMessage(
                                 ChatMessageType.ACTION_BAR,

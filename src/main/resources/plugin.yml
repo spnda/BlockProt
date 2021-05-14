@@ -13,6 +13,8 @@ permissions:
     description: Allows a player to view info on any locked blocks
   blockprot.admin:
     description: Allows a player to unlock and edit other blocks that do not belong to them
+  blockprot.bypass:
+    description: Allows a player to bypass any protection, effectively having access to every block.
 commands:
   blockprot:
     description: The main blockprot command

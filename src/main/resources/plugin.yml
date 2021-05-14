@@ -8,12 +8,16 @@ prefix: BlockProt
 website: https://www.github.com/spnda/BukkitPlugins
 permissions:
   blockprot.lock:
+    default: true
     description: Allows a player to lock blocks
   blockprot.info:
+    default: op
     description: Allows a player to view info on any locked blocks
   blockprot.admin:
+    default: false
     description: Allows a player to unlock and edit other blocks that do not belong to them
   blockprot.bypass:
+    default: false
     description: Allows a player to bypass any protection, effectively having access to every block.
 commands:
   blockprot:

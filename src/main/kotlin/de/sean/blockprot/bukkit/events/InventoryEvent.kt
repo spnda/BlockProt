@@ -5,14 +5,8 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.inventory.InventoryCloseEvent
 
 class InventoryEvent : Listener {
-    @EventHandler
-    fun onInventoryClose(event: InventoryCloseEvent?) {
-        // SLockUtil.lock.remove(event.getPlayer().getUniqueId().toString());
-    }
-
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
         val player = event.whoClicked as Player

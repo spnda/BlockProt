@@ -73,7 +73,7 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                     val friends = parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
                     handler.setAccess(friends)
                     if (LockUtil.disallowRedstoneOnPlace()) {
-                        handler.setRedstone(true)
+                        handler.setRedstone(redstone = false)
                     }
                 }
             }
@@ -88,7 +88,7 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                         if (LockUtil.shouldLockOnPlace(event.player)) playerUuid else ""
                     )
                     if (LockUtil.disallowRedstoneOnPlace()) {
-                        handler.setRedstone(true)
+                        handler.setRedstone(redstone = false)
                     }
                 }
             }

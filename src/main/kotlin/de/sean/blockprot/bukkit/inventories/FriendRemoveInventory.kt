@@ -5,6 +5,7 @@ import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.FriendModifyAction
 import de.sean.blockprot.util.ItemUtil
+import de.sean.blockprot.util.setBackButton
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -13,7 +14,7 @@ import org.bukkit.inventory.Inventory
 import java.util.*
 
 object FriendRemoveInventory : BlockFriendModifyInventory {
-    override val size = 9 * 3
+    override val size = InventoryConstants.tripleLine
     override val inventoryName: String = Translator.get(TranslationKey.INVENTORIES__FRIENDS__REMOVE)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
@@ -48,19 +49,12 @@ object FriendRemoveInventory : BlockFriendModifyInventory {
             inv.setItem(i, ItemUtil.getItemStack(1, Material.SKELETON_SKULL, offlinePlayer.name))
             state.friendResultCache.add(offlinePlayer)
         }
-        inv.setItem(
-            9 * 3 - 1,
-            ItemUtil.getItemStack(
-                1,
-                Material.BLACK_STAINED_GLASS_PANE,
-                Translator.get(TranslationKey.INVENTORIES__BACK)
-            )
-        )
+        inv.setBackButton()
 
         // Get the skulls asynchronously and add them one after each other.
         Bukkit.getScheduler().runTaskAsynchronously(BlockProt.instance) { _ ->
             var i = 0
-            while (i < 9 * 3 - 2 && i < state.friendResultCache.size) {
+            while (i < InventoryConstants.tripleLine - 2 && i < state.friendResultCache.size) {
                 val skull = ItemUtil.getPlayerSkull(state.friendResultCache[i])
                 inv.setItem(i, skull)
                 i++

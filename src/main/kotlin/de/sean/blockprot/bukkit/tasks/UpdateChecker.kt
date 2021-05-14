@@ -2,6 +2,7 @@ package de.sean.blockprot.bukkit.tasks
 
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
+import de.sean.blockprot.BlockProt
 import de.sean.blockprot.util.BlockProtMessenger
 import de.sean.blockprot.util.SemanticVersion
 import net.md_5.bungee.api.chat.ClickEvent
@@ -38,7 +39,7 @@ class UpdateChecker(private val receivingPlayers: List<Player>, private val desc
                     log("${description.name} is up to date. (${latest.currentVersion}).", false, BlockProtMessenger.LogSeverity.LOG)
             }
         } catch (e: IOException) {
-            e.printStackTrace()
+            BlockProt.instance.logger.warning(e.toString())
             return
         }
     }

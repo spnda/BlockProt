@@ -6,6 +6,7 @@ import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
 import de.sean.blockprot.util.ItemUtil
+import de.sean.blockprot.util.setBackButton
 import de.tr7zw.nbtapi.NBTTileEntity
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -15,7 +16,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 
 object BlockLockInventory : BlockProtInventory {
-    override val size = 9 * 1
+    override val size = InventoryConstants.singleLine
     override val inventoryName = Translator.get(TranslationKey.INVENTORIES__BLOCK_LOCK)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
@@ -132,7 +133,7 @@ object BlockLockInventory : BlockProtInventory {
             player.hasPermission(LockUtil.PERMISSION_ADMIN)
         ) {
             inv.setItem(
-                7,
+                InventoryConstants.lineLength - 2,
                 ItemUtil.getItemStack(
                     1,
                     Material.OAK_SIGN,
@@ -140,14 +141,7 @@ object BlockLockInventory : BlockProtInventory {
                 )
             )
         }
-        inv.setItem(
-            8,
-            ItemUtil.getItemStack(
-                1,
-                Material.BLACK_STAINED_GLASS_PANE,
-                Translator.get(TranslationKey.INVENTORIES__BACK)
-            )
-        )
+        inv.setBackButton()
         return inv
     }
 }

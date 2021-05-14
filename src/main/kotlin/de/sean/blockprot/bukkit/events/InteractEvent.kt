@@ -3,13 +3,14 @@ package de.sean.blockprot.bukkit.events
 import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.inventories.BlockLockInventory
+import de.sean.blockprot.bukkit.inventories.InventoryConstants
 import de.sean.blockprot.bukkit.inventories.InventoryState
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.util.ItemUtil.getItemStack
+import de.sean.blockprot.util.setBackButton
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
-import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -67,14 +68,7 @@ open class InteractEvent : Listener {
                                     i++
                                 }
                             }
-                            inv.setItem(
-                                8,
-                                getItemStack(
-                                    1,
-                                    Material.BLACK_STAINED_GLASS_PANE,
-                                    Translator.get(TranslationKey.INVENTORIES__BACK)
-                                )
-                            )
+                            inv.setBackButton(InventoryConstants.lineLength - 1)
                             player.openInventory(inv)
                         }
                     } else {

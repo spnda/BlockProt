@@ -53,7 +53,7 @@ class BlockLockHandler constructor(val block: Block) {
         if (isProtected()) (getOwner() == player || getAccess().contains(player)) else getOwner().isEmpty()
 
     fun lockBlock(player: Player, isOp: Boolean, doubleChest: NBTTileEntity?): LockReturnValue {
-        var owner = container.getString(OWNER_ATTRIBUTE) ?: ""
+        var owner = getOwner()
         val playerUuid = player.uniqueId.toString()
         if (owner.isEmpty()) {
             // This block is not owned by anyone, this user can claim this block
@@ -61,12 +61,11 @@ class BlockLockHandler constructor(val block: Block) {
             container.setString(OWNER_ATTRIBUTE, owner)
             doubleChest?.persistentDataContainer?.setString(OWNER_ATTRIBUTE, owner)
             return LockReturnValue(true, Translator.get(TranslationKey.MESSAGES__PERMISSION_GRANTED))
-        } else if ((owner == playerUuid) ||
+        } else if (isOwner(playerUuid) ||
             (isOp && owner.isNotEmpty()) ||
             player.hasPermission(LockUtil.PERMISSION_ADMIN)
         ) {
-            container.setString(OWNER_ATTRIBUTE, "")
-            container.setString(LOCK_ATTRIBUTE, "") // Also clear the friends
+            setOwner(""); setAccess(emptyList())
             doubleChest?.persistentDataContainer?.setString(OWNER_ATTRIBUTE, "")
             doubleChest?.persistentDataContainer?.setString(LOCK_ATTRIBUTE, "") // Also clear the friends
             return LockReturnValue(true, Translator.get(TranslationKey.MESSAGES__UNLOCKED))

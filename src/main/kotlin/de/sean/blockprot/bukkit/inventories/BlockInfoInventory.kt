@@ -5,6 +5,7 @@ import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.util.ItemUtil
+import de.sean.blockprot.util.setBackButton
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -13,7 +14,7 @@ import org.bukkit.inventory.Inventory
 import java.util.*
 
 object BlockInfoInventory : BlockProtInventory {
-    override val size = 9 * 3
+    override val size = InventoryConstants.tripleLine
     override val inventoryName = Translator.get(TranslationKey.INVENTORIES__BLOCK_INFO)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
@@ -38,9 +39,9 @@ object BlockInfoInventory : BlockProtInventory {
 
         inv.clear()
         state.friendResultCache.clear()
-        for (i in 0..(access.size - 1).coerceAtMost(9 * 2)) { // Maximum of 2 lines of skulls
+        for (i in 0..(access.size - 1).coerceAtMost(InventoryConstants.doubleLine)) { // Maximum of 2 lines of skulls
             val offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(access[i]))
-            inv.setItem(9 + i, ItemUtil.getItemStack(1, Material.SKELETON_SKULL, offlinePlayer.name))
+            inv.setItem(InventoryConstants.lineLength + i, ItemUtil.getItemStack(1, Material.SKELETON_SKULL, offlinePlayer.name))
             state.friendResultCache.add(offlinePlayer)
         }
 
@@ -57,20 +58,13 @@ object BlockInfoInventory : BlockProtInventory {
                 else Translator.get(TranslationKey.INVENTORIES__REDSTONE__DISALLOWED)
             )
         )
-        inv.setItem(
-            8,
-            ItemUtil.getItemStack(
-                1,
-                Material.BLACK_STAINED_GLASS_PANE,
-                Translator.get(TranslationKey.INVENTORIES__BACK)
-            )
-        )
+        inv.setBackButton(InventoryConstants.lineLength - 1)
 
         Bukkit.getScheduler().runTaskAsynchronously(BlockProt.instance) { _ ->
             var i = 0
-            while (i < 9 * 2 && i < state.friendResultCache.size) {
+            while (i < InventoryConstants.doubleLine && i < state.friendResultCache.size) {
                 val skull = ItemUtil.getPlayerSkull(state.friendResultCache[i])
-                inv.setItem(9 + i, skull)
+                inv.setItem(InventoryConstants.lineLength + i, skull)
                 i++
             }
         }

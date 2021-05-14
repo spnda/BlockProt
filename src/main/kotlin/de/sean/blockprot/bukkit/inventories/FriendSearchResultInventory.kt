@@ -8,6 +8,7 @@ import de.sean.blockprot.bukkit.nbt.FriendModifyAction
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.nbt.LockUtil.parseStringList
 import de.sean.blockprot.util.ItemUtil
+import de.sean.blockprot.util.setBackButton
 import de.tr7zw.nbtapi.NBTEntity
 import org.apache.commons.lang.StringUtils
 import org.bukkit.Bukkit
@@ -17,7 +18,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 
 object FriendSearchResultInventory : BlockFriendModifyInventory {
-    override val size = 9 * 3
+    override val size = InventoryConstants.tripleLine
     override val inventoryName = Translator.get(TranslationKey.INVENTORIES__FRIENDS__RESULT)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
@@ -120,7 +121,7 @@ object FriendSearchResultInventory : BlockFriendModifyInventory {
         // the inventory has been opened and later add them to the inventory. In the meantime,
         // we'll show the same amount of skeleton heads.
         val inv = createInventory()
-        val maxPlayers = players.size.coerceAtMost(9 * 3 - 2)
+        val maxPlayers = players.size.coerceAtMost(InventoryConstants.tripleLine - 2)
         for (i in 0 until maxPlayers) {
             inv.setItem(i, ItemUtil.getItemStack(1, Material.SKELETON_SKULL, players[i].name))
         }
@@ -133,10 +134,7 @@ object FriendSearchResultInventory : BlockFriendModifyInventory {
                 playersIndex += 1
             }
         }
-        inv.setItem(
-            9 * 3 - 1,
-            ItemUtil.getItemStack(1, Material.BLACK_STAINED_GLASS_PANE, Translator.get(TranslationKey.INVENTORIES__BACK), null)
-        )
+        inv.setBackButton()
         return inv
     }
 }

@@ -4,6 +4,7 @@ import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.FriendModifyAction
 import de.sean.blockprot.util.ItemUtil
+import de.sean.blockprot.util.setBackButton
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -11,7 +12,7 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.meta.SkullMeta
 
 object FriendAddInventory : BlockFriendModifyInventory {
-    override val size = 9 * 3
+    override val size = InventoryConstants.tripleLine
     override val inventoryName = Translator.get(TranslationKey.INVENTORIES__FRIENDS__ADD)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
@@ -51,26 +52,19 @@ object FriendAddInventory : BlockFriendModifyInventory {
     fun createInventoryAndFill(friendsToAdd: MutableList<Player>): Inventory {
         val inv = createInventory()
         var i = 0
-        while (i < 9 * 3 - 3 && i < friendsToAdd.size) {
+        while (i < InventoryConstants.tripleLine - 3 && i < friendsToAdd.size) {
             inv.setItem(i, ItemUtil.getPlayerSkull(friendsToAdd[i]))
             i++
         }
         inv.setItem(
-            9 * 3 - 2,
+            InventoryConstants.tripleLine - 2,
             ItemUtil.getItemStack(
                 1,
                 Material.MAP,
                 Translator.get(TranslationKey.INVENTORIES__FRIENDS__SEARCH)
             )
         )
-        inv.setItem(
-            9 * 3 - 1,
-            ItemUtil.getItemStack(
-                1,
-                Material.BLACK_STAINED_GLASS_PANE,
-                Translator.get(TranslationKey.INVENTORIES__BACK)
-            )
-        )
+        inv.setBackButton()
         return inv
     }
 }

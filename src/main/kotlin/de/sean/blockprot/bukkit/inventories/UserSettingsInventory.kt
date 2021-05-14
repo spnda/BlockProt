@@ -5,6 +5,7 @@ import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.util.ItemUtil
 import de.sean.blockprot.util.setBackButton
+import de.sean.blockprot.util.setItemStack
 import de.tr7zw.nbtapi.NBTEntity
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -74,30 +75,21 @@ object UserSettingsInventory : BlockProtInventory {
         val inv = createInventory()
         val nbtEntity = NBTEntity(player).persistentDataContainer
         val lockOnPlace = nbtEntity.getBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE)
-        inv.setItem(
+        inv.setItemStack(
             0,
-            ItemUtil.getItemStack(
-                1,
-                Material.BARRIER,
-                if (lockOnPlace) Translator.get(TranslationKey.INVENTORIES__LOCK_ON_PLACE__DEACTIVATE)
-                else Translator.get(TranslationKey.INVENTORIES__LOCK_ON_PLACE__ACTIVATE)
-            )
+            Material.BARRIER,
+            if (lockOnPlace) TranslationKey.INVENTORIES__LOCK_ON_PLACE__DEACTIVATE
+            else TranslationKey.INVENTORIES__LOCK_ON_PLACE__ACTIVATE
         )
-        inv.setItem(
+        inv.setItemStack(
             1,
-            ItemUtil.getItemStack(
-                1,
-                Material.PLAYER_HEAD,
-                Translator.get(TranslationKey.INVENTORIES__FRIENDS__ADD)
-            )
+            Material.PLAYER_HEAD,
+            TranslationKey.INVENTORIES__FRIENDS__ADD
         )
-        inv.setItem(
+        inv.setItemStack(
             2,
-            ItemUtil.getItemStack(
-                1,
-                Material.ZOMBIE_HEAD,
-                Translator.get(TranslationKey.INVENTORIES__FRIENDS__REMOVE)
-            )
+            Material.ZOMBIE_HEAD,
+            TranslationKey.INVENTORIES__FRIENDS__REMOVE
         )
         inv.setBackButton()
         return inv

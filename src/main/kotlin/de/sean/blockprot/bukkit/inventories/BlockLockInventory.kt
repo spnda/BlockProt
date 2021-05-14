@@ -5,8 +5,8 @@ import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
-import de.sean.blockprot.util.ItemUtil
 import de.sean.blockprot.util.setBackButton
+import de.sean.blockprot.util.setItemStack
 import de.tr7zw.nbtapi.NBTTileEntity
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -51,14 +51,11 @@ object BlockLockInventory : BlockProtInventory {
                     redstone = it.getRedstone()
                     return@applyChanges ret
                 }
-                event.inventory.setItem(
+                event.inventory.setItemStack(
                     1,
-                    ItemUtil.getItemStack(
-                        1,
-                        if (redstone) Material.REDSTONE else Material.GUNPOWDER,
-                        if (redstone) Translator.get(TranslationKey.INVENTORIES__REDSTONE__DISALLOW)
-                        else Translator.get(TranslationKey.INVENTORIES__REDSTONE__ALLOW)
-                    )
+                    if (redstone) Material.REDSTONE else Material.GUNPOWDER,
+                    if (redstone) TranslationKey.INVENTORIES__REDSTONE__DISALLOW
+                    else TranslationKey.INVENTORIES__REDSTONE__ALLOW
                 )
                 event.isCancelled = true
             }
@@ -97,54 +94,44 @@ object BlockLockInventory : BlockProtInventory {
         val owner = handler.getOwner()
         val redstone = handler.getRedstone()
         if (owner.isEmpty()) {
-            inv.setItem(
+            inv.setItemStack(
                 0,
-                ItemUtil.getItemStack(1, material, Translator.get(TranslationKey.INVENTORIES__LOCK))
+                material,
+                TranslationKey.INVENTORIES__LOCK
             )
         } else if (owner == playerUuid || player.hasPermission(LockUtil.PERMISSION_ADMIN)) {
-            inv.setItem(
+            inv.setItemStack(
                 0,
-                ItemUtil.getItemStack(1, material, Translator.get(TranslationKey.INVENTORIES__UNLOCK))
+                material,
+                TranslationKey.INVENTORIES__UNLOCK
             )
         }
         if (owner == playerUuid) {
-            inv.setItem(
+            inv.setItemStack(
                 1,
-                ItemUtil.getItemStack(
-                    1,
-                    if (redstone) Material.REDSTONE else Material.GUNPOWDER,
-                    if (redstone) Translator.get(TranslationKey.INVENTORIES__REDSTONE__DISALLOW)
-                    else Translator.get(TranslationKey.INVENTORIES__REDSTONE__ALLOW)
-                )
+                if (redstone) Material.REDSTONE else Material.GUNPOWDER,
+                if (redstone) TranslationKey.INVENTORIES__REDSTONE__DISALLOW
+                else TranslationKey.INVENTORIES__REDSTONE__ALLOW
             )
-            inv.setItem(
+            inv.setItemStack(
                 2,
-                ItemUtil.getItemStack(
-                    1,
-                    Material.PLAYER_HEAD,
-                    Translator.get(TranslationKey.INVENTORIES__FRIENDS__ADD)
-                )
+                Material.PLAYER_HEAD,
+                TranslationKey.INVENTORIES__FRIENDS__ADD
             )
-            inv.setItem(
+            inv.setItemStack(
                 3,
-                ItemUtil.getItemStack(
-                    1,
-                    Material.ZOMBIE_HEAD,
-                    Translator.get(TranslationKey.INVENTORIES__FRIENDS__REMOVE)
-                )
+                Material.ZOMBIE_HEAD,
+                TranslationKey.INVENTORIES__FRIENDS__REMOVE
             )
         }
         if (player.isOp ||
             player.hasPermission(LockUtil.PERMISSION_INFO) ||
             player.hasPermission(LockUtil.PERMISSION_ADMIN)
         ) {
-            inv.setItem(
+            inv.setItemStack(
                 InventoryConstants.lineLength - 2,
-                ItemUtil.getItemStack(
-                    1,
-                    Material.OAK_SIGN,
-                    Translator.get(TranslationKey.INVENTORIES__BLOCK_INFO)
-                )
+                Material.OAK_SIGN,
+                TranslationKey.INVENTORIES__BLOCK_INFO
             )
         }
         inv.setBackButton()

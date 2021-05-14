@@ -5,6 +5,7 @@ import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.FriendModifyAction
 import de.sean.blockprot.util.ItemUtil
 import de.sean.blockprot.util.setBackButton
+import de.sean.blockprot.util.setItemStack
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -56,13 +57,10 @@ object FriendAddInventory : BlockFriendModifyInventory {
             inv.setItem(i, ItemUtil.getPlayerSkull(friendsToAdd[i]))
             i++
         }
-        inv.setItem(
+        inv.setItemStack(
             InventoryConstants.tripleLine - 2,
-            ItemUtil.getItemStack(
-                1,
-                Material.MAP,
-                Translator.get(TranslationKey.INVENTORIES__FRIENDS__SEARCH)
-            )
+            Material.MAP,
+            TranslationKey.INVENTORIES__FRIENDS__SEARCH
         )
         inv.setBackButton()
         return inv

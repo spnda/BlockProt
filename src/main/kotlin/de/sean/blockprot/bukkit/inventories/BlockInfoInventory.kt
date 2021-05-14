@@ -6,6 +6,7 @@ import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.util.ItemUtil
 import de.sean.blockprot.util.setBackButton
+import de.sean.blockprot.util.setItemStack
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -41,7 +42,10 @@ object BlockInfoInventory : BlockProtInventory {
         state.friendResultCache.clear()
         for (i in 0..(access.size - 1).coerceAtMost(InventoryConstants.doubleLine)) { // Maximum of 2 lines of skulls
             val offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(access[i]))
-            inv.setItem(InventoryConstants.lineLength + i, ItemUtil.getItemStack(1, Material.SKELETON_SKULL, offlinePlayer.name))
+            inv.setItem(
+                InventoryConstants.lineLength + i,
+                ItemUtil.getItemStack(1, Material.SKELETON_SKULL, offlinePlayer.name)
+            )
             state.friendResultCache.add(offlinePlayer)
         }
 
@@ -49,14 +53,11 @@ object BlockInfoInventory : BlockProtInventory {
             0,
             ItemUtil.getPlayerSkull(Bukkit.getOfflinePlayer(UUID.fromString(owner)))
         )
-        inv.setItem(
+        inv.setItemStack(
             1,
-            ItemUtil.getItemStack(
-                1,
-                if (redstone) Material.REDSTONE else Material.GUNPOWDER,
-                if (redstone) Translator.get(TranslationKey.INVENTORIES__REDSTONE__ALLOWED)
-                else Translator.get(TranslationKey.INVENTORIES__REDSTONE__DISALLOWED)
-            )
+            if (redstone) Material.REDSTONE else Material.GUNPOWDER,
+            if (redstone) TranslationKey.INVENTORIES__REDSTONE__ALLOWED
+            else TranslationKey.INVENTORIES__REDSTONE__DISALLOWED
         )
         inv.setBackButton(InventoryConstants.lineLength - 1)
 

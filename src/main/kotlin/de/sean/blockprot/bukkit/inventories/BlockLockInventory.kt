@@ -38,7 +38,6 @@ object BlockLockInventory : BlockProtInventory {
                         if (doubleChest != null) NBTTileEntity(doubleChest) else null
                     )
                 }
-                event.isCancelled = true
             }
             Material.REDSTONE, Material.GUNPOWDER -> {
                 val doubleChest = getDoubleChest(block, player.world)
@@ -57,7 +56,6 @@ object BlockLockInventory : BlockProtInventory {
                     if (redstone) TranslationKey.INVENTORIES__REDSTONE__DISALLOW
                     else TranslationKey.INVENTORIES__REDSTONE__ALLOW
                 )
-                event.isCancelled = true
             }
             Material.PLAYER_HEAD -> {
                 handler = BlockLockHandler(block)
@@ -66,7 +64,6 @@ object BlockLockInventory : BlockProtInventory {
                 inv = FriendAddInventory.createInventoryAndFill(friendsToAdd)
                 player.closeInventory()
                 player.openInventory(inv)
-                event.isCancelled = true
             }
             Material.ZOMBIE_HEAD -> {
                 handler = BlockLockHandler(block)
@@ -74,7 +71,6 @@ object BlockLockInventory : BlockProtInventory {
                 inv = FriendRemoveInventory.createInventoryAndFill(player, friends)
                 player.closeInventory()
                 player.openInventory(inv)
-                event.isCancelled = true
             }
             Material.OAK_SIGN -> {
                 player.closeInventory()
@@ -86,6 +82,7 @@ object BlockLockInventory : BlockProtInventory {
                 InventoryState.remove(player.uniqueId)
             }
         }
+        event.isCancelled = true
     }
 
     fun createInventoryAndFill(player: Player, material: Material, handler: BlockLockHandler): Inventory {

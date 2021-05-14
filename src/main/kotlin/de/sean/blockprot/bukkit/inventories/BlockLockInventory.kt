@@ -96,11 +96,17 @@ object BlockLockInventory : BlockProtInventory {
         val playerUuid = player.uniqueId.toString()
         val owner = handler.getOwner()
         val redstone = handler.getRedstone()
-        if (owner == playerUuid || player.isOp || player.hasPermission(LockUtil.PERMISSION_ADMIN))
+        if (owner.isEmpty()) {
+            inv.setItem(
+                0,
+                ItemUtil.getItemStack(1, material, Translator.get(TranslationKey.INVENTORIES__LOCK))
+            )
+        } else if (owner == playerUuid || player.hasPermission(LockUtil.PERMISSION_ADMIN)) {
             inv.setItem(
                 0,
                 ItemUtil.getItemStack(1, material, Translator.get(TranslationKey.INVENTORIES__UNLOCK))
             )
+        }
         if (owner == playerUuid) {
             inv.setItem(
                 1,

@@ -29,7 +29,6 @@ object UserSettingsInventory : BlockProtInventory {
                     LockUtil.LOCK_ON_PLACE_ATTRIBUTE,
                     lockOnPlace
                 )
-                Bukkit.getLogger().info(lockOnPlace.toString())
                 event.inventory.setItem(
                     0,
                     ItemUtil.getItemStack(

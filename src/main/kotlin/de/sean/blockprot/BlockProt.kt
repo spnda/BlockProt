@@ -2,9 +2,12 @@ package de.sean.blockprot
 
 import de.sean.blockprot.bukkit.commands.BlockProtCommand
 import de.sean.blockprot.bukkit.events.*
+import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.tasks.UpdateChecker
+import de.tr7zw.nbtapi.utils.MinecraftVersion
 import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.command.TabExecutor
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.event.Listener
@@ -37,8 +40,63 @@ class BlockProt : JavaPlugin() {
         Translator.init(config)
     }
 
+    /**
+     * Get a list of [Material]s for a list of [String]s. This checks all values
+     * in the [Material] enum and returns the materials which name is included in
+     * the list of strings.
+     */
+    private fun <T : Enum<*>> loadEnumValuesFromStrings(values: Array<T>, strings: List<String>): Set<T> {
+        val ret = mutableSetOf<T>()
+        for (value in values) {
+            if (strings.contains(value.name)) ret.add(value)
+        }
+        return ret
+    }
+
+    /**
+     * Loads all the different lists from the config.yml file and adds
+     * them to the various lists in LockUtil.
+     */
+    private fun loadBlocksFromConfig() {
+        if (config.contains("lockable_tile_entities")) {
+            var tileEntities = config.getList("lockable_tile_entities")!!
+            tileEntities = tileEntities.filterIsInstance<String>()
+            val materials = loadEnumValuesFromStrings(Material.values(), tileEntities)
+            LockUtil.lockableTileEntities.addAll(materials)
+        }
+
+        if (config.contains("lockable_shulker_boxes")) {
+            var shulkerBoxes = config.getList("lockable_shulker_boxes")!!
+            shulkerBoxes = shulkerBoxes.filterIsInstance<String>()
+            val materials = loadEnumValuesFromStrings(Material.values(), shulkerBoxes)
+            LockUtil.shulkerBoxes.addAll(materials)
+        }
+
+        LockUtil.lockableTileEntities.addAll(LockUtil.shulkerBoxes)
+
+        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_16_R3)) {
+            if (config.contains("lockable_blocks")) {
+                var lockableBlocks = config.getList("lockable_blocks")!!
+                lockableBlocks = lockableBlocks.filterIsInstance<String>()
+                val materials = loadEnumValuesFromStrings(Material.values(), lockableBlocks)
+                LockUtil.lockableBlocks.addAll(materials)
+            }
+
+            if (config.contains("lockable_doors")) {
+                var lockableDoors = config.getList("lockable_doors")!!
+                lockableDoors = lockableDoors.filterIsInstance<String>()
+                val materials = loadEnumValuesFromStrings(Material.values(), lockableDoors)
+                LockUtil.lockableDoors.addAll(materials)
+            }
+
+            LockUtil.lockableBlocks.addAll(LockUtil.lockableDoors)
+        }
+    }
+
     override fun onEnable() {
         this.also { instance = it }.saveDefaultConfig()
+
+        loadBlocksFromConfig()
 
         /* Save all translation files into the plugin directory. */
         var languageFileName = config.get("language_file")

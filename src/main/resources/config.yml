@@ -14,3 +14,61 @@ notify_op_of_updates: false
 # If set to "true", redstone will be automatically disallowed on every
 # placed block, if the player has lock on place enabled.
 redstone_disallowed_by_default: false
+
+# Tile entities that should be locked. Tile entities are blocks
+# that can contain items.
+lockable_tile_entities:
+  - CHEST
+  - TRAPPED_CHEST
+  - FURNACE
+  - SMOKER
+  - BLAST_FURNACE
+  - HOPPER
+  - BARREL
+  - BREWING_STAND
+
+lockable_shulker_boxes:
+  - BLACK_SHULKER_BOX
+  - BLUE_SHULKER_BOX
+  - BROWN_SHULKER_BOX
+  - CYAN_SHULKER_BOX
+  - GRAY_SHULKER_BOX
+  - GREEN_SHULKER_BOX
+  - LIGHT_BLUE_SHULKER_BOX
+  - LIGHT_GRAY_SHULKER_BOX
+  - LIME_SHULKER_BOX
+  - MAGENTA_SHULKER_BOX
+  - ORANGE_SHULKER_BOX
+  - PINK_SHULKER_BOX
+  - PURPLE_SHULKER_BOX
+  - RED_SHULKER_BOX
+  - SHULKER_BOX
+  - WHITE_SHULKER_BOX
+  - YELLOW_SHULKER_BOX
+
+# Blocks that should be lockable.
+# This only works with Spigot 1.16.4 or higher.
+lockable_blocks:
+  - ANVIL
+  - CHIPPED_ANVIL
+  - DAMAGED_ANVIL
+  - ACACIA_FENCE_GATE
+  - BIRCH_FENCE_GATE
+  - CRIMSON_FENCE_GATE
+  - DARK_OAK_FENCE_GATE
+  - JUNGLE_FENCE_GATE
+  - OAK_FENCE_GATE
+  - SPRUCE_FENCE_GATE
+  - WARPED_FENCE_GATE
+
+# Doors are two blocks and are therefore handled differently.
+# This only works with Spigot 1.16.4 or higher.
+lockable_doors:
+  - ACACIA_DOOR
+  - BIRCH_DOOR
+  - CRIMSON_DOOR
+  - DARK_OAK_DOOR
+  - JUNGLE_DOOR
+  - OAK_DOOR
+  - SPRUCE_DOOR
+  - WARPED_DOOR

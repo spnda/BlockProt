@@ -43,13 +43,18 @@ class BlockProt : JavaPlugin() {
     /**
      * Get a list of [Material]s for a list of [String]s. This checks all values
      * in the [Material] enum and returns the materials which name is included in
-     * the list of strings.
+     * the list of strings. If some values in [strings] were not found in [values],
+     * a warning will be printed afterwards.
      */
-    private fun <T : Enum<*>> loadEnumValuesFromStrings(values: Array<T>, strings: List<String>): Set<T> {
+    private fun <T : Enum<*>> loadEnumValuesFromStrings(values: Array<T>, strings: MutableList<String>): Set<T> {
         val ret = mutableSetOf<T>()
         for (value in values) {
-            if (strings.contains(value.name)) ret.add(value)
+            if (strings.contains(value.name)) {
+                ret.add(value)
+                strings.remove(value.name)
+            }
         }
+        if (strings.isNotEmpty()) logger.warning("Could not map these values to enum: $strings")
         return ret
     }
 
@@ -61,14 +66,14 @@ class BlockProt : JavaPlugin() {
         if (config.contains("lockable_tile_entities")) {
             var tileEntities = config.getList("lockable_tile_entities")!!
             tileEntities = tileEntities.filterIsInstance<String>()
-            val materials = loadEnumValuesFromStrings(Material.values(), tileEntities)
+            val materials = loadEnumValuesFromStrings(Material.values(), tileEntities.toMutableList())
             LockUtil.lockableTileEntities.addAll(materials)
         }
 
         if (config.contains("lockable_shulker_boxes")) {
             var shulkerBoxes = config.getList("lockable_shulker_boxes")!!
             shulkerBoxes = shulkerBoxes.filterIsInstance<String>()
-            val materials = loadEnumValuesFromStrings(Material.values(), shulkerBoxes)
+            val materials = loadEnumValuesFromStrings(Material.values(), shulkerBoxes.toMutableList())
             LockUtil.shulkerBoxes.addAll(materials)
         }
 
@@ -78,14 +83,14 @@ class BlockProt : JavaPlugin() {
             if (config.contains("lockable_blocks")) {
                 var lockableBlocks = config.getList("lockable_blocks")!!
                 lockableBlocks = lockableBlocks.filterIsInstance<String>()
-                val materials = loadEnumValuesFromStrings(Material.values(), lockableBlocks)
+                val materials = loadEnumValuesFromStrings(Material.values(), lockableBlocks.toMutableList())
                 LockUtil.lockableBlocks.addAll(materials)
             }
 
             if (config.contains("lockable_doors")) {
                 var lockableDoors = config.getList("lockable_doors")!!
                 lockableDoors = lockableDoors.filterIsInstance<String>()
-                val materials = loadEnumValuesFromStrings(Material.values(), lockableDoors)
+                val materials = loadEnumValuesFromStrings(Material.values(), lockableDoors.toMutableList())
                 LockUtil.lockableDoors.addAll(materials)
             }
 

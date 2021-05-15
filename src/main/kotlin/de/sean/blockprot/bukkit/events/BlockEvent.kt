@@ -78,7 +78,7 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                 }
             }
             // We won't lock normal blocks on placing.
-            in LockUtil.lockableTileEntities -> {
+            in LockUtil.lockableTileEntities, in LockUtil.lockableBlocks -> {
                 val handler = BlockLockHandler(block)
                 // We only try to lock the block if it isn't locked already.
                 // Shulker boxes might already be locked, from previous placing.

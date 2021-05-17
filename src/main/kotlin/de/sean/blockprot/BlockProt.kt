@@ -40,6 +40,13 @@ class BlockProt : JavaPlugin() {
         Translator.init(config)
     }
 
+    private fun List<String>.containsIgnoreCase(value: String): Boolean {
+        for (item in this) {
+            if (item.equals(value, ignoreCase = true)) return true
+        }
+        return false
+    }
+
     /**
      * Get a list of [Material]s for a list of [String]s. This checks all values
      * in the [Material] enum and returns the materials which name is included in
@@ -49,7 +56,7 @@ class BlockProt : JavaPlugin() {
     private fun <T : Enum<*>> loadEnumValuesFromStrings(values: Array<T>, strings: MutableList<String>): Set<T> {
         val ret = mutableSetOf<T>()
         for (value in values) {
-            if (strings.contains(value.name)) {
+            if (strings.containsIgnoreCase(value.name)) {
                 ret.add(value)
                 strings.remove(value.name)
             }

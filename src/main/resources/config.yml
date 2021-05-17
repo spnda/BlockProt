@@ -16,7 +16,8 @@ notify_op_of_updates: false
 redstone_disallowed_by_default: false
 
 # Tile entities that should be locked. Tile entities are blocks
-# that can contain items.
+# that can contain items. You can find a detailed list of all
+# possible values at https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html.
 lockable_tile_entities:
   - CHEST
   - TRAPPED_CHEST
@@ -27,6 +28,7 @@ lockable_tile_entities:
   - BARREL
   - BREWING_STAND
 
+# All varieties of shulker boxes that should be lockable.
 lockable_shulker_boxes:
   - BLACK_SHULKER_BOX
   - BLUE_SHULKER_BOX

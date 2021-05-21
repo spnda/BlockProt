@@ -7,7 +7,7 @@ import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
 import de.sean.blockprot.util.setBackButton
 import de.sean.blockprot.util.setItemStack
-import de.tr7zw.nbtapi.NBTTileEntity
+import de.tr7zw.changeme.nbtapi.NBTTileEntity
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.block.Block

@@ -3,7 +3,7 @@ package de.sean.blockprot.bukkit.inventories
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.FriendModifyAction
 import de.sean.blockprot.bukkit.nbt.LockUtil
-import de.tr7zw.nbtapi.NBTTileEntity
+import de.tr7zw.changeme.nbtapi.NBTTileEntity
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 

@@ -8,9 +8,9 @@ import de.sean.blockprot.bukkit.nbt.LockUtil.LOCK_ATTRIBUTE
 import de.sean.blockprot.bukkit.nbt.LockUtil.OWNER_ATTRIBUTE
 import de.sean.blockprot.bukkit.nbt.LockUtil.REDSTONE_ATTRIBUTE
 import de.sean.blockprot.bukkit.nbt.LockUtil.parseStringList
-import de.tr7zw.nbtapi.NBTBlock
-import de.tr7zw.nbtapi.NBTCompound
-import de.tr7zw.nbtapi.NBTTileEntity
+import de.tr7zw.changeme.nbtapi.NBTBlock
+import de.tr7zw.changeme.nbtapi.NBTCompound
+import de.tr7zw.changeme.nbtapi.NBTTileEntity
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
 

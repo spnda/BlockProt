@@ -3,7 +3,7 @@ package de.sean.blockprot.bukkit.inventories
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockReturnValue
 import de.sean.blockprot.bukkit.nbt.LockUtil
-import de.tr7zw.nbtapi.NBTEntity
+import de.tr7zw.changeme.nbtapi.NBTEntity
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit

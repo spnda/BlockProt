@@ -4,7 +4,7 @@ import de.sean.blockprot.bukkit.commands.BlockProtCommand
 import de.sean.blockprot.bukkit.events.*
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.tasks.UpdateChecker
-import de.tr7zw.nbtapi.utils.MinecraftVersion
+import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion
 import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.Material

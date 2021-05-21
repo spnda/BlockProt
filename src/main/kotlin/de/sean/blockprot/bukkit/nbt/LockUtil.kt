@@ -1,7 +1,7 @@
 package de.sean.blockprot.bukkit.nbt
 
 import de.sean.blockprot.BlockProt
-import de.tr7zw.nbtapi.NBTEntity
+import de.tr7zw.changeme.nbtapi.NBTEntity
 import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.block.Block

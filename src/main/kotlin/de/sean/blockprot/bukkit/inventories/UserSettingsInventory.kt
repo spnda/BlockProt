@@ -6,7 +6,7 @@ import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.util.ItemUtil
 import de.sean.blockprot.util.setBackButton
 import de.sean.blockprot.util.setItemStack
-import de.tr7zw.nbtapi.NBTEntity
+import de.tr7zw.changeme.nbtapi.NBTEntity
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player

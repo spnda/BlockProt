@@ -4,9 +4,9 @@ import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.nbt.LockUtil.parseStringList
 import de.sean.blockprot.bukkit.tasks.DoubleChestLocker
-import de.tr7zw.nbtapi.NBTEntity
-import de.tr7zw.nbtapi.NBTItem
-import de.tr7zw.nbtapi.NBTTileEntity
+import de.tr7zw.changeme.nbtapi.NBTEntity
+import de.tr7zw.changeme.nbtapi.NBTItem
+import de.tr7zw.changeme.nbtapi.NBTTileEntity
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.event.EventHandler

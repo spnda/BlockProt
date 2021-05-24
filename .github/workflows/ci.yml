@@ -12,18 +12,15 @@ on:
 
 jobs:
   build:
-    name: BlockProt CI
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-20.04
+    container:
+      image: openjdk:16-jdk
+      options: --user root
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Set up JDK 16
-        uses: actions/setup-java@v2
-        with:
-          java-version: '16'
-          distribution: 'adopt'
+      - uses: gradle/wrapper-validation-action@v1
+      - id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       - name: Check for errors
         uses: github/super-linter@v3
         env:
@@ -32,3 +29,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build with Gradle
         run: ./gradlew build
+        env:
+          GIT_TAG: ${{ steps.vars.outputs.tag }}

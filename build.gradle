@@ -1,6 +1,12 @@
 import org.apache.tools.ant.filters.ReplaceTokens
+import org.kohsuke.github.GHReleaseBuilder
+import org.kohsuke.github.GitHub
 
 buildscript {
+    dependencies {
+        classpath 'org.kohsuke:github-api:1.129'
+    }
+
     repositories {
         maven {
             url "https://plugins.gradle.org/m2/"
@@ -9,26 +15,38 @@ buildscript {
 }
 
 plugins {
+    id 'java-library'
+    id 'application'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
     id 'org.jetbrains.kotlin.jvm' version '1.5.0'
-    id 'java'
-    id 'application'
+    id "com.matthewprenger.cursegradle" version "1.4.0"
+    id "org.ajoberstar.grgit" version "4.1.0"
 }
 
-static def gitTagName() {
-    def tag = ""
-    def proc = "git describe --tags --abbrev=0".execute()
-    proc.in.eachLine { line -> tag = line }
-    proc.waitFor()
-    return tag
+def ENV = System.getenv()
+
+def gitTagName() {
+    def ENV = System.getenv()
+    if (ENV.GIT_TAG) {
+        return ENV.GIT_TAG
+    } else {
+        return ""
+    }
 }
 
-static def gitBranchName() {
-    def branch = ""
-    def proc = "git rev-parse --abbrev-ref HEAD".execute()
-    proc.in.eachLine { line -> branch = line }
-    proc.waitFor()
-    return branch
+def gitBranchName() {
+    def ENV = System.getenv()
+    if (ENV.GITHUB_REF) {
+        def branch = ENV.GITHUB_REF
+        return branch.substring(branch.lastIndexOf("/") + 1)
+    }
+
+    if (grgit == null) {
+        return "unknown"
+    }
+
+    def branch = grgit.branch.current().name
+    return branch.substring(branch.lastIndexOf("/") + 1)
 }
 
 def version = "${project.name}-${gitTagName()}-${gitBranchName()}"
@@ -73,7 +91,7 @@ jar {
 }
 
 shadowJar {
-    archiveFileName = "${version}-${getArchiveClassifier().get()}.jar"
+    archiveFileName = "${version}-all.jar"
 
     relocate 'de.tr7zw.changeme.nbtapi', 'de.sean.blockprot.nbtapi'
     relocate 'org.bstats', 'de.sean.blockprot.metrics'
@@ -93,4 +111,42 @@ application {
 compileKotlin {
     kotlinOptions.useIR = true
     kotlinOptions.jvmTarget = "1.8"
+}
+
+curseforge {
+    if (ENV.CURSEFORGE_API_KEY) {
+        apiKey = ENV.CURSEFORGE_API_KEY
+    }
+
+    project {
+        id = "440797"
+        changelog = "A changelog can be found at https://github.com/spnda/BlockProt/commits"
+        releaseType = "release"
+        addGameVersion "1.16"
+        addGameVersion "1.15"
+        addGameVersion "1.14"
+
+        mainArtifact(file("${project.buildDir}/libs/${archivesBaseName}-all.jar")) {
+            displayName = gitTagName()
+        }
+    }
+}
+
+task github() {
+    onlyIf {
+        ENV.GITHUB_TOKEN
+    }
+
+    doLast {
+        def github = GitHub.connectUsingOAuth(ENV.GITHUB_TOKEN as String)
+        def repository = github.getRepository(ENV.GITHUB_REPOSITORY)
+
+        def releaseBuilder = new GHReleaseBuilder(repository, version as String)
+        releaseBuilder.name(version)
+        releaseBuilder.body("A changelog can be found at https://github.com/spnda/BlockProt/commits")
+        releaseBuilder.commitish(gitBranchName())
+
+        def ghRelease = releaseBuilder.create()
+        ghRelease.uploadAsset(file("${project.buildDir}/libs/${archivesBaseName}-all.jar"), "application/java-archive")
+    }
 }

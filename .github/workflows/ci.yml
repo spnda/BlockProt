@@ -27,3 +27,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build with Gradle
         run: ./gradlew build
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Artifacts
+          path: build/libs/

@@ -23,11 +23,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public final class FriendsModifyInventory implements FriendModifyInventory {
+public final class FriendManageInventory implements FriendModifyInventory {
     private final int maxSkulls = InventoryConstants.tripleLine - 4;
 
     @NotNull
-    public static final FriendsModifyInventory INSTANCE = new FriendsModifyInventory();
+    public static final FriendManageInventory INSTANCE = new FriendManageInventory();
 
     @Override
     public int getSize() {
@@ -45,10 +45,12 @@ public final class FriendsModifyInventory implements FriendModifyInventory {
         final Player player = (Player)event.getWhoClicked();
         final ItemStack item = event.getCurrentItem();
         if (item == null) return;
+        Bukkit.getLogger().info(item.getType().toString());
         switch (item.getType()) {
             case BLACK_STAINED_GLASS_PANE: {
                 // Exit the modify inventory and return to the base lock inventory.
                 if (state == null) break;
+                Bukkit.getLogger().info("Encountered exit.");
                 exitModifyInventory(player, state);
                 break;
             }

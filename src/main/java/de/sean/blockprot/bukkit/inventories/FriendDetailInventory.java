@@ -31,7 +31,7 @@ public final class FriendDetailInventory implements FriendModifyInventory {
     @NotNull
     @Override
     public String getInventoryName() {
-        return Translator.get(TranslationKey.INVENTORIES__FRIENDS__MANAGE);
+        return Translator.get(TranslationKey.INVENTORIES__FRIENDS__EDIT);
     }
 
     @Override
@@ -43,7 +43,7 @@ public final class FriendDetailInventory implements FriendModifyInventory {
         switch (item.getType()) {
             case BLACK_STAINED_GLASS_PANE: {
                 if (state == null) return;
-                player.openInventory(FriendsModifyInventory.INSTANCE.createInventoryAndFill(player));
+                player.openInventory(FriendManageInventory.INSTANCE.createInventoryAndFill(player));
                 break;
             }
             case RED_STAINED_GLASS_PANE: {
@@ -51,7 +51,7 @@ public final class FriendDetailInventory implements FriendModifyInventory {
                 OfflinePlayer friend = state.getCurFriend();
                 assert friend != null;
                 modifyFriendsForAction(state, player, friend, FriendModifyAction.REMOVE_FRIEND, false);
-                player.openInventory(FriendsModifyInventory.INSTANCE.createInventoryAndFill(player));
+                player.openInventory(FriendManageInventory.INSTANCE.createInventoryAndFill(player));
                 break;
             }
             case PLAYER_HEAD: {

@@ -21,6 +21,7 @@ inventories:
     deactivate: "Never lock on placing"
   friends:
     manage: "Manage Friends"
+    edit: "Edit Friend"
     remove: "Remove Friend"
     search: "Search Players"
     result: "Players found"

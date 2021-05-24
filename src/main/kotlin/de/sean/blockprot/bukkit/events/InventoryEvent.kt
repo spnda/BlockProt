@@ -15,7 +15,7 @@ class InventoryEvent : Listener {
             BlockInfoInventory.inventoryName -> BlockInfoInventory.onInventoryClick(event, state)
             BlockLockInventory.inventoryName -> BlockLockInventory.onInventoryClick(event, state)
             FriendDetailInventory.INSTANCE.inventoryName -> FriendDetailInventory.INSTANCE.onInventoryClick(event, state)
-            FriendsModifyInventory.INSTANCE.inventoryName -> FriendsModifyInventory.INSTANCE.onInventoryClick(event, state)
+            FriendManageInventory.INSTANCE.inventoryName -> FriendManageInventory.INSTANCE.onInventoryClick(event, state)
             FriendSearchResultInventory.inventoryName -> FriendSearchResultInventory.onInventoryClick(event, state)
             UserSettingsInventory.inventoryName -> UserSettingsInventory.onInventoryClick(event, state)
         }

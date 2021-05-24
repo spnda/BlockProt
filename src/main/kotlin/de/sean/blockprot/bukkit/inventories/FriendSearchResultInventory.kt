@@ -18,8 +18,8 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 
 object FriendSearchResultInventory : FriendModifyInventory {
-    override val size = InventoryConstants.tripleLine
-    override val inventoryName = Translator.get(TranslationKey.INVENTORIES__FRIENDS__RESULT)
+    override fun getSize() = InventoryConstants.tripleLine
+    override fun getInventoryName() = Translator.get(TranslationKey.INVENTORIES__FRIENDS__RESULT)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
         val player = event.whoClicked as Player
@@ -34,14 +34,14 @@ object FriendSearchResultInventory : FriendModifyInventory {
                     player.closeInventory()
                     return
                 }
-                player.openInventory(FriendsModifyInventory.INSTANCE.createInventoryAndFill(player))
+                player.openInventory(FriendManageInventory.INSTANCE.createInventoryAndFill(player))
             }
             Material.PLAYER_HEAD -> {
                 if (state == null) return
                 val index = findItemIndex(event.inventory, item)
                 val friend = state.friendResultCache[index]
-                modifyFriendsForAction(state, player, friend, FriendModifyAction.ADD_FRIEND, exit = false)
-                player.openInventory(FriendsModifyInventory.INSTANCE.createInventoryAndFill(player))
+                modifyFriendsForAction(state, player, friend, FriendModifyAction.ADD_FRIEND, false)
+                player.openInventory(FriendManageInventory.INSTANCE.createInventoryAndFill(player))
             }
             else -> {
                 player.closeInventory()

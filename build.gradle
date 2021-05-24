@@ -15,6 +15,24 @@ plugins {
     id 'application'
 }
 
+static def gitTagName() {
+    def tag = ""
+    def proc = "git describe --tags --abbrev=0".execute()
+    proc.in.eachLine { line -> tag = line }
+    proc.waitFor()
+    return tag
+}
+
+static def gitBranchName() {
+    def branch = ""
+    def proc = "git rev-parse --abbrev-ref HEAD".execute()
+    proc.in.eachLine { line -> branch = line }
+    proc.waitFor()
+    return branch
+}
+
+def version = "${project.name}-${gitTagName()}-${gitBranchName()}"
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -51,11 +69,11 @@ dependencies {
 }
 
 jar {
-    setArchivesBaseName("${project.name}-${project.plugin_version}")
+    setArchivesBaseName(version)
 }
 
 shadowJar {
-    archiveFileName = "${project.name}-${project.plugin_version}-${getArchiveClassifier().get()}.jar"
+    archiveFileName = "${version}-${getArchiveClassifier().get()}.jar"
 
     relocate 'de.tr7zw.changeme.nbtapi', 'de.sean.blockprot.nbtapi'
     relocate 'org.bstats', 'de.sean.blockprot.metrics'
@@ -64,7 +82,7 @@ shadowJar {
 processResources {
     from(sourceSets.main.resources.srcDirs) {
         it.setDuplicatesStrategy(DuplicatesStrategy.INCLUDE)
-        filter ReplaceTokens, tokens: [version: project.plugin_version]
+        filter ReplaceTokens, tokens: [version: gitTagName()]
     }
 }
 

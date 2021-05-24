@@ -45,12 +45,10 @@ public final class FriendManageInventory implements FriendModifyInventory {
         final Player player = (Player)event.getWhoClicked();
         final ItemStack item = event.getCurrentItem();
         if (item == null) return;
-        Bukkit.getLogger().info(item.getType().toString());
         switch (item.getType()) {
             case BLACK_STAINED_GLASS_PANE: {
                 // Exit the modify inventory and return to the base lock inventory.
                 if (state == null) break;
-                Bukkit.getLogger().info("Encountered exit.");
                 exitModifyInventory(player, state);
                 break;
             }
@@ -136,18 +134,21 @@ public final class FriendManageInventory implements FriendModifyInventory {
             state.getFriendResultCache().add(curPlayer);
         }
 
-        InventoryExtensionsKt.setItemStack(
-            inv,
-            maxSkulls,
-            Material.CYAN_STAINED_GLASS_PANE,
-            TranslationKey.INVENTORIES__LAST_PAGE
-        );
-        InventoryExtensionsKt.setItemStack(
-            inv,
-            InventoryConstants.tripleLine - 3,
-            Material.BLUE_STAINED_GLASS_PANE,
-            TranslationKey.INVENTORIES__NEXT_PAGE
-        );
+        // Only show the page buttons if there's more than 1 page.
+        if (state.getFriendPage() == 0 && players.size() >= maxSkulls) {
+            InventoryExtensionsKt.setItemStack(
+                inv,
+                maxSkulls,
+                Material.CYAN_STAINED_GLASS_PANE,
+                TranslationKey.INVENTORIES__LAST_PAGE
+            );
+            InventoryExtensionsKt.setItemStack(
+                inv,
+                InventoryConstants.tripleLine - 3,
+                Material.BLUE_STAINED_GLASS_PANE,
+                TranslationKey.INVENTORIES__NEXT_PAGE
+            );
+        }
         InventoryExtensionsKt.setItemStack(
             inv,
             InventoryConstants.tripleLine - 2,

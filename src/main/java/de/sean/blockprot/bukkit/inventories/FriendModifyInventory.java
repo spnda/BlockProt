@@ -2,7 +2,10 @@ package de.sean.blockprot.bukkit.inventories;
 
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler;
 import de.sean.blockprot.bukkit.nbt.FriendModifyAction;
+import de.sean.blockprot.bukkit.nbt.LockUtil;
+import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +18,13 @@ public interface FriendModifyInventory extends BlockProtInventory {
         switch (state.getFriendSearchState()) {
             case FRIEND_SEARCH: {
                 if (state.getBlock() == null) break;
+                final BlockState doubleChest = LockUtil.INSTANCE.getDoubleChest(state.getBlock(), player.getWorld());
+                applyChanges(state.getBlock(), player, exit, (handler) -> handler.modifyFriends(
+                    player.getUniqueId().toString(),
+                    friend.getUniqueId().toString(),
+                    action,
+                    doubleChest == null ? null : new NBTTileEntity(doubleChest)
+                ));
             }
             case DEFAULT_FRIEND_SEARCH: {
                 modifyFriends(player, exit, (l) -> {

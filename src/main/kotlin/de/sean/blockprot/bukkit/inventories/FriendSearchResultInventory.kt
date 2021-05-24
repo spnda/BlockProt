@@ -19,7 +19,7 @@ import org.bukkit.inventory.Inventory
 
 object FriendSearchResultInventory : FriendModifyInventory {
     override fun getSize() = InventoryConstants.tripleLine
-    override fun getInventoryName() = Translator.get(TranslationKey.INVENTORIES__FRIENDS__RESULT)
+    override fun getTranslatedInventoryName() = Translator.get(TranslationKey.INVENTORIES__FRIENDS__RESULT)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
         val player = event.whoClicked as Player

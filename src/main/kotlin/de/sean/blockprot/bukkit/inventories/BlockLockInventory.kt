@@ -16,7 +16,7 @@ import org.bukkit.inventory.Inventory
 
 object BlockLockInventory : BlockProtInventory {
     override fun getSize() = InventoryConstants.singleLine
-    override fun getInventoryName() = Translator.get(TranslationKey.INVENTORIES__BLOCK_LOCK)
+    override fun getTranslatedInventoryName() = Translator.get(TranslationKey.INVENTORIES__BLOCK_LOCK)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
         if (state?.block == null) return

@@ -30,7 +30,7 @@ public final class FriendDetailInventory implements FriendModifyInventory {
 
     @NotNull
     @Override
-    public String getInventoryName() {
+    public String getTranslatedInventoryName() {
         return Translator.get(TranslationKey.INVENTORIES__FRIENDS__EDIT);
     }
 

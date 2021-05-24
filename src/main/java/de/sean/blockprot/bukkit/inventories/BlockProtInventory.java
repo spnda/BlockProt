@@ -30,10 +30,20 @@ public interface BlockProtInventory {
     int getSize();
 
     /**
-     * Get the name of this inventory, or an empty String if not translatable.
+     * Get the translated name of this inventory, or an empty String if not translatable.
      */
     @NotNull
-    String getInventoryName();
+    String getTranslatedInventoryName();
+
+    /**
+     * Get the default inventory name.
+     * @return The translated inventory name, or this class's simple name if the translation was not found.
+     */
+    @NotNull
+    default String getDefaultInventoryName() {
+        final String inventoryName = getTranslatedInventoryName();
+        return inventoryName.isEmpty() ? this.getClass().getSimpleName() : inventoryName;
+    }
 
     /**
      * Handles clicks in this inventory.
@@ -43,14 +53,13 @@ public interface BlockProtInventory {
     void onInventoryClick(@NotNull InventoryClickEvent event, @Nullable InventoryState state);
 
     /**
-     * Create this current inventory. If {@link BlockProtInventory#getInventoryName()} returns an empty String,
+     * Create this current inventory. If {@link BlockProtInventory#getTranslatedInventoryName()} returns an empty String,
      * this class's simple name will be used.
      * @return The Bukkit Inventory.
      */
     @NotNull
     default Inventory createInventory() {
-        final String inventoryName = getInventoryName();
-        return Bukkit.createInventory(null, getSize(), inventoryName.isEmpty() ? this.getClass().getSimpleName() : inventoryName);
+        return Bukkit.createInventory(null, getSize(), getDefaultInventoryName());
     }
 
     /**

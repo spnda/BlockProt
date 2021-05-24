@@ -72,6 +72,7 @@ public final class FriendManageInventory implements FriendModifyInventory {
                 }
                 break;
             }
+            case SKELETON_SKULL:
             case PLAYER_HEAD: {
                 // Get the clicked player head and open the detail inventory.
                 if (state == null) break;

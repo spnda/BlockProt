@@ -8,7 +8,6 @@ import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
 import de.sean.blockprot.util.setBackButton
 import de.sean.blockprot.util.setItemStack
 import de.tr7zw.changeme.nbtapi.NBTTileEntity
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
@@ -26,7 +25,6 @@ object BlockLockInventory : BlockProtInventory {
 
         val player = event.whoClicked as Player
         val inv: Inventory
-        val handler: BlockLockHandler
 
         when (item.type) {
             in LockUtil.lockableTileEntities, in LockUtil.lockableBlocks -> {
@@ -58,17 +56,7 @@ object BlockLockInventory : BlockProtInventory {
                 )
             }
             Material.PLAYER_HEAD -> {
-                handler = BlockLockHandler(block)
-                val owner = handler.getOwner()
-                val friendsToAdd = FriendAddInventory.filterFriendsList(handler.getAccess(), Bukkit.getOnlinePlayers().toList(), owner)
-                inv = FriendAddInventory.createInventoryAndFill(friendsToAdd)
-                player.closeInventory()
-                player.openInventory(inv)
-            }
-            Material.ZOMBIE_HEAD -> {
-                handler = BlockLockHandler(block)
-                val friends = handler.getAccess()
-                inv = FriendRemoveInventory.createInventoryAndFill(player, friends)
+                inv = FriendsModifyInventory.INSTANCE.createInventoryAndFill(player)
                 player.closeInventory()
                 player.openInventory(inv)
             }
@@ -113,12 +101,7 @@ object BlockLockInventory : BlockProtInventory {
             inv.setItemStack(
                 2,
                 Material.PLAYER_HEAD,
-                TranslationKey.INVENTORIES__FRIENDS__ADD
-            )
-            inv.setItemStack(
-                3,
-                Material.ZOMBIE_HEAD,
-                TranslationKey.INVENTORIES__FRIENDS__REMOVE
+                TranslationKey.INVENTORIES__FRIENDS__MANAGE
             )
         }
         if (player.isOp ||

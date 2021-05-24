@@ -7,7 +7,7 @@ import de.tr7zw.changeme.nbtapi.NBTTileEntity
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 
-interface BlockFriendModifyInventory : BlockProtInventory {
+interface FriendModifyInventory : BlockProtInventory {
     fun modifyFriendsForAction(state: InventoryState, player: Player, friend: OfflinePlayer, action: FriendModifyAction, exit: Boolean) {
         when (state.friendSearchState) {
             InventoryState.FriendSearchState.FRIEND_SEARCH -> {
@@ -50,5 +50,29 @@ interface BlockFriendModifyInventory : BlockProtInventory {
             }
         }
         player.openInventory(inv)
+    }
+
+    /**
+     * Filter a list of [allPlayers] and remove all players that are in [current] and [self].
+     */
+    fun <T : Player> filterFriendsForPlayers(current: List<String>, allPlayers: List<T>, self: String): MutableList<T> {
+        val ret: MutableList<T> = ArrayList()
+        for (player in allPlayers) {
+            val playerUuid = player.uniqueId.toString()
+            if (!current.contains(playerUuid) && playerUuid != self) ret.add(player)
+        }
+        return ret
+    }
+
+    /**
+     * Filter a list of [allPlayers] and remove all players that are in [current] and [self].
+     */
+    fun <T : OfflinePlayer> filterFriendsForOfflinePlayers(current: List<String>, allPlayers: List<T>, self: String): MutableList<T> {
+        val ret: MutableList<T> = ArrayList()
+        for (player in allPlayers) {
+            val playerUuid = player.uniqueId.toString()
+            if (!current.contains(playerUuid) && playerUuid != self) ret.add(player)
+        }
+        return ret
     }
 }

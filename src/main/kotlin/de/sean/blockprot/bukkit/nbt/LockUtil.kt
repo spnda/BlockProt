@@ -63,6 +63,7 @@ object LockUtil {
     /**
      * Parse a comma-separated list from a String
      */
+    @JvmStatic
     fun parseStringList(str: String): List<String> {
         val ret: MutableList<String> =
             ArrayList(listOf(*str.replace("^\\[|]$".toRegex(), "").split(", ").toTypedArray()))

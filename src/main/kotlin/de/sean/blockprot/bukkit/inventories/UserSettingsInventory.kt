@@ -13,8 +13,8 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 
 object UserSettingsInventory : BlockProtInventory {
-    override val size = InventoryConstants.singleLine
-    override val inventoryName = Translator.get(TranslationKey.INVENTORIES__USER_SETTINGS)
+    override fun getSize() = InventoryConstants.singleLine
+    override fun getInventoryName() = Translator.get(TranslationKey.INVENTORIES__USER_SETTINGS)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
         val player = event.whoClicked as Player
@@ -41,7 +41,7 @@ object UserSettingsInventory : BlockProtInventory {
             Material.PLAYER_HEAD -> {
                 if (state == null) return
                 state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH
-                val inv = FriendsModifyInventory.INSTANCE.createInventoryAndFill(player)
+                val inv = FriendManageInventory.INSTANCE.createInventoryAndFill(player)
                 player.closeInventory()
                 player.openInventory(inv)
             }

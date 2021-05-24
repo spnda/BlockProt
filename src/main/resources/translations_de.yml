@@ -16,6 +16,7 @@ inventories:
     deactivate: "Nie automatisch sperren"
   friends:
     manage: "Freunde verwalten"
+    edit: "Freund editieren"
     remove: "Freund entfernen"
     search: "Spieler suchen"
     result: "Spieler gefunden"

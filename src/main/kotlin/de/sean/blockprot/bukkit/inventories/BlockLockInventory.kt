@@ -15,8 +15,8 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 
 object BlockLockInventory : BlockProtInventory {
-    override val size = InventoryConstants.singleLine
-    override val inventoryName = Translator.get(TranslationKey.INVENTORIES__BLOCK_LOCK)
+    override fun getSize() = InventoryConstants.singleLine
+    override fun getInventoryName() = Translator.get(TranslationKey.INVENTORIES__BLOCK_LOCK)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
         if (state?.block == null) return
@@ -29,7 +29,7 @@ object BlockLockInventory : BlockProtInventory {
         when (item.type) {
             in LockUtil.lockableTileEntities, in LockUtil.lockableBlocks -> {
                 val doubleChest = getDoubleChest(block, player.world)
-                applyChanges(block, player, exit = true) {
+                applyChanges(block, player, true) {
                     it.lockBlock(
                         player,
                         player.isOp,
@@ -40,7 +40,7 @@ object BlockLockInventory : BlockProtInventory {
             Material.REDSTONE, Material.GUNPOWDER -> {
                 val doubleChest = getDoubleChest(block, player.world)
                 var redstone = true
-                applyChanges(block, player, exit = false) {
+                applyChanges(block, player, false) {
                     val ret = it.lockRedstoneForBlock(
                         player.uniqueId.toString(),
                         if (doubleChest != null) NBTTileEntity(doubleChest) else null
@@ -56,7 +56,7 @@ object BlockLockInventory : BlockProtInventory {
                 )
             }
             Material.PLAYER_HEAD -> {
-                inv = FriendsModifyInventory.INSTANCE.createInventoryAndFill(player)
+                inv = FriendManageInventory.INSTANCE.createInventoryAndFill(player)
                 player.closeInventory()
                 player.openInventory(inv)
             }

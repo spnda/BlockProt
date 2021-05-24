@@ -16,7 +16,7 @@ import java.util.*
 
 object BlockInfoInventory : BlockProtInventory {
     override fun getSize() = InventoryConstants.tripleLine
-    override fun getInventoryName() = Translator.get(TranslationKey.INVENTORIES__BLOCK_INFO)
+    override fun getTranslatedInventoryName() = Translator.get(TranslationKey.INVENTORIES__BLOCK_INFO)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
         val player = event.whoClicked as Player

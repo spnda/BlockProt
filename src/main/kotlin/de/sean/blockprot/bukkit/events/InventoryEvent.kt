@@ -12,12 +12,12 @@ class InventoryEvent : Listener {
         val player = event.whoClicked as Player
         val state = InventoryState.get(player.uniqueId)
         when (event.view.title) {
-            BlockInfoInventory.inventoryName -> BlockInfoInventory.onInventoryClick(event, state)
-            BlockLockInventory.inventoryName -> BlockLockInventory.onInventoryClick(event, state)
-            FriendDetailInventory.INSTANCE.inventoryName -> FriendDetailInventory.INSTANCE.onInventoryClick(event, state)
-            FriendManageInventory.INSTANCE.inventoryName -> FriendManageInventory.INSTANCE.onInventoryClick(event, state)
-            FriendSearchResultInventory.inventoryName -> FriendSearchResultInventory.onInventoryClick(event, state)
-            UserSettingsInventory.inventoryName -> UserSettingsInventory.onInventoryClick(event, state)
+            BlockInfoInventory.defaultInventoryName -> BlockInfoInventory.onInventoryClick(event, state)
+            BlockLockInventory.defaultInventoryName -> BlockLockInventory.onInventoryClick(event, state)
+            FriendDetailInventory.INSTANCE.defaultInventoryName -> FriendDetailInventory.INSTANCE.onInventoryClick(event, state)
+            FriendManageInventory.INSTANCE.defaultInventoryName -> FriendManageInventory.INSTANCE.onInventoryClick(event, state)
+            FriendSearchResultInventory.defaultInventoryName -> FriendSearchResultInventory.onInventoryClick(event, state)
+            UserSettingsInventory.defaultInventoryName -> UserSettingsInventory.onInventoryClick(event, state)
         }
     }
 }

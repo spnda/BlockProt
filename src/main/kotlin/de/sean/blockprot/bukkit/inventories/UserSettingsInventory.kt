@@ -14,7 +14,7 @@ import org.bukkit.inventory.Inventory
 
 object UserSettingsInventory : BlockProtInventory {
     override fun getSize() = InventoryConstants.singleLine
-    override fun getInventoryName() = Translator.get(TranslationKey.INVENTORIES__USER_SETTINGS)
+    override fun getTranslatedInventoryName() = Translator.get(TranslationKey.INVENTORIES__USER_SETTINGS)
 
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
         val player = event.whoClicked as Player

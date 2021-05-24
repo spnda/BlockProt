@@ -17,7 +17,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 
-object FriendSearchResultInventory : BlockFriendModifyInventory {
+object FriendSearchResultInventory : FriendModifyInventory {
     override val size = InventoryConstants.tripleLine
     override val inventoryName = Translator.get(TranslationKey.INVENTORIES__FRIENDS__RESULT)
 
@@ -34,29 +34,14 @@ object FriendSearchResultInventory : BlockFriendModifyInventory {
                     player.closeInventory()
                     return
                 }
-                val currentFriends: List<String> = when (state.friendSearchState) {
-                    InventoryState.FriendSearchState.FRIEND_SEARCH -> when (state.block) {
-                        null -> emptyList()
-                        else -> BlockLockHandler(state.block).getAccess()
-                    }
-                    InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
-                        val nbtEntity = NBTEntity(player).persistentDataContainer
-                        parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
-                    }
-                }
-                val friendsToAdd = FriendAddInventory.filterFriendsList(
-                    currentFriends,
-                    Bukkit.getOnlinePlayers().toList(),
-                    player.uniqueId.toString()
-                )
-                val inv = FriendAddInventory.createInventoryAndFill(friendsToAdd)
-                player.openInventory(inv)
+                player.openInventory(FriendsModifyInventory.INSTANCE.createInventoryAndFill(player))
             }
             Material.PLAYER_HEAD -> {
                 if (state == null) return
                 val index = findItemIndex(event.inventory, item)
                 val friend = state.friendResultCache[index]
-                modifyFriendsForAction(state, player, friend, FriendModifyAction.ADD_FRIEND, exit = true)
+                modifyFriendsForAction(state, player, friend, FriendModifyAction.ADD_FRIEND, exit = false)
+                player.openInventory(FriendsModifyInventory.INSTANCE.createInventoryAndFill(player))
             }
             else -> {
                 player.closeInventory()

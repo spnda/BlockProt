@@ -25,6 +25,16 @@ data class InventoryState(val block: Block?) {
 
     var friendResultCache: MutableList<OfflinePlayer> = mutableListOf()
 
+    /**
+     * The current index of the [FriendModifyInventory] page.
+     */
+    var friendPage: Int = 0
+
+    /**
+     * The friend we currently want to modify with [FriendDetailInventory].
+     */
+    var curFriend: OfflinePlayer? = null
+
     companion object {
         /**
          * HashMap containing the current InventoryState of each player.

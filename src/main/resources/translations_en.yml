@@ -4,6 +4,8 @@
 # GitHub repository: https://github.com/spnda/BlockProt/pulls
 inventories:
   back: "Back"
+  last_page: "Last page"
+  next_page: "Next page"
   block_lock: "Block Lock"
   user_settings: "User Settings"
   block_info: "Block Info"
@@ -18,8 +20,8 @@ inventories:
     activate: "Always lock on placing"
     deactivate: "Never lock on placing"
   friends:
-    add: "Add Friends"
-    remove: "Remove Friends"
+    manage: "Manage Friends"
+    remove: "Remove Friend"
     search: "Search Players"
     result: "Players found"
 

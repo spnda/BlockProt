@@ -7,11 +7,13 @@ import de.tr7zw.changeme.nbtapi.NBTEntity
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
+import org.bukkit.OfflinePlayer
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
+import java.util.*
 
 interface BlockProtInventory {
     val size: Int
@@ -61,5 +63,12 @@ interface BlockProtInventory {
             }
         }
         return -1
+    }
+
+    /**
+     * Maps a list of string-uuids to a list of offline players.
+     */
+    fun mapUuidToPlayer(players: List<String>): List<OfflinePlayer> = players.map {
+        Bukkit.getOfflinePlayer(UUID.fromString(it))
     }
 }

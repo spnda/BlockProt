@@ -7,7 +7,6 @@ import de.sean.blockprot.util.ItemUtil
 import de.sean.blockprot.util.setBackButton
 import de.sean.blockprot.util.setItemStack
 import de.tr7zw.changeme.nbtapi.NBTEntity
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -42,23 +41,7 @@ object UserSettingsInventory : BlockProtInventory {
             Material.PLAYER_HEAD -> {
                 if (state == null) return
                 state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH
-                val currentFriends = LockUtil.parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
-                val friendsToAdd =
-                    FriendAddInventory.filterFriendsList(
-                        currentFriends,
-                        Bukkit.getOnlinePlayers().toList(),
-                        player.uniqueId.toString()
-                    )
-                val inv = FriendAddInventory.createInventoryAndFill(friendsToAdd)
-                player.closeInventory()
-                player.openInventory(inv)
-                InventoryState.set(player.uniqueId, state)
-            }
-            Material.ZOMBIE_HEAD -> {
-                if (state == null) return
-                state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH
-                val currentFriends = LockUtil.parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
-                val inv = FriendRemoveInventory.createInventoryAndFill(player, currentFriends)
+                val inv = FriendsModifyInventory.INSTANCE.createInventoryAndFill(player)
                 player.closeInventory()
                 player.openInventory(inv)
             }
@@ -83,12 +66,7 @@ object UserSettingsInventory : BlockProtInventory {
         inv.setItemStack(
             1,
             Material.PLAYER_HEAD,
-            TranslationKey.INVENTORIES__FRIENDS__ADD
-        )
-        inv.setItemStack(
-            2,
-            Material.ZOMBIE_HEAD,
-            TranslationKey.INVENTORIES__FRIENDS__REMOVE
+            TranslationKey.INVENTORIES__FRIENDS__MANAGE
         )
         inv.setBackButton()
         return inv

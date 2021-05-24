@@ -15,8 +15,8 @@ inventories:
     activate: "Immer automatisch sperren"
     deactivate: "Nie automatisch sperren"
   friends:
-    add: "Freunde hinzufügen"
-    remove: "Freunde entfernen"
+    manage: "Freunde verwalten"
+    remove: "Freund entfernen"
     search: "Spieler suchen"
     result: "Spieler gefunden"
 

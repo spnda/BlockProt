@@ -25,15 +25,6 @@ plugins {
 
 def ENV = System.getenv()
 
-def gitTagName() {
-    def ENV = System.getenv()
-    if (ENV.GIT_TAG) {
-        return ENV.GIT_TAG
-    } else {
-        return ""
-    }
-}
-
 def gitBranchName() {
     def ENV = System.getenv()
     if (ENV.GITHUB_REF) {
@@ -49,7 +40,7 @@ def gitBranchName() {
     return branch.substring(branch.lastIndexOf("/") + 1)
 }
 
-def version = "${project.name}-${gitTagName()}-${gitBranchName()}"
+def version = "${project.name}-${project.plugin_version}-${gitBranchName()}"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -100,7 +91,7 @@ shadowJar {
 processResources {
     from(sourceSets.main.resources.srcDirs) {
         it.setDuplicatesStrategy(DuplicatesStrategy.INCLUDE)
-        filter ReplaceTokens, tokens: [version: gitTagName()]
+        filter ReplaceTokens, tokens: [version: project.plugin_version]
     }
 }
 
@@ -127,7 +118,7 @@ curseforge {
         addGameVersion "1.14"
 
         mainArtifact(file("${project.buildDir}/libs/${archivesBaseName}-all.jar")) {
-            displayName = gitTagName()
+            displayName = project.plugin_version
         }
     }
 }

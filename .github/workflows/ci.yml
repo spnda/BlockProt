@@ -19,8 +19,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: gradle/wrapper-validation-action@v1
-      - id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       - name: Check for errors
         uses: github/super-linter@v3
         env:
@@ -29,5 +27,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build with Gradle
         run: ./gradlew build
-        env:
-          GIT_TAG: ${{ steps.vars.outputs.tag }}

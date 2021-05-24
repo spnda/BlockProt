@@ -36,7 +36,7 @@ object FriendSearchResultInventory : FriendModifyInventory {
                 }
                 player.openInventory(FriendManageInventory.INSTANCE.createInventoryAndFill(player))
             }
-            Material.PLAYER_HEAD -> {
+            Material.PLAYER_HEAD, Material.SKELETON_SKULL -> {
                 if (state == null) return
                 val index = findItemIndex(event.inventory, item)
                 val friend = state.friendResultCache[index]

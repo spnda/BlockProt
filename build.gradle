@@ -105,6 +105,10 @@ compileKotlin {
     }
 }
 
+/**
+ * This task is currently unused, as CurseGradle does not support uploading
+ * Bukkit plugins to CurseForge.
+ */
 curseforge {
     if (ENV.CURSEFORGE_API_KEY) {
         apiKey = ENV.CURSEFORGE_API_KEY

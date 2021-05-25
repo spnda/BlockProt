@@ -29,6 +29,7 @@ public abstract class FriendModifyInventory extends BlockProtInventory {
                     action,
                     doubleChest == null ? null : new NBTTileEntity(doubleChest)
                 ));
+                break;
             }
             case DEFAULT_FRIEND_SEARCH: {
                 modifyFriends(player, exit, (l) -> {
@@ -41,6 +42,7 @@ public abstract class FriendModifyInventory extends BlockProtInventory {
                             return null;
                     }
                 });
+                break;
             }
         }
     }

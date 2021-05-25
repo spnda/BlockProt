@@ -44,7 +44,7 @@ class BlockProtCommand : TabExecutor {
 
                 return if (player != null) {
                     InventoryState.set(player.uniqueId, InventoryState(null))
-                    player.openInventory(UserSettingsInventory.createInventoryAndFill(player))
+                    player.openInventory(UserSettingsInventory().fill(player))
                     true
                 } else false
             }

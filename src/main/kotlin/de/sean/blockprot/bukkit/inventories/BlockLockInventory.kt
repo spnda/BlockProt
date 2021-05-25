@@ -14,7 +14,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 
-object BlockLockInventory : BlockProtInventory {
+class BlockLockInventory : BlockProtInventory() {
     override fun getSize() = InventoryConstants.singleLine
     override fun getTranslatedInventoryName() = Translator.get(TranslationKey.INVENTORIES__BLOCK_LOCK)
 
@@ -56,49 +56,45 @@ object BlockLockInventory : BlockProtInventory {
                 )
             }
             Material.PLAYER_HEAD -> {
-                inv = FriendManageInventory.INSTANCE.createInventoryAndFill(player)
+                inv = FriendManageInventory().fill(player)
                 player.closeInventory()
                 player.openInventory(inv)
             }
             Material.OAK_SIGN -> {
                 player.closeInventory()
-                inv = BlockInfoInventory.createInventoryAndFill(player, BlockLockHandler(block))
+                inv = BlockInfoInventory().fill(player, BlockLockHandler(block))
                 player.openInventory(inv)
             }
-            else -> { // This also includes Material.BLACK_STAINED_GLASS_PANE
-                player.closeInventory()
-                InventoryState.remove(player.uniqueId)
-            }
+            else -> exit(player) // This also includes Material.BLACK_STAINED_GLASS_PANE
         }
         event.isCancelled = true
     }
 
-    fun createInventoryAndFill(player: Player, material: Material, handler: BlockLockHandler): Inventory {
-        val inv = createInventory()
+    fun fill(player: Player, material: Material, handler: BlockLockHandler): Inventory {
         val playerUuid = player.uniqueId.toString()
         val owner = handler.getOwner()
         val redstone = handler.getRedstone()
         if (owner.isEmpty()) {
-            inv.setItemStack(
+            inventory.setItemStack(
                 0,
                 material,
                 TranslationKey.INVENTORIES__LOCK
             )
         } else if (owner == playerUuid || player.hasPermission(LockUtil.PERMISSION_ADMIN)) {
-            inv.setItemStack(
+            inventory.setItemStack(
                 0,
                 material,
                 TranslationKey.INVENTORIES__UNLOCK
             )
         }
         if (owner == playerUuid) {
-            inv.setItemStack(
+            inventory.setItemStack(
                 1,
                 if (redstone) Material.REDSTONE else Material.GUNPOWDER,
                 if (redstone) TranslationKey.INVENTORIES__REDSTONE__DISALLOW
                 else TranslationKey.INVENTORIES__REDSTONE__ALLOW
             )
-            inv.setItemStack(
+            inventory.setItemStack(
                 2,
                 Material.PLAYER_HEAD,
                 TranslationKey.INVENTORIES__FRIENDS__MANAGE
@@ -108,13 +104,13 @@ object BlockLockInventory : BlockProtInventory {
             player.hasPermission(LockUtil.PERMISSION_INFO) ||
             player.hasPermission(LockUtil.PERMISSION_ADMIN)
         ) {
-            inv.setItemStack(
+            inventory.setItemStack(
                 InventoryConstants.lineLength - 2,
                 Material.OAK_SIGN,
                 TranslationKey.INVENTORIES__BLOCK_INFO
             )
         }
-        inv.setBackButton()
-        return inv
+        inventory.setBackButton()
+        return inventory
     }
 }

@@ -17,7 +17,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 
-object FriendSearchResultInventory : FriendModifyInventory {
+class FriendSearchResultInventory : FriendModifyInventory() {
     override fun getSize() = InventoryConstants.tripleLine
     override fun getTranslatedInventoryName() = Translator.get(TranslationKey.INVENTORIES__FRIENDS__RESULT)
 
@@ -34,19 +34,16 @@ object FriendSearchResultInventory : FriendModifyInventory {
                     player.closeInventory()
                     return
                 }
-                player.openInventory(FriendManageInventory.INSTANCE.createInventoryAndFill(player))
+                player.openInventory(FriendManageInventory().fill(player))
             }
             Material.PLAYER_HEAD, Material.SKELETON_SKULL -> {
                 if (state == null) return
-                val index = findItemIndex(event.inventory, item)
+                val index = findItemIndex(item)
                 val friend = state.friendResultCache[index]
                 modifyFriendsForAction(state, player, friend, FriendModifyAction.ADD_FRIEND, false)
-                player.openInventory(FriendManageInventory.INSTANCE.createInventoryAndFill(player))
+                player.openInventory(FriendManageInventory().fill(player))
             }
-            else -> {
-                player.closeInventory()
-                InventoryState.remove(player.uniqueId)
-            }
+            else -> exit(player)
         }
         event.isCancelled = true
     }
@@ -69,7 +66,7 @@ object FriendSearchResultInventory : FriendModifyInventory {
     /**
      * Create an inventory for given [player].
      */
-    fun createInventoryAndFill(player: Player, searchQuery: String): Inventory? {
+    fun fill(player: Player, searchQuery: String): Inventory? {
         var players = Bukkit.getOfflinePlayers().toList()
         val state = InventoryState.get(player.uniqueId) ?: return null
 
@@ -105,21 +102,20 @@ object FriendSearchResultInventory : FriendModifyInventory {
         // To not delay when the inventory opens, we'll asynchronously get the items after
         // the inventory has been opened and later add them to the inventory. In the meantime,
         // we'll show the same amount of skeleton heads.
-        val inv = createInventory()
         val maxPlayers = players.size.coerceAtMost(InventoryConstants.tripleLine - 2)
         for (i in 0 until maxPlayers) {
-            inv.setItem(i, ItemUtil.getItemStack(1, Material.SKELETON_SKULL, players[i].name))
+            inventory.setItem(i, ItemUtil.getItemStack(1, Material.SKELETON_SKULL, players[i].name))
         }
         Bukkit.getScheduler().runTaskAsynchronously(BlockProt.instance) { _ ->
             // Only show the 9 * 3 - 2 most relevant players. Don't show any more.
             var playersIndex = 0
             while (playersIndex < maxPlayers && playersIndex < players.size) {
                 // Only add to the inventory if this is not a friend (yet)
-                inv.setItem(playersIndex, ItemUtil.getPlayerSkull(players[playersIndex]))
+                inventory.setItem(playersIndex, ItemUtil.getPlayerSkull(players[playersIndex]))
                 playersIndex += 1
             }
         }
-        inv.setBackButton()
-        return inv
+        inventory.setBackButton()
+        return inventory
     }
 }

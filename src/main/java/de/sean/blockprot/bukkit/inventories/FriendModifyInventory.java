@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 
 public abstract class FriendModifyInventory extends BlockProtInventory {
     public FriendModifyInventory() {
@@ -71,11 +72,18 @@ public abstract class FriendModifyInventory extends BlockProtInventory {
         player.openInventory(inventory);
     }
 
-    List<OfflinePlayer> filterFriendsForOfflinePlayers(List<String> current, List<OfflinePlayer> allPlayers, String self) {
+    /**
+     * Allows for quick filtering of a list of {@link String}s for a list of {@link OfflinePlayer}.
+     * @param input A list of Strings, either name or UUIDs, that can be accessed inside of the callback for validation.
+     * @param allPlayers A list of all players to filter by.
+     * @param check A callback function, allowing the caller to easily define custom filter logic.
+     * @return A list of all {@link OfflinePlayer} in {@code allPlayers} which were valid as by {@code check}.
+     */
+    List<OfflinePlayer> filterList(List<String> input, List<OfflinePlayer> allPlayers, BiFunction<String, List<String>, Boolean> check) {
         final List<OfflinePlayer> ret = new ArrayList<>();
         for (OfflinePlayer player : allPlayers) {
-            final String uuid = player.getUniqueId().toString();
-            if (!current.contains(uuid) && !uuid.equals(self)) ret.add(player);
+            final String playerUuid = player.getUniqueId().toString();
+            if (check.apply(playerUuid, input)) ret.add(player);
         }
         return ret;
     }

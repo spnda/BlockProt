@@ -110,10 +110,11 @@ public final class FriendManageInventory extends FriendModifyInventory {
             case DEFAULT_FRIEND_SEARCH: {
                 final NBTCompound nbtEntity = new NBTEntity(player).getPersistentDataContainer();
                 List<String> currentFriends = LockUtil.parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE));
-                players = filterFriendsForOfflinePlayers(
+                final String selfUuid = player.getUniqueId().toString();
+                players = filterList(
                     currentFriends,
                     Arrays.asList(Bukkit.getOfflinePlayers()),
-                    player.getUniqueId().toString()
+                    (uuid, cur) -> cur.contains(uuid) && !uuid.equals(selfUuid)
                 );
                 break;
             }

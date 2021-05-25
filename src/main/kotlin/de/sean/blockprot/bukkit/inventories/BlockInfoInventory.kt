@@ -21,12 +21,34 @@ class BlockInfoInventory : BlockProtInventory() {
     override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
         val player = event.whoClicked as Player
         val item = event.currentItem ?: return
-        if (item.type == Material.BLACK_STAINED_GLASS_PANE) {
-            player.closeInventory()
-            val block = InventoryState.get(player.uniqueId)?.block ?: return
-            val handler = BlockLockHandler(block)
-            val inv = BlockLockInventory().fill(player, block.state.type, handler)
-            player.openInventory(inv)
+        when (item.type) {
+            Material.BLACK_STAINED_GLASS_PANE -> {
+                player.closeInventory()
+                if (state?.block == null) return
+                val handler = BlockLockHandler(state.block)
+                val inv = BlockLockInventory().fill(player, state.block.state.type, handler)
+                player.openInventory(inv)
+            }
+            Material.CYAN_STAINED_GLASS_PANE -> {
+                if (state != null && state.friendPage >= 1) {
+                    state.friendPage = state.friendPage - 1;
+
+                    player.closeInventory();
+                    if (state.block != null) player.openInventory(fill(player, BlockLockHandler(state.block)));
+                }
+            }
+            Material.BLUE_STAINED_GLASS_PANE -> {
+                val lastFriendInInventory = inventory.getItem(InventoryConstants.tripleLine - 1);
+                if (lastFriendInInventory != null && lastFriendInInventory.amount == 0 && state != null) {
+                    // There's an item in the last slot => The page is fully filled up, meaning we should go to the next page.
+                    state.friendPage = state.friendPage + 1;
+
+                    player.closeInventory();
+                    if (state.block != null) player.openInventory(fill(player, BlockLockHandler(state.block)));
+                }
+            }
+            else -> {
+            }
         }
         event.isCancelled = true
     }
@@ -52,6 +74,18 @@ class BlockInfoInventory : BlockProtInventory() {
             0,
             ItemUtil.getPlayerSkull(Bukkit.getOfflinePlayer(UUID.fromString(owner)))
         )
+        if (state.friendPage == 0 && access.size >= InventoryConstants.doubleLine) {
+            inventory.setItemStack(
+                InventoryConstants.lineLength - 3,
+                Material.CYAN_STAINED_GLASS_PANE,
+                TranslationKey.INVENTORIES__LAST_PAGE,
+            )
+            inventory.setItemStack(
+                InventoryConstants.lineLength - 2,
+                Material.BLUE_STAINED_GLASS_PANE,
+                TranslationKey.INVENTORIES__NEXT_PAGE,
+            )
+        }
         inventory.setItemStack(
             1,
             if (redstone) Material.REDSTONE else Material.GUNPOWDER,

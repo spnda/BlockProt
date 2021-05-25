@@ -23,11 +23,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public final class FriendManageInventory implements FriendModifyInventory {
+public final class FriendManageInventory extends FriendModifyInventory {
     private final int maxSkulls = InventoryConstants.tripleLine - 4;
-
-    @NotNull
-    public static final FriendManageInventory INSTANCE = new FriendManageInventory();
 
     @Override
     public int getSize() {
@@ -57,7 +54,7 @@ public final class FriendManageInventory implements FriendModifyInventory {
                     state.setFriendPage(state.getFriendPage() - 1);
 
                     player.closeInventory();
-                    player.openInventory(createInventoryAndFill(player));
+                    player.openInventory(fill(player));
                 }
                 break;
             }
@@ -68,7 +65,7 @@ public final class FriendManageInventory implements FriendModifyInventory {
                     state.setFriendPage(state.getFriendPage() + 1);
 
                     player.closeInventory();
-                    player.openInventory(createInventoryAndFill(player));
+                    player.openInventory(fill(player));
                 }
                 break;
             }
@@ -76,10 +73,10 @@ public final class FriendManageInventory implements FriendModifyInventory {
             case PLAYER_HEAD: {
                 // Get the clicked player head and open the detail inventory.
                 if (state == null) break;
-                int index = findItemIndex(event.getInventory(), item);
+                int index = findItemIndex(item);
                 OfflinePlayer friend = state.getFriendResultCache().get(index);
                 state.setCurFriend(friend);
-                final Inventory inv = FriendDetailInventory.INSTANCE.createInventoryAndFill(player);
+                final Inventory inv = new FriendDetailInventory().fill(player);
                 player.closeInventory();
                 player.openInventory(inv);
                 break;
@@ -99,10 +96,9 @@ public final class FriendManageInventory implements FriendModifyInventory {
     }
 
     @NotNull
-    public Inventory createInventoryAndFill(@NotNull Player player) {
-        final Inventory inv = createInventory();
+    public Inventory fill(@NotNull Player player) {
         final InventoryState state = InventoryState.Companion.get(player.getUniqueId());
-        if (state == null) return inv;
+        if (state == null) return inventory;
 
         List<OfflinePlayer> players;
         switch (state.getFriendSearchState()) {
@@ -131,37 +127,37 @@ public final class FriendManageInventory implements FriendModifyInventory {
         int pageOffset = maxSkulls * state.getFriendPage();
         for (int i = pageOffset; i < Math.min(players.size() - pageOffset, maxSkulls); i++) {
             final OfflinePlayer curPlayer = players.get(i);
-            inv.setItem(i - pageOffset, ItemUtil.INSTANCE.getItemStack(1, Material.SKELETON_SKULL, curPlayer.getName()));
+            inventory.setItem(i - pageOffset, ItemUtil.INSTANCE.getItemStack(1, Material.SKELETON_SKULL, curPlayer.getName()));
             state.getFriendResultCache().add(curPlayer);
         }
 
         // Only show the page buttons if there's more than 1 page.
         if (state.getFriendPage() == 0 && players.size() >= maxSkulls) {
             InventoryExtensionsKt.setItemStack(
-                inv,
+                inventory,
                 maxSkulls,
                 Material.CYAN_STAINED_GLASS_PANE,
                 TranslationKey.INVENTORIES__LAST_PAGE
             );
             InventoryExtensionsKt.setItemStack(
-                inv,
+                inventory,
                 InventoryConstants.tripleLine - 3,
                 Material.BLUE_STAINED_GLASS_PANE,
                 TranslationKey.INVENTORIES__NEXT_PAGE
             );
         }
         InventoryExtensionsKt.setItemStack(
-            inv,
+            inventory,
             InventoryConstants.tripleLine - 2,
             Material.MAP,
             TranslationKey.INVENTORIES__FRIENDS__SEARCH
         );
-        InventoryExtensionsKt.setBackButton(inv);
+        InventoryExtensionsKt.setBackButton(inventory);
 
         Bukkit.getScheduler().runTaskAsynchronously(BlockProt.instance, () -> {
             int i = 0;
             while (i < maxSkulls && i < state.getFriendResultCache().size()) {
-                inv.setItem(
+                inventory.setItem(
                     i,
                     ItemUtil.INSTANCE.getPlayerSkull(state.getFriendResultCache().get(i))
                 );
@@ -169,6 +165,6 @@ public final class FriendManageInventory implements FriendModifyInventory {
             }
         });
 
-        return inv;
+        return inventory;
     }
 }

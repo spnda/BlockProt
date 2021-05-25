@@ -48,7 +48,7 @@ open class InteractEvent : Listener {
                     val state = InventoryState(event.clickedBlock!!)
                     state.friendSearchState = InventoryState.FriendSearchState.FRIEND_SEARCH
                     InventoryState.set(player.uniqueId, state)
-                    val inv = BlockLockInventory.createInventoryAndFill(player, event.clickedBlock!!.type, handler)
+                    val inv = BlockLockInventory().fill(player, event.clickedBlock!!.type, handler)
                     player.openInventory(inv)
                 } else {
                     sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION))

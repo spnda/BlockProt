@@ -13,8 +13,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface FriendModifyInventory extends BlockProtInventory {
-    default void modifyFriendsForAction(@NotNull InventoryState state, @NotNull Player player, @NotNull OfflinePlayer friend, @NotNull FriendModifyAction action, boolean exit) {
+public abstract class FriendModifyInventory extends BlockProtInventory {
+    public FriendModifyInventory() {
+        super();
+    }
+
+    public void modifyFriendsForAction(@NotNull InventoryState state, @NotNull Player player, @NotNull OfflinePlayer friend, @NotNull FriendModifyAction action, boolean exit) {
         switch (state.getFriendSearchState()) {
             case FRIEND_SEARCH: {
                 if (state.getBlock() == null) break;
@@ -41,13 +45,13 @@ public interface FriendModifyInventory extends BlockProtInventory {
         }
     }
 
-    default void exitModifyInventory(@NotNull Player player, @NotNull InventoryState state) {
+    public void exitModifyInventory(@NotNull Player player, @NotNull InventoryState state) {
         player.closeInventory();
         Inventory inventory;
         switch (state.getFriendSearchState()) {
             case FRIEND_SEARCH: {
                 if (state.getBlock() == null) return;
-                inventory = BlockLockInventory.INSTANCE.createInventoryAndFill(
+                inventory = new BlockLockInventory().fill(
                     player,
                     state.getBlock().getState().getType(),
                     new BlockLockHandler(state.getBlock())
@@ -55,7 +59,7 @@ public interface FriendModifyInventory extends BlockProtInventory {
                 break;
             }
             case DEFAULT_FRIEND_SEARCH: {
-                inventory = UserSettingsInventory.INSTANCE.createInventoryAndFill(player);
+                inventory = new UserSettingsInventory().fill(player);
                 break;
             }
             default: {
@@ -65,7 +69,7 @@ public interface FriendModifyInventory extends BlockProtInventory {
         player.openInventory(inventory);
     }
 
-    default List<OfflinePlayer> filterFriendsForOfflinePlayers(List<String> current, List<OfflinePlayer> allPlayers, String self) {
+    List<OfflinePlayer> filterFriendsForOfflinePlayers(List<String> current, List<OfflinePlayer> allPlayers, String self) {
         final List<OfflinePlayer> ret = new ArrayList<>();
         for (OfflinePlayer player : allPlayers) {
             final String uuid = player.getUniqueId().toString();

@@ -14,6 +14,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,24 +24,35 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public interface BlockProtInventory {
+public abstract class BlockProtInventory implements InventoryHolder {
+    Inventory inventory;
+
+    public BlockProtInventory() {
+        inventory = createInventory();
+    }
+
+    @Override
+    public Inventory getInventory() {
+        return inventory;
+    }
+
     /**
      * Get the size of this inventory, which should be a multiple of 9 with a maximum value of 6 * 9.
      */
-    int getSize();
+    abstract int getSize();
 
     /**
      * Get the translated name of this inventory, or an empty String if not translatable.
      */
     @NotNull
-    String getTranslatedInventoryName();
+    abstract String getTranslatedInventoryName();
 
     /**
      * Get the default inventory name.
      * @return The translated inventory name, or this class's simple name if the translation was not found.
      */
     @NotNull
-    default String getDefaultInventoryName() {
+    public String getDefaultInventoryName() {
         final String inventoryName = getTranslatedInventoryName();
         return inventoryName.isEmpty() ? this.getClass().getSimpleName() : inventoryName;
     }
@@ -50,7 +62,7 @@ public interface BlockProtInventory {
      * @param event Bukkit's inventory click event for this inventory.
      * @param state The current players inventory state.
      */
-    void onInventoryClick(@NotNull InventoryClickEvent event, @Nullable InventoryState state);
+    public abstract void onInventoryClick(@NotNull InventoryClickEvent event, @Nullable InventoryState state);
 
     /**
      * Create this current inventory. If {@link BlockProtInventory#getTranslatedInventoryName()} returns an empty String,
@@ -58,8 +70,13 @@ public interface BlockProtInventory {
      * @return The Bukkit Inventory.
      */
     @NotNull
-    default Inventory createInventory() {
-        return Bukkit.createInventory(null, getSize(), getDefaultInventoryName());
+    public Inventory createInventory() {
+        return Bukkit.createInventory(this, getSize(), getDefaultInventoryName());
+    }
+
+    public void exit(@NotNull Player player) {
+        player.closeInventory();
+        InventoryState.Companion.remove(player.getUniqueId());
     }
 
     /**
@@ -67,18 +84,15 @@ public interface BlockProtInventory {
      * @param exit If after modification we should close the inventory and clear the inventory state for {@code player}.
      * @param modify The callback function in which the given list can be modified.
      */
-    default void modifyFriends(@NotNull Player player, boolean exit, @NotNull Function<List<String>, ?> modify) {
+    void modifyFriends(@NotNull Player player, boolean exit, @NotNull Function<List<String>, ?> modify) {
         NBTCompound playerNBT = new NBTEntity(player).getPersistentDataContainer();
         List<String> currentFriends = LockUtil.parseStringList(playerNBT.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE));
         modify.apply(currentFriends);
         playerNBT.setString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE, currentFriends.toString());
-        if (exit) {
-            player.closeInventory();
-            InventoryState.Companion.remove(player.getUniqueId());
-        }
+        if (exit) exit(player);
     }
 
-    default void applyChanges(@NotNull Block block, @NotNull Player player, boolean exit, @NotNull Function<BlockLockHandler, LockReturnValue> changes) {
+    void applyChanges(@NotNull Block block, @NotNull Player player, boolean exit, @NotNull Function<BlockLockHandler, LockReturnValue> changes) {
         BlockLockHandler handler = new BlockLockHandler(block);
         LockReturnValue ret = changes.apply(handler);
         if (ret.getSuccess()) {
@@ -86,13 +100,15 @@ public interface BlockProtInventory {
             BaseComponent[] messageComponent = TextComponent.fromLegacyText(ret.getMessage());
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, messageComponent);
         }
-        if (exit) {
-            player.closeInventory();
-            InventoryState.Companion.remove(player.getUniqueId());
-        }
+        if (exit) exit(player);
     }
 
-    default int findItemIndex(@NotNull Inventory inventory, @NotNull ItemStack item) {
+    /**
+     * Finds the index inside of this inventory for given item.
+     * @param item The item to check for. Every item in this inventory will be checked against this using {@link ItemStack#equals(Object)}
+     * @return The index of the item inside the inventory. If not found, {@code -1}.
+     */
+    int findItemIndex(@NotNull ItemStack item) {
         for (int i = 0; i < inventory.getSize(); i++) {
             if (inventory.getContents()[i].equals(item)) return i;
         }
@@ -100,7 +116,7 @@ public interface BlockProtInventory {
     }
 
     @NotNull
-    default List<OfflinePlayer> mapUuidToPlayer(@NotNull List<String> uuids) {
+    List<OfflinePlayer> mapUuidToPlayer(@NotNull List<String> uuids) {
         return uuids
             .stream()
             .map((s) -> Bukkit.getOfflinePlayer(UUID.fromString(s)))

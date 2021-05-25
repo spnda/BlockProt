@@ -16,7 +16,7 @@ object FriendSearchInventory {
     fun openAnvilInventory(requestingPlayer: Player) {
         AnvilGUI.Builder()
             .onComplete { player: Player, searchQuery: String ->
-                playerInventories[player.uniqueId] = FriendSearchResultInventory.createInventoryAndFill(player, searchQuery)
+                playerInventories[player.uniqueId] = FriendSearchResultInventory().fill(player, searchQuery)
                 return@onComplete AnvilGUI.Response.openInventory(playerInventories[player.uniqueId])
             }
             .text("Name")

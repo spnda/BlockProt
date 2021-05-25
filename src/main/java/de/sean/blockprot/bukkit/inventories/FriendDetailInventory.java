@@ -19,10 +19,7 @@ import java.util.Objects;
 /**
  * The detail inventory for managing a single friend and their permission.
  */
-public final class FriendDetailInventory implements FriendModifyInventory {
-    @NotNull
-    public static final FriendDetailInventory INSTANCE = new FriendDetailInventory();
-
+public final class FriendDetailInventory extends FriendModifyInventory {
     @Override
     public int getSize() {
         return InventoryConstants.singleLine;
@@ -43,7 +40,7 @@ public final class FriendDetailInventory implements FriendModifyInventory {
         switch (item.getType()) {
             case BLACK_STAINED_GLASS_PANE: {
                 if (state == null) return;
-                player.openInventory(FriendManageInventory.INSTANCE.createInventoryAndFill(player));
+                player.openInventory(new FriendManageInventory().fill(player));
                 break;
             }
             case RED_STAINED_GLASS_PANE: {
@@ -51,37 +48,33 @@ public final class FriendDetailInventory implements FriendModifyInventory {
                 OfflinePlayer friend = state.getCurFriend();
                 assert friend != null;
                 modifyFriendsForAction(state, player, friend, FriendModifyAction.REMOVE_FRIEND, false);
-                player.openInventory(FriendManageInventory.INSTANCE.createInventoryAndFill(player));
+                player.openInventory(new FriendManageInventory().fill(player));
                 break;
             }
             case PLAYER_HEAD: {
                 break; // Don't do anything.
             }
-            default: {
-                player.closeInventory();
-                InventoryState.Companion.remove(player.getUniqueId());
-            }
+            default: exit(player);
         }
         event.setCancelled(true);
     }
 
-    public Inventory createInventoryAndFill(@NotNull Player player) {
-        final Inventory inv = createInventory();
+    public Inventory fill(@NotNull Player player) {
         final InventoryState state = InventoryState.Companion.get(player.getUniqueId());
-        if (state == null) return inv;
+        if (state == null) return inventory;
 
-        inv.setItem(
+        inventory.setItem(
             0,
             ItemUtil.INSTANCE.getPlayerSkull(Objects.requireNonNull(state.getCurFriend()))
         );
         InventoryExtensionsKt.setItemStack(
-            inv,
+            inventory,
             1,
             Material.RED_STAINED_GLASS_PANE,
             TranslationKey.INVENTORIES__FRIENDS__REMOVE
         );
-        InventoryExtensionsKt.setBackButton(inv);
+        InventoryExtensionsKt.setBackButton(inventory);
 
-        return inv;
+        return inventory;
     }
 }

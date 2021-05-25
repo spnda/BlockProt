@@ -12,7 +12,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 
-object UserSettingsInventory : BlockProtInventory {
+class UserSettingsInventory : BlockProtInventory() {
     override fun getSize() = InventoryConstants.singleLine
     override fun getTranslatedInventoryName() = Translator.get(TranslationKey.INVENTORIES__USER_SETTINGS)
 
@@ -41,34 +41,30 @@ object UserSettingsInventory : BlockProtInventory {
             Material.PLAYER_HEAD -> {
                 if (state == null) return
                 state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH
-                val inv = FriendManageInventory.INSTANCE.createInventoryAndFill(player)
+                val inv = FriendManageInventory().fill(player)
                 player.closeInventory()
                 player.openInventory(inv)
             }
-            else -> { // This also includes Material.BLACK_STAINED_GLASS_PANE
-                player.closeInventory()
-                InventoryState.remove(player.uniqueId)
-            }
+            else -> exit(player) // This also includes Material.BLACK_STAINED_GLASS_PANE
         }
         event.isCancelled = true
     }
 
-    fun createInventoryAndFill(player: Player): Inventory {
-        val inv = createInventory()
+    fun fill(player: Player): Inventory {
         val nbtEntity = NBTEntity(player).persistentDataContainer
         val lockOnPlace = nbtEntity.getBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE)
-        inv.setItemStack(
+        inventory.setItemStack(
             0,
             Material.BARRIER,
             if (lockOnPlace) TranslationKey.INVENTORIES__LOCK_ON_PLACE__DEACTIVATE
             else TranslationKey.INVENTORIES__LOCK_ON_PLACE__ACTIVATE
         )
-        inv.setItemStack(
+        inventory.setItemStack(
             1,
             Material.PLAYER_HEAD,
             TranslationKey.INVENTORIES__FRIENDS__MANAGE
         )
-        inv.setBackButton()
-        return inv
+        inventory.setBackButton()
+        return inventory
     }
 }

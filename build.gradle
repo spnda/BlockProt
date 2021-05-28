@@ -138,11 +138,12 @@ task github() {
         def repository = github.getRepository(ENV.GITHUB_REPOSITORY)
 
         def releaseBuilder = new GHReleaseBuilder(repository, version as String)
-        releaseBuilder.name(version)
+        releaseBuilder.name(project.plugin_version as String)
         releaseBuilder.body("A changelog can be found at https://github.com/spnda/BlockProt/commits")
         releaseBuilder.commitish(gitBranchName())
 
         def ghRelease = releaseBuilder.create()
+        ghRelease.setName("${project.name} ${project.plugin_version}") // We set the proper name here, as "releaseBuilder.name" is also used for the tag name.
         ghRelease.uploadAsset(file("${project.buildDir}/libs/${archivesBaseName}-all.jar"), "application/java-archive")
     }
 }

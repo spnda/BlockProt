@@ -8,7 +8,6 @@ import de.sean.blockprot.bukkit.nbt.FriendModifyAction
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.nbt.LockUtil.parseStringList
 import de.sean.blockprot.util.ItemUtil
-import de.sean.blockprot.util.setBackButton
 import de.tr7zw.changeme.nbtapi.NBTEntity
 import org.apache.commons.lang.StringUtils
 import org.bukkit.Bukkit
@@ -115,7 +114,7 @@ class FriendSearchResultInventory : FriendModifyInventory() {
                 playersIndex += 1
             }
         }
-        inventory.setBackButton()
+        setBackButton()
         return inventory
     }
 }

@@ -5,8 +5,6 @@ import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
-import de.sean.blockprot.util.setBackButton
-import de.sean.blockprot.util.setItemStack
 import de.tr7zw.changeme.nbtapi.NBTTileEntity
 import org.bukkit.Material
 import org.bukkit.block.Block
@@ -48,7 +46,7 @@ class BlockLockInventory : BlockProtInventory() {
                     redstone = it.getRedstone()
                     return@applyChanges ret
                 }
-                event.inventory.setItemStack(
+                setItemStack(
                     1,
                     if (redstone) Material.REDSTONE else Material.GUNPOWDER,
                     if (redstone) TranslationKey.INVENTORIES__REDSTONE__DISALLOW
@@ -75,26 +73,26 @@ class BlockLockInventory : BlockProtInventory() {
         val owner = handler.getOwner()
         val redstone = handler.getRedstone()
         if (owner.isEmpty()) {
-            inventory.setItemStack(
+            setItemStack(
                 0,
                 material,
                 TranslationKey.INVENTORIES__LOCK
             )
         } else if (owner == playerUuid || player.hasPermission(LockUtil.PERMISSION_ADMIN)) {
-            inventory.setItemStack(
+            setItemStack(
                 0,
                 material,
                 TranslationKey.INVENTORIES__UNLOCK
             )
         }
         if (owner == playerUuid) {
-            inventory.setItemStack(
+            setItemStack(
                 1,
                 if (redstone) Material.REDSTONE else Material.GUNPOWDER,
                 if (redstone) TranslationKey.INVENTORIES__REDSTONE__DISALLOW
                 else TranslationKey.INVENTORIES__REDSTONE__ALLOW
             )
-            inventory.setItemStack(
+            setItemStack(
                 2,
                 Material.PLAYER_HEAD,
                 TranslationKey.INVENTORIES__FRIENDS__MANAGE
@@ -104,13 +102,13 @@ class BlockLockInventory : BlockProtInventory() {
             player.hasPermission(LockUtil.PERMISSION_INFO) ||
             player.hasPermission(LockUtil.PERMISSION_ADMIN)
         ) {
-            inventory.setItemStack(
+            setItemStack(
                 InventoryConstants.lineLength - 2,
                 Material.OAK_SIGN,
                 TranslationKey.INVENTORIES__BLOCK_INFO
             )
         }
-        inventory.setBackButton()
+        setBackButton()
         return inventory
     }
 }

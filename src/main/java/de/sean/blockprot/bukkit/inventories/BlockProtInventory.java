@@ -1,14 +1,18 @@
 package de.sean.blockprot.bukkit.inventories;
 
+import de.sean.blockprot.TranslationKey;
+import de.sean.blockprot.Translator;
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler;
 import de.sean.blockprot.bukkit.nbt.LockReturnValue;
 import de.sean.blockprot.bukkit.nbt.LockUtil;
+import de.sean.blockprot.util.ItemUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -25,7 +29,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public abstract class BlockProtInventory implements InventoryHolder {
-    Inventory inventory;
+    protected Inventory inventory;
 
     public BlockProtInventory() {
         inventory = createInventory();
@@ -121,5 +125,26 @@ public abstract class BlockProtInventory implements InventoryHolder {
             .stream()
             .map((s) -> Bukkit.getOfflinePlayer(UUID.fromString(s)))
             .collect(Collectors.toList());
+    }
+
+    /**
+     * Sets the back button to the last item in the inventory.
+     */
+    public void setBackButton() {
+        setBackButton(inventory.getSize() - 1);
+    }
+
+    /**
+     * Sets the back button to the [index] in the inventory.
+     */
+    public void setBackButton(int index) {
+        setItemStack(index, Material.BLACK_STAINED_GLASS_PANE, TranslationKey.INVENTORIES__BACK);
+    }
+
+    /**
+     * Sets a ItemStack with the type [material] and the name as [key] at [index].
+     */
+    public void setItemStack(int index, Material material, TranslationKey key) {
+        inventory.setItem(index, ItemUtil.INSTANCE.getItemStack(1, material, Translator.get(key)));
     }
 }

@@ -5,7 +5,6 @@ import de.sean.blockprot.TranslationKey;
 import de.sean.blockprot.Translator;
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler;
 import de.sean.blockprot.bukkit.nbt.LockUtil;
-import de.sean.blockprot.util.InventoryExtensionsKt;
 import de.sean.blockprot.util.ItemUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
@@ -134,26 +133,23 @@ public final class FriendManageInventory extends FriendModifyInventory {
 
         // Only show the page buttons if there's more than 1 page.
         if (state.getFriendPage() == 0 && players.size() >= maxSkulls) {
-            InventoryExtensionsKt.setItemStack(
-                inventory,
+            setItemStack(
                 maxSkulls,
                 Material.CYAN_STAINED_GLASS_PANE,
                 TranslationKey.INVENTORIES__LAST_PAGE
             );
-            InventoryExtensionsKt.setItemStack(
-                inventory,
+            setItemStack(
                 InventoryConstants.tripleLine - 3,
                 Material.BLUE_STAINED_GLASS_PANE,
                 TranslationKey.INVENTORIES__NEXT_PAGE
             );
         }
-        InventoryExtensionsKt.setItemStack(
-            inventory,
+        setItemStack(
             InventoryConstants.tripleLine - 2,
             Material.MAP,
             TranslationKey.INVENTORIES__FRIENDS__SEARCH
         );
-        InventoryExtensionsKt.setBackButton(inventory);
+        setBackButton();
 
         Bukkit.getScheduler().runTaskAsynchronously(BlockProt.instance, () -> {
             int i = 0;

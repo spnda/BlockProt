@@ -3,7 +3,6 @@ package de.sean.blockprot.bukkit.inventories;
 import de.sean.blockprot.TranslationKey;
 import de.sean.blockprot.Translator;
 import de.sean.blockprot.bukkit.nbt.FriendModifyAction;
-import de.sean.blockprot.util.InventoryExtensionsKt;
 import de.sean.blockprot.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -67,13 +66,12 @@ public final class FriendDetailInventory extends FriendModifyInventory {
             0,
             ItemUtil.INSTANCE.getPlayerSkull(Objects.requireNonNull(state.getCurFriend()))
         );
-        InventoryExtensionsKt.setItemStack(
-            inventory,
+        setItemStack(
             1,
             Material.RED_STAINED_GLASS_PANE,
             TranslationKey.INVENTORIES__FRIENDS__REMOVE
         );
-        InventoryExtensionsKt.setBackButton(inventory);
+        setBackButton();
 
         return inventory;
     }

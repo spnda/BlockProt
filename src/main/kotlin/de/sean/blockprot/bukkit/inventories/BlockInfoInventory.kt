@@ -5,8 +5,6 @@ import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.util.ItemUtil
-import de.sean.blockprot.util.setBackButton
-import de.sean.blockprot.util.setItemStack
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -75,24 +73,24 @@ class BlockInfoInventory : BlockProtInventory() {
             ItemUtil.getPlayerSkull(Bukkit.getOfflinePlayer(UUID.fromString(owner)))
         )
         if (state.friendPage == 0 && access.size >= InventoryConstants.doubleLine) {
-            inventory.setItemStack(
+            setItemStack(
                 InventoryConstants.lineLength - 3,
                 Material.CYAN_STAINED_GLASS_PANE,
                 TranslationKey.INVENTORIES__LAST_PAGE,
             )
-            inventory.setItemStack(
+            setItemStack(
                 InventoryConstants.lineLength - 2,
                 Material.BLUE_STAINED_GLASS_PANE,
                 TranslationKey.INVENTORIES__NEXT_PAGE,
             )
         }
-        inventory.setItemStack(
+        setItemStack(
             1,
             if (redstone) Material.REDSTONE else Material.GUNPOWDER,
             if (redstone) TranslationKey.INVENTORIES__REDSTONE__ALLOWED
             else TranslationKey.INVENTORIES__REDSTONE__DISALLOWED
         )
-        inventory.setBackButton(InventoryConstants.lineLength - 1)
+        setBackButton(InventoryConstants.lineLength - 1)
 
         Bukkit.getScheduler().runTaskAsynchronously(BlockProt.instance) { _ ->
             var i = 0

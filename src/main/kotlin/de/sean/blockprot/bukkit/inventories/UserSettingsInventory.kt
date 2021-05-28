@@ -4,8 +4,6 @@ import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.util.ItemUtil
-import de.sean.blockprot.util.setBackButton
-import de.sean.blockprot.util.setItemStack
 import de.tr7zw.changeme.nbtapi.NBTEntity
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -53,18 +51,18 @@ class UserSettingsInventory : BlockProtInventory() {
     fun fill(player: Player): Inventory {
         val nbtEntity = NBTEntity(player).persistentDataContainer
         val lockOnPlace = nbtEntity.getBoolean(LockUtil.LOCK_ON_PLACE_ATTRIBUTE)
-        inventory.setItemStack(
+        setItemStack(
             0,
             Material.BARRIER,
             if (lockOnPlace) TranslationKey.INVENTORIES__LOCK_ON_PLACE__DEACTIVATE
             else TranslationKey.INVENTORIES__LOCK_ON_PLACE__ACTIVATE
         )
-        inventory.setItemStack(
+        setItemStack(
             1,
             Material.PLAYER_HEAD,
             TranslationKey.INVENTORIES__FRIENDS__MANAGE
         )
-        inventory.setBackButton()
+        setBackButton()
         return inventory
     }
 }

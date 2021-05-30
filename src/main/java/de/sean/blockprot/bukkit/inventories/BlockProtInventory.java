@@ -68,7 +68,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @param event Bukkit's inventory click event for this inventory.
      * @param state The current players inventory state.
      */
-    public abstract void onInventoryClick(@NotNull InventoryClickEvent event, @Nullable InventoryState state);
+    public abstract void onClick(@NotNull InventoryClickEvent event, @Nullable InventoryState state);
 
     /**
      * Callback when this inventory gets closed, so that the holders can save their NBT or state.

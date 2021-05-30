@@ -19,7 +19,7 @@ class BlockLockInventory : BlockProtInventory() {
     override fun getSize() = InventoryConstants.singleLine
     override fun getTranslatedInventoryName() = Translator.get(TranslationKey.INVENTORIES__BLOCK_LOCK)
 
-    override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
+    override fun onClick(event: InventoryClickEvent, state: InventoryState?) {
         if (state?.block == null) return
         val block: Block = state.block
         val item = event.currentItem ?: return

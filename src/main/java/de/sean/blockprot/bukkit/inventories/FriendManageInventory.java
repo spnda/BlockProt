@@ -69,7 +69,7 @@ public final class FriendManageInventory extends FriendModifyInventory {
     }
 
     @Override
-    public void onInventoryClick(@NotNull InventoryClickEvent event, @Nullable InventoryState state) {
+    public void onClick(@NotNull InventoryClickEvent event, @Nullable InventoryState state) {
         final Player player = (Player)event.getWhoClicked();
         final ItemStack item = event.getCurrentItem();
         if (item == null) return;

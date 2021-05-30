@@ -15,7 +15,7 @@ class UserSettingsInventory : BlockProtInventory() {
     override fun getSize() = InventoryConstants.singleLine
     override fun getTranslatedInventoryName() = Translator.get(TranslationKey.INVENTORIES__USER_SETTINGS)
 
-    override fun onInventoryClick(event: InventoryClickEvent, state: InventoryState?) {
+    override fun onClick(event: InventoryClickEvent, state: InventoryState?) {
         val player = event.whoClicked as Player
         val item = event.currentItem ?: return
         val nbtEntity = NBTEntity(player).persistentDataContainer

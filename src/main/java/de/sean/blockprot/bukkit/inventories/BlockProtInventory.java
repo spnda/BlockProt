@@ -22,7 +22,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
@@ -68,14 +67,14 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @param event Bukkit's inventory click event for this inventory.
      * @param state The current players inventory state.
      */
-    public abstract void onClick(@NotNull InventoryClickEvent event, @Nullable InventoryState state);
+    public abstract void onClick(@NotNull InventoryClickEvent event, @NotNull InventoryState state);
 
     /**
      * Callback when this inventory gets closed, so that the holders can save their NBT or state.
      * @param event Bukkit's inventory close event for this inventory.
      * @param state The current players inventory state.
      */
-    public abstract void onClose(@NotNull InventoryCloseEvent event, @Nullable InventoryState state);
+    public abstract void onClose(@NotNull InventoryCloseEvent event, @NotNull InventoryState state);
 
     /**
      * Create this current inventory. If {@link BlockProtInventory#getTranslatedInventoryName()} returns an empty String,

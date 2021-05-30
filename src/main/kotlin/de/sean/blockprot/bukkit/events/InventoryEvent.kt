@@ -11,7 +11,7 @@ class InventoryEvent : Listener {
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
         val player = event.whoClicked as Player
-        val state = InventoryState.get(player.uniqueId)
+        val state = InventoryState.get(player.uniqueId) ?: return
         when (event.inventory.holder) {
             is BlockLockInventory -> (event.inventory.holder as BlockLockInventory).onClick(event, state)
             is BlockInfoInventory -> (event.inventory.holder as BlockInfoInventory).onClick(event, state)
@@ -25,7 +25,7 @@ class InventoryEvent : Listener {
     @EventHandler
     fun onInventoryClose(event: InventoryCloseEvent) {
         val player = event.player as Player
-        val state = InventoryState.get(player.uniqueId)
+        val state = InventoryState.get(player.uniqueId) ?: return
         when (event.inventory.holder) {
             is BlockLockInventory -> (event.inventory.holder as BlockLockInventory).onClose(event, state)
             is BlockInfoInventory -> (event.inventory.holder as BlockInfoInventory).onClose(event, state)

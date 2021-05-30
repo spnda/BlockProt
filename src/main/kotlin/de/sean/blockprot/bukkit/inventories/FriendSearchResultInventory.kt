@@ -21,7 +21,7 @@ class FriendSearchResultInventory : FriendModifyInventory() {
     override fun getSize() = InventoryConstants.tripleLine
     override fun getTranslatedInventoryName() = Translator.get(TranslationKey.INVENTORIES__FRIENDS__RESULT)
 
-    override fun onClick(event: InventoryClickEvent, state: InventoryState?) {
+    override fun onClick(event: InventoryClickEvent, state: InventoryState) {
         val player = event.whoClicked as Player
         val item = event.currentItem ?: return
         when (item.type) {
@@ -30,14 +30,9 @@ class FriendSearchResultInventory : FriendModifyInventory() {
                 // pressing Escape to go back, or closing it to go to the result
                 // inventory, we won't return to the anvil inventory and instead
                 // go right back to the FriendAddInventory.
-                if (state == null) {
-                    player.closeInventory()
-                    return
-                }
                 player.openInventory(FriendManageInventory().fill(player))
             }
             Material.PLAYER_HEAD, Material.SKELETON_SKULL -> {
-                if (state == null) return
                 val index = findItemIndex(item)
                 val friend = state.friendResultCache[index]
                 modifyFriendsForAction(state, player, friend, FriendModifyAction.ADD_FRIEND, false)
@@ -48,7 +43,7 @@ class FriendSearchResultInventory : FriendModifyInventory() {
         event.isCancelled = true
     }
 
-    override fun onClose(event: InventoryCloseEvent, state: InventoryState?) {}
+    override fun onClose(event: InventoryCloseEvent, state: InventoryState) {}
 
     /**
      * Compare two strings by the levenshtein distance, returning a value between 0,

@@ -19,8 +19,8 @@ class BlockLockInventory : BlockProtInventory() {
     override fun getSize() = InventoryConstants.singleLine
     override fun getTranslatedInventoryName() = Translator.get(TranslationKey.INVENTORIES__BLOCK_LOCK)
 
-    override fun onClick(event: InventoryClickEvent, state: InventoryState?) {
-        if (state?.block == null) return
+    override fun onClick(event: InventoryClickEvent, state: InventoryState) {
+        if (state.block == null) return
         val block: Block = state.block
         val item = event.currentItem ?: return
 
@@ -62,8 +62,8 @@ class BlockLockInventory : BlockProtInventory() {
         event.isCancelled = true
     }
 
-    override fun onClose(event: InventoryCloseEvent, state: InventoryState?) {
-        if (state != null && state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH && state.block != null) {
+    override fun onClose(event: InventoryCloseEvent, state: InventoryState) {
+        if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH && state.block != null) {
             val doubleChest = getDoubleChest(state.block, event.player.world)
             applyChanges(state.block, event.player as Player, false) {
                 val ret = it.lockRedstoneForBlock(

@@ -1,5 +1,3 @@
-@file:Suppress("LiftReturnOrAssignment")
-
 package de.sean.blockprot.bukkit.nbt
 
 import de.sean.blockprot.TranslationKey
@@ -17,14 +15,10 @@ import org.bukkit.entity.Player
 import java.util.*
 
 class BlockLockHandler constructor(val block: Block) {
-    private var container: NBTCompound
-
-    init {
-        when (block.type) {
-            in LockUtil.lockableBlocks -> container = NBTBlock(block).data
-            in LockUtil.lockableTileEntities -> container = NBTTileEntity(block.state).persistentDataContainer
-            else -> throw RuntimeException("Given block ${block.type} is not a lockable block/tile entity")
-        }
+    private var container: NBTCompound = when (block.type) {
+        in LockUtil.lockableBlocks -> NBTBlock(block).data
+        in LockUtil.lockableTileEntities -> NBTTileEntity(block.state).persistentDataContainer
+        else -> throw RuntimeException("Given block ${block.type} is not a lockable block/tile entity")
     }
 
     /**

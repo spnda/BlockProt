@@ -18,7 +18,6 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -69,19 +68,18 @@ public final class FriendManageInventory extends FriendModifyInventory {
     }
 
     @Override
-    public void onClick(@NotNull InventoryClickEvent event, @Nullable InventoryState state) {
+    public void onClick(@NotNull InventoryClickEvent event, @NotNull InventoryState state) {
         final Player player = (Player)event.getWhoClicked();
         final ItemStack item = event.getCurrentItem();
         if (item == null) return;
         switch (item.getType()) {
             case BLACK_STAINED_GLASS_PANE: {
                 // Exit the modify inventory and return to the base lock inventory.
-                if (state == null) break;
                 exitModifyInventory(player, state);
                 break;
             }
             case CYAN_STAINED_GLASS_PANE: {
-                if (state != null && state.getFriendPage() >= 1) {
+                if (state.getFriendPage() >= 1) {
                     state.setFriendPage(state.getFriendPage() - 1);
 
                     player.closeInventory();
@@ -91,7 +89,7 @@ public final class FriendManageInventory extends FriendModifyInventory {
             }
             case BLUE_STAINED_GLASS_PANE: {
                 ItemStack lastFriendInInventory = event.getInventory().getItem(maxSkulls);
-                if (lastFriendInInventory != null && lastFriendInInventory.getAmount() == 0 && state != null) {
+                if (lastFriendInInventory != null && lastFriendInInventory.getAmount() == 0) {
                     // There's an item in the last slot => The page is fully filled up, meaning we should go to the next page.
                     state.setFriendPage(state.getFriendPage() + 1);
 
@@ -103,7 +101,6 @@ public final class FriendManageInventory extends FriendModifyInventory {
             case SKELETON_SKULL:
             case PLAYER_HEAD: {
                 // Get the clicked player head and open the detail inventory.
-                if (state == null) break;
                 int index = findItemIndex(item);
                 OfflinePlayer friend = state.getFriendResultCache().get(index);
                 state.setCurFriend(friend);
@@ -117,7 +114,6 @@ public final class FriendManageInventory extends FriendModifyInventory {
                 break;
             }
             case OAK_DOOR: {
-                if (state == null) break;
                 int curIndex;
                 if (curFlags == null) {
                     BlockLockHandler handler = new BlockLockHandler(Objects.requireNonNull(state.getBlock()));
@@ -147,8 +143,8 @@ public final class FriendManageInventory extends FriendModifyInventory {
     }
 
     @Override
-    public void onClose(@NotNull InventoryCloseEvent event, @Nullable InventoryState state) {
-        if (state != null && state.getFriendSearchState() == InventoryState.FriendSearchState.FRIEND_SEARCH && state.getBlock() != null) {
+    public void onClose(@NotNull InventoryCloseEvent event, @NotNull InventoryState state) {
+        if (state.getFriendSearchState() == InventoryState.FriendSearchState.FRIEND_SEARCH && state.getBlock() != null) {
             new BlockLockHandler(state.getBlock()).setBlockAccessFlags(curFlags);
         }
     }

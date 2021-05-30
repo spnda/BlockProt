@@ -17,19 +17,19 @@ class BlockInfoInventory : BlockProtInventory() {
     override fun getSize() = InventoryConstants.tripleLine
     override fun getTranslatedInventoryName() = Translator.get(TranslationKey.INVENTORIES__BLOCK_INFO)
 
-    override fun onClick(event: InventoryClickEvent, state: InventoryState?) {
+    override fun onClick(event: InventoryClickEvent, state: InventoryState) {
         val player = event.whoClicked as Player
         val item = event.currentItem ?: return
         when (item.type) {
             Material.BLACK_STAINED_GLASS_PANE -> {
                 player.closeInventory()
-                if (state?.block == null) return
+                if (state.block == null) return
                 val handler = BlockLockHandler(state.block)
                 val inv = BlockLockInventory().fill(player, state.block.state.type, handler)
                 player.openInventory(inv)
             }
             Material.CYAN_STAINED_GLASS_PANE -> {
-                if (state != null && state.friendPage >= 1) {
+                if (state.friendPage >= 1) {
                     state.friendPage = state.friendPage - 1;
 
                     player.closeInventory();
@@ -38,7 +38,7 @@ class BlockInfoInventory : BlockProtInventory() {
             }
             Material.BLUE_STAINED_GLASS_PANE -> {
                 val lastFriendInInventory = inventory.getItem(InventoryConstants.tripleLine - 1);
-                if (lastFriendInInventory != null && lastFriendInInventory.amount == 0 && state != null) {
+                if (lastFriendInInventory != null && lastFriendInInventory.amount == 0) {
                     // There's an item in the last slot => The page is fully filled up, meaning we should go to the next page.
                     state.friendPage = state.friendPage + 1;
 
@@ -52,7 +52,7 @@ class BlockInfoInventory : BlockProtInventory() {
         event.isCancelled = true
     }
 
-    override fun onClose(event: InventoryCloseEvent, state: InventoryState?) {}
+    override fun onClose(event: InventoryCloseEvent, state: InventoryState) {}
 
     fun fill(player: Player, handler: BlockLockHandler): Inventory {
         val state = InventoryState.get(player.uniqueId) ?: return inventory

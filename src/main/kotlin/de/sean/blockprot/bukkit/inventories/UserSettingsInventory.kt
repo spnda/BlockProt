@@ -15,7 +15,7 @@ class UserSettingsInventory : BlockProtInventory() {
     override fun getSize() = InventoryConstants.singleLine
     override fun getTranslatedInventoryName() = Translator.get(TranslationKey.INVENTORIES__USER_SETTINGS)
 
-    override fun onClick(event: InventoryClickEvent, state: InventoryState?) {
+    override fun onClick(event: InventoryClickEvent, state: InventoryState) {
         val player = event.whoClicked as Player
         val item = event.currentItem ?: return
         val nbtEntity = NBTEntity(player).persistentDataContainer
@@ -38,7 +38,6 @@ class UserSettingsInventory : BlockProtInventory() {
                 )
             }
             Material.PLAYER_HEAD -> {
-                if (state == null) return
                 state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH
                 val inv = FriendManageInventory().fill(player)
                 player.closeInventory()
@@ -49,7 +48,7 @@ class UserSettingsInventory : BlockProtInventory() {
         event.isCancelled = true
     }
 
-    override fun onClose(event: InventoryCloseEvent, state: InventoryState?) {}
+    override fun onClose(event: InventoryCloseEvent, state: InventoryState) {}
 
     fun fill(player: Player): Inventory {
         val nbtEntity = NBTEntity(player).persistentDataContainer

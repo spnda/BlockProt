@@ -14,6 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -22,13 +23,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public final class FriendManageInventory extends FriendModifyInventory {
-    private int maxSkulls = InventoryConstants.tripleLine - 5;
-
     private static final List<EnumSet<BlockAccessFlag>> accessFlagCombinations = Arrays.asList(
         EnumSet.of(BlockAccessFlag.READ),
         EnumSet.of(BlockAccessFlag.WRITE),
         EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE)
     );
+
+    private int maxSkulls = InventoryConstants.tripleLine - 5;
+
+    private EnumSet<BlockAccessFlag> curFlags;
 
     @Override
     public int getSize() {
@@ -115,17 +118,22 @@ public final class FriendManageInventory extends FriendModifyInventory {
             }
             case OAK_DOOR: {
                 if (state == null) break;
-                BlockLockHandler handler = new BlockLockHandler(Objects.requireNonNull(state.getBlock()));
-                int curIndex = getAccessFlagIndexOf(handler.getBlockAccessFlags());
+                int curIndex;
+                if (curFlags == null) {
+                    BlockLockHandler handler = new BlockLockHandler(Objects.requireNonNull(state.getBlock()));
+                    curIndex = getAccessFlagIndexOf(handler.getBlockAccessFlags());
+                } else {
+                    curIndex = getAccessFlagIndexOf(curFlags);
+                }
+
                 if (curIndex + 1 >= accessFlagCombinations.size()) curIndex = 0;
                 else curIndex += 1;
-                EnumSet<BlockAccessFlag> newFlags = accessFlagCombinations.get(curIndex);
+                curFlags = accessFlagCombinations.get(curIndex);
                 setItemStack(
                     InventoryConstants.tripleLine - 3,
                     Material.OAK_DOOR,
-                    accessFlagToString(newFlags)
+                    accessFlagToString(curFlags)
                 );
-                handler.setBlockAccessFlags(newFlags);
                 break;
             }
             default: {
@@ -138,18 +146,24 @@ public final class FriendManageInventory extends FriendModifyInventory {
         event.setCancelled(true);
     }
 
+    @Override
+    public void onClose(@NotNull InventoryCloseEvent event, @Nullable InventoryState state) {
+        if (state != null && state.getFriendSearchState() == InventoryState.FriendSearchState.FRIEND_SEARCH && state.getBlock() != null) {
+            new BlockLockHandler(state.getBlock()).setBlockAccessFlags(curFlags);
+        }
+    }
+
     @NotNull
     public Inventory fill(@NotNull Player player) {
         final InventoryState state = InventoryState.Companion.get(player.getUniqueId());
         if (state == null) return inventory;
 
         List<OfflinePlayer> players;
-        EnumSet<BlockAccessFlag> flags;
         switch (state.getFriendSearchState()) {
             case FRIEND_SEARCH: {
                 final BlockLockHandler handler = new BlockLockHandler(Objects.requireNonNull(state.getBlock()));
                 players = mapUuidToPlayer(handler.getAccess());
-                flags = handler.getBlockAccessFlags();
+                curFlags = handler.getBlockAccessFlags();
                 break;
             }
             case DEFAULT_FRIEND_SEARCH: {
@@ -162,7 +176,6 @@ public final class FriendManageInventory extends FriendModifyInventory {
                     Arrays.asList(Bukkit.getOfflinePlayers()),
                     (uuid, cur) -> cur.contains(uuid) && !uuid.equals(selfUuid)
                 );
-                flags = null;
                 break;
             }
             default: {
@@ -194,11 +207,11 @@ public final class FriendManageInventory extends FriendModifyInventory {
         }
 
         // Only show the access switch
-        if (flags != null && state.getFriendSearchState() != InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH) {
+        if (curFlags != null && state.getFriendSearchState() != InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH) {
             setItemStack(
                 InventoryConstants.tripleLine - 3,
                 Material.OAK_DOOR,
-                accessFlagToString(flags)
+                accessFlagToString(curFlags)
             );
         }
         setItemStack(

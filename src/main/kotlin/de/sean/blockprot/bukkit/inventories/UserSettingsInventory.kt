@@ -8,6 +8,7 @@ import de.tr7zw.changeme.nbtapi.NBTEntity
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
 
 class UserSettingsInventory : BlockProtInventory() {
@@ -47,6 +48,8 @@ class UserSettingsInventory : BlockProtInventory() {
         }
         event.isCancelled = true
     }
+
+    override fun onClose(event: InventoryCloseEvent, state: InventoryState?) {}
 
     fun fill(player: Player): Inventory {
         val nbtEntity = NBTEntity(player).persistentDataContainer

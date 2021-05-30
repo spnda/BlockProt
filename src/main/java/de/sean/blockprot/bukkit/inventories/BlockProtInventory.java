@@ -17,6 +17,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -35,6 +36,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
         inventory = createInventory();
     }
 
+    @NotNull
     @Override
     public Inventory getInventory() {
         return inventory;
@@ -69,6 +71,13 @@ public abstract class BlockProtInventory implements InventoryHolder {
     public abstract void onInventoryClick(@NotNull InventoryClickEvent event, @Nullable InventoryState state);
 
     /**
+     * Callback when this inventory gets closed, so that the holders can save their NBT or state.
+     * @param event Bukkit's inventory close event for this inventory.
+     * @param state The current players inventory state.
+     */
+    public abstract void onClose(@NotNull InventoryCloseEvent event, @Nullable InventoryState state);
+
+    /**
      * Create this current inventory. If {@link BlockProtInventory#getTranslatedInventoryName()} returns an empty String,
      * this class's simple name will be used.
      * @return The Bukkit Inventory.
@@ -78,6 +87,9 @@ public abstract class BlockProtInventory implements InventoryHolder {
         return Bukkit.createInventory(this, getSize(), getDefaultInventoryName());
     }
 
+    /**
+     * Exits the currently open inventory for [player] and removes the InventoryState for [player].
+     */
     public void exit(@NotNull Player player) {
         player.closeInventory();
         InventoryState.Companion.remove(player.getUniqueId());

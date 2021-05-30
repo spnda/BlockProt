@@ -14,6 +14,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
 
 class FriendSearchResultInventory : FriendModifyInventory() {
@@ -46,6 +47,8 @@ class FriendSearchResultInventory : FriendModifyInventory() {
         }
         event.isCancelled = true
     }
+
+    override fun onClose(event: InventoryCloseEvent, state: InventoryState?) {}
 
     /**
      * Compare two strings by the levenshtein distance, returning a value between 0,

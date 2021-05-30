@@ -10,9 +10,12 @@ import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
 
 class BlockLockInventory : BlockProtInventory() {
+    private var redstone: Boolean = false
+
     override fun getSize() = InventoryConstants.singleLine
     override fun getTranslatedInventoryName() = Translator.get(TranslationKey.INVENTORIES__BLOCK_LOCK)
 
@@ -36,16 +39,7 @@ class BlockLockInventory : BlockProtInventory() {
                 }
             }
             Material.REDSTONE, Material.GUNPOWDER -> {
-                val doubleChest = getDoubleChest(block, player.world)
-                var redstone = true
-                applyChanges(block, player, false) {
-                    val ret = it.lockRedstoneForBlock(
-                        player.uniqueId.toString(),
-                        if (doubleChest != null) NBTTileEntity(doubleChest) else null
-                    )
-                    redstone = it.getRedstone()
-                    return@applyChanges ret
-                }
+                redstone = !redstone
                 setItemStack(
                     1,
                     if (redstone) Material.REDSTONE else Material.GUNPOWDER,
@@ -68,10 +62,25 @@ class BlockLockInventory : BlockProtInventory() {
         event.isCancelled = true
     }
 
+    override fun onClose(event: InventoryCloseEvent, state: InventoryState?) {
+        if (state != null && state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH && state.block != null) {
+            val doubleChest = getDoubleChest(state.block, event.player.world)
+            applyChanges(state.block, event.player as Player, false) {
+                val ret = it.lockRedstoneForBlock(
+                    event.player.uniqueId.toString(),
+                    if (doubleChest != null) NBTTileEntity(doubleChest) else null
+                )
+                redstone = it.getRedstone()
+                return@applyChanges ret
+            }
+        }
+    }
+
     fun fill(player: Player, material: Material, handler: BlockLockHandler): Inventory {
         val playerUuid = player.uniqueId.toString()
         val owner = handler.getOwner()
-        val redstone = handler.getRedstone()
+        redstone = handler.getRedstone()
+
         if (owner.isEmpty()) {
             setItemStack(
                 0,

@@ -49,8 +49,8 @@ public final class FriendManageInventory extends FriendModifyInventory {
         for (BlockAccessFlag flag : flags) {
             String flagStr = flag.toString();
             builder
-                .append(flagStr.substring(0, 1).toUpperCase()) // Uppercase first letter.
-                .append(flagStr.substring(1).toLowerCase());
+                .append(flagStr.substring(0, 1).toUpperCase(Locale.ENGLISH)) // Uppercase first letter.
+                .append(flagStr.substring(1).toLowerCase(Locale.ENGLISH));
             if (i < (flags.size() - 1)) builder.append(", ");
             i++;
         }

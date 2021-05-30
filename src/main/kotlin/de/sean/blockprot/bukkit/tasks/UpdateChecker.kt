@@ -13,19 +13,21 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.PluginDescriptionFile
 import java.io.BufferedReader
 import java.io.IOException
+import java.io.InputStream
 import java.io.InputStreamReader
 import java.net.URL
 import java.util.stream.Collectors
 
 class UpdateChecker(private val receivingPlayers: List<Player>, private val description: PluginDescriptionFile) : Runnable {
     override fun run() {
+        var inputStream: InputStream? = null
         try {
             // Documentation for API at https://github.com/SpigotMC/XenforoResourceManagerAPI
             val url = URL("https://api.spigotmc.org/simple/0.1/index.php?action=getResource&id=87829")
             val request = url.openConnection()
             request.connect()
-            val inputStream = request.getInputStream()
-            val reader = BufferedReader(InputStreamReader(inputStream))
+            inputStream = request.getInputStream()
+            val reader = BufferedReader(InputStreamReader(inputStream!!))
             val response: String = reader.lines().collect(Collectors.joining(System.lineSeparator()))
             // Use Gson to parse the given JSON from the API to a SpigotResource class.
             val latest: SpigotResource = Gson().fromJson(response, SpigotResource::class.java)
@@ -41,6 +43,8 @@ class UpdateChecker(private val receivingPlayers: List<Player>, private val desc
         } catch (e: IOException) {
             BlockProt.instance.logger.warning(e.toString())
             return
+        } finally {
+            inputStream?.close()
         }
     }
 

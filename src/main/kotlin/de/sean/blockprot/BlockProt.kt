@@ -15,10 +15,10 @@ import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
-class BlockProt : JavaPlugin() {
+open class BlockProt : JavaPlugin() {
     companion object {
         lateinit var instance: BlockProt
-        lateinit var metrics: Metrics
+        protected lateinit var metrics: Metrics
         const val pluginId: Int = 9999
         const val defaultLanguageFile = "translations_en.yml"
     }

@@ -145,6 +145,10 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * Sets a ItemStack with the type [material] and the name as [key] at [index].
      */
     public void setItemStack(int index, Material material, TranslationKey key) {
-        inventory.setItem(index, ItemUtil.INSTANCE.getItemStack(1, material, Translator.get(key)));
+        setItemStack(index, material, Translator.get(key));
+    }
+
+    public void setItemStack(int index, Material material, String text) {
+        inventory.setItem(index, ItemUtil.INSTANCE.getItemStack(1, material, text));
     }
 }

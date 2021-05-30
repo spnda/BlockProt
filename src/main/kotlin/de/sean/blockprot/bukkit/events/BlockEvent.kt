@@ -1,5 +1,6 @@
 package de.sean.blockprot.bukkit.events
 
+import de.sean.blockprot.bukkit.nbt.BlockAccessFlag
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.nbt.LockUtil.parseStringList
@@ -15,6 +16,7 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockBurnEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.plugin.java.JavaPlugin
+import java.util.*
 
 class BlockEvent(private val plugin: JavaPlugin) : Listener {
     @EventHandler
@@ -72,12 +74,12 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                     val nbtEntity = NBTEntity(event.player).persistentDataContainer
                     val friends = parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
                     handler.setAccess(friends)
+                    handler.setBlockAccessFlags(EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE))
                     if (LockUtil.disallowRedstoneOnPlace()) {
                         handler.setRedstone(redstone = false)
                     }
                 }
             }
-            // We won't lock normal blocks on placing.
             in LockUtil.lockableTileEntities, in LockUtil.lockableBlocks -> {
                 val handler = BlockLockHandler(block)
                 // We only try to lock the block if it isn't locked already.
@@ -87,6 +89,7 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                     handler.setOwner(
                         if (LockUtil.shouldLockOnPlace(event.player)) playerUuid else ""
                     )
+                    handler.setBlockAccessFlags(EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE))
                     if (LockUtil.disallowRedstoneOnPlace()) {
                         handler.setRedstone(redstone = false)
                     }

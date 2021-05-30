@@ -20,6 +20,7 @@ object LockUtil {
     const val REDSTONE_ATTRIBUTE = "splugin_lock_redstone"
     const val LOCK_ON_PLACE_ATTRIBUTE = "splugin_lock_on_place"
     const val DEFAULT_FRIENDS_ATTRIBUTE = "blockprot_default_friends"
+    const val ACCESS_FLAGS_ATTRIBUTE = "blockprot_access_flags"
 
     const val PERMISSION_LOCK = "blockprot.lock"
     const val PERMISSION_INFO = "blockprot.info"

@@ -3,6 +3,7 @@ package de.sean.blockprot.bukkit.inventories;
 import de.sean.blockprot.BlockProt;
 import de.sean.blockprot.TranslationKey;
 import de.sean.blockprot.Translator;
+import de.sean.blockprot.bukkit.nbt.BlockAccessFlag;
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler;
 import de.sean.blockprot.bukkit.nbt.LockUtil;
 import de.sean.blockprot.util.ItemUtil;
@@ -18,12 +19,16 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public final class FriendManageInventory extends FriendModifyInventory {
-    private final int maxSkulls = InventoryConstants.tripleLine - 4;
+    private int maxSkulls = InventoryConstants.tripleLine - 5;
+
+    private static final List<EnumSet<BlockAccessFlag>> accessFlagCombinations = Arrays.asList(
+        EnumSet.of(BlockAccessFlag.READ),
+        EnumSet.of(BlockAccessFlag.WRITE),
+        EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE)
+    );
 
     @Override
     public int getSize() {
@@ -34,6 +39,30 @@ public final class FriendManageInventory extends FriendModifyInventory {
     @Override
     public String getTranslatedInventoryName() {
         return Translator.get(TranslationKey.INVENTORIES__FRIENDS__MANAGE);
+    }
+
+    @NotNull
+    private String accessFlagToString(EnumSet<BlockAccessFlag> flags) {
+        if (flags.isEmpty()) return "No access";
+        StringBuilder builder = new StringBuilder();
+        int i = 0;
+        for (BlockAccessFlag flag : flags) {
+            String flagStr = flag.toString();
+            builder
+                .append(flagStr.substring(0, 1).toUpperCase()) // Uppercase first letter.
+                .append(flagStr.substring(1).toLowerCase());
+            if (i < (flags.size() - 1)) builder.append(", ");
+            i++;
+        }
+        return builder.toString();
+    }
+
+    private int getAccessFlagIndexOf(EnumSet<BlockAccessFlag> flags) {
+        int result = 0;
+        for (; result < accessFlagCombinations.size(); result++) {
+            if (flags.equals(accessFlagCombinations.get(result))) return result;
+        }
+        return result;
     }
 
     @Override
@@ -84,6 +113,21 @@ public final class FriendManageInventory extends FriendModifyInventory {
                 FriendSearchInventory.INSTANCE.openAnvilInventory(player);
                 break;
             }
+            case OAK_DOOR: {
+                if (state == null) break;
+                BlockLockHandler handler = new BlockLockHandler(Objects.requireNonNull(state.getBlock()));
+                int curIndex = getAccessFlagIndexOf(handler.getBlockAccessFlags());
+                if (curIndex + 1 >= accessFlagCombinations.size()) curIndex = 0;
+                else curIndex += 1;
+                EnumSet<BlockAccessFlag> newFlags = accessFlagCombinations.get(curIndex);
+                setItemStack(
+                    InventoryConstants.tripleLine - 3,
+                    Material.OAK_DOOR,
+                    accessFlagToString(newFlags)
+                );
+                handler.setBlockAccessFlags(newFlags);
+                break;
+            }
             default: {
                 // Unexpected, exit the inventory.
                 player.closeInventory();
@@ -100,13 +144,16 @@ public final class FriendManageInventory extends FriendModifyInventory {
         if (state == null) return inventory;
 
         List<OfflinePlayer> players;
+        EnumSet<BlockAccessFlag> flags;
         switch (state.getFriendSearchState()) {
             case FRIEND_SEARCH: {
                 final BlockLockHandler handler = new BlockLockHandler(Objects.requireNonNull(state.getBlock()));
                 players = mapUuidToPlayer(handler.getAccess());
+                flags = handler.getBlockAccessFlags();
                 break;
             }
             case DEFAULT_FRIEND_SEARCH: {
+                maxSkulls += 1; // We have 1 button less, as that button is only for blocks, which gives us room for one more friend.
                 final NBTCompound nbtEntity = new NBTEntity(player).getPersistentDataContainer();
                 List<String> currentFriends = LockUtil.parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE));
                 final String selfUuid = player.getUniqueId().toString();
@@ -115,6 +162,7 @@ public final class FriendManageInventory extends FriendModifyInventory {
                     Arrays.asList(Bukkit.getOfflinePlayers()),
                     (uuid, cur) -> cur.contains(uuid) && !uuid.equals(selfUuid)
                 );
+                flags = null;
                 break;
             }
             default: {
@@ -139,9 +187,18 @@ public final class FriendManageInventory extends FriendModifyInventory {
                 TranslationKey.INVENTORIES__LAST_PAGE
             );
             setItemStack(
-                InventoryConstants.tripleLine - 3,
+                maxSkulls + 1,
                 Material.BLUE_STAINED_GLASS_PANE,
                 TranslationKey.INVENTORIES__NEXT_PAGE
+            );
+        }
+
+        // Only show the access switch
+        if (flags != null && state.getFriendSearchState() != InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH) {
+            setItemStack(
+                InventoryConstants.tripleLine - 3,
+                Material.OAK_DOOR,
+                accessFlagToString(flags)
             );
         }
         setItemStack(

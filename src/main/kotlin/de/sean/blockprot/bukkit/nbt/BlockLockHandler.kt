@@ -4,6 +4,7 @@ package de.sean.blockprot.bukkit.nbt
 
 import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
+import de.sean.blockprot.bukkit.nbt.LockUtil.ACCESS_FLAGS_ATTRIBUTE
 import de.sean.blockprot.bukkit.nbt.LockUtil.LOCK_ATTRIBUTE
 import de.sean.blockprot.bukkit.nbt.LockUtil.OWNER_ATTRIBUTE
 import de.sean.blockprot.bukkit.nbt.LockUtil.REDSTONE_ATTRIBUTE
@@ -13,6 +14,7 @@ import de.tr7zw.changeme.nbtapi.NBTCompound
 import de.tr7zw.changeme.nbtapi.NBTTileEntity
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
+import java.util.*
 
 class BlockLockHandler constructor(val block: Block) {
     private var container: NBTCompound
@@ -25,20 +27,52 @@ class BlockLockHandler constructor(val block: Block) {
         }
     }
 
+    /**
+     * Reads the current owner from the NBT container.
+     * @return The owner as a UUID-String read from the container, or an empty String.
+     */
     fun getOwner(): String = container.getString(OWNER_ATTRIBUTE) ?: ""
+
+    /**
+     * Gets the list of friends that are allowed to access the container.
+     * @return A list of UUID-Strings which each represent a player's UUID.
+     */
     fun getAccess() = parseStringList(container.getString(LOCK_ATTRIBUTE))
 
     /**
-     * If true, redstone should be allowed for this block and should not be blocked.
-     * The default value is true
+     * Read the access flags of this block.
      */
-    fun getRedstone(): Boolean {
-        return if (!container.hasKey(REDSTONE_ATTRIBUTE)) true // Default value
-        else container.getBoolean(REDSTONE_ATTRIBUTE)
-    }
+    fun getBlockAccessFlags(): EnumSet<BlockAccessFlag> =
+        if (!container.hasKey(ACCESS_FLAGS_ATTRIBUTE)) EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE)
+        else BlockAccessFlag.parseFlags(container.getInteger(ACCESS_FLAGS_ATTRIBUTE))
 
+    /**
+     * If true, redstone should be allowed for this block and should not be blocked.
+     * If redstone has not been set for this block yet, the default value is true
+     * @return Whether redstone should be allowed or not.
+     */
+    fun getRedstone(): Boolean =
+        if (!container.hasKey(REDSTONE_ATTRIBUTE)) true // Default value
+        else container.getBoolean(REDSTONE_ATTRIBUTE)
+
+    /**
+     * Set the current owner of this block.
+     */
     fun setOwner(string: String) = container.setString(OWNER_ATTRIBUTE, string)
+
+    /**
+     * Set the current list of friends that have access to this block.
+     */
     fun setAccess(list: List<String>) = container.setString(LOCK_ATTRIBUTE, list.toString())
+
+    /**
+     * Sets the access flags for this block. ORs all flags together to one integer, then
+     * writes all of them to ACCESS_FLAGS_ATTRIBUTE.
+     */
+    fun setBlockAccessFlags(flags: EnumSet<BlockAccessFlag>) = container.setInteger(
+        ACCESS_FLAGS_ATTRIBUTE,
+        flags.map { it.flag }.fold(0) { acc, i -> acc.or(i) }
+    )
 
     /**
      * If true, redstone should be allowed for this block and should not be blocked
@@ -49,6 +83,10 @@ class BlockLockHandler constructor(val block: Block) {
     fun isProtected() = !isNotProtected()
 
     fun isOwner(player: String) = getOwner() == player
+
+    /**
+     * Checks whether or not given [player] can access this block.
+     */
     fun canAccess(player: String) =
         if (isProtected()) (getOwner() == player || getAccess().contains(player)) else getOwner().isEmpty()
 

@@ -2,22 +2,21 @@ package de.sean.blockprot.bukkit.nbt
 
 import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
-import de.sean.blockprot.bukkit.nbt.LockUtil.ACCESS_FLAGS_ATTRIBUTE
-import de.sean.blockprot.bukkit.nbt.LockUtil.LOCK_ATTRIBUTE
-import de.sean.blockprot.bukkit.nbt.LockUtil.OWNER_ATTRIBUTE
-import de.sean.blockprot.bukkit.nbt.LockUtil.REDSTONE_ATTRIBUTE
-import de.sean.blockprot.bukkit.nbt.LockUtil.parseStringList
+import de.sean.blockprot.bukkit.util.LockUtil
+import de.sean.blockprot.bukkit.util.LockUtil.parseStringList
 import de.tr7zw.changeme.nbtapi.NBTBlock
 import de.tr7zw.changeme.nbtapi.NBTCompound
 import de.tr7zw.changeme.nbtapi.NBTTileEntity
 import org.bukkit.block.Block
+import org.bukkit.block.data.Bisected
+import org.bukkit.block.data.type.Door
 import org.bukkit.entity.Player
 import java.util.*
 
 class BlockLockHandler constructor(val block: Block) {
-    private var container: NBTCompound = when (block.type) {
-        in LockUtil.lockableBlocks -> NBTBlock(block).data
-        in LockUtil.lockableTileEntities -> NBTTileEntity(block.state).persistentDataContainer
+    private var container: NBTCompound = when {
+        LockUtil.isLockableBlock(block.type) -> NBTBlock(block).data
+        LockUtil.isLockableTileEntity(block.type) -> NBTTileEntity(block.state).persistentDataContainer
         else -> throw RuntimeException("Given block ${block.type} is not a lockable block/tile entity")
     }
 
@@ -95,7 +94,7 @@ class BlockLockHandler constructor(val block: Block) {
             return LockReturnValue(true, Translator.get(TranslationKey.MESSAGES__PERMISSION_GRANTED))
         } else if (isOwner(playerUuid) ||
             (isOp && owner.isNotEmpty()) ||
-            player.hasPermission(LockUtil.PERMISSION_ADMIN)
+            player.hasPermission(PERMISSION_ADMIN)
         ) {
             setOwner(""); setAccess(emptyList())
             doubleChest?.persistentDataContainer?.setString(OWNER_ATTRIBUTE, "")
@@ -156,5 +155,37 @@ class BlockLockHandler constructor(val block: Block) {
                 }
             }
         }
+    }
+
+    /**
+     * Copy the data over from the top or bottom door to the other half
+     */
+    fun applyToDoor(block: Block) {
+        if (LockUtil.isLockableDoor(block.type)) {
+            val blockState = block.state
+            val door = blockState.blockData as Door
+            var other = blockState.location
+            other = if (door.half == Bisected.Half.TOP) other.subtract(0.0, 1.0, 0.0)
+            else other.add(0.0, 1.0, 0.0)
+            val otherDoor = blockState.world.getBlockAt(other)
+            val otherDoorHandler = BlockLockHandler(otherDoor)
+            otherDoorHandler.setOwner(this.getOwner())
+            otherDoorHandler.setAccess(this.getAccess())
+            otherDoorHandler.setRedstone(this.getRedstone())
+        }
+    }
+
+    companion object {
+        const val OWNER_ATTRIBUTE = "splugin_owner"
+        const val LOCK_ATTRIBUTE = "splugin_lock"
+        const val REDSTONE_ATTRIBUTE = "splugin_lock_redstone"
+        const val LOCK_ON_PLACE_ATTRIBUTE = "splugin_lock_on_place"
+        const val DEFAULT_FRIENDS_ATTRIBUTE = "blockprot_default_friends"
+        const val ACCESS_FLAGS_ATTRIBUTE = "blockprot_access_flags"
+
+        const val PERMISSION_LOCK = "blockprot.lock"
+        const val PERMISSION_INFO = "blockprot.info"
+        const val PERMISSION_ADMIN = "blockprot.admin"
+        const val PERMISSION_BYPASS = "blockprot.bypass"
     }
 }

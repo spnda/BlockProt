@@ -1,4 +1,4 @@
-package de.sean.blockprot.util
+package de.sean.blockprot.bukkit.util
 
 import org.bukkit.Material
 import org.bukkit.OfflinePlayer

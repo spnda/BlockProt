@@ -5,9 +5,8 @@ import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.FriendModifyAction
-import de.sean.blockprot.bukkit.nbt.LockUtil
-import de.sean.blockprot.bukkit.nbt.LockUtil.parseStringList
-import de.sean.blockprot.util.ItemUtil
+import de.sean.blockprot.bukkit.util.LockUtil.parseStringList
+import de.sean.blockprot.bukkit.util.ItemUtil
 import de.tr7zw.changeme.nbtapi.NBTEntity
 import org.apache.commons.lang.StringUtils
 import org.bukkit.Bukkit
@@ -76,7 +75,7 @@ class FriendSearchResultInventory : FriendModifyInventory() {
             }
             InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
                 val playerNBT = NBTEntity(player).persistentDataContainer
-                parseStringList(playerNBT.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
+                parseStringList(playerNBT.getString(BlockLockHandler.DEFAULT_FRIENDS_ATTRIBUTE))
             }
         }
 

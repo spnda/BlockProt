@@ -4,7 +4,7 @@ import de.sean.blockprot.BlockProt
 import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
-import de.sean.blockprot.util.ItemUtil
+import de.sean.blockprot.bukkit.util.ItemUtil
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player

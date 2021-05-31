@@ -5,7 +5,7 @@ import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.inventories.BlockLockInventory
 import de.sean.blockprot.bukkit.inventories.InventoryState
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
-import de.sean.blockprot.bukkit.nbt.LockUtil
+import de.sean.blockprot.bukkit.util.LockUtil
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.block.Block
@@ -20,20 +20,20 @@ open class InteractEvent : Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     open fun playerInteract(event: PlayerInteractEvent) {
         if (event.clickedBlock == null) return
-        if (!LockUtil.isLockable(event.clickedBlock!!.state)) return
+        if (!LockUtil.isLockable(event.clickedBlock!!.state.type)) return
         val player = event.player
         when {
             event.action == Action.RIGHT_CLICK_BLOCK && !player.isSneaking -> {
                 // The user right clicked and is trying to access the container
                 if (event.clickedBlock != null) {
                     val handler = BlockLockHandler(event.clickedBlock as Block)
-                    if (!(handler.canAccess(player.uniqueId.toString()) || player.hasPermission(LockUtil.PERMISSION_BYPASS))) {
+                    if (!(handler.canAccess(player.uniqueId.toString()) || player.hasPermission(BlockLockHandler.PERMISSION_BYPASS))) {
                         event.isCancelled = true
                         sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION))
                     }
                 }
             }
-            event.action == Action.RIGHT_CLICK_BLOCK && player.isSneaking && player.hasPermission(LockUtil.PERMISSION_LOCK) -> {
+            event.action == Action.RIGHT_CLICK_BLOCK && player.isSneaking && player.hasPermission(BlockLockHandler.PERMISSION_LOCK) -> {
                 if (event.item != null) return // Only enter the menu with an empty hand.
                 val handler = BlockLockHandler(event.clickedBlock!!)
                 event.isCancelled = true
@@ -42,8 +42,8 @@ open class InteractEvent : Listener {
                 if (handler.isNotProtected() ||
                     handler.getOwner() == player.uniqueId.toString() ||
                     event.player.isOp ||
-                    player.hasPermission(LockUtil.PERMISSION_INFO) ||
-                    player.hasPermission(LockUtil.PERMISSION_ADMIN)
+                    player.hasPermission(BlockLockHandler.PERMISSION_INFO) ||
+                    player.hasPermission(BlockLockHandler.PERMISSION_ADMIN)
                 ) {
                     val state = InventoryState(event.clickedBlock!!)
                     state.friendSearchState = InventoryState.FriendSearchState.FRIEND_SEARCH

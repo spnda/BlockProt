@@ -1,7 +1,7 @@
 package de.sean.blockprot.bukkit.events
 
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
-import de.sean.blockprot.bukkit.nbt.LockUtil
+import de.sean.blockprot.bukkit.util.LockUtil
 import org.bukkit.block.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -14,8 +14,8 @@ class HopperEvent : Listener {
     fun onItemMove(event: InventoryMoveItemEvent) {
         if (event.destination.type == InventoryType.HOPPER) {
             // This is a hopper trying to pull from something.
-            when (event.source.type) {
-                in LockUtil.lockableInventories -> {
+            when {
+                LockUtil.isLockableInventory(event.source.type) -> {
                     // This hopper is trying to pull from some inventory which *may* be locked.
                     // Note: we do not have to check for double chests, as both sides of a chest are individually locked.
                     val sourceLocation = getBlock(event.source.holder ?: return) ?: return

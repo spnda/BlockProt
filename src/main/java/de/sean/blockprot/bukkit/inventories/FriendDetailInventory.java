@@ -3,7 +3,7 @@ package de.sean.blockprot.bukkit.inventories;
 import de.sean.blockprot.TranslationKey;
 import de.sean.blockprot.Translator;
 import de.sean.blockprot.bukkit.nbt.FriendModifyAction;
-import de.sean.blockprot.util.ItemUtil;
+import de.sean.blockprot.bukkit.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;

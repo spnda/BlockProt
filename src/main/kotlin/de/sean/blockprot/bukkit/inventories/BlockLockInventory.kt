@@ -3,8 +3,8 @@ package de.sean.blockprot.bukkit.inventories
 import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
-import de.sean.blockprot.bukkit.nbt.LockUtil
-import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
+import de.sean.blockprot.bukkit.util.LockUtil
+import de.sean.blockprot.bukkit.util.LockUtil.getDoubleChest
 import de.tr7zw.changeme.nbtapi.NBTTileEntity
 import org.bukkit.Material
 import org.bukkit.block.Block
@@ -27,8 +27,8 @@ class BlockLockInventory : BlockProtInventory() {
         val player = event.whoClicked as Player
         val inv: Inventory
 
-        when (item.type) {
-            in LockUtil.lockableTileEntities, in LockUtil.lockableBlocks -> {
+        when {
+            LockUtil.isLockable(item.type) -> {
                 val doubleChest = getDoubleChest(block, player.world)
                 applyChanges(block, player, true) {
                     it.lockBlock(
@@ -38,7 +38,7 @@ class BlockLockInventory : BlockProtInventory() {
                     )
                 }
             }
-            Material.REDSTONE, Material.GUNPOWDER -> {
+            item.type == Material.REDSTONE || item.type == Material.GUNPOWDER -> {
                 redstone = !redstone
                 setItemStack(
                     1,
@@ -47,12 +47,12 @@ class BlockLockInventory : BlockProtInventory() {
                     else TranslationKey.INVENTORIES__REDSTONE__ALLOW
                 )
             }
-            Material.PLAYER_HEAD -> {
+            item.type == Material.PLAYER_HEAD -> {
                 inv = FriendManageInventory().fill(player)
                 player.closeInventory()
                 player.openInventory(inv)
             }
-            Material.OAK_SIGN -> {
+            item.type == Material.OAK_SIGN -> {
                 player.closeInventory()
                 inv = BlockInfoInventory().fill(player, BlockLockHandler(block))
                 player.openInventory(inv)
@@ -87,7 +87,7 @@ class BlockLockInventory : BlockProtInventory() {
                 material,
                 TranslationKey.INVENTORIES__LOCK
             )
-        } else if (owner == playerUuid || player.hasPermission(LockUtil.PERMISSION_ADMIN)) {
+        } else if (owner == playerUuid || player.hasPermission(BlockLockHandler.PERMISSION_ADMIN)) {
             setItemStack(
                 0,
                 material,
@@ -108,8 +108,8 @@ class BlockLockInventory : BlockProtInventory() {
             )
         }
         if (player.isOp ||
-            player.hasPermission(LockUtil.PERMISSION_INFO) ||
-            player.hasPermission(LockUtil.PERMISSION_ADMIN)
+            player.hasPermission(BlockLockHandler.PERMISSION_INFO) ||
+            player.hasPermission(BlockLockHandler.PERMISSION_ADMIN)
         ) {
             setItemStack(
                 InventoryConstants.lineLength - 2,

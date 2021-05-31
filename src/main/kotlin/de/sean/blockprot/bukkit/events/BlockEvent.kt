@@ -2,8 +2,8 @@ package de.sean.blockprot.bukkit.events
 
 import de.sean.blockprot.bukkit.nbt.BlockAccessFlag
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
-import de.sean.blockprot.bukkit.nbt.LockUtil
-import de.sean.blockprot.bukkit.nbt.LockUtil.parseStringList
+import de.sean.blockprot.bukkit.util.LockUtil
+import de.sean.blockprot.bukkit.util.LockUtil.parseStringList
 import de.sean.blockprot.bukkit.tasks.DoubleChestLocker
 import de.tr7zw.changeme.nbtapi.NBTEntity
 import de.tr7zw.changeme.nbtapi.NBTItem
@@ -21,7 +21,7 @@ import java.util.*
 class BlockEvent(private val plugin: JavaPlugin) : Listener {
     @EventHandler
     fun blockBurn(event: BlockBurnEvent) {
-        if (!LockUtil.isLockable(event.block.state)) return
+        if (!LockUtil.isLockable(event.block.type)) return
         val handler = BlockLockHandler(event.block)
         // If the block is protected by any user, prevent it from burning down.
         if (handler.isProtected()) {
@@ -31,8 +31,8 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
 
     @EventHandler
     fun playerBlockBreak(event: BlockBreakEvent) {
-        if (!LockUtil.isLockable(event.block.state)) return // We only want to check for Tiles.
-        if (LockUtil.shulkerBoxes.contains(event.block.state.type) && event.isDropItems) {
+        if (!LockUtil.isLockable(event.block.type)) return // We only want to check for Tiles.
+        if (LockUtil.isLockableShulkerBox(event.block.type) && event.isDropItems) {
             event.isDropItems = false // Prevent the event from dropping items itself
             val itemsToDrop = event.block.drops.first() // Shulker blocks should only have a single drop anyway
             val nbtTile = NBTTileEntity(event.block.state).persistentDataContainer
@@ -52,8 +52,8 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
     fun playerBlockPlace(event: BlockPlaceEvent) {
         val block = event.blockPlaced
         val playerUuid = event.player.uniqueId.toString()
-        when (block.type) {
-            Material.CHEST -> {
+        when {
+            block.type == Material.CHEST -> {
                 val handler = BlockLockHandler(block)
 
                 // After placing, it takes 1 tick for the chests to connect.
@@ -72,7 +72,7 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                 if (LockUtil.shouldLockOnPlace(event.player)) {
                     handler.lockBlock(event.player, event.player.isOp, null)
                     val nbtEntity = NBTEntity(event.player).persistentDataContainer
-                    val friends = parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE))
+                    val friends = parseStringList(nbtEntity.getString(BlockLockHandler.DEFAULT_FRIENDS_ATTRIBUTE))
                     handler.setAccess(friends)
                     handler.setBlockAccessFlags(EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE))
                     if (LockUtil.disallowRedstoneOnPlace()) {
@@ -80,7 +80,7 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                     }
                 }
             }
-            in LockUtil.lockableTileEntities, in LockUtil.lockableBlocks -> {
+            LockUtil.isLockableTileEntity(event.block.type) || LockUtil.isLockableBlock(event.block.type) -> {
                 val handler = BlockLockHandler(block)
                 // We only try to lock the block if it isn't locked already.
                 // Shulker boxes might already be locked, from previous placing.

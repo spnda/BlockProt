@@ -5,8 +5,8 @@ import de.sean.blockprot.TranslationKey;
 import de.sean.blockprot.Translator;
 import de.sean.blockprot.bukkit.nbt.BlockAccessFlag;
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler;
-import de.sean.blockprot.bukkit.nbt.LockUtil;
-import de.sean.blockprot.util.ItemUtil;
+import de.sean.blockprot.bukkit.util.LockUtil;
+import de.sean.blockprot.bukkit.util.ItemUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
 import org.bukkit.Bukkit;
@@ -165,7 +165,7 @@ public final class FriendManageInventory extends FriendModifyInventory {
             case DEFAULT_FRIEND_SEARCH: {
                 maxSkulls += 1; // We have 1 button less, as that button is only for blocks, which gives us room for one more friend.
                 final NBTCompound nbtEntity = new NBTEntity(player).getPersistentDataContainer();
-                List<String> currentFriends = LockUtil.parseStringList(nbtEntity.getString(LockUtil.DEFAULT_FRIENDS_ATTRIBUTE));
+                List<String> currentFriends = LockUtil.parseStringList(nbtEntity.getString(BlockLockHandler.DEFAULT_FRIENDS_ATTRIBUTE));
                 final String selfUuid = player.getUniqueId().toString();
                 players = filterList(
                     currentFriends,

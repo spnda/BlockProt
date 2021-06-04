@@ -1,5 +1,5 @@
 name: BlockProt
-version: @version@
+version: ${version}
 main: de.sean.blockprot.BlockProt
 api-version: 1.14
 authors: [ spnda ]

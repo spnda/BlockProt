@@ -1,7 +1,7 @@
 /*
  * This file is part of BlockProt, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2021 spnda
+ * Copyright (c) $YEAR spnda
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,20 +22,3 @@
  * SOFTWARE.
  */
 
-package de.sean.blockprot.bukkit.events
-
-import de.sean.blockprot.bukkit.nbt.BlockLockHandler
-import de.sean.blockprot.bukkit.util.LockUtil
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.block.BlockRedstoneEvent
-
-class RedstoneEvent : Listener {
-    @EventHandler
-    fun onRedstone(event: BlockRedstoneEvent) {
-        // If this is a lockable block and the redstone protection is activated, set the redstone current to 0
-        if (LockUtil.isLockableBlock(event.block.type) && !BlockLockHandler(event.block).getRedstone()) {
-            event.newCurrent = 0
-        }
-    }
-}

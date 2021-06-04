@@ -1,4 +1,3 @@
-
 import org.kohsuke.github.GHReleaseBuilder
 import org.kohsuke.github.GitHub
 
@@ -17,6 +16,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.5.10"
     id("com.matthewprenger.cursegradle") version "1.4.0"
     id("org.ajoberstar.grgit") version "4.1.0"
+    id("com.diffplug.spotless") version "5.8.2"
 }
 
 val env: MutableMap<String, String> = System.getenv()
@@ -64,6 +64,22 @@ dependencies {
     api("org.bstats:bstats-bukkit:2.2.1")
 
     compileOnly("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT") // Spigot
+}
+
+spotless {
+    encoding("UTF-8")
+
+    java {
+        licenseHeaderFile(project.file("HEADER.txt")).yearSeparator(", ")
+    }
+
+    kotlin {
+        // We can start using ktlint through spotless as soon as
+        // https://github.com/diffplug/spotless/issues/142 is fixed.
+        // ktlint()
+
+        licenseHeaderFile(project.file("HEADER.txt")).yearSeparator(", ")
+    }
 }
 
 tasks.processResources {

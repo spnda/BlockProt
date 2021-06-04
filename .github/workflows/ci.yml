@@ -9,21 +9,29 @@ on:
       - '**.gradle'
   pull_request:
     branches: [ master ]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-20.04
-    container:
-      image: openjdk:16-jdk
-      options: --user root
+    # Setting any container image breaks actions/checkout@v2.
+    # container:
+    #   image: openjdk:16-jdk
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: Set up JDK 16
+        uses: actions/setup-java@v2
+        with:
+          java-version: '16'
+          distribution: 'adopt'
       - uses: gradle/wrapper-validation-action@v1
       - name: Check for errors
-        uses: github/super-linter@v3
+        uses: docker://ghcr.io/github/super-linter:slim-v4 # Use the super-linter:slim package, see https://github.com/github/super-linter#slim-image why.
         env:
-          DEFAULT_BRANCH: main
-          FILTER_REGEX_INCLUDE: .*src/.*.kt
+          DEFAULT_BRANCH: master
+          FILTER_REGEX_INCLUDE: .*\.(kt|java)
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build with Gradle
         run: ./gradlew build

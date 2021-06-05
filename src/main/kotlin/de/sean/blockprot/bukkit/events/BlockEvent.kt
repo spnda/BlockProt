@@ -26,9 +26,9 @@ package de.sean.blockprot.bukkit.events
 
 import de.sean.blockprot.bukkit.nbt.BlockAccessFlag
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
+import de.sean.blockprot.bukkit.tasks.DoubleChestLocker
 import de.sean.blockprot.bukkit.util.LockUtil
 import de.sean.blockprot.bukkit.util.LockUtil.parseStringList
-import de.sean.blockprot.bukkit.tasks.DoubleChestLocker
 import de.tr7zw.changeme.nbtapi.NBTEntity
 import de.tr7zw.changeme.nbtapi.NBTItem
 import de.tr7zw.changeme.nbtapi.NBTTileEntity

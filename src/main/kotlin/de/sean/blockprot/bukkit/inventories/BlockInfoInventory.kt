@@ -54,20 +54,20 @@ class BlockInfoInventory : BlockProtInventory() {
             }
             Material.CYAN_STAINED_GLASS_PANE -> {
                 if (state.friendPage >= 1) {
-                    state.friendPage = state.friendPage - 1;
+                    state.friendPage = state.friendPage - 1
 
-                    player.closeInventory();
-                    if (state.block != null) player.openInventory(fill(player, BlockLockHandler(state.block)));
+                    player.closeInventory()
+                    if (state.block != null) player.openInventory(fill(player, BlockLockHandler(state.block)))
                 }
             }
             Material.BLUE_STAINED_GLASS_PANE -> {
-                val lastFriendInInventory = inventory.getItem(InventoryConstants.tripleLine - 1);
+                val lastFriendInInventory = inventory.getItem(InventoryConstants.tripleLine - 1)
                 if (lastFriendInInventory != null && lastFriendInInventory.amount == 0) {
                     // There's an item in the last slot => The page is fully filled up, meaning we should go to the next page.
-                    state.friendPage = state.friendPage + 1;
+                    state.friendPage = state.friendPage + 1
 
-                    player.closeInventory();
-                    if (state.block != null) player.openInventory(fill(player, BlockLockHandler(state.block)));
+                    player.closeInventory()
+                    if (state.block != null) player.openInventory(fill(player, BlockLockHandler(state.block)))
                 }
             }
             else -> {

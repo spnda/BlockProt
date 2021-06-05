@@ -31,7 +31,7 @@ jobs:
         uses: docker://ghcr.io/github/super-linter:slim-v4 # Use the super-linter:slim package, see https://github.com/github/super-linter#slim-image why.
         env:
           DEFAULT_BRANCH: master
-          FILTER_REGEX_INCLUDE: .*\.(kt|java)
+          FILTER_REGEX_INCLUDE: .*\.kt
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build with Gradle
         run: ./gradlew build

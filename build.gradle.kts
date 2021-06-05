@@ -34,7 +34,7 @@ fun gitBranchName(): String {
 
 group = "de.sean"
 version = "0.2.2"
-base.archivesBaseName = "${project.name}-${version}-${gitBranchName()}"
+base.archivesBaseName = "${project.name}-$version-${gitBranchName()}"
 
 repositories {
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") {
@@ -107,7 +107,7 @@ tasks.shadowJar {
     relocate("org.bstats", "de.sean.blockprot.metrics")
     minimize()
 
-    val classifier: String? = null;
+    val classifier: String? = null
     archiveClassifier.set(classifier)
 
     archiveFileName.set("${base.archivesBaseName}-all.jar")

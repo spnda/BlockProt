@@ -29,8 +29,8 @@ import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.sean.blockprot.bukkit.nbt.FriendModifyAction
-import de.sean.blockprot.bukkit.util.LockUtil.parseStringList
 import de.sean.blockprot.bukkit.util.ItemUtil
+import de.sean.blockprot.bukkit.util.LockUtil.parseStringList
 import de.tr7zw.changeme.nbtapi.NBTEntity
 import org.apache.commons.lang.StringUtils
 import org.bukkit.Bukkit

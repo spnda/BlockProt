@@ -50,7 +50,7 @@ public abstract class FriendModifyInventory extends BlockProtInventory {
      * @param player The player, or better the owner of the block we want to modify
      *               or the player we want to edit the default friends for.
      * @param friend The friend we want to do {@code action} for.
-     * @param action
+     * @param action The action to perform with {@code friend}.
      * @param exit   Whether we want to close the inventory for {@code player} after modifying.
      */
     public final void modifyFriendsForAction(
@@ -94,6 +94,8 @@ public abstract class FriendModifyInventory extends BlockProtInventory {
                     });
                 break;
             }
+            default:
+                break;
         }
     }
 
@@ -111,13 +113,11 @@ public abstract class FriendModifyInventory extends BlockProtInventory {
                             new BlockLockHandler(state.getBlock()));
                 break;
             }
-            case DEFAULT_FRIEND_SEARCH: {
+            case DEFAULT_FRIEND_SEARCH:
                 inventory = new UserSettingsInventory().fill(player);
                 break;
-            }
-            default: {
+            default:
                 return;
-            }
         }
         player.openInventory(inventory);
     }
@@ -132,10 +132,11 @@ public abstract class FriendModifyInventory extends BlockProtInventory {
      * @return A list of all {@link OfflinePlayer} in {@code allPlayers} which were valid as by
      * {@code check}.
      */
+    @NotNull
     List<OfflinePlayer> filterList(
-        List<String> input,
-        List<OfflinePlayer> allPlayers,
-        BiFunction<String, List<String>, Boolean> check) {
+        @NotNull final List<String> input,
+        @NotNull final List<OfflinePlayer> allPlayers,
+        @NotNull final BiFunction<String, List<String>, Boolean> check) {
         final List<OfflinePlayer> ret = new ArrayList<>();
         for (OfflinePlayer player : allPlayers) {
             final String playerUuid = player.getUniqueId().toString();

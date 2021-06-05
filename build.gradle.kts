@@ -102,7 +102,8 @@ tasks.jar {
 }
 
 tasks.shadowJar {
-    relocate("de.tr7zw.changeme.nbtapi", "de.sean.blockprot.nbtapi")
+    relocate("de.tr7zw.changeme.nbtapi", "de.sean.blockprot.shaded.nbtapi")
+    relocate("net.wesjd.anvilgui", "de.sean.blockprot.shaded.anvilgui")
     relocate("org.bstats", "de.sean.blockprot.metrics")
     minimize()
 

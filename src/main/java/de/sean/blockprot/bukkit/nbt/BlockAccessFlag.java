@@ -24,18 +24,40 @@
 
 package de.sean.blockprot.bukkit.nbt;
 
+import de.sean.blockprot.TranslationKey;
+import de.sean.blockprot.Translator;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.EnumSet;
 
 public enum BlockAccessFlag {
     /**
      * The user is allowed to see, but not alter, the contents of the inventory.
      */
-    READ,
+    READ(TranslationKey.INVENTORIES__BACK),
 
     /**
      * The user is allowed to add and remove contents of the inventory.
      */
-    WRITE;
+    WRITE(TranslationKey.INVENTORIES__BACK);
+
+    @NotNull
+    private final TranslationKey descriptionKey;
+
+    BlockAccessFlag(@NotNull final TranslationKey description) {
+        this.descriptionKey = description;
+    }
+
+    /**
+     * Get the translated description of this flag. It uses {@link Translator#get(TranslationKey)}
+     * using the {@link #descriptionKey} to get the corresponding value.
+     *
+     * @return Translated description.
+     */
+    @NotNull
+    public String getDescription() {
+        return Translator.get(descriptionKey);
+    }
 
     /**
      * Gets this enum as a bit flag.

@@ -214,7 +214,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
     }
 
     /**
-     * Sets a ItemStack with the type [material] and the name as [key] at [index].
+     * Sets a ItemStack with the type [material] and the name translated by [key] at [index].
      *
      * @param key The translation key to use to get the translated name for this item.
      */
@@ -227,5 +227,21 @@ public abstract class BlockProtInventory implements InventoryHolder {
      */
     public void setItemStack(int index, Material material, String text) {
         inventory.setItem(index, ItemUtil.INSTANCE.getItemStack(1, material, text));
+    }
+
+    /**
+     * Sets a ItemStack with the type {@code material} and the name translated by {@code text} with
+     * {@code lore} at {@code index}.
+     */
+    public void setItemStack(int index, Material material, TranslationKey key, List<String> lore) {
+        setItemStack(index, material, Translator.get(key), lore);
+    }
+
+    /**
+     * Sets a ItemStack with the type {@code material} and the name as {@code text} with {@code lore}
+     * at {@code index}.
+     */
+    public void setItemStack(int index, Material material, String text, List<String> lore) {
+        inventory.setItem(index, ItemUtil.INSTANCE.getItemStack(1, material, text, lore));
     }
 }

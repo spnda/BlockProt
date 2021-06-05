@@ -49,7 +49,6 @@ public final class FriendManageInventory extends FriendModifyInventory {
     private static final List<EnumSet<BlockAccessFlag>> accessFlagCombinations =
         Arrays.asList(
             EnumSet.of(BlockAccessFlag.READ),
-            EnumSet.of(BlockAccessFlag.WRITE),
             EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE));
 
     private int maxSkulls = InventoryConstants.tripleLine - 5;
@@ -68,7 +67,7 @@ public final class FriendManageInventory extends FriendModifyInventory {
     }
 
     @NotNull
-    private String accessFlagToString(EnumSet<BlockAccessFlag> flags) {
+    private String accessFlagToString(@NotNull final EnumSet<BlockAccessFlag> flags) {
         if (flags.isEmpty()) return "No access";
         StringBuilder builder = new StringBuilder();
         int i = 0;
@@ -81,6 +80,15 @@ public final class FriendManageInventory extends FriendModifyInventory {
             i++;
         }
         return builder.toString();
+    }
+
+    @NotNull
+    private List<String> accumulateAccessFlagLore(@NotNull final EnumSet<BlockAccessFlag> flags) {
+        if (flags.isEmpty()) return Collections.singletonList("No access");
+        ArrayList<String> ret = new ArrayList<>();
+        for (BlockAccessFlag flag : flags)
+            ret.add(flag.getDescription());
+        return ret;
     }
 
     private int getAccessFlagIndexOf(EnumSet<BlockAccessFlag> flags) {
@@ -154,7 +162,9 @@ public final class FriendManageInventory extends FriendModifyInventory {
                 setItemStack(
                     InventoryConstants.tripleLine - 3,
                     Material.OAK_DOOR,
-                    accessFlagToString(curFlags));
+                    accessFlagToString(curFlags),
+                    accumulateAccessFlagLore(curFlags)
+                );
                 break;
             }
             default: {

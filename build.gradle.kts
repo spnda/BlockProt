@@ -16,7 +16,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.5.10"
     id("com.matthewprenger.cursegradle") version "1.4.0"
     id("org.ajoberstar.grgit") version "4.1.0"
-    id("com.diffplug.spotless") version "5.8.2"
+    id("com.diffplug.spotless") version "5.12.5"
 }
 
 val env: MutableMap<String, String> = System.getenv()

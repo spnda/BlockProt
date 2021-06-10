@@ -22,20 +22,24 @@
  * SOFTWARE.
  */
 
-package de.sean.blockprot.bukkit.events
+package de.sean.blockprot.bukkit.nbt;
 
-import de.sean.blockprot.bukkit.nbt.BlockLockHandler
-import de.sean.blockprot.bukkit.nbt.LockUtil
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.block.BlockRedstoneEvent
+import de.tr7zw.changeme.nbtapi.NBTCompound;
 
-class RedstoneEvent : Listener {
-    @EventHandler
-    fun onRedstone(event: BlockRedstoneEvent) {
-        // If this is a lockable block and the redstone protection is activated, set the redstone current to 0
-        if (LockUtil.isLockableBlock(event.block.type) && !BlockLockHandler(event.block).getRedstone()) {
-            event.newCurrent = 0
-        }
-    }
+public abstract class LockHandler<T extends NBTCompound> {
+    static final String OWNER_ATTRIBUTE = "splugin_owner";
+    static final String LOCK_ATTRIBUTE = "splugin_lock";
+    static final String REDSTONE_ATTRIBUTE = "splugin_lock_redstone";
+    static final String LOCK_ON_PLACE_ATTRIBUTE = "splugin_lock_on_place";
+    static final String DEFAULT_FRIENDS_ATTRIBUTE = "blockprot_default_friends";
+    static final String ACCESS_FLAGS_ATTRIBUTE = "blockprot_access_flags";
+
+    public static final String PERMISSION_LOCK = "blockprot.lock";
+    public static final String PERMISSION_INFO = "blockprot.info";
+    public static final String PERMISSION_ADMIN = "blockprot.admin";
+    public static final String PERMISSION_BYPASS = "blockprot.bypass";
+
+    public T container;
+
+    protected LockHandler() { }
 }

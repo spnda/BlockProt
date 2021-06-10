@@ -25,7 +25,7 @@
 package de.sean.blockprot.bukkit.tasks
 
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
-import de.sean.blockprot.bukkit.util.LockUtil.getDoubleChest
+import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import java.util.function.Consumer

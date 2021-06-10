@@ -27,8 +27,9 @@ package de.sean.blockprot.bukkit.inventories
 import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
-import de.sean.blockprot.bukkit.util.LockUtil
-import de.sean.blockprot.bukkit.util.LockUtil.getDoubleChest
+import de.sean.blockprot.bukkit.nbt.LockHandler
+import de.sean.blockprot.bukkit.nbt.LockUtil
+import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
 import de.tr7zw.changeme.nbtapi.NBTTileEntity
 import org.bukkit.Material
 import org.bukkit.block.Block
@@ -102,8 +103,8 @@ class BlockLockInventory : BlockProtInventory() {
 
     fun fill(player: Player, material: Material, handler: BlockLockHandler): Inventory {
         val playerUuid = player.uniqueId.toString()
-        val owner = handler.getOwner()
-        redstone = handler.getRedstone()
+        val owner = handler.owner
+        redstone = handler.redstone
 
         if (owner.isEmpty()) {
             setItemStack(
@@ -111,7 +112,7 @@ class BlockLockInventory : BlockProtInventory() {
                 material,
                 TranslationKey.INVENTORIES__LOCK
             )
-        } else if (owner == playerUuid || player.hasPermission(BlockLockHandler.PERMISSION_ADMIN)) {
+        } else if (owner == playerUuid || player.hasPermission(LockHandler.PERMISSION_ADMIN)) {
             setItemStack(
                 0,
                 material,
@@ -132,8 +133,8 @@ class BlockLockInventory : BlockProtInventory() {
             )
         }
         if (player.isOp ||
-            player.hasPermission(BlockLockHandler.PERMISSION_INFO) ||
-            player.hasPermission(BlockLockHandler.PERMISSION_ADMIN)
+            player.hasPermission(LockHandler.PERMISSION_INFO) ||
+            player.hasPermission(LockHandler.PERMISSION_ADMIN)
         ) {
             setItemStack(
                 InventoryConstants.lineLength - 2,

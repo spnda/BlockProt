@@ -25,7 +25,7 @@
 package de.sean.blockprot.bukkit.events
 
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
-import de.sean.blockprot.bukkit.util.LockUtil
+import de.sean.blockprot.bukkit.nbt.LockUtil
 import org.bukkit.block.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

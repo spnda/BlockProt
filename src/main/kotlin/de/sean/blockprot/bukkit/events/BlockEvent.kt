@@ -26,10 +26,9 @@ package de.sean.blockprot.bukkit.events
 
 import de.sean.blockprot.bukkit.nbt.BlockAccessFlag
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler
+import de.sean.blockprot.bukkit.nbt.LockUtil
+import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler
 import de.sean.blockprot.bukkit.tasks.DoubleChestLocker
-import de.sean.blockprot.bukkit.util.LockUtil
-import de.sean.blockprot.bukkit.util.LockUtil.parseStringList
-import de.tr7zw.changeme.nbtapi.NBTEntity
 import de.tr7zw.changeme.nbtapi.NBTItem
 import de.tr7zw.changeme.nbtapi.NBTTileEntity
 import org.bukkit.Bukkit
@@ -48,7 +47,7 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
         if (!LockUtil.isLockable(event.block.type)) return
         val handler = BlockLockHandler(event.block)
         // If the block is protected by any user, prevent it from burning down.
-        if (handler.isProtected()) {
+        if (handler.isProtected) {
             event.isCancelled = true
         }
     }
@@ -65,7 +64,7 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
             event.player.world.dropItemNaturally(event.block.state.location, itemsToDrop)
         } else {
             val handler = BlockLockHandler(event.block)
-            if (!handler.isOwner(event.player.uniqueId.toString()) && handler.isProtected()) {
+            if (!handler.isOwner(event.player.uniqueId.toString()) && handler.isProtected) {
                 // Prevent unauthorized players from breaking locked blocks.
                 event.isCancelled = true
             }
@@ -95,12 +94,12 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
 
                 if (LockUtil.shouldLockOnPlace(event.player)) {
                     handler.lockBlock(event.player, event.player.isOp, null)
-                    val nbtEntity = NBTEntity(event.player).persistentDataContainer
-                    val friends = parseStringList(nbtEntity.getString(BlockLockHandler.DEFAULT_FRIENDS_ATTRIBUTE))
-                    handler.setAccess(friends)
-                    handler.setBlockAccessFlags(EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE))
+                    val settingsHandler = PlayerSettingsHandler(event.player)
+                    val friends = settingsHandler.defaultFriends
+                    handler.access = friends
+                    handler.blockAccessFlags = EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE)
                     if (LockUtil.disallowRedstoneOnPlace()) {
-                        handler.setRedstone(redstone = false)
+                        handler.redstone = false
                     }
                 }
             }
@@ -108,14 +107,12 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                 val handler = BlockLockHandler(block)
                 // We only try to lock the block if it isn't locked already.
                 // Shulker boxes might already be locked, from previous placing.
-                if (handler.isNotProtected()) {
+                if (handler.isNotProtected) {
                     // Assign a empty string for no owner to not have NPEs when reading
-                    handler.setOwner(
-                        if (LockUtil.shouldLockOnPlace(event.player)) playerUuid else ""
-                    )
-                    handler.setBlockAccessFlags(EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE))
+                    handler.owner = if (LockUtil.shouldLockOnPlace(event.player)) playerUuid else ""
+                    handler.blockAccessFlags = EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE)
                     if (LockUtil.disallowRedstoneOnPlace()) {
-                        handler.setRedstone(redstone = false)
+                        handler.redstone = false
                     }
                 }
             }

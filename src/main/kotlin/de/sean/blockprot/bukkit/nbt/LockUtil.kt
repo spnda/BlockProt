@@ -22,10 +22,9 @@
  * SOFTWARE.
  */
 
-package de.sean.blockprot.bukkit.util
+package de.sean.blockprot.bukkit.nbt
 
 import de.sean.blockprot.BlockProt
-import de.sean.blockprot.bukkit.nbt.BlockLockHandler
 import de.tr7zw.changeme.nbtapi.NBTEntity
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion
 import org.bukkit.Bukkit
@@ -109,7 +108,7 @@ object LockUtil {
             var shulkerBoxes = config.getList("lockable_shulker_boxes")!!
             shulkerBoxes = shulkerBoxes.filterIsInstance<String>()
             val materials = loadEnumValuesFromStrings(Material.values(), shulkerBoxes.toMutableList())
-            this.shulkerBoxes.addAll(materials)
+            LockUtil.shulkerBoxes.addAll(materials)
         }
 
         lockableTileEntities.addAll(shulkerBoxes)
@@ -119,14 +118,14 @@ object LockUtil {
                 var lockableBlocks = config.getList("lockable_blocks")!!
                 lockableBlocks = lockableBlocks.filterIsInstance<String>()
                 val materials = loadEnumValuesFromStrings(Material.values(), lockableBlocks.toMutableList())
-                this.lockableBlocks.addAll(materials)
+                LockUtil.lockableBlocks.addAll(materials)
             }
 
             if (config.contains("lockable_doors")) {
                 var lockableDoors = config.getList("lockable_doors")!!
                 lockableDoors = lockableDoors.filterIsInstance<String>()
                 val materials = loadEnumValuesFromStrings(Material.values(), lockableDoors.toMutableList())
-                this.lockableDoors.addAll(materials)
+                LockUtil.lockableDoors.addAll(materials)
             }
 
             lockableBlocks.addAll(lockableDoors)

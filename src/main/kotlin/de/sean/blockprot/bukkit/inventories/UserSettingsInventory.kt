@@ -26,9 +26,8 @@ package de.sean.blockprot.bukkit.inventories
 
 import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
-import de.sean.blockprot.bukkit.nbt.BlockLockHandler
+import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler
 import de.sean.blockprot.bukkit.util.ItemUtil
-import de.tr7zw.changeme.nbtapi.NBTEntity
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -42,15 +41,12 @@ class UserSettingsInventory : BlockProtInventory() {
     override fun onClick(event: InventoryClickEvent, state: InventoryState) {
         val player = event.whoClicked as Player
         val item = event.currentItem ?: return
-        val nbtEntity = NBTEntity(player).persistentDataContainer
         when (item.type) {
             Material.BARRIER -> {
                 // Lock on place button, default value is true
-                val lockOnPlace = !nbtEntity.getBoolean(BlockLockHandler.LOCK_ON_PLACE_ATTRIBUTE)
-                nbtEntity.setBoolean(
-                    BlockLockHandler.LOCK_ON_PLACE_ATTRIBUTE,
-                    lockOnPlace
-                )
+                val settingsHandler = PlayerSettingsHandler(player)
+                val lockOnPlace = !settingsHandler.lockOnPlace
+                settingsHandler.lockOnPlace = lockOnPlace
                 event.inventory.setItem(
                     0,
                     ItemUtil.getItemStack(
@@ -75,8 +71,8 @@ class UserSettingsInventory : BlockProtInventory() {
     override fun onClose(event: InventoryCloseEvent, state: InventoryState) {}
 
     fun fill(player: Player): Inventory {
-        val nbtEntity = NBTEntity(player).persistentDataContainer
-        val lockOnPlace = nbtEntity.getBoolean(BlockLockHandler.LOCK_ON_PLACE_ATTRIBUTE)
+        val settingsHandler = PlayerSettingsHandler(player)
+        val lockOnPlace = settingsHandler.lockOnPlace
         setItemStack(
             0,
             Material.BARRIER,

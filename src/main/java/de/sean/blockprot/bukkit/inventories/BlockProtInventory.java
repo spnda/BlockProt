@@ -28,10 +28,8 @@ import de.sean.blockprot.TranslationKey;
 import de.sean.blockprot.Translator;
 import de.sean.blockprot.bukkit.nbt.BlockLockHandler;
 import de.sean.blockprot.bukkit.nbt.LockReturnValue;
+import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.bukkit.util.ItemUtil;
-import de.sean.blockprot.bukkit.util.LockUtil;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
-import de.tr7zw.changeme.nbtapi.NBTEntity;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -149,12 +147,10 @@ public abstract class BlockProtInventory implements InventoryHolder {
      */
     protected void modifyFriends(
         @NotNull final Player player, final boolean exit, @NotNull final Function<List<String>, ?> modify) {
-        NBTCompound playerNBT = new NBTEntity(player).getPersistentDataContainer();
-        List<String> currentFriends =
-            LockUtil.parseStringList(
-                playerNBT.getString(BlockLockHandler.DEFAULT_FRIENDS_ATTRIBUTE));
+        final PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(player);
+        List<String> currentFriends = settingsHandler.getDefaultFriends();
         modify.apply(currentFriends);
-        playerNBT.setString(BlockLockHandler.DEFAULT_FRIENDS_ATTRIBUTE, currentFriends.toString());
+        settingsHandler.setDefaultFriends(currentFriends);
 
         if (exit) {
             exit(player);
@@ -169,7 +165,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
         BlockLockHandler handler = new BlockLockHandler(block);
         LockReturnValue ret = changes.apply(handler);
         if (ret.getSuccess()) {
-            handler.applyToDoor(handler.getBlock());
+            handler.applyToDoor(handler.block);
             BaseComponent[] messageComponent = TextComponent.fromLegacyText(ret.getMessage());
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, messageComponent);
         }

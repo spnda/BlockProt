@@ -164,9 +164,9 @@ public abstract class BlockProtInventory implements InventoryHolder {
         @NotNull final Function<BlockLockHandler, LockReturnValue> changes) {
         BlockLockHandler handler = new BlockLockHandler(block);
         LockReturnValue ret = changes.apply(handler);
-        if (ret.getSuccess()) {
+        if (ret.success) {
             handler.applyToDoor(handler.block);
-            BaseComponent[] messageComponent = TextComponent.fromLegacyText(ret.getMessage());
+            BaseComponent[] messageComponent = TextComponent.fromLegacyText(ret.message);
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, messageComponent);
         }
         if (exit) {

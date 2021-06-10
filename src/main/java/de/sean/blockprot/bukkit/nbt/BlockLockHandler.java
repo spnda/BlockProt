@@ -25,7 +25,6 @@
 package de.sean.blockprot.bukkit.nbt;
 
 import de.sean.blockprot.TranslationKey;
-import de.sean.blockprot.Translator;
 import de.tr7zw.changeme.nbtapi.NBTBlock;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
@@ -170,16 +169,16 @@ public class BlockLockHandler extends LockHandler<NBTCompound> {
             setOwner(owner);
             if (doubleChest != null)
                 doubleChest.getPersistentDataContainer().setString(OWNER_ATTRIBUTE, owner);
-            return new LockReturnValue(true, Translator.get(TranslationKey.MESSAGES__PERMISSION_GRANTED));
+            return new LockReturnValue(true, TranslationKey.MESSAGES__PERMISSION_GRANTED);
         } else if (isOwner(playerUuid) || isOp || player.hasPermission(PERMISSION_ADMIN)) {
             setOwner(""); setAccess(Collections.emptyList());
             if (doubleChest != null) {
                 doubleChest.getPersistentDataContainer().setString(OWNER_ATTRIBUTE, "");
                 doubleChest.getPersistentDataContainer().setString(OWNER_ATTRIBUTE, "[]"); // Also clear the friends.
             }
-            return new LockReturnValue(true, Translator.get(TranslationKey.MESSAGES__UNLOCKED));
+            return new LockReturnValue(true, TranslationKey.MESSAGES__UNLOCKED);
         }
-        return new LockReturnValue(false, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
+        return new LockReturnValue(false, TranslationKey.MESSAGES__NO_PERMISSION);
     }
 
     @NotNull
@@ -196,9 +195,9 @@ public class BlockLockHandler extends LockHandler<NBTCompound> {
             setRedstone(redstone);
             if (doubleChest != null)
                 doubleChest.getPersistentDataContainer().setBoolean(REDSTONE_ATTRIBUTE, redstone);
-            return new LockReturnValue(true, redstone ? Translator.get(TranslationKey.MESSAGES__REDSTONE_REMOVED) : Translator.get(TranslationKey.MESSAGES__REDSTONE_ADDED));
+            return new LockReturnValue(true, redstone ? TranslationKey.MESSAGES__REDSTONE_REMOVED : TranslationKey.MESSAGES__REDSTONE_ADDED);
         }
-        return new LockReturnValue(false, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
+        return new LockReturnValue(false, TranslationKey.MESSAGES__NO_PERMISSION);
     }
 
     @NotNull
@@ -206,20 +205,20 @@ public class BlockLockHandler extends LockHandler<NBTCompound> {
         // This theoretically shouldn't happen, though we will still check for it just to be sure
         if (!isOwner(player)) return new LockReturnValue(
             false,
-            Translator.get(TranslationKey.MESSAGES__NO_PERMISSION)
+            TranslationKey.MESSAGES__NO_PERMISSION
         );
 
         final List<String> access = getAccess();
         switch (action) {
             case ADD_FRIEND: {
                 if (access.contains(friend)) {
-                    return new LockReturnValue(false, Translator.get(TranslationKey.MESSAGES__FRIEND_ALREADY_ADDED));
+                    return new LockReturnValue(false, TranslationKey.MESSAGES__FRIEND_ALREADY_ADDED);
                 } else {
                     access.add(friend);
                     setAccess(access);
                     if (doubleChest != null)
                         doubleChest.getPersistentDataContainer().setString(LOCK_ATTRIBUTE, access.toString());
-                    return new LockReturnValue(true, Translator.get(TranslationKey.MESSAGES__FRIEND_ADDED));
+                    return new LockReturnValue(true, TranslationKey.MESSAGES__FRIEND_ADDED);
                 }
             }
             case REMOVE_FRIEND: {
@@ -228,9 +227,9 @@ public class BlockLockHandler extends LockHandler<NBTCompound> {
                     setAccess(access);
                     if (doubleChest != null)
                         doubleChest.getPersistentDataContainer().setString(LOCK_ATTRIBUTE, access.toString());
-                    return new LockReturnValue(true, Translator.get(TranslationKey.MESSAGES__FRIEND_REMOVED));
+                    return new LockReturnValue(true, TranslationKey.MESSAGES__FRIEND_REMOVED);
                 } else {
-                    return new LockReturnValue(false, Translator.get(TranslationKey.MESSAGES__FRIEND_CANT_BE_REMOVED));
+                    return new LockReturnValue(false, TranslationKey.MESSAGES__FRIEND_CANT_BE_REMOVED);
                 }
             }
             default: {

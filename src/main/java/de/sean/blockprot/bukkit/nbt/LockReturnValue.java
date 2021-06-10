@@ -22,6 +22,25 @@
  * SOFTWARE.
  */
 
-package de.sean.blockprot.bukkit.nbt
+package de.sean.blockprot.bukkit.nbt;
 
-data class LockReturnValue(val success: Boolean, val message: String)
+import de.sean.blockprot.TranslationKey;
+import de.sean.blockprot.Translator;
+import org.jetbrains.annotations.NotNull;
+
+public class LockReturnValue {
+    public final boolean success;
+
+    @NotNull
+    public final String message;
+
+    public LockReturnValue(final boolean success, @NotNull final String message) {
+        this.success = success;
+        this.message = message;
+    }
+
+    public LockReturnValue(final boolean success, @NotNull final TranslationKey key) {
+        this.success = success;
+        this.message = Translator.get(key);
+    }
+}

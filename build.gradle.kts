@@ -63,7 +63,7 @@ dependencies {
 
     api("org.bstats:bstats-bukkit:2.2.1")
 
-    compileOnly("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT") // Spigot
+    compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT") // Spigot
 }
 
 spotless {

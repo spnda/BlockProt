@@ -33,10 +33,11 @@ fun gitBranchName(): String {
 }
 
 group = "de.sean"
-version = "0.2.2"
+version = "0.2.3"
 base.archivesBaseName = "${project.name}-$version-${gitBranchName()}"
 
 repositories {
+    mavenLocal()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") {
         name = "Spigot"
         content {
@@ -59,7 +60,7 @@ dependencies {
     implementation("de.tr7zw:item-nbt-api:2.8.0-SNAPSHOT") // item-nbt-api
 
     // Use anvils as inventories. They're stupid and require NMS, making renaming much easier.
-    implementation("net.wesjd:anvilgui:1.5.0-SNAPSHOT")
+    implementation("net.wesjd:anvilgui:1.5.1-SNAPSHOT")
 
     api("org.bstats:bstats-bukkit:2.2.1")
 

@@ -68,6 +68,7 @@ public abstract class FriendModifyInventory extends BlockProtInventory {
                     state.getBlock(),
                     player,
                     exit,
+                    true,
                     (handler) ->
                         handler.modifyFriends(
                             player.getUniqueId().toString(),

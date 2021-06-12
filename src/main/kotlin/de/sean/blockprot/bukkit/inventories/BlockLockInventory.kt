@@ -55,7 +55,7 @@ class BlockLockInventory : BlockProtInventory() {
         when {
             LockUtil.isLockable(item.type) -> {
                 val doubleChest = getDoubleChest(block, player.world)
-                applyChanges(block, player, true) {
+                applyChanges(block, player, true, true) {
                     it.lockBlock(
                         player,
                         player.isOp,
@@ -90,13 +90,12 @@ class BlockLockInventory : BlockProtInventory() {
     override fun onClose(event: InventoryCloseEvent, state: InventoryState) {
         if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH && state.block != null) {
             val doubleChest = getDoubleChest(state.block, event.player.world)
-            applyChanges(state.block, event.player as Player, false) {
-                val ret = it.lockRedstoneForBlock(
+            applyChanges(state.block, event.player as Player, false, false) {
+                return@applyChanges it.lockRedstoneForBlock(
                     event.player.uniqueId.toString(),
-                    if (doubleChest != null) NBTTileEntity(doubleChest) else null
+                    if (doubleChest != null) NBTTileEntity(doubleChest) else null,
+                    redstone,
                 )
-                redstone = it.getRedstone()
-                return@applyChanges ret
             }
         }
     }

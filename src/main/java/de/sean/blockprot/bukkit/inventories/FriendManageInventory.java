@@ -49,7 +49,7 @@ public final class FriendManageInventory extends FriendModifyInventory {
             EnumSet.of(BlockAccessFlag.READ),
             EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE));
 
-    private int maxSkulls = InventoryConstants.tripleLine - 5;
+    private int maxSkulls = InventoryConstants.tripleLine - 4;
 
     private EnumSet<BlockAccessFlag> curFlags;
 
@@ -245,14 +245,14 @@ public final class FriendManageInventory extends FriendModifyInventory {
         }
 
         // Only show the access switch
-        if (curFlags != null
-            && state.getFriendSearchState()
-            != InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH) {
-            setItemStack(
-                InventoryConstants.tripleLine - 3,
-                Material.OAK_DOOR,
-                accessFlagToString(curFlags));
-        }
+        // if (curFlags != null
+        //     && state.getFriendSearchState()
+        //     != InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH) {
+        //     setItemStack(
+        //         InventoryConstants.tripleLine - 3,
+        //         Material.OAK_DOOR,
+        //         accessFlagToString(curFlags));
+        // }
         setItemStack(
             InventoryConstants.tripleLine - 2,
             Material.MAP,

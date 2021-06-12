@@ -116,7 +116,10 @@ public class BlockLockHandler extends LockHandler<NBTCompound> {
     public boolean getRedstone() {
         // We will default to 'true'. The default value for a boolean is 'false',
         // which would also be the default value for NBTCompound#getBoolean
-        if (!container.hasKey(REDSTONE_ATTRIBUTE)) return true;
+        if (!container.hasKey(REDSTONE_ATTRIBUTE)) {
+            container.setBoolean(REDSTONE_ATTRIBUTE, true);
+            return true;
+        }
         return container.getBoolean(REDSTONE_ATTRIBUTE);
     }
 
@@ -182,16 +185,10 @@ public class BlockLockHandler extends LockHandler<NBTCompound> {
     }
 
     @NotNull
-    public LockReturnValue lockRedstoneForBlock(@NotNull final String player, @Nullable final NBTTileEntity doubleChest) {
+    public LockReturnValue lockRedstoneForBlock(@NotNull final String player, @Nullable final NBTTileEntity doubleChest, @Nullable final Boolean value) {
         final String owner = getOwner();
         if (owner.equals(player)) { // Simpler than #isOwner
-            boolean redstone;
-            if (!container.hasKey(REDSTONE_ATTRIBUTE)) {
-                /* We assume that our current value is true, and we'll therefore change it off */
-                redstone = false;
-            } else {
-                redstone = !getRedstone();
-            }
+            boolean redstone = value == null ? !getRedstone() : value;
             setRedstone(redstone);
             if (doubleChest != null)
                 doubleChest.getPersistentDataContainer().setBoolean(REDSTONE_ATTRIBUTE, redstone);

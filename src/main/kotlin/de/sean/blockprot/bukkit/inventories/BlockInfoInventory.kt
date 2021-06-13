@@ -80,9 +80,9 @@ class BlockInfoInventory : BlockProtInventory() {
 
     fun fill(player: Player, handler: BlockLockHandler): Inventory {
         val state = InventoryState.get(player.uniqueId) ?: return inventory
-        val owner = handler.getOwner()
-        val access = handler.getAccess()
-        val redstone = handler.getRedstone()
+        val owner = handler.owner
+        val access = handler.access
+        val redstone = handler.redstone
 
         inventory.clear()
         state.friendResultCache.clear()

@@ -1,9 +1,15 @@
+
+import org.ec4j.core.Resource
+import org.ec4j.core.parser.ErrorHandler
 import org.kohsuke.github.GHReleaseBuilder
 import org.kohsuke.github.GitHub
+import java.nio.charset.StandardCharsets
+import java.nio.file.Paths
 
 buildscript {
     dependencies {
         classpath("org.kohsuke:github-api:1.130")
+        classpath("org.ec4j.core:ec4j-core:0.3.0")
     }
 
     repositories {
@@ -30,6 +36,22 @@ fun gitBranchName(): String {
 
     val branch = grgit.branch.current().name
     return branch.substring(branch.lastIndexOf("/") + 1)
+}
+
+fun readEditorConfigRules(): Map<String, String> {
+    val editorConfigFile = Paths.get(System.getProperty("user.dir") + "/.editorconfig")
+    val parser = org.ec4j.core.parser.EditorConfigParser.builder().build()
+    val handler = org.ec4j.core.parser.EditorConfigModelHandler(org.ec4j.core.PropertyTypeRegistry.default_(), org.ec4j.core.model.Version.CURRENT)
+    parser.parse(Resource.Resources.ofPath(editorConfigFile, StandardCharsets.UTF_8), handler, ErrorHandler.THROW_SYNTAX_ERRORS_IGNORE_OTHERS)
+    val editorConfig = handler.editorConfig
+
+    return editorConfig.sections.filter {
+        it.glob.source.equals("*.{kt,kts}") || it.glob.source.equals("*")
+    }.map { it ->
+        it.properties.mapValues {
+            it.value.sourceValue
+        }
+    }.reduce { sum, element -> sum + element }
 }
 
 group = "de.sean"
@@ -70,16 +92,28 @@ dependencies {
 spotless {
     encoding("UTF-8")
 
+    val editorConfig = readEditorConfigRules()
+    println(editorConfig)
+
     java {
+        importOrder()
+        removeUnusedImports()
+
         licenseHeaderFile(project.file("HEADER.txt")).yearSeparator(", ")
     }
 
     kotlin {
         // We can start using ktlint through spotless as soon as
         // https://github.com/diffplug/spotless/issues/142 is fixed.
-        // ktlint()
+        // For now we use ec4j to read the editorconfig manually and
+        // pass the read values to ktlint.
+        ktlint().userData(editorConfig)
 
         licenseHeaderFile(project.file("HEADER.txt")).yearSeparator(", ")
+    }
+
+    kotlinGradle {
+        ktlint().userData(editorConfig)
     }
 }
 

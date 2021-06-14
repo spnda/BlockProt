@@ -41,10 +41,10 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
-public class BlockLockHandler extends LockHandler<NBTCompound> {
+public class BlockNBTHandler extends NBTHandler<NBTCompound> {
     public final Block block;
 
-    public BlockLockHandler(@NotNull final Block block) {
+    public BlockNBTHandler(@NotNull final Block block) {
         super();
         this.block = block;
 
@@ -246,7 +246,7 @@ public class BlockLockHandler extends LockHandler<NBTCompound> {
             }
 
             final Block otherDoor = block.getWorld().getBlockAt(other);
-            final BlockLockHandler otherDoorHandler = new BlockLockHandler(otherDoor);
+            final BlockNBTHandler otherDoorHandler = new BlockNBTHandler(otherDoor);
             otherDoorHandler.setOwner(this.getOwner());
             otherDoorHandler.setAccess(this.getAccess());
             otherDoorHandler.setRedstone(this.getRedstone());

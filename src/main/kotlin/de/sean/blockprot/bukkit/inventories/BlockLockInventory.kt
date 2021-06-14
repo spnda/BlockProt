@@ -26,8 +26,8 @@ package de.sean.blockprot.bukkit.inventories
 
 import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
-import de.sean.blockprot.bukkit.nbt.BlockLockHandler
-import de.sean.blockprot.bukkit.nbt.LockHandler
+import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
+import de.sean.blockprot.bukkit.nbt.NBTHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
 import de.tr7zw.changeme.nbtapi.NBTTileEntity
@@ -79,7 +79,7 @@ class BlockLockInventory : BlockProtInventory() {
             }
             item.type == Material.OAK_SIGN -> {
                 player.closeInventory()
-                inv = BlockInfoInventory().fill(player, BlockLockHandler(block))
+                inv = BlockInfoInventory().fill(player, BlockNBTHandler(block))
                 player.openInventory(inv)
             }
             else -> exit(player) // This also includes Material.BLACK_STAINED_GLASS_PANE
@@ -100,7 +100,7 @@ class BlockLockInventory : BlockProtInventory() {
         }
     }
 
-    fun fill(player: Player, material: Material, handler: BlockLockHandler): Inventory {
+    fun fill(player: Player, material: Material, handler: BlockNBTHandler): Inventory {
         val playerUuid = player.uniqueId.toString()
         val owner = handler.owner
         redstone = handler.redstone
@@ -111,7 +111,7 @@ class BlockLockInventory : BlockProtInventory() {
                 material,
                 TranslationKey.INVENTORIES__LOCK
             )
-        } else if (owner == playerUuid || player.hasPermission(LockHandler.PERMISSION_ADMIN)) {
+        } else if (owner == playerUuid || player.hasPermission(NBTHandler.PERMISSION_ADMIN)) {
             setItemStack(
                 0,
                 material,
@@ -132,8 +132,8 @@ class BlockLockInventory : BlockProtInventory() {
             )
         }
         if (player.isOp ||
-            player.hasPermission(LockHandler.PERMISSION_INFO) ||
-            player.hasPermission(LockHandler.PERMISSION_ADMIN)
+            player.hasPermission(NBTHandler.PERMISSION_INFO) ||
+            player.hasPermission(NBTHandler.PERMISSION_ADMIN)
         ) {
             setItemStack(
                 InventoryConstants.lineLength - 2,

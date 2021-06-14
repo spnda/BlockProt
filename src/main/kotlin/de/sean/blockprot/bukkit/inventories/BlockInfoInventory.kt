@@ -27,7 +27,7 @@ package de.sean.blockprot.bukkit.inventories
 import de.sean.blockprot.BlockProt
 import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
-import de.sean.blockprot.bukkit.nbt.BlockLockHandler
+import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
 import de.sean.blockprot.bukkit.util.ItemUtil
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -48,7 +48,7 @@ class BlockInfoInventory : BlockProtInventory() {
             Material.BLACK_STAINED_GLASS_PANE -> {
                 player.closeInventory()
                 if (state.block == null) return
-                val handler = BlockLockHandler(state.block)
+                val handler = BlockNBTHandler(state.block)
                 val inv = BlockLockInventory().fill(player, state.block.state.type, handler)
                 player.openInventory(inv)
             }
@@ -57,7 +57,7 @@ class BlockInfoInventory : BlockProtInventory() {
                     state.friendPage = state.friendPage - 1
 
                     player.closeInventory()
-                    if (state.block != null) player.openInventory(fill(player, BlockLockHandler(state.block)))
+                    if (state.block != null) player.openInventory(fill(player, BlockNBTHandler(state.block)))
                 }
             }
             Material.BLUE_STAINED_GLASS_PANE -> {
@@ -67,7 +67,7 @@ class BlockInfoInventory : BlockProtInventory() {
                     state.friendPage = state.friendPage + 1
 
                     player.closeInventory()
-                    if (state.block != null) player.openInventory(fill(player, BlockLockHandler(state.block)))
+                    if (state.block != null) player.openInventory(fill(player, BlockNBTHandler(state.block)))
                 }
             }
             else -> {
@@ -78,7 +78,7 @@ class BlockInfoInventory : BlockProtInventory() {
 
     override fun onClose(event: InventoryCloseEvent, state: InventoryState) {}
 
-    fun fill(player: Player, handler: BlockLockHandler): Inventory {
+    fun fill(player: Player, handler: BlockNBTHandler): Inventory {
         val state = InventoryState.get(player.uniqueId) ?: return inventory
         val owner = handler.owner
         val access = handler.access

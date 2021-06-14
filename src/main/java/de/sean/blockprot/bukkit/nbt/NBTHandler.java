@@ -26,7 +26,7 @@ package de.sean.blockprot.bukkit.nbt;
 
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 
-public abstract class LockHandler<T extends NBTCompound> {
+public abstract class NBTHandler<T extends NBTCompound> {
     static final String OWNER_ATTRIBUTE = "splugin_owner";
     static final String LOCK_ATTRIBUTE = "splugin_lock";
     static final String REDSTONE_ATTRIBUTE = "splugin_lock_redstone";
@@ -41,5 +41,5 @@ public abstract class LockHandler<T extends NBTCompound> {
 
     public T container;
 
-    protected LockHandler() { }
+    protected NBTHandler() { }
 }

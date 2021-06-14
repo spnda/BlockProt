@@ -25,7 +25,7 @@
 package de.sean.blockprot.bukkit.events
 
 import de.sean.blockprot.bukkit.nbt.BlockAccessFlag
-import de.sean.blockprot.bukkit.nbt.BlockLockHandler
+import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler
 import de.sean.blockprot.bukkit.tasks.DoubleChestLocker
@@ -45,7 +45,7 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
     @EventHandler
     fun blockBurn(event: BlockBurnEvent) {
         if (!LockUtil.isLockable(event.block.type)) return
-        val handler = BlockLockHandler(event.block)
+        val handler = BlockNBTHandler(event.block)
         // If the block is protected by any user, prevent it from burning down.
         if (handler.isProtected) {
             event.isCancelled = true
@@ -63,7 +63,7 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
             nbtItem.getOrCreateCompound("BlockEntityTag").getOrCreateCompound("PublicBukkitValues").mergeCompound(nbtTile)
             event.player.world.dropItemNaturally(event.block.state.location, itemsToDrop)
         } else {
-            val handler = BlockLockHandler(event.block)
+            val handler = BlockNBTHandler(event.block)
             if (!handler.isOwner(event.player.uniqueId.toString()) && handler.isProtected) {
                 // Prevent unauthorized players from breaking locked blocks.
                 event.isCancelled = true
@@ -77,7 +77,7 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
         val playerUuid = event.player.uniqueId.toString()
         when {
             block.type == Material.CHEST -> {
-                val handler = BlockLockHandler(block)
+                val handler = BlockNBTHandler(block)
 
                 // After placing, it takes 1 tick for the chests to connect.
                 Bukkit.getScheduler().runTaskLater(
@@ -104,7 +104,7 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                 }
             }
             LockUtil.isLockableTileEntity(event.block.type) || LockUtil.isLockableBlock(event.block.type) -> {
-                val handler = BlockLockHandler(block)
+                val handler = BlockNBTHandler(block)
                 // We only try to lock the block if it isn't locked already.
                 // Shulker boxes might already be locked, from previous placing.
                 if (handler.isNotProtected) {

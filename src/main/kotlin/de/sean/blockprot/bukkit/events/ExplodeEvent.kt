@@ -24,7 +24,7 @@
 
 package de.sean.blockprot.bukkit.events
 
-import de.sean.blockprot.bukkit.nbt.BlockLockHandler
+import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import org.bukkit.block.Block
 import org.bukkit.event.EventHandler
@@ -52,7 +52,7 @@ class ExplodeEvent : Listener {
             when {
                 LockUtil.isLockableTileEntity(b.type) || LockUtil.isLockableBlock(b.type) -> {
                     // Someone owns this block, block its destroying.
-                    val handler = BlockLockHandler(b)
+                    val handler = BlockNBTHandler(b)
                     if (handler.isProtected()) it.remove()
                 }
                 // adding a break here affects the while loop causing it to only check one block

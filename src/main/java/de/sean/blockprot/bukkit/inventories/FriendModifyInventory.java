@@ -24,7 +24,7 @@
 
 package de.sean.blockprot.bukkit.inventories;
 
-import de.sean.blockprot.bukkit.nbt.BlockLockHandler;
+import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.FriendModifyAction;
 import de.sean.blockprot.bukkit.nbt.LockUtil;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
@@ -111,7 +111,7 @@ public abstract class FriendModifyInventory extends BlockProtInventory {
                         .fill(
                             player,
                             state.getBlock().getState().getType(),
-                            new BlockLockHandler(state.getBlock()));
+                            new BlockNBTHandler(state.getBlock()));
                 break;
             }
             case DEFAULT_FRIEND_SEARCH:

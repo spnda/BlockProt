@@ -24,14 +24,14 @@
 
 package de.sean.blockprot.bukkit.tasks
 
-import de.sean.blockprot.bukkit.nbt.BlockLockHandler
+import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import java.util.function.Consumer
 
 class DoubleChestLocker(
-    private val newHandler: BlockLockHandler,
+    private val newHandler: BlockNBTHandler,
     val block: Block,
     private val player: Player,
     private val callback: Consumer<Boolean>
@@ -42,7 +42,7 @@ class DoubleChestLocker(
             callback.accept(true)
             return
         }
-        val oldChestHandler = BlockLockHandler(doubleChest.block)
+        val oldChestHandler = BlockNBTHandler(doubleChest.block)
         if (oldChestHandler.isProtected() && oldChestHandler.getOwner() != player.uniqueId.toString()) {
             callback.accept(false)
         } else {

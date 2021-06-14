@@ -28,7 +28,7 @@ import de.sean.blockprot.BlockProt;
 import de.sean.blockprot.TranslationKey;
 import de.sean.blockprot.Translator;
 import de.sean.blockprot.bukkit.nbt.BlockAccessFlag;
-import de.sean.blockprot.bukkit.nbt.BlockLockHandler;
+import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.bukkit.util.ItemUtil;
 import org.bukkit.Bukkit;
@@ -147,8 +147,8 @@ public final class FriendManageInventory extends FriendModifyInventory {
             case OAK_DOOR: {
                 int curIndex;
                 if (curFlags == null) {
-                    BlockLockHandler handler =
-                        new BlockLockHandler(Objects.requireNonNull(state.getBlock()));
+                    BlockNBTHandler handler =
+                        new BlockNBTHandler(Objects.requireNonNull(state.getBlock()));
                     curIndex = getAccessFlagIndexOf(handler.getBlockAccessFlags());
                 } else {
                     curIndex = getAccessFlagIndexOf(curFlags);
@@ -179,7 +179,7 @@ public final class FriendManageInventory extends FriendModifyInventory {
     public void onClose(@NotNull InventoryCloseEvent event, @NotNull InventoryState state) {
         if (state.getFriendSearchState() == InventoryState.FriendSearchState.FRIEND_SEARCH
             && state.getBlock() != null) {
-            new BlockLockHandler(state.getBlock()).setBlockAccessFlags(curFlags);
+            new BlockNBTHandler(state.getBlock()).setBlockAccessFlags(curFlags);
         }
     }
 
@@ -191,8 +191,8 @@ public final class FriendManageInventory extends FriendModifyInventory {
         List<OfflinePlayer> players;
         switch (state.getFriendSearchState()) {
             case FRIEND_SEARCH: {
-                final BlockLockHandler handler =
-                    new BlockLockHandler(Objects.requireNonNull(state.getBlock()));
+                final BlockNBTHandler handler =
+                    new BlockNBTHandler(Objects.requireNonNull(state.getBlock()));
                 players = mapUuidToPlayer(handler.getAccess());
                 curFlags = handler.getBlockAccessFlags();
                 break;

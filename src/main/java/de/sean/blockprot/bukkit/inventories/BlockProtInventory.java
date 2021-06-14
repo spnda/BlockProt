@@ -26,7 +26,7 @@ package de.sean.blockprot.bukkit.inventories;
 
 import de.sean.blockprot.TranslationKey;
 import de.sean.blockprot.Translator;
-import de.sean.blockprot.bukkit.nbt.BlockLockHandler;
+import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.LockReturnValue;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.bukkit.util.ItemUtil;
@@ -162,8 +162,8 @@ public abstract class BlockProtInventory implements InventoryHolder {
         @NotNull final Player player,
         final boolean exit,
         final boolean sendMessage,
-        @NotNull final Function<BlockLockHandler, LockReturnValue> changes) {
-        BlockLockHandler handler = new BlockLockHandler(block);
+        @NotNull final Function<BlockNBTHandler, LockReturnValue> changes) {
+        BlockNBTHandler handler = new BlockNBTHandler(block);
         LockReturnValue ret = changes.apply(handler);
         if (ret.success) {
             handler.applyToDoor(handler.block);

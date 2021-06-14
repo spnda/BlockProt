@@ -24,7 +24,7 @@
 
 package de.sean.blockprot.bukkit.events
 
-import de.sean.blockprot.bukkit.nbt.BlockLockHandler
+import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -34,7 +34,7 @@ class RedstoneEvent : Listener {
     @EventHandler
     fun onRedstone(event: BlockRedstoneEvent) {
         // If this is a lockable block and the redstone protection is activated, set the redstone current to 0
-        if (LockUtil.isLockableBlock(event.block.type) && !BlockLockHandler(event.block).getRedstone()) {
+        if (LockUtil.isLockableBlock(event.block.type) && !BlockNBTHandler(event.block).getRedstone()) {
             event.newCurrent = 0
         }
     }

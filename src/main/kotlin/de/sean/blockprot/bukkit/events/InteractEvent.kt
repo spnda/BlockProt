@@ -28,8 +28,8 @@ import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.inventories.BlockLockInventory
 import de.sean.blockprot.bukkit.inventories.InventoryState
-import de.sean.blockprot.bukkit.nbt.BlockLockHandler
-import de.sean.blockprot.bukkit.nbt.LockHandler
+import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
+import de.sean.blockprot.bukkit.nbt.NBTHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -51,24 +51,24 @@ open class InteractEvent : Listener {
             event.action == Action.RIGHT_CLICK_BLOCK && !player.isSneaking -> {
                 // The user right clicked and is trying to access the container
                 if (event.clickedBlock != null) {
-                    val handler = BlockLockHandler(event.clickedBlock as Block)
-                    if (!(handler.canAccess(player.uniqueId.toString()) || player.hasPermission(LockHandler.PERMISSION_BYPASS))) {
+                    val handler = BlockNBTHandler(event.clickedBlock as Block)
+                    if (!(handler.canAccess(player.uniqueId.toString()) || player.hasPermission(NBTHandler.PERMISSION_BYPASS))) {
                         event.isCancelled = true
                         sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION))
                     }
                 }
             }
-            event.action == Action.RIGHT_CLICK_BLOCK && player.isSneaking && player.hasPermission(LockHandler.PERMISSION_LOCK) -> {
+            event.action == Action.RIGHT_CLICK_BLOCK && player.isSneaking && player.hasPermission(NBTHandler.PERMISSION_LOCK) -> {
                 if (event.item != null) return // Only enter the menu with an empty hand.
-                val handler = BlockLockHandler(event.clickedBlock!!)
+                val handler = BlockNBTHandler(event.clickedBlock!!)
                 event.isCancelled = true
                 // Only open the menu if the player is the owner of this block
                 // or if this block is not protected or if they have the special permissions.
                 if (handler.isNotProtected ||
                     handler.owner == player.uniqueId.toString() ||
                     event.player.isOp ||
-                    player.hasPermission(BlockLockHandler.PERMISSION_INFO) ||
-                    player.hasPermission(BlockLockHandler.PERMISSION_ADMIN)
+                    player.hasPermission(BlockNBTHandler.PERMISSION_INFO) ||
+                    player.hasPermission(BlockNBTHandler.PERMISSION_ADMIN)
                 ) {
                     val state = InventoryState(event.clickedBlock!!)
                     state.friendSearchState = InventoryState.FriendSearchState.FRIEND_SEARCH

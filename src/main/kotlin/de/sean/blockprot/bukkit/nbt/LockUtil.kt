@@ -184,8 +184,8 @@ object LockUtil {
      */
     fun shouldLockOnPlace(player: Player): Boolean {
         val nbtEntity = NBTEntity(player).persistentDataContainer
-        return if (nbtEntity.hasKey(BlockLockHandler.LOCK_ON_PLACE_ATTRIBUTE)) {
-            nbtEntity.getBoolean(BlockLockHandler.LOCK_ON_PLACE_ATTRIBUTE) != false
+        return if (nbtEntity.hasKey(BlockNBTHandler.LOCK_ON_PLACE_ATTRIBUTE)) {
+            nbtEntity.getBoolean(BlockNBTHandler.LOCK_ON_PLACE_ATTRIBUTE) != false
         } else {
             true
         }

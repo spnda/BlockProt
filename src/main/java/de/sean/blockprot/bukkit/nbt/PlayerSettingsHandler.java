@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class PlayerSettingsHandler extends LockHandler<NBTCompound> {
+public class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
     public final Player player;
 
     public PlayerSettingsHandler(@NotNull final Player player) {

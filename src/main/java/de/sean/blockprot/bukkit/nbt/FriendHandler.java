@@ -23,21 +23,23 @@
  */
 package de.sean.blockprot.bukkit.nbt;
 
+import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 
-public class PlayerNBTHandler extends NBTHandler<FriendPlayer> {
+public class FriendHandler extends NBTHandler<NBTCompound> {
     static final String ACCESS_FLAGS_ATTRIBUTE = "blockprot_access_flags";
 
-    public PlayerNBTHandler(@NotNull final FriendPlayer compound) {
+    public FriendHandler(@NotNull final NBTCompound compound) {
         super();
         this.container = compound;
     }
 
     @NotNull
     public String getName() {
-        return container.getName();
+        String name = container.getName();
+        return name == null ? "" : name;
     }
 
     /**
@@ -55,5 +57,13 @@ public class PlayerNBTHandler extends NBTHandler<FriendPlayer> {
      */
     public void setAccessFlags(@NotNull final EnumSet<BlockAccessFlag> flags) {
         container.setInteger(ACCESS_FLAGS_ATTRIBUTE, flags.stream().mapToInt(BlockAccessFlag::getFlag).sum());
+    }
+
+    public boolean canRead() {
+        return getAccessFlags().contains(BlockAccessFlag.READ);
+    }
+
+    public boolean canWrite() {
+        return getAccessFlags().contains(BlockAccessFlag.WRITE);
     }
 }

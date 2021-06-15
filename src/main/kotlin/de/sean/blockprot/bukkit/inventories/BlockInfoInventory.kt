@@ -80,13 +80,13 @@ class BlockInfoInventory : BlockProtInventory() {
     fun fill(player: Player, handler: BlockNBTHandler): Inventory {
         val state = InventoryState.get(player.uniqueId) ?: return inventory
         val owner = handler.owner
-        val access = handler.access
+        val friends = handler.friends
         val redstone = handler.redstone
 
         inventory.clear()
         state.friendResultCache.clear()
-        for (i in 0..(access.size - 1).coerceAtMost(InventoryConstants.doubleLine)) { // Maximum of 2 lines of skulls
-            val offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(access[i]))
+        for (i in 0..(friends.size - 1).coerceAtMost(InventoryConstants.doubleLine)) { // Maximum of 2 lines of skulls
+            val offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(friends[i].name))
             inventory.setItem(
                 InventoryConstants.lineLength + i,
                 ItemUtil.getItemStack(1, Material.SKELETON_SKULL, offlinePlayer.name)
@@ -98,7 +98,7 @@ class BlockInfoInventory : BlockProtInventory() {
             0,
             ItemUtil.getPlayerSkull(Bukkit.getOfflinePlayer(UUID.fromString(owner)))
         )
-        if (state.friendPage == 0 && access.size >= InventoryConstants.doubleLine) {
+        if (state.friendPage == 0 && friends.size >= InventoryConstants.doubleLine) {
             setItemStack(
                 InventoryConstants.lineLength - 3,
                 Material.CYAN_STAINED_GLASS_PANE,

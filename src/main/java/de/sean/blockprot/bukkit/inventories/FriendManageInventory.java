@@ -129,7 +129,7 @@ public final class FriendManageInventory extends FriendModifyInventory {
             case FRIEND_SEARCH: {
                 final BlockNBTHandler handler =
                     new BlockNBTHandler(Objects.requireNonNull(state.getBlock()));
-                players = mapUuidToPlayer(handler.getAccess());
+                players = mapFriendsToPlayer(handler.getFriendsStream());
                 break;
             }
             case DEFAULT_FRIEND_SEARCH: {

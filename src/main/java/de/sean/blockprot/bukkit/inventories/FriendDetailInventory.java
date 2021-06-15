@@ -54,7 +54,7 @@ public final class FriendDetailInventory extends FriendModifyInventory {
     private EnumSet<BlockAccessFlag> curFlags = EnumSet.noneOf(BlockAccessFlag.class);
 
     @Nullable
-    private PlayerNBTHandler playerHandler = null;
+    private FriendHandler playerHandler = null;
 
     @Override
     public int getSize() {
@@ -128,16 +128,19 @@ public final class FriendDetailInventory extends FriendModifyInventory {
         final InventoryState state = InventoryState.Companion.get(player.getUniqueId());
         if (state == null) return inventory;
 
-        /* Get the current FriendPlayer */
-        BlockNBTHandler handler = new BlockNBTHandler(Objects.requireNonNull(state.getBlock()));
-        final Optional<FriendPlayer> friend =
-            handler.getFriend(player.getUniqueId().toString());
+        final OfflinePlayer friend = state.getCurFriend();
+        if (friend == null) return inventory;
 
-        if (!friend.isPresent()) {
+        /* Get the current FriendHandler */
+        BlockNBTHandler handler = new BlockNBTHandler(Objects.requireNonNull(state.getBlock()));
+        final Optional<FriendHandler> friendHandler =
+            handler.getFriend(friend.getUniqueId().toString());
+
+        if (!friendHandler.isPresent()) {
             Bukkit.getLogger().warning("Tried to open a " + this.getClass().getSimpleName() + " with a unknown player.");
             return inventory;
         }
-        playerHandler = new PlayerNBTHandler(friend.get());
+        playerHandler = friendHandler.get();
 
         inventory.setItem(
             0, ItemUtil.INSTANCE.getPlayerSkull(Objects.requireNonNull(state.getCurFriend())));

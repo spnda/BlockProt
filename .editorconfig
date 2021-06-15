@@ -7,6 +7,8 @@ insert_final_newline = true
 max_line_length = 170
 
 [*.{kt,kts}]
+# We want to mimic the import layout IDEA uses
+ij_kotlin_imports_layout = *,java.**,javax.**,kotlin.**,^
 # IDEA auto-imports using wildcards so we will allow it
 disabled_rules = no-wildcard-imports
 

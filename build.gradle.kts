@@ -1,10 +1,10 @@
 
-import java.nio.charset.StandardCharsets
-import java.nio.file.Paths
 import org.ec4j.core.Resource
 import org.ec4j.core.parser.ErrorHandler
 import org.kohsuke.github.GHReleaseBuilder
 import org.kohsuke.github.GitHub
+import java.nio.charset.StandardCharsets
+import java.nio.file.Paths
 
 buildscript {
     dependencies {
@@ -107,13 +107,13 @@ spotless {
         // https://github.com/diffplug/spotless/issues/142 is fixed.
         // For now we use ec4j to read the editorconfig manually and
         // pass the read values to ktlint.
-        // ktlint().userData(editorConfig)
+        ktlint("0.41.0").userData(editorConfig)
 
         licenseHeaderFile(project.file("HEADER.txt")).yearSeparator(", ")
     }
 
     kotlinGradle {
-        ktlint().userData(editorConfig)
+        ktlint("0.41.0").userData(editorConfig)
     }
 }
 

@@ -26,9 +26,9 @@ package de.sean.blockprot.bukkit.inventories
 import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
-import de.sean.blockprot.bukkit.nbt.NBTHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
+import de.sean.blockprot.bukkit.nbt.NBTHandler
 import de.tr7zw.changeme.nbtapi.NBTTileEntity
 import org.bukkit.Material
 import org.bukkit.block.Block
@@ -130,9 +130,11 @@ class BlockLockInventory : BlockProtInventory() {
                 TranslationKey.INVENTORIES__FRIENDS__MANAGE
             )
         }
-        if (player.isOp ||
-            player.hasPermission(NBTHandler.PERMISSION_INFO) ||
-            player.hasPermission(NBTHandler.PERMISSION_ADMIN)
+        if (owner.isNotEmpty() && (
+            player.isOp ||
+                player.hasPermission(NBTHandler.PERMISSION_INFO) ||
+                player.hasPermission(NBTHandler.PERMISSION_ADMIN)
+            )
         ) {
             setItemStack(
                 InventoryConstants.lineLength - 2,

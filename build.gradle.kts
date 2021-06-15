@@ -107,7 +107,7 @@ spotless {
         // https://github.com/diffplug/spotless/issues/142 is fixed.
         // For now we use ec4j to read the editorconfig manually and
         // pass the read values to ktlint.
-        ktlint().userData(editorConfig)
+        // ktlint().userData(editorConfig)
 
         licenseHeaderFile(project.file("HEADER.txt")).yearSeparator(", ")
     }

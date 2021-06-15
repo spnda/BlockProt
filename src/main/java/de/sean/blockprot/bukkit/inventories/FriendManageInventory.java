@@ -21,13 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package de.sean.blockprot.bukkit.inventories;
 
 import de.sean.blockprot.BlockProt;
 import de.sean.blockprot.TranslationKey;
 import de.sean.blockprot.Translator;
-import de.sean.blockprot.bukkit.nbt.BlockAccessFlag;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.bukkit.util.ItemUtil;
@@ -41,17 +39,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 public final class FriendManageInventory extends FriendModifyInventory {
-    private static final List<EnumSet<BlockAccessFlag>> accessFlagCombinations =
-        Arrays.asList(
-            EnumSet.of(BlockAccessFlag.READ),
-            EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE));
-
     private int maxSkulls = InventoryConstants.tripleLine - 4;
-
-    private EnumSet<BlockAccessFlag> curFlags;
 
     @Override
     public int getSize() {
@@ -62,39 +55,6 @@ public final class FriendManageInventory extends FriendModifyInventory {
     @Override
     public String getTranslatedInventoryName() {
         return Translator.get(TranslationKey.INVENTORIES__FRIENDS__MANAGE);
-    }
-
-    @NotNull
-    private String accessFlagToString(@NotNull final EnumSet<BlockAccessFlag> flags) {
-        if (flags.isEmpty()) return "No access";
-        StringBuilder builder = new StringBuilder();
-        int i = 0;
-        for (BlockAccessFlag flag : flags) {
-            String flagStr = flag.toString();
-            builder.append(
-                flagStr.substring(0, 1).toUpperCase(Locale.ENGLISH)); // Uppercase first letter.
-            builder.append(flagStr.substring(1).toLowerCase(Locale.ENGLISH));
-            if (i < (flags.size() - 1)) builder.append(", ");
-            i++;
-        }
-        return builder.toString();
-    }
-
-    @NotNull
-    private List<String> accumulateAccessFlagLore(@NotNull final EnumSet<BlockAccessFlag> flags) {
-        if (flags.isEmpty()) return Collections.singletonList("No access");
-        ArrayList<String> ret = new ArrayList<>();
-        for (BlockAccessFlag flag : flags)
-            ret.add(flag.getDescription());
-        return ret;
-    }
-
-    private int getAccessFlagIndexOf(EnumSet<BlockAccessFlag> flags) {
-        int result = 0;
-        for (; result < accessFlagCombinations.size(); result++) {
-            if (flags.equals(accessFlagCombinations.get(result))) return result;
-        }
-        return result;
     }
 
     @Override
@@ -144,27 +104,6 @@ public final class FriendManageInventory extends FriendModifyInventory {
                 FriendSearchInventory.INSTANCE.openAnvilInventory(player);
                 break;
             }
-            case OAK_DOOR: {
-                int curIndex;
-                if (curFlags == null) {
-                    BlockNBTHandler handler =
-                        new BlockNBTHandler(Objects.requireNonNull(state.getBlock()));
-                    curIndex = getAccessFlagIndexOf(handler.getBlockAccessFlags());
-                } else {
-                    curIndex = getAccessFlagIndexOf(curFlags);
-                }
-
-                if (curIndex + 1 >= accessFlagCombinations.size()) curIndex = 0;
-                else curIndex += 1;
-                curFlags = accessFlagCombinations.get(curIndex);
-                setItemStack(
-                    InventoryConstants.tripleLine - 3,
-                    Material.OAK_DOOR,
-                    accessFlagToString(curFlags),
-                    accumulateAccessFlagLore(curFlags)
-                );
-                break;
-            }
             default: {
                 // Unexpected, exit the inventory.
                 player.closeInventory();
@@ -177,10 +116,7 @@ public final class FriendManageInventory extends FriendModifyInventory {
 
     @Override
     public void onClose(@NotNull InventoryCloseEvent event, @NotNull InventoryState state) {
-        if (state.getFriendSearchState() == InventoryState.FriendSearchState.FRIEND_SEARCH
-            && state.getBlock() != null) {
-            new BlockNBTHandler(state.getBlock()).setBlockAccessFlags(curFlags);
-        }
+
     }
 
     @NotNull
@@ -194,7 +130,6 @@ public final class FriendManageInventory extends FriendModifyInventory {
                 final BlockNBTHandler handler =
                     new BlockNBTHandler(Objects.requireNonNull(state.getBlock()));
                 players = mapUuidToPlayer(handler.getAccess());
-                curFlags = handler.getBlockAccessFlags();
                 break;
             }
             case DEFAULT_FRIEND_SEARCH: {
@@ -244,15 +179,6 @@ public final class FriendManageInventory extends FriendModifyInventory {
                 TranslationKey.INVENTORIES__NEXT_PAGE);
         }
 
-        // Only show the access switch
-        // if (curFlags != null
-        //     && state.getFriendSearchState()
-        //     != InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH) {
-        //     setItemStack(
-        //         InventoryConstants.tripleLine - 3,
-        //         Material.OAK_DOOR,
-        //         accessFlagToString(curFlags));
-        // }
         setItemStack(
             InventoryConstants.tripleLine - 2,
             Material.MAP,

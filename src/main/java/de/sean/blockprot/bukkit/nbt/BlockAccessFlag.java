@@ -21,14 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package de.sean.blockprot.bukkit.nbt;
 
 import de.sean.blockprot.TranslationKey;
 import de.sean.blockprot.Translator;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.EnumSet;
+import java.util.*;
 
 public enum BlockAccessFlag {
     /**
@@ -94,5 +93,30 @@ public enum BlockAccessFlag {
         }
 
         return flags;
+    }
+
+    @NotNull
+    public static String accessFlagToString(@NotNull final EnumSet<BlockAccessFlag> flags) {
+        if (flags.isEmpty()) return "No access";
+        StringBuilder builder = new StringBuilder();
+        int i = 0;
+        for (BlockAccessFlag flag : flags) {
+            String flagStr = flag.toString();
+            builder.append(
+                flagStr.substring(0, 1).toUpperCase(Locale.ENGLISH)); // Uppercase first letter.
+            builder.append(flagStr.substring(1).toLowerCase(Locale.ENGLISH));
+            if (i < (flags.size() - 1)) builder.append(", ");
+            i++;
+        }
+        return builder.toString();
+    }
+
+    @NotNull
+    public static List<String> accumulateAccessFlagLore(@NotNull final EnumSet<BlockAccessFlag> flags) {
+        if (flags.isEmpty()) return Collections.singletonList("No access");
+        ArrayList<String> ret = new ArrayList<>();
+        for (BlockAccessFlag flag : flags)
+            ret.add(flag.getDescription());
+        return ret;
     }
 }

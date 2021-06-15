@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package de.sean.blockprot.bukkit.nbt
 
 import de.sean.blockprot.BlockProt
@@ -146,7 +145,8 @@ object LockUtil {
      * Parse a comma-separated list from a String
      */
     @JvmStatic
-    fun parseStringList(str: String): List<String> {
+    fun parseStringList(str: String?): List<String> {
+        if (str == null) return emptyList()
         val ret: MutableList<String> =
             ArrayList(listOf(*str.replace("^\\[|]$".toRegex(), "").split(", ").toTypedArray()))
         ret.removeIf { obj: String -> obj.isEmpty() }
@@ -184,8 +184,8 @@ object LockUtil {
      */
     fun shouldLockOnPlace(player: Player): Boolean {
         val nbtEntity = NBTEntity(player).persistentDataContainer
-        return if (nbtEntity.hasKey(BlockNBTHandler.LOCK_ON_PLACE_ATTRIBUTE)) {
-            nbtEntity.getBoolean(BlockNBTHandler.LOCK_ON_PLACE_ATTRIBUTE) != false
+        return if (nbtEntity.hasKey(PlayerSettingsHandler.LOCK_ON_PLACE_ATTRIBUTE)) {
+            nbtEntity.getBoolean(PlayerSettingsHandler.LOCK_ON_PLACE_ATTRIBUTE) != false
         } else {
             true
         }

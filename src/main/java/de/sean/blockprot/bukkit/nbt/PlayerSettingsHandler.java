@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package de.sean.blockprot.bukkit.nbt;
 
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -37,6 +36,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
+    static final String LOCK_ON_PLACE_ATTRIBUTE = "splugin_lock_on_place";
+    static final String DEFAULT_FRIENDS_ATTRIBUTE = "blockprot_default_friends";
+
     public final Player player;
 
     public PlayerSettingsHandler(@NotNull final Player player) {

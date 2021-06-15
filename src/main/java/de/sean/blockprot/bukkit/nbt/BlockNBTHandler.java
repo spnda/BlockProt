@@ -29,6 +29,7 @@ import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.type.Door;
 import org.bukkit.entity.Player;
@@ -304,8 +305,9 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
 
     public void applyToDoor(@NotNull final Block block) {
         if (LockUtil.INSTANCE.isLockableDoor(block.getType())) {
-            final Door door = (Door) block.getState();
-            final Location other = block.getState().getLocation();
+            final BlockState blockState = block.getState();
+            final Door door = (Door) blockState.getBlockData();
+            final Location other = blockState.getLocation();
             if (door.getHalf() == Bisected.Half.TOP) {
                 other.subtract(0f, 1f, 0f);
             } else {

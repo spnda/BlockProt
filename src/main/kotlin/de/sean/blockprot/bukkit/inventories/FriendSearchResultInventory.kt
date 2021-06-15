@@ -93,7 +93,7 @@ class FriendSearchResultInventory : FriendModifyInventory() {
             InventoryState.FriendSearchState.FRIEND_SEARCH -> {
                 val block = state.block ?: return null
                 val handler = BlockNBTHandler(block)
-                handler.access
+                handler.friends.map { it.name }
             }
             InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH -> {
                 val settingsHandler = PlayerSettingsHandler(player)

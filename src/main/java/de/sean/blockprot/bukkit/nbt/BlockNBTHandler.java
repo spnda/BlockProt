@@ -35,13 +35,17 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class BlockNBTHandler extends NBTHandler<NBTCompound> {
     static final String OWNER_ATTRIBUTE = "splugin_owner";
-    static final String LOCK_ATTRIBUTE = "splugin_lock";
+    static final String OLD_LOCK_ATTRIBUTE = "splugin_lock";
+    static final String LOCK_ATTRIBUTE = "blockprot_friends";
     static final String REDSTONE_ATTRIBUTE = "splugin_lock_redstone";
 
     public final Block block;
@@ -57,6 +61,12 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
         } else {
             throw new RuntimeException("Given block " + block.getType() + " is not a lockable block/tile entity");
         }
+    }
+
+    private BlockNBTHandler(@NotNull final NBTCompound compound) {
+        super();
+        this.container = compound;
+        this.block = null;
     }
 
     /**
@@ -82,52 +92,34 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
      * Therefore we will remap the values here. This will possibly
      * be removed in a future version.
      */
-    private void remapAccess(@NotNull final List<String> originalList) {
-        NBTCompound access = container.getOrCreateCompound(LOCK_ATTRIBUTE);
-        for (String key : originalList) {
-            access.getOrCreateCompound(key);
-        }
+    private void remapAccess() {
+        final List<String> stringList = LockUtil.parseStringList(container.getString(OLD_LOCK_ATTRIBUTE));
+        if (stringList.isEmpty()) return;
+        container.removeKey(OLD_LOCK_ATTRIBUTE); // Remove the original list.
+        container.addCompound(LOCK_ATTRIBUTE); // Create the new compound.
+        stringList.forEach(this::addFriend);
     }
 
     /**
-     * Gets a {@link Stream} of {@link FriendPlayer} for this block.
+     * Gets a {@link Stream} of {@link FriendHandler} for this block.
      */
     @NotNull
-    private Stream<FriendPlayer> getFriendsStream() {
+    public Stream<FriendHandler> getFriendsStream() {
+        remapAccess();
         if (!container.hasKey(LOCK_ATTRIBUTE)) return Stream.empty();
-        final List<String> stringList = LockUtil.parseStringList(container.getString(LOCK_ATTRIBUTE));
-        if (!stringList.isEmpty())
-            remapAccess(stringList);
 
-        return container.getCompoundList(LOCK_ATTRIBUTE)
+        final NBTCompound compound = container.getOrCreateCompound(LOCK_ATTRIBUTE);
+        return compound
+            .getKeys()
             .stream()
-            .map((c) -> (FriendPlayer)c);
-    }
-
-    /**
-     * Gets the list of friends that are allowed to access the container.
-     * @deprecated Use {@link #getFriends()} instead.
-     * @return A list of UUID-Strings which each represent a player's UUID.
-     */
-    @NotNull
-    @Deprecated
-    public List<String> getAccess() {
-        if (!container.hasKey(LOCK_ATTRIBUTE)) return new ArrayList<>();
-        final List<String> stringList = LockUtil.parseStringList(container.getString(LOCK_ATTRIBUTE));
-        if (!stringList.isEmpty())
-            remapAccess(stringList);
-
-        return container.getCompoundList(LOCK_ATTRIBUTE)
-            .stream()
-            .map(NBTCompound::getName)
-            .collect(Collectors.toList());
+            .map((k) -> new FriendHandler(compound.getCompound(k)));
     }
 
     /**
      * Gets a {@link List} of friends for this block.
      */
     @NotNull
-    public List<FriendPlayer> getFriends() {
+    public List<FriendHandler> getFriends() {
         return getFriendsStream().collect(Collectors.toList());
     }
 
@@ -135,35 +127,42 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
      * Filters the results of {@link #getFriends()} for any entry which
      * id qualifies for {@link String#equals(Object)}.
      * @param id The String ID to check for. Usually a UUID as a String as {@link UUID#toString()}.
-     * @return The first {@link FriendPlayer} found, or none.
+     * @return The first {@link FriendHandler} found, or none.
      */
     @NotNull
-    public Optional<FriendPlayer> getFriend(@NotNull final String id) {
+    public Optional<FriendHandler> getFriend(@NotNull final String id) {
         return getFriendsStream()
             .filter((f) -> f.getName().equals(id))
             .findFirst();
     }
 
     /**
-     * Set the current list of friends that have access to this block.
+     * Set a new list of FriendHandler for the friends list.
      */
-    @Deprecated
-    public void setAccess(@NotNull final List<String> access) {
+    public void setFriends(@NotNull final List<FriendHandler> access) {
         NBTCompound compound = container.getOrCreateCompound(LOCK_ATTRIBUTE);
-        for (String value : access) {
-            compound.getOrCreateCompound(value);
+        for (FriendHandler handler : access) {
+            NBTCompound newCompound = compound.addCompound(handler.getName());
+            newCompound.mergeCompound(handler.container);
         }
     }
 
     /**
-     * Set a new list of PlayerNBTHandler for the friends list.
+     * Adds a new friend to the NBT.
+     * @param friend The friend to add.
      */
-    public void setFriends(@NotNull final List<FriendPlayer> access) {
+    public void addFriend(@NotNull final String friend) {
         NBTCompound compound = container.getOrCreateCompound(LOCK_ATTRIBUTE);
-        for (FriendPlayer handler : access) {
-            NBTCompound newCompound = compound.getOrCreateCompound(handler.getName());
-            newCompound.mergeCompound(handler);
-        }
+        compound.addCompound(friend).setString("id", friend);
+    }
+
+    /**
+     * Removes a friend from the NBT.
+     * @param friend The friend to remove.
+     */
+    public void removeFriend(@NotNull final String friend) {
+        NBTCompound compound = container.getOrCreateCompound(LOCK_ATTRIBUTE);
+        compound.removeKey(friend);
     }
 
     /**
@@ -194,7 +193,7 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
      * if an owner exists and if any friends have been added to the block.
      */
     public boolean isNotProtected() {
-        return getOwner().isEmpty() && getAccess().isEmpty();
+        return getOwner().isEmpty() && getFriends().isEmpty();
     }
 
     /**
@@ -216,7 +215,8 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
      * Checks whether or not given [player] can access this block.
      */
     public boolean canAccess(@NotNull final String player) {
-        return !isProtected() || (getOwner().equals(player) || getAccess().contains(player));
+        Optional<FriendHandler> friend = getFriend(player);
+        return !isProtected() || (getOwner().equals(player) || (friend.isPresent() && friend.get().canRead()));
     }
 
     @NotNull
@@ -228,14 +228,16 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
             // This block is not owned by anyone, this user can claim this block
             owner = playerUuid;
             setOwner(owner);
-            if (doubleChest != null)
-                doubleChest.getPersistentDataContainer().setString(OWNER_ATTRIBUTE, owner);
+            if (doubleChest != null) {
+                new BlockNBTHandler(doubleChest.getPersistentDataContainer()).setOwner(owner);
+            }
             return new LockReturnValue(true, TranslationKey.MESSAGES__PERMISSION_GRANTED);
         } else if (isOwner(playerUuid) || isOp || player.hasPermission(PERMISSION_ADMIN)) {
-            setOwner(""); setAccess(Collections.emptyList());
+            setOwner(""); setFriends(Collections.emptyList());
             if (doubleChest != null) {
-                doubleChest.getPersistentDataContainer().setString(OWNER_ATTRIBUTE, "");
-                doubleChest.getPersistentDataContainer().setString(OWNER_ATTRIBUTE, "[]"); // Also clear the friends.
+                final BlockNBTHandler doubleChestHandler = new BlockNBTHandler(doubleChest.getPersistentDataContainer());
+                doubleChestHandler.setOwner("");
+                doubleChestHandler.setFriends(Collections.emptyList()); // Also clear the friends.
             }
             return new LockReturnValue(true, TranslationKey.MESSAGES__UNLOCKED);
         }
@@ -248,11 +250,18 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
         if (owner.equals(player)) { // Simpler than #isOwner
             boolean redstone = value == null ? !getRedstone() : value;
             setRedstone(redstone);
-            if (doubleChest != null)
-                doubleChest.getPersistentDataContainer().setBoolean(REDSTONE_ATTRIBUTE, redstone);
+            if (doubleChest != null) {
+                new BlockNBTHandler(doubleChest.getPersistentDataContainer()).setRedstone(redstone);
+            }
             return new LockReturnValue(true, redstone ? TranslationKey.MESSAGES__REDSTONE_REMOVED : TranslationKey.MESSAGES__REDSTONE_ADDED);
         }
         return new LockReturnValue(false, TranslationKey.MESSAGES__NO_PERMISSION);
+    }
+
+    private boolean containsFriend(@NotNull final List<FriendHandler> friends, @NotNull final String friend) {
+        return friends
+            .stream()
+            .anyMatch((f) -> f.getName().equals(friend));
     }
 
     @NotNull
@@ -263,25 +272,25 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
             TranslationKey.MESSAGES__NO_PERMISSION
         );
 
-        final List<String> access = getAccess();
+        final List<FriendHandler> friends = getFriends();
         switch (action) {
             case ADD_FRIEND: {
-                if (access.contains(friend)) {
+                if (containsFriend(friends, friend)) {
                     return new LockReturnValue(false, TranslationKey.MESSAGES__FRIEND_ALREADY_ADDED);
                 } else {
-                    access.add(friend);
-                    setAccess(access);
-                    if (doubleChest != null)
-                        doubleChest.getPersistentDataContainer().setString(LOCK_ATTRIBUTE, access.toString());
+                    addFriend(friend);
+                    if (doubleChest != null) {
+                        new BlockNBTHandler(doubleChest.getPersistentDataContainer()).addFriend(friend);
+                    }
                     return new LockReturnValue(true, TranslationKey.MESSAGES__FRIEND_ADDED);
                 }
             }
             case REMOVE_FRIEND: {
-                if (access.contains(friend)) {
-                    access.remove(friend);
-                    setAccess(access);
-                    if (doubleChest != null)
-                        doubleChest.getPersistentDataContainer().setString(LOCK_ATTRIBUTE, access.toString());
+                if (containsFriend(friends, friend)) {
+                    removeFriend(friend);
+                    if (doubleChest != null) {
+                        new BlockNBTHandler(doubleChest.getPersistentDataContainer()).removeFriend(friend);
+                    }
                     return new LockReturnValue(true, TranslationKey.MESSAGES__FRIEND_REMOVED);
                 } else {
                     return new LockReturnValue(false, TranslationKey.MESSAGES__FRIEND_CANT_BE_REMOVED);
@@ -306,7 +315,7 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
             final Block otherDoor = block.getWorld().getBlockAt(other);
             final BlockNBTHandler otherDoorHandler = new BlockNBTHandler(otherDoor);
             otherDoorHandler.setOwner(this.getOwner());
-            otherDoorHandler.setAccess(this.getAccess());
+            otherDoorHandler.setFriends(this.getFriends());
             otherDoorHandler.setRedstone(this.getRedstone());
         }
     }

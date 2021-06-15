@@ -1,10 +1,10 @@
 
+import java.nio.charset.StandardCharsets
+import java.nio.file.Paths
 import org.ec4j.core.Resource
 import org.ec4j.core.parser.ErrorHandler
 import org.kohsuke.github.GHReleaseBuilder
 import org.kohsuke.github.GitHub
-import java.nio.charset.StandardCharsets
-import java.nio.file.Paths
 
 buildscript {
     dependencies {

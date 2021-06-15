@@ -42,12 +42,12 @@ class DoubleChestLocker(
             return
         }
         val oldChestHandler = BlockNBTHandler(doubleChest.block)
-        if (oldChestHandler.isProtected() && oldChestHandler.getOwner() != player.uniqueId.toString()) {
+        if (oldChestHandler.isProtected && oldChestHandler.owner != player.uniqueId.toString()) {
             callback.accept(false)
         } else {
-            newHandler.setOwner(oldChestHandler.getOwner())
-            newHandler.setAccess(oldChestHandler.getAccess())
-            newHandler.setRedstone(oldChestHandler.getRedstone())
+            newHandler.owner = oldChestHandler.owner
+            newHandler.friends = oldChestHandler.friends
+            newHandler.redstone = oldChestHandler.redstone
             callback.accept(true)
         }
     }

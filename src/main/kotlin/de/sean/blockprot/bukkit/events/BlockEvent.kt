@@ -93,7 +93,9 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                     handler.lockBlock(event.player, event.player.isOp, null)
                     val settingsHandler = PlayerSettingsHandler(event.player)
                     val friends = settingsHandler.defaultFriends
-                    handler.access = friends
+                    for (friend in friends) {
+                        handler.addFriend(friend)
+                    }
                     if (LockUtil.disallowRedstoneOnPlace()) {
                         handler.redstone = false
                     }

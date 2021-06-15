@@ -26,6 +26,7 @@ package de.sean.blockprot.bukkit.inventories;
 import de.sean.blockprot.TranslationKey;
 import de.sean.blockprot.Translator;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
+import de.sean.blockprot.bukkit.nbt.FriendHandler;
 import de.sean.blockprot.bukkit.nbt.LockReturnValue;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.bukkit.util.ItemUtil;
@@ -48,6 +49,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class BlockProtInventory implements InventoryHolder {
     protected final Inventory inventory;
@@ -191,9 +193,21 @@ public abstract class BlockProtInventory implements InventoryHolder {
     }
 
     @NotNull
-    protected final List<OfflinePlayer> mapUuidToPlayer(@NotNull final List<String> uuids) {
-        return uuids.stream()
-            .map((s) -> Bukkit.getOfflinePlayer(UUID.fromString(s)))
+    protected final List<OfflinePlayer> mapFriendsToPlayer(@NotNull final List<FriendHandler> friends) {
+        return mapFriendsToPlayer(friends.stream());
+    }
+
+    /**
+     * Map a {@link Stream} of {@link String} to a {@link List} of {@link OfflinePlayer} using
+     * {@link UUID#fromString(String)} and {@link Bukkit#getOfflinePlayer(UUID)}.
+     * @param friends A {@link Stream} of {@link String} in which each entry should be parseable
+     *        by {@link UUID#fromString(String)}.
+     * @return A list of all players that mapped successfully.
+     */
+    @NotNull
+    protected final List<OfflinePlayer> mapFriendsToPlayer(@NotNull final Stream<FriendHandler> friends) {
+        return friends
+            .map((f) -> Bukkit.getOfflinePlayer(UUID.fromString(f.getName())))
             .collect(Collectors.toList());
     }
 

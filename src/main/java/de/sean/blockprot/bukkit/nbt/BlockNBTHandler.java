@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package de.sean.blockprot.bukkit.nbt;
 
 import de.sean.blockprot.TranslationKey;
@@ -36,12 +35,15 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class BlockNBTHandler extends NBTHandler<NBTCompound> {
+    static final String OWNER_ATTRIBUTE = "splugin_owner";
+    static final String LOCK_ATTRIBUTE = "splugin_lock";
+    static final String REDSTONE_ATTRIBUTE = "splugin_lock_redstone";
+
     public final Block block;
 
     public BlockNBTHandler(@NotNull final Block block) {
@@ -75,37 +77,93 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
     }
 
     /**
+     * As of 0.3.0 we expect a list of compounds, in which we can
+     * store the access flags and other future settings.
+     * Therefore we will remap the values here. This will possibly
+     * be removed in a future version.
+     */
+    private void remapAccess(@NotNull final List<String> originalList) {
+        NBTCompound access = container.getOrCreateCompound(LOCK_ATTRIBUTE);
+        for (String key : originalList) {
+            access.getOrCreateCompound(key);
+        }
+    }
+
+    /**
+     * Gets a {@link Stream} of {@link FriendPlayer} for this block.
+     */
+    @NotNull
+    private Stream<FriendPlayer> getFriendsStream() {
+        if (!container.hasKey(LOCK_ATTRIBUTE)) return Stream.empty();
+        final List<String> stringList = LockUtil.parseStringList(container.getString(LOCK_ATTRIBUTE));
+        if (!stringList.isEmpty())
+            remapAccess(stringList);
+
+        return container.getCompoundList(LOCK_ATTRIBUTE)
+            .stream()
+            .map((c) -> (FriendPlayer)c);
+    }
+
+    /**
      * Gets the list of friends that are allowed to access the container.
+     * @deprecated Use {@link #getFriends()} instead.
      * @return A list of UUID-Strings which each represent a player's UUID.
      */
     @NotNull
+    @Deprecated
     public List<String> getAccess() {
         if (!container.hasKey(LOCK_ATTRIBUTE)) return new ArrayList<>();
-        return LockUtil.parseStringList(container.getString(LOCK_ATTRIBUTE));
+        final List<String> stringList = LockUtil.parseStringList(container.getString(LOCK_ATTRIBUTE));
+        if (!stringList.isEmpty())
+            remapAccess(stringList);
+
+        return container.getCompoundList(LOCK_ATTRIBUTE)
+            .stream()
+            .map(NBTCompound::getName)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Gets a {@link List} of friends for this block.
+     */
+    @NotNull
+    public List<FriendPlayer> getFriends() {
+        return getFriendsStream().collect(Collectors.toList());
+    }
+
+    /**
+     * Filters the results of {@link #getFriends()} for any entry which
+     * id qualifies for {@link String#equals(Object)}.
+     * @param id The String ID to check for. Usually a UUID as a String as {@link UUID#toString()}.
+     * @return The first {@link FriendPlayer} found, or none.
+     */
+    @NotNull
+    public Optional<FriendPlayer> getFriend(@NotNull final String id) {
+        return getFriendsStream()
+            .filter((f) -> f.getName().equals(id))
+            .findFirst();
     }
 
     /**
      * Set the current list of friends that have access to this block.
      */
+    @Deprecated
     public void setAccess(@NotNull final List<String> access) {
-        container.setString(LOCK_ATTRIBUTE, access.toString());
+        NBTCompound compound = container.getOrCreateCompound(LOCK_ATTRIBUTE);
+        for (String value : access) {
+            compound.getOrCreateCompound(value);
+        }
     }
 
     /**
-     * Read the access flags of this block.
+     * Set a new list of PlayerNBTHandler for the friends list.
      */
-    @NotNull
-    public EnumSet<BlockAccessFlag> getBlockAccessFlags() {
-        if (!container.hasKey(ACCESS_FLAGS_ATTRIBUTE)) return EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE);
-        else return BlockAccessFlag.parseFlags(container.getInteger(ACCESS_FLAGS_ATTRIBUTE));
-    }
-
-    /**
-     * Sets the access flags for this block. ORs all flags together to one integer, then
-     * writes all of them to ACCESS_FLAGS_ATTRIBUTE.
-     */
-    public void setBlockAccessFlags(@NotNull final EnumSet<BlockAccessFlag> flags) {
-        container.setInteger(ACCESS_FLAGS_ATTRIBUTE, flags.stream().mapToInt(BlockAccessFlag::getFlag).sum());
+    public void setFriends(@NotNull final List<FriendPlayer> access) {
+        NBTCompound compound = container.getOrCreateCompound(LOCK_ATTRIBUTE);
+        for (FriendPlayer handler : access) {
+            NBTCompound newCompound = compound.getOrCreateCompound(handler.getName());
+            newCompound.mergeCompound(handler);
+        }
     }
 
     /**

@@ -23,18 +23,15 @@
  */
 package de.sean.blockprot.bukkit.nbt;
 
-import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTList;
+import de.tr7zw.changeme.nbtapi.NBTListCompound;
 
-public abstract class NBTHandler<T extends NBTCompound> {
-    public static final String PERMISSION_LOCK = "blockprot.lock";
-    public static final String PERMISSION_INFO = "blockprot.info";
-    public static final String PERMISSION_ADMIN = "blockprot.admin";
-    public static final String PERMISSION_BYPASS = "blockprot.bypass";
+public class FriendPlayer extends NBTListCompound {
+    protected FriendPlayer(NBTList<?> parent, Object obj) {
+        super(parent, obj);
+    }
 
-    /**
-     * The NBT container for this handler.
-     */
-    T container;
-
-    protected NBTHandler() { }
+    public PlayerNBTHandler asNBTHandler() {
+        return new PlayerNBTHandler(this);
+    }
 }

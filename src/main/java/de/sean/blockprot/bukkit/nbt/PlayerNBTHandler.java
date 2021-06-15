@@ -23,18 +23,37 @@
  */
 package de.sean.blockprot.bukkit.nbt;
 
-import de.tr7zw.changeme.nbtapi.NBTCompound;
+import org.jetbrains.annotations.NotNull;
 
-public abstract class NBTHandler<T extends NBTCompound> {
-    public static final String PERMISSION_LOCK = "blockprot.lock";
-    public static final String PERMISSION_INFO = "blockprot.info";
-    public static final String PERMISSION_ADMIN = "blockprot.admin";
-    public static final String PERMISSION_BYPASS = "blockprot.bypass";
+import java.util.EnumSet;
+
+public class PlayerNBTHandler extends NBTHandler<FriendPlayer> {
+    static final String ACCESS_FLAGS_ATTRIBUTE = "blockprot_access_flags";
+
+    public PlayerNBTHandler(@NotNull final FriendPlayer compound) {
+        super();
+        this.container = compound;
+    }
+
+    @NotNull
+    public String getName() {
+        return container.getName();
+    }
 
     /**
-     * The NBT container for this handler.
+     * Read the access flags of this block.
      */
-    T container;
+    @NotNull
+    public EnumSet<BlockAccessFlag> getAccessFlags() {
+        if (!container.hasKey(ACCESS_FLAGS_ATTRIBUTE)) return EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE);
+        else return BlockAccessFlag.parseFlags(container.getInteger(ACCESS_FLAGS_ATTRIBUTE));
+    }
 
-    protected NBTHandler() { }
+    /**
+     * Sets the access flags for this block. ORs all flags together to one integer, then
+     * writes all of them to ACCESS_FLAGS_ATTRIBUTE.
+     */
+    public void setAccessFlags(@NotNull final EnumSet<BlockAccessFlag> flags) {
+        container.setInteger(ACCESS_FLAGS_ATTRIBUTE, flags.stream().mapToInt(BlockAccessFlag::getFlag).sum());
+    }
 }

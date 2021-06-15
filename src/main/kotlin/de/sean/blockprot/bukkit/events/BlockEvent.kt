@@ -21,10 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package de.sean.blockprot.bukkit.events
 
-import de.sean.blockprot.bukkit.nbt.BlockAccessFlag
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler
@@ -39,7 +37,6 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockBurnEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.plugin.java.JavaPlugin
-import java.util.*
 
 class BlockEvent(private val plugin: JavaPlugin) : Listener {
     @EventHandler
@@ -97,7 +94,6 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                     val settingsHandler = PlayerSettingsHandler(event.player)
                     val friends = settingsHandler.defaultFriends
                     handler.access = friends
-                    handler.blockAccessFlags = EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE)
                     if (LockUtil.disallowRedstoneOnPlace()) {
                         handler.redstone = false
                     }
@@ -110,7 +106,6 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                 if (handler.isNotProtected) {
                     // Assign a empty string for no owner to not have NPEs when reading
                     handler.owner = if (LockUtil.shouldLockOnPlace(event.player)) playerUuid else ""
-                    handler.blockAccessFlags = EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE)
                     if (LockUtil.disallowRedstoneOnPlace()) {
                         handler.redstone = false
                     }

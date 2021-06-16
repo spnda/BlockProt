@@ -56,7 +56,7 @@ fun readEditorConfigRules(): Map<String, String> {
 
 group = "de.sean"
 version = "0.2.3"
-base.archivesBaseName = "${project.name}-$version-${gitBranchName()}"
+base.archivesName.set("${project.name}-$version-${gitBranchName()}")
 
 repositories {
     mavenLocal()
@@ -191,6 +191,6 @@ tasks.register("github") {
 
         val ghRelease = releaseBuilder.create()
         ghRelease.name = "${project.name} $version" // We set the proper name here, as "releaseBuilder.name" is also used for the tag name.
-        ghRelease.uploadAsset(file("${project.buildDir}/libs/${base.archivesBaseName}-all.jar"), "application/java-archive")
+        ghRelease.uploadAsset(file("${project.buildDir}/libs/${base.archivesName.get()}-all.jar"), "application/java-archive")
     }
 }

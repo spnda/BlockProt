@@ -67,14 +67,6 @@ public final class FriendDetailInventory extends FriendModifyInventory {
         return Translator.get(TranslationKey.INVENTORIES__FRIENDS__EDIT);
     }
 
-    private int getAccessFlagIndexOf(EnumSet<BlockAccessFlag> flags) {
-        int result = 0;
-        for (; result < accessFlagCombinations.size(); result++) {
-            if (flags.equals(accessFlagCombinations.get(result))) return result;
-        }
-        return result;
-    }
-
     @Override
     public void onClick(@NotNull InventoryClickEvent event, @NotNull InventoryState state) {
         final Player player = (Player) event.getWhoClicked();
@@ -94,16 +86,19 @@ public final class FriendDetailInventory extends FriendModifyInventory {
                 player.openInventory(new FriendManageInventory().fill(player));
                 break;
             }
-            case OAK_DOOR: {
+            case ENDER_EYE: {
                 if (playerHandler == null) break;
-                int curIndex = getAccessFlagIndexOf(playerHandler.getAccessFlags());
+                int curIndex = 0;
+                for (; curIndex < accessFlagCombinations.size(); curIndex++) {
+                    if (curFlags.equals(accessFlagCombinations.get(curIndex))) break;
+                }
 
                 if (curIndex + 1 >= accessFlagCombinations.size()) curIndex = 0;
                 else curIndex += 1;
                 curFlags = accessFlagCombinations.get(curIndex);
                 setItemStack(
                     2,
-                    Material.OAK_DOOR,
+                    Material.ENDER_EYE,
                     BlockAccessFlag.accessFlagToString(curFlags),
                     BlockAccessFlag.accumulateAccessFlagLore(curFlags)
                 );
@@ -142,6 +137,9 @@ public final class FriendDetailInventory extends FriendModifyInventory {
         }
         playerHandler = friendHandler.get();
 
+        /* Read the current access flags */
+        curFlags = playerHandler.getAccessFlags();
+
         inventory.setItem(
             0, ItemUtil.INSTANCE.getPlayerSkull(Objects.requireNonNull(state.getCurFriend())));
         setItemStack(
@@ -150,7 +148,7 @@ public final class FriendDetailInventory extends FriendModifyInventory {
         if (state.getFriendSearchState() == InventoryState.FriendSearchState.FRIEND_SEARCH) {
             setItemStack(
                 2,
-                Material.OAK_DOOR,
+                Material.ENDER_EYE,
                 BlockAccessFlag.accessFlagToString(curFlags),
                 BlockAccessFlag.accumulateAccessFlagLore(curFlags)
             );

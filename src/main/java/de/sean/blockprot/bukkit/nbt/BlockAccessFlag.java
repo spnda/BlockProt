@@ -25,6 +25,7 @@ package de.sean.blockprot.bukkit.nbt;
 
 import de.sean.blockprot.TranslationKey;
 import de.sean.blockprot.Translator;
+import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -102,10 +103,13 @@ public enum BlockAccessFlag {
         int i = 0;
         for (BlockAccessFlag flag : flags) {
             String flagStr = flag.toString();
-            builder.append(
-                flagStr.substring(0, 1).toUpperCase(Locale.ENGLISH)); // Uppercase first letter.
-            builder.append(flagStr.substring(1).toLowerCase(Locale.ENGLISH));
-            if (i < (flags.size() - 1)) builder.append(", ");
+            builder
+                .append(ChatColor.ITALIC)
+                .append(flagStr.substring(0, 1).toUpperCase(Locale.ENGLISH)) // Uppercase first letter.
+                .append(flagStr.substring(1).toLowerCase(Locale.ENGLISH));
+            if (i < (flags.size() - 1)) {
+                builder.append(ChatColor.RESET).append(", ");
+            }
             i++;
         }
         return builder.toString();
@@ -115,8 +119,15 @@ public enum BlockAccessFlag {
     public static List<String> accumulateAccessFlagLore(@NotNull final EnumSet<BlockAccessFlag> flags) {
         if (flags.isEmpty()) return Collections.singletonList("No access");
         ArrayList<String> ret = new ArrayList<>();
-        for (BlockAccessFlag flag : flags)
-            ret.add(flag.getDescription());
+        StringBuilder builder = new StringBuilder();
+        for (BlockAccessFlag flag : flags) {
+            builder.setLength(0);
+            builder
+                .append(ChatColor.RESET)
+                .append(ChatColor.YELLOW)
+                .append(flag.getDescription());
+            ret.add(builder.toString());
+        }
         return ret;
     }
 }

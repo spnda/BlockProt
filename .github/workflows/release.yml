@@ -5,11 +5,16 @@ on: [workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-20.04
-    container:
-      image: openjdk:16-jdk
-      options: --user root
+    # container:
+    #   image: openjdk:16-jdk
+    # options: --user root
     steps:
       - uses: actions/checkout@v2
+      - name: Set up JDK 16
+        uses: actions/setup-java@v2
+        with:
+          java-version: '16'
+          distribution: 'adopt'
       - uses: gradle/wrapper-validation-action@v1
       - run: ./gradlew build github --stacktrace
         env:

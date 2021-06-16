@@ -28,8 +28,8 @@ import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.inventories.BlockLockInventory
 import de.sean.blockprot.bukkit.inventories.InventoryState
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
-import de.sean.blockprot.bukkit.nbt.NBTHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil
+import de.sean.blockprot.bukkit.nbt.NBTHandler
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.block.Block

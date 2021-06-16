@@ -25,6 +25,9 @@ inventories:
     remove: "Remove Friend"
     search: "Search Players"
     result: "Players found"
+    permissions:
+      read: "Read"
+      write: "Write"
 
 messages:
   permission_granted: "Permission granted."

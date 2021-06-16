@@ -20,6 +20,9 @@ inventories:
     remove: "Freund entfernen"
     search: "Spieler suchen"
     result: "Spieler gefunden"
+    permissions:
+      read: "Inhalt einsehen"
+      write: "Editieren"
 
 messages:
   permission_granted: "Erlaubnis erteilt."

@@ -33,12 +33,12 @@ public enum BlockAccessFlag {
     /**
      * The user is allowed to see, but not alter, the contents of the inventory.
      */
-    READ(TranslationKey.INVENTORIES__BACK),
+    READ(TranslationKey.INVENTORIES__FRIENDS__PERMISSIONS__READ),
 
     /**
      * The user is allowed to add and remove contents of the inventory.
      */
-    WRITE(TranslationKey.INVENTORIES__BACK);
+    WRITE(TranslationKey.INVENTORIES__FRIENDS__PERMISSIONS__WRITE);
 
     @NotNull
     private final TranslationKey descriptionKey;

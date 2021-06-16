@@ -62,7 +62,7 @@ public abstract class FriendModifyInventory extends BlockProtInventory {
             case FRIEND_SEARCH: {
                 if (state.getBlock() == null) break;
                 final BlockState doubleChest =
-                    LockUtil.INSTANCE.getDoubleChest(state.getBlock(), player.getWorld());
+                    LockUtil.getDoubleChest(state.getBlock(), player.getWorld());
                 applyChanges(
                     state.getBlock(),
                     player,

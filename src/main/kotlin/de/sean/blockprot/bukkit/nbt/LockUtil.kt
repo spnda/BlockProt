@@ -134,12 +134,12 @@ object LockUtil {
     /**
      * Whether the given [type] is either a lockable block or a lockable tile entity.
      */
-    fun isLockable(type: Material) = isLockableBlock(type) || isLockableTileEntity(type)
-    fun isLockableBlock(type: Material) = type in lockableBlocks
-    fun isLockableTileEntity(type: Material) = type in lockableTileEntities
-    fun isLockableDoor(type: Material) = type in lockableDoors
-    fun isLockableShulkerBox(type: Material) = type in shulkerBoxes
-    fun isLockableInventory(type: InventoryType) = type in lockableInventories
+    @JvmStatic fun isLockable(type: Material) = isLockableBlock(type) || isLockableTileEntity(type)
+    @JvmStatic fun isLockableBlock(type: Material) = type in lockableBlocks
+    @JvmStatic fun isLockableTileEntity(type: Material) = type in lockableTileEntities
+    @JvmStatic fun isLockableDoor(type: Material) = type in lockableDoors
+    @JvmStatic fun isLockableShulkerBox(type: Material) = type in shulkerBoxes
+    @JvmStatic fun isLockableInventory(type: InventoryType) = type in lockableInventories
 
     /**
      * Parse a comma-separated list from a String
@@ -157,6 +157,7 @@ object LockUtil {
      * Get the BlockState of the double chest of given [block].
      * @return The BlockState of the double chest, null if given [block] was not a chest.
      */
+    @JvmStatic
     fun getDoubleChest(block: Block, world: World): BlockState? {
         var doubleChest: DoubleChest? = null
         val chestState = block.state
@@ -182,6 +183,7 @@ object LockUtil {
      * Check if the given [player] wants their blocks to be locked when
      * placed.
      */
+    @JvmStatic
     fun shouldLockOnPlace(player: Player): Boolean {
         val nbtEntity = NBTEntity(player).persistentDataContainer
         return if (nbtEntity.hasKey(PlayerSettingsHandler.LOCK_ON_PLACE_ATTRIBUTE)) {
@@ -195,6 +197,7 @@ object LockUtil {
      * Checks the config if the "redstone_disallowed_by_default" key is
      * set to true. If it was not found, it defaults to false.
      */
+    @JvmStatic
     fun disallowRedstoneOnPlace(): Boolean {
         val config = BlockProt.instance.config
         return if (config.contains("redstone_disallowed_by_default")) {

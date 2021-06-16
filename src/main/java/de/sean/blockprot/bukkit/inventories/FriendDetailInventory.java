@@ -83,6 +83,8 @@ public final class FriendDetailInventory extends FriendModifyInventory {
                 assert friend != null;
                 modifyFriendsForAction(
                     state, player, friend, FriendModifyAction.REMOVE_FRIEND, false);
+                // We remove the friend, so the player does not exist anymore either.
+                this.playerHandler = null;
                 player.openInventory(new FriendManageInventory().fill(player));
                 break;
             }

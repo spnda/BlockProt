@@ -52,6 +52,8 @@ class InventoryEvent : Listener {
         } else {
             // No state, let's check if they're in some block inventory.
             try {
+                // Casting null does not trigger a ClassCastException.
+                if (event.inventory.holder == null) return
                 val blockHolder = event.inventory.holder as BlockInventoryHolder
                 if (LockUtil.isLockable(blockHolder.block.type)) {
                     // Ok, we have a lockable block, check if they can write anything to this.

@@ -118,7 +118,11 @@ spotless {
 }
 
 tasks.processResources {
-    expand("version" to project.version)
+    inputs.property("version", project.version)
+
+    filesMatching("plugin.yml") {
+        expand("version" to project.version)
+    }
 }
 
 tasks.compileJava {

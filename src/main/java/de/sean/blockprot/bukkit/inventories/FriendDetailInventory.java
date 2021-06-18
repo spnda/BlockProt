@@ -44,7 +44,7 @@ public final class FriendDetailInventory extends FriendModifyInventory {
             EnumSet.of(BlockAccessFlag.READ),
             EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE));
 
-    @NotNull
+    @Nullable
     private EnumSet<BlockAccessFlag> curFlags = EnumSet.noneOf(BlockAccessFlag.class);
 
     @Nullable
@@ -83,7 +83,7 @@ public final class FriendDetailInventory extends FriendModifyInventory {
                 break;
             }
             case ENDER_EYE: {
-                if (playerHandler == null) break;
+                if (playerHandler == null || curFlags == null) break;
                 int curIndex = 0;
                 for (; curIndex < accessFlagCombinations.size(); curIndex++) {
                     if (curFlags.equals(accessFlagCombinations.get(curIndex))) break;
@@ -111,7 +111,7 @@ public final class FriendDetailInventory extends FriendModifyInventory {
 
     @Override
     public void onClose(@NotNull InventoryCloseEvent event, @NotNull InventoryState state) {
-        if (this.playerHandler != null)
+        if (this.playerHandler != null && curFlags != null)
             this.playerHandler.setAccessFlags(curFlags);
     }
 
@@ -122,26 +122,26 @@ public final class FriendDetailInventory extends FriendModifyInventory {
         final OfflinePlayer friend = state.getCurFriend();
         if (friend == null) return inventory;
 
-        /* Get the current FriendHandler */
-        BlockNBTHandler handler = new BlockNBTHandler(Objects.requireNonNull(state.getBlock()));
-        final Optional<FriendHandler> friendHandler =
-            handler.getFriend(friend.getUniqueId().toString());
-
-        if (!friendHandler.isPresent()) {
-            Bukkit.getLogger().warning("Tried to open a " + this.getClass().getSimpleName() + " with a unknown player.");
-            return inventory;
-        }
-        playerHandler = friendHandler.get();
-
-        /* Read the current access flags */
-        curFlags = playerHandler.getAccessFlags();
-
         inventory.setItem(
             0, ItemUtil.INSTANCE.getPlayerSkull(Objects.requireNonNull(state.getCurFriend())));
         setItemStack(
             1, Material.RED_STAINED_GLASS_PANE, TranslationKey.INVENTORIES__FRIENDS__REMOVE);
 
         if (state.getFriendSearchState() == InventoryState.FriendSearchState.FRIEND_SEARCH) {
+            /* Get the current FriendHandler */
+            BlockNBTHandler handler = new BlockNBTHandler(Objects.requireNonNull(state.getBlock()));
+            final Optional<FriendHandler> friendHandler =
+                handler.getFriend(friend.getUniqueId().toString());
+
+            if (!friendHandler.isPresent()) {
+                Bukkit.getLogger().warning("Tried to open a " + this.getClass().getSimpleName() + " with a unknown player.");
+                return inventory;
+            }
+            playerHandler = friendHandler.get();
+
+            /* Read the current access flags */
+            curFlags = playerHandler.getAccessFlags();
+
             setItemStack(
                 2,
                 Material.ENDER_EYE,

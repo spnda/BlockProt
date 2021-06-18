@@ -24,7 +24,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -55,7 +55,7 @@ public class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
 
     @NotNull
     public List<String> getDefaultFriends() {
-        if (!container.hasKey(DEFAULT_FRIENDS_ATTRIBUTE)) return Collections.emptyList();
+        if (!container.hasKey(DEFAULT_FRIENDS_ATTRIBUTE)) return new ArrayList<>();
         else {
             return LockUtil
                 .parseStringList(container.getString(DEFAULT_FRIENDS_ATTRIBUTE));
@@ -64,7 +64,7 @@ public class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
 
     @NotNull
     public List<OfflinePlayer> getDefaultFriendsAsPlayers() {
-        if (!container.hasKey(DEFAULT_FRIENDS_ATTRIBUTE)) return Collections.emptyList();
+        if (!container.hasKey(DEFAULT_FRIENDS_ATTRIBUTE)) return new ArrayList<>();
         else {
             return LockUtil
                 .parseStringList(container.getString(DEFAULT_FRIENDS_ATTRIBUTE))

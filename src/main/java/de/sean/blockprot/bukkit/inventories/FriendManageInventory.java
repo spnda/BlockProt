@@ -20,6 +20,7 @@ package de.sean.blockprot.bukkit.inventories;
 import de.sean.blockprot.BlockProt;
 import de.sean.blockprot.TranslationKey;
 import de.sean.blockprot.Translator;
+import de.sean.blockprot.bukkit.inventories.InventoryState.FriendSearchState;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.bukkit.util.ItemUtil;
@@ -37,7 +38,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public final class FriendManageInventory extends FriendModifyInventory {
+public final class FriendManageInventory extends BlockProtInventory {
     private int maxSkulls = InventoryConstants.tripleLine - 4;
 
     @Override
@@ -49,6 +50,36 @@ public final class FriendManageInventory extends FriendModifyInventory {
     @Override
     public String getTranslatedInventoryName() {
         return Translator.get(TranslationKey.INVENTORIES__FRIENDS__MANAGE);
+    }
+
+    /**
+     * Exits this inventory depending on {@code state}'s {@link FriendSearchState} back to the {@link BlockLockInventory}
+     * or the {@link UserSettingsInventory} respectively.
+     *
+     * @param player The player to open/close the inventory for.
+     * @param state The {@code player}'s state.
+     */
+    public final void exitModifyInventory(@NotNull final Player player, @NotNull final InventoryState state) {
+        player.closeInventory();
+        Inventory inventory;
+        switch (state.getFriendSearchState()) {
+            case FRIEND_SEARCH: {
+                if (state.getBlock() == null) return;
+                inventory =
+                    new BlockLockInventory()
+                        .fill(
+                            player,
+                            state.getBlock().getState().getType(),
+                            new BlockNBTHandler(state.getBlock()));
+                break;
+            }
+            case DEFAULT_FRIEND_SEARCH:
+                inventory = new UserSettingsInventory().fill(player);
+                break;
+            default:
+                return;
+        }
+        player.openInventory(inventory);
     }
 
     @Override
@@ -133,11 +164,11 @@ public final class FriendManageInventory extends FriendModifyInventory {
                 final PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(player);
                 List<String> currentFriends = settingsHandler.getDefaultFriends();
                 final String selfUuid = player.getUniqueId().toString();
-                players =
-                    filterList(
-                        currentFriends,
-                        Arrays.asList(Bukkit.getOfflinePlayers()),
-                        (uuid, cur) -> cur.contains(uuid) && !uuid.equals(selfUuid));
+                players = filterList(
+                    currentFriends, Arrays.asList(Bukkit.getOfflinePlayers()),
+                    (filterPlayer, friends) ->
+                        friends.contains(filterPlayer.getUniqueId().toString()) && !player.getUniqueId().toString().equals(selfUuid)
+                );
                 break;
             }
             default: {

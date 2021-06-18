@@ -32,7 +32,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
 
-class FriendSearchResultInventory : FriendModifyInventory() {
+class FriendSearchResultInventory : BlockProtInventory() {
     override fun getSize() = InventoryConstants.tripleLine
     override fun getTranslatedInventoryName() = Translator.get(TranslationKey.INVENTORIES__FRIENDS__RESULT)
 
@@ -50,7 +50,7 @@ class FriendSearchResultInventory : FriendModifyInventory() {
             Material.PLAYER_HEAD, Material.SKELETON_SKULL -> {
                 val index = findItemIndex(item)
                 val friend = state.friendResultCache[index]
-                modifyFriendsForAction(state, player, friend, FriendModifyAction.ADD_FRIEND, false)
+                modifyFriendsForAction(state, player, friend, FriendModifyAction.ADD_FRIEND)
                 player.openInventory(FriendManageInventory().fill(player))
             }
             else -> exit(player)
@@ -123,7 +123,7 @@ class FriendSearchResultInventory : FriendModifyInventory() {
             var playersIndex = 0
             while (playersIndex < maxPlayers && playersIndex < players.size) {
                 // Only add to the inventory if this is not a friend (yet)
-                inventory.setItem(playersIndex, ItemUtil.getPlayerSkull(players[playersIndex]))
+                setPlayerSkull(playersIndex, players[playersIndex])
                 playersIndex += 1
             }
         }

@@ -43,7 +43,7 @@ data class InventoryState(val block: Block?) {
     var friendResultCache: MutableList<OfflinePlayer> = mutableListOf()
 
     /**
-     * The current index of the [FriendModifyInventory] page.
+     * The current index of the [BlockProtInventory] page.
      */
     var friendPage: Int = 0
 

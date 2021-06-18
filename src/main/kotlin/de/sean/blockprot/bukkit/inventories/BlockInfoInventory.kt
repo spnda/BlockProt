@@ -88,9 +88,8 @@ class BlockInfoInventory : BlockProtInventory() {
             state.friendResultCache.add(offlinePlayer)
         }
 
-        if (owner.isNotEmpty()) inventory.setItem(
-            0,
-            ItemUtil.getPlayerSkull(Bukkit.getOfflinePlayer(UUID.fromString(owner)))
+        if (owner.isNotEmpty()) setPlayerSkull(
+            0, Bukkit.getOfflinePlayer(UUID.fromString(owner))
         )
         if (state.friendPage == 0 && friends.size >= InventoryConstants.doubleLine) {
             setItemStack(
@@ -115,8 +114,7 @@ class BlockInfoInventory : BlockProtInventory() {
         Bukkit.getScheduler().runTaskAsynchronously(BlockProt.instance) { _ ->
             var i = 0
             while (i < InventoryConstants.doubleLine && i < state.friendResultCache.size) {
-                val skull = ItemUtil.getPlayerSkull(state.friendResultCache[i])
-                inventory.setItem(InventoryConstants.lineLength + i, skull)
+                setPlayerSkull(InventoryConstants.lineLength + i, state.friendResultCache[i])
                 i++
             }
         }

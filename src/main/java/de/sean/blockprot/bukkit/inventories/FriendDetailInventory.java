@@ -19,8 +19,10 @@ package de.sean.blockprot.bukkit.inventories;
 
 import de.sean.blockprot.TranslationKey;
 import de.sean.blockprot.Translator;
-import de.sean.blockprot.bukkit.nbt.*;
-import de.sean.blockprot.bukkit.util.ItemUtil;
+import de.sean.blockprot.bukkit.nbt.BlockAccessFlag;
+import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
+import de.sean.blockprot.bukkit.nbt.FriendHandler;
+import de.sean.blockprot.bukkit.nbt.FriendModifyAction;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -37,7 +39,7 @@ import java.util.*;
 /**
  * The detail inventory for managing a single friend and their permission.
  */
-public final class FriendDetailInventory extends FriendModifyInventory {
+public final class FriendDetailInventory extends BlockProtInventory {
     @NotNull
     private static final List<EnumSet<BlockAccessFlag>> accessFlagCombinations =
         Arrays.asList(
@@ -76,7 +78,7 @@ public final class FriendDetailInventory extends FriendModifyInventory {
                 OfflinePlayer friend = state.getCurFriend();
                 assert friend != null;
                 modifyFriendsForAction(
-                    state, player, friend, FriendModifyAction.REMOVE_FRIEND, false);
+                    state, player, friend, FriendModifyAction.REMOVE_FRIEND);
                 // We remove the friend, so the player does not exist anymore either.
                 this.playerHandler = null;
                 player.openInventory(new FriendManageInventory().fill(player));
@@ -122,8 +124,7 @@ public final class FriendDetailInventory extends FriendModifyInventory {
         final OfflinePlayer friend = state.getCurFriend();
         if (friend == null) return inventory;
 
-        inventory.setItem(
-            0, ItemUtil.INSTANCE.getPlayerSkull(Objects.requireNonNull(state.getCurFriend())));
+        setPlayerSkull(0, state.getCurFriend());
         setItemStack(
             1, Material.RED_STAINED_GLASS_PANE, TranslationKey.INVENTORIES__FRIENDS__REMOVE);
 

@@ -8,7 +8,7 @@ import java.nio.file.Paths
 
 buildscript {
     dependencies {
-        classpath("org.kohsuke:github-api:1.130")
+        classpath("org.kohsuke:github-api:1.131")
         classpath("org.ec4j.core:ec4j-core:0.3.0")
     }
 

@@ -10,3 +10,8 @@ updates:
     schedule:
       interval: "monthly" # We will just check for updates every month.
       day: "monday" # Monday is the default
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "monday"

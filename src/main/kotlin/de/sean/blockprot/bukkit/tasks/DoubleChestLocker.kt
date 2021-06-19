@@ -39,9 +39,7 @@ class DoubleChestLocker(
         if (oldChestHandler.isProtected && oldChestHandler.owner != player.uniqueId.toString()) {
             callback.accept(false)
         } else {
-            newHandler.owner = oldChestHandler.owner
-            newHandler.friends = oldChestHandler.friends
-            newHandler.redstone = oldChestHandler.redstone
+            newHandler.mergeHandler(oldChestHandler)
             callback.accept(true)
         }
     }

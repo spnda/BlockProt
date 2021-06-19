@@ -18,6 +18,7 @@
 package de.sean.blockprot.bukkit.nbt;
 
 import de.tr7zw.changeme.nbtapi.NBTCompound;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class NBTHandler<T extends NBTCompound> {
     public static final String PERMISSION_LOCK = "blockprot.lock";
@@ -31,4 +32,6 @@ public abstract class NBTHandler<T extends NBTCompound> {
     T container;
 
     protected NBTHandler() { }
+
+    public abstract void mergeHandler(@NotNull final NBTHandler<?> handler);
 }

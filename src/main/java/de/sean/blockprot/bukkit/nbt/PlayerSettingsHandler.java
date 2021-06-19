@@ -77,4 +77,7 @@ public class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
     public void setDefaultFriends(@NotNull final List<String> friends) {
         container.setString(DEFAULT_FRIENDS_ATTRIBUTE, friends.toString());
     }
+
+    @Override
+    public void mergeHandler(@NotNull NBTHandler<?> handler) {}
 }

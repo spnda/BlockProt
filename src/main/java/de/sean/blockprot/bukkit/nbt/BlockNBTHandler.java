@@ -43,6 +43,8 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
     static final String LOCK_ATTRIBUTE = "blockprot_friends";
     static final String REDSTONE_ATTRIBUTE = "splugin_lock_redstone";
 
+    private static final boolean DEFAULT_REDSTONE = true;
+
     public final Block block;
 
     public BlockNBTHandler(@NotNull final Block block) {
@@ -169,8 +171,8 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
         // We will default to 'true'. The default value for a boolean is 'false',
         // which would also be the default value for NBTCompound#getBoolean
         if (!container.hasKey(REDSTONE_ATTRIBUTE)) {
-            container.setBoolean(REDSTONE_ATTRIBUTE, true);
-            return true;
+            container.setBoolean(REDSTONE_ATTRIBUTE, DEFAULT_REDSTONE);
+            return DEFAULT_REDSTONE;
         }
         return container.getBoolean(REDSTONE_ATTRIBUTE);
     }
@@ -228,11 +230,10 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
             }
             return new LockReturnValue(true, TranslationKey.MESSAGES__PERMISSION_GRANTED);
         } else if (isOwner(playerUuid) || isOp || player.hasPermission(PERMISSION_ADMIN)) {
-            setOwner(""); setFriends(Collections.emptyList());
+            this.clear();
             if (doubleChest != null) {
                 final BlockNBTHandler doubleChestHandler = new BlockNBTHandler(doubleChest.getPersistentDataContainer());
-                doubleChestHandler.setOwner("");
-                doubleChestHandler.setFriends(Collections.emptyList()); // Also clear the friends.
+                doubleChestHandler.clear();
             }
             return new LockReturnValue(true, TranslationKey.MESSAGES__UNLOCKED);
         }
@@ -310,9 +311,27 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
 
             final Block otherDoor = block.getWorld().getBlockAt(other);
             final BlockNBTHandler otherDoorHandler = new BlockNBTHandler(otherDoor);
-            otherDoorHandler.setOwner(this.getOwner());
-            otherDoorHandler.setFriends(this.getFriends());
-            otherDoorHandler.setRedstone(this.getRedstone());
+            otherDoorHandler.mergeHandler(this);
         }
+    }
+
+    public void clear() {
+        this.setOwner("");
+        this.setFriends(Collections.emptyList());
+        this.setRedstone(DEFAULT_REDSTONE);
+    }
+
+    /**
+     * Merges this handler with another {@link NBTHandler}.
+     * @param handler The handler to merge with. If {@code handler} is not an instance
+     *                of {@link BlockNBTHandler}, this will do nothing.
+     */
+    @Override
+    public void mergeHandler(@NotNull NBTHandler<?> handler) {
+        if (!(handler instanceof BlockNBTHandler)) return;
+        final BlockNBTHandler blockNBTHandler = (BlockNBTHandler) handler;
+        this.setOwner(blockNBTHandler.getOwner());
+        this.setFriends(blockNBTHandler.getFriends());
+        this.setRedstone(blockNBTHandler.getRedstone());
     }
 }

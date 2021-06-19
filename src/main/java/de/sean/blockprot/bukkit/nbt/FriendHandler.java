@@ -60,4 +60,7 @@ public class FriendHandler extends NBTHandler<NBTCompound> {
     public boolean canWrite() {
         return getAccessFlags().contains(BlockAccessFlag.WRITE);
     }
+
+    @Override
+    public void mergeHandler(@NotNull NBTHandler<?> handler) {}
 }

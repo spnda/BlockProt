@@ -17,8 +17,8 @@
  */
 package de.sean.blockprot.bukkit.events
 
+import de.sean.blockprot.BlockProt
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
-import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler
 import de.sean.blockprot.bukkit.tasks.DoubleChestLocker
 import de.tr7zw.changeme.nbtapi.NBTItem
@@ -35,7 +35,7 @@ import org.bukkit.plugin.java.JavaPlugin
 class BlockEvent(private val plugin: JavaPlugin) : Listener {
     @EventHandler
     fun blockBurn(event: BlockBurnEvent) {
-        if (!LockUtil.isLockable(event.block.type)) return
+        if (!BlockProt.defaultConfig.isLockable(event.block.type)) return
         val handler = BlockNBTHandler(event.block)
         // If the block is protected by any user, prevent it from burning down.
         if (handler.isProtected) {
@@ -45,8 +45,8 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
 
     @EventHandler
     fun playerBlockBreak(event: BlockBreakEvent) {
-        if (!LockUtil.isLockable(event.block.type)) return // We only want to check for Tiles.
-        if (LockUtil.isLockableShulkerBox(event.block.type) && event.isDropItems) {
+        if (!BlockProt.defaultConfig.isLockable(event.block.type)) return // We only want to check for Tiles.
+        if (BlockProt.defaultConfig.isLockableShulkerBox(event.block.type) && event.isDropItems) {
             event.isDropItems = false // Prevent the event from dropping items itself
             val itemsToDrop = event.block.drops.first() // Shulker blocks should only have a single drop anyway
             val nbtTile = NBTTileEntity(event.block.state).persistentDataContainer
@@ -83,26 +83,26 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                     1
                 )
 
-                if (LockUtil.shouldLockOnPlace(event.player)) {
+                if (PlayerSettingsHandler(event.player).lockOnPlace) {
                     handler.lockBlock(event.player, event.player.isOp, null)
                     val settingsHandler = PlayerSettingsHandler(event.player)
                     val friends = settingsHandler.defaultFriends
                     for (friend in friends) {
                         handler.addFriend(friend)
                     }
-                    if (LockUtil.disallowRedstoneOnPlace()) {
+                    if (BlockProt.defaultConfig.disallowRedstoneOnPlace()) {
                         handler.redstone = false
                     }
                 }
             }
-            LockUtil.isLockableTileEntity(event.block.type) || LockUtil.isLockableBlock(event.block.type) -> {
+            BlockProt.defaultConfig.isLockableTileEntity(event.block.type) || BlockProt.defaultConfig.isLockableBlock(event.block.type) -> {
                 val handler = BlockNBTHandler(block)
                 // We only try to lock the block if it isn't locked already.
                 // Shulker boxes might already be locked, from previous placing.
                 if (handler.isNotProtected) {
                     // Assign a empty string for no owner to not have NPEs when reading
-                    handler.owner = if (LockUtil.shouldLockOnPlace(event.player)) playerUuid else ""
-                    if (LockUtil.disallowRedstoneOnPlace()) {
+                    handler.owner = if (PlayerSettingsHandler(event.player).lockOnPlace) playerUuid else ""
+                    if (BlockProt.defaultConfig.disallowRedstoneOnPlace()) {
                         handler.redstone = false
                     }
                 }

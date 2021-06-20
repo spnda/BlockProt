@@ -17,12 +17,12 @@
  */
 package de.sean.blockprot.bukkit.events
 
+import de.sean.blockprot.BlockProt
 import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.inventories.BlockLockInventory
 import de.sean.blockprot.bukkit.inventories.InventoryState
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
-import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.nbt.NBTHandler
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -38,7 +38,7 @@ open class InteractEvent : Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     open fun playerInteract(event: PlayerInteractEvent) {
         if (event.clickedBlock == null) return
-        if (!LockUtil.isLockable(event.clickedBlock!!.state.type)) return
+        if (!BlockProt.defaultConfig.isLockable(event.clickedBlock!!.state.type)) return
         val player = event.player
         when {
             event.action == Action.RIGHT_CLICK_BLOCK && !player.isSneaking -> {

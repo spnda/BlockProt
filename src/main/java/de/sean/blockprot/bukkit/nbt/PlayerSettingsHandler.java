@@ -17,6 +17,7 @@
  */
 package de.sean.blockprot.bukkit.nbt;
 
+import de.sean.blockprot.config.BlockProtConfig;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
 import org.bukkit.Bukkit;
@@ -42,6 +43,10 @@ public class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
         this.container = new NBTEntity(player).getPersistentDataContainer();
     }
 
+    /**
+     * Check if the given [player] wants their blocks to be locked when
+     * placed.
+     */
     public boolean getLockOnPlace() {
         // We will default to 'true'. The default value for a boolean is 'false',
         // which would also be the default value for NBTCompound#getBoolean
@@ -57,7 +62,7 @@ public class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
     public List<String> getDefaultFriends() {
         if (!container.hasKey(DEFAULT_FRIENDS_ATTRIBUTE)) return new ArrayList<>();
         else {
-            return LockUtil
+            return BlockProtConfig
                 .parseStringList(container.getString(DEFAULT_FRIENDS_ATTRIBUTE));
         }
     }
@@ -66,7 +71,7 @@ public class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
     public List<OfflinePlayer> getDefaultFriendsAsPlayers() {
         if (!container.hasKey(DEFAULT_FRIENDS_ATTRIBUTE)) return new ArrayList<>();
         else {
-            return LockUtil
+            return BlockProtConfig
                 .parseStringList(container.getString(DEFAULT_FRIENDS_ATTRIBUTE))
                 .stream()
                 .map(s -> Bukkit.getOfflinePlayer(UUID.fromString(s)))

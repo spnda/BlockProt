@@ -19,8 +19,8 @@ package de.sean.blockprot
 
 import de.sean.blockprot.bukkit.commands.BlockProtCommand
 import de.sean.blockprot.bukkit.events.*
-import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.tasks.UpdateChecker
+import de.sean.blockprot.config.DefaultConfig
 import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.command.TabExecutor
@@ -33,6 +33,7 @@ import java.io.File
 open class BlockProt : JavaPlugin() {
     companion object {
         lateinit var instance: BlockProt
+        lateinit var defaultConfig: DefaultConfig
         protected lateinit var metrics: Metrics
         const val pluginId: Int = 9999
         const val defaultLanguageFile = "translations_en.yml"
@@ -58,14 +59,10 @@ open class BlockProt : JavaPlugin() {
     override fun onEnable() {
         this.also { instance = it }.saveDefaultConfig()
 
-        LockUtil.loadBlocksFromConfig(config)
+        defaultConfig = DefaultConfig(this.config)
 
         /* Save all translation files into the plugin directory. */
-        var languageFileName = config.get("language_file")
-        if (languageFileName == null || languageFileName !is String) {
-            languageFileName = defaultLanguageFile
-        }
-        loadTranslation(languageFileName)
+        loadTranslation(defaultConfig.languageFile ?: defaultLanguageFile)
 
         /* Check for updates */
         Bukkit.getScheduler().runTaskAsynchronously(this, UpdateChecker(emptyList(), description))

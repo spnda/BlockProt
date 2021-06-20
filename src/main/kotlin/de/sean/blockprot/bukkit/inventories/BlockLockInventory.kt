@@ -17,10 +17,10 @@
  */
 package de.sean.blockprot.bukkit.inventories
 
+import de.sean.blockprot.BlockProt
 import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
-import de.sean.blockprot.bukkit.nbt.LockUtil
 import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
 import de.sean.blockprot.bukkit.nbt.NBTHandler
 import de.tr7zw.changeme.nbtapi.NBTTileEntity
@@ -46,7 +46,7 @@ class BlockLockInventory : BlockProtInventory() {
         val inv: Inventory
 
         when {
-            LockUtil.isLockable(item.type) -> {
+            BlockProt.defaultConfig.isLockable(item.type) -> {
                 val doubleChest = getDoubleChest(block, player.world)
                 applyChanges(block, player, true, true) {
                     it.lockBlock(

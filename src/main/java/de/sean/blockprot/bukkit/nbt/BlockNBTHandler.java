@@ -17,7 +17,9 @@
  */
 package de.sean.blockprot.bukkit.nbt;
 
+import de.sean.blockprot.BlockProt;
 import de.sean.blockprot.TranslationKey;
+import de.sean.blockprot.config.BlockProtConfig;
 import de.tr7zw.changeme.nbtapi.NBTBlock;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
@@ -51,9 +53,9 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
         super();
         this.block = block;
 
-        if (LockUtil.isLockableBlock(this.block.getType())) {
+        if (BlockProt.defaultConfig.isLockableBlock(this.block.getType())) {
             container = new NBTBlock(block).getData();
-        } else if (LockUtil.isLockableTileEntity(this.block.getType())) {
+        } else if (BlockProt.defaultConfig.isLockableTileEntity(this.block.getType())) {
             container = new NBTTileEntity(block.getState()).getPersistentDataContainer();
         } else {
             throw new RuntimeException("Given block " + block.getType() + " is not a lockable block/tile entity");
@@ -90,7 +92,7 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
      * be removed in a future version.
      */
     private void remapAccess() {
-        final List<String> stringList = LockUtil.parseStringList(container.getString(OLD_LOCK_ATTRIBUTE));
+        final List<String> stringList = BlockProtConfig.parseStringList(container.getString(OLD_LOCK_ATTRIBUTE));
         if (stringList.isEmpty()) return;
         container.removeKey(OLD_LOCK_ATTRIBUTE); // Remove the original list.
         container.addCompound(LOCK_ATTRIBUTE); // Create the new compound.
@@ -299,7 +301,7 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
     }
 
     public void applyToDoor(@NotNull final Block block) {
-        if (LockUtil.isLockableDoor(block.getType())) {
+        if (BlockProt.defaultConfig.isLockableDoor(block.getType())) {
             final BlockState blockState = block.getState();
             final Door door = (Door) blockState.getBlockData();
             final Location other = blockState.getLocation();

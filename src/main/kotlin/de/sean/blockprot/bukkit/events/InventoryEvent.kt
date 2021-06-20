@@ -17,9 +17,9 @@
  */
 package de.sean.blockprot.bukkit.events
 
+import de.sean.blockprot.BlockProt
 import de.sean.blockprot.bukkit.inventories.*
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
-import de.sean.blockprot.bukkit.nbt.LockUtil
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -49,7 +49,7 @@ class InventoryEvent : Listener {
                 // Casting null does not trigger a ClassCastException.
                 if (event.inventory.holder == null) return
                 val blockHolder = event.inventory.holder as BlockInventoryHolder
-                if (LockUtil.isLockable(blockHolder.block.type)) {
+                if (BlockProt.defaultConfig.isLockable(blockHolder.block.type)) {
                     // Ok, we have a lockable block, check if they can write anything to this.
                     // TODO: Implement a Cache for this lookup, it seems to be quite expensive.
                     //       We should probably use a MultiMap, or implement our own Key that

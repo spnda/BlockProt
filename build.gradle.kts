@@ -55,7 +55,7 @@ fun readEditorConfigRules(): Map<String, String> {
 }
 
 group = "de.sean"
-version = "0.3.2"
+version = "0.3.3"
 base.archivesName.set("${project.name}-$version-${gitBranchName()}")
 
 repositories {

@@ -34,9 +34,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 public final class FriendManageInventory extends BlockProtInventory {
     private int maxSkulls = InventoryConstants.tripleLine - 4;
@@ -163,12 +164,10 @@ public final class FriendManageInventory extends BlockProtInventory {
                 maxSkulls += 1;
                 final PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(player);
                 List<String> currentFriends = settingsHandler.getDefaultFriends();
-                final String selfUuid = player.getUniqueId().toString();
-                players = filterList(
-                    currentFriends, Arrays.asList(Bukkit.getOfflinePlayers()),
-                    (filterPlayer, friends) ->
-                        friends.contains(filterPlayer.getUniqueId().toString()) && !player.getUniqueId().toString().equals(selfUuid)
-                );
+                players = currentFriends
+                    .stream()
+                    .map((friend) -> Bukkit.getOfflinePlayer(UUID.fromString(friend)))
+                    .collect(Collectors.toList());
                 break;
             }
             default: {
@@ -180,6 +179,7 @@ public final class FriendManageInventory extends BlockProtInventory {
             }
         }
 
+        Bukkit.getLogger().info(players.toString());
         // Fill the first page inventory with skeleton skulls.
         state.getFriendResultCache().clear();
         int pageOffset = maxSkulls * state.getFriendPage();

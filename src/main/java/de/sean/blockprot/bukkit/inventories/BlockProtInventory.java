@@ -264,10 +264,11 @@ public abstract class BlockProtInventory implements InventoryHolder {
     /**
      * Allows for quick filtering of a list of {@link String}s for a list of {@link OfflinePlayer}.
      *
-     * @param input      A list of Strings, either name or UUIDs, that can be accessed inside of the
+     * @param input      A list of {@code U} that can be accessed inside of the
      *                   callback for validation.
      * @param filterList A list of all players to filter by.
      * @param check      A callback function, allowing the caller to easily define custom filter logic.
+     *                   If false, we shall filter the item out of the original list.
      * @return A list of all {@link OfflinePlayer} in {@code allPlayers} which were valid as by
      *         {@code check}.
      */

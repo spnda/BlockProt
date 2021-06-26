@@ -11,3 +11,7 @@ restrict_access_to_residents: false
 # This allows any Mayor to view the block info, similarly
 # to what the "blockprot.info" permission would do.
 allow_mayor_to_see_block_info: false
+
+# Whether or not players are allowed to bypass protections in
+# ruined towns.
+bypass_protection_in_ruined_towns: true

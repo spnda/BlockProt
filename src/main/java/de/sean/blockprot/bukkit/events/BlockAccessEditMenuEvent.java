@@ -19,12 +19,16 @@ package de.sean.blockprot.bukkit.events;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Called when a player is trying to access a blocks lock menu.
+ * Can be cancelled to prevent the inventory from opening up.
  */
-public class BlockAccessEditMenuEvent extends BaseBlockEvent {
+public class BlockAccessEditMenuEvent extends BaseBlockEvent implements Cancellable {
+    private boolean isCancelled = false;
+
     @NotNull
     private final Player player;
 
@@ -55,6 +59,22 @@ public class BlockAccessEditMenuEvent extends BaseBlockEvent {
     @NotNull
     public MenuAccess getAccess() {
         return access;
+    }
+
+    /**
+     * If this event is cancelled, the inventory will not be opened.
+     */
+    @Override
+    public boolean isCancelled() {
+        return this.isCancelled;
+    }
+
+    /**
+     * If this event is cancelled, the inventory will not be opened.
+     */
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.isCancelled = cancel;
     }
 
     public enum MenuAccess {

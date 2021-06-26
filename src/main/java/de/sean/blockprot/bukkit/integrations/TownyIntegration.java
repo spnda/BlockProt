@@ -45,6 +45,7 @@ public class TownyIntegration extends PluginIntegration implements Listener {
     private static final String CLEANUP_PLOTS_AFTER_UNCLAIM = "cleanup_plots_after_unclaim";
     private static final String RESTRICT_ACCESS_TO_RESIDENTS = "restrict_access_to_residents";
     private static final String ALLOW_MAYOR_TO_SEE_BLOCK_INFO = "allow_mayor_to_see_block_info";
+    private static final String BYPASS_PROTECTIONS_IN_RUINED_TOWNS = "bypass_protection_in_ruined_towns";
 
     /**
      * Our Towny plugin instance. Might be null if towny was not found.
@@ -104,6 +105,11 @@ public class TownyIntegration extends PluginIntegration implements Listener {
             || configuration.getBoolean(CLEANUP_PLOTS_AFTER_UNCLAIM);
     }
 
+    private boolean shouldBypassProtectionsInRuinedTowns() {
+        return configuration.contains(BYPASS_PROTECTIONS_IN_RUINED_TOWNS)
+            || configuration.getBoolean(BYPASS_PROTECTIONS_IN_RUINED_TOWNS);
+    }
+
     private boolean residentEqualsPlayer(@Nullable Resident resident, @Nullable Player player) {
         if (resident == null && player == null) return true;
         if (resident == null || player == null) return false;
@@ -143,8 +149,10 @@ public class TownyIntegration extends PluginIntegration implements Listener {
         if (TownyAPI.getInstance().isWilderness(block))
             return; // We allow anyone to access blocks in the wilderness.
 
-        if (shouldRestrictAccessToResidents()) {
-            Town town = TownyAPI.getInstance().getTown(block.getLocation());
+        Town town = TownyAPI.getInstance().getTown(block.getLocation());
+        if (shouldBypassProtectionsInRuinedTowns() && town.isRuined()) {
+            event.setCancelled(false);
+        } else if (shouldRestrictAccessToResidents()) {
             Resident resident = TownyAPI.getInstance().getResident(event.getPlayer().getUniqueId());
             if (resident == null || town.hasResident(resident)) {
                 event.setCancelled(true);
@@ -163,12 +171,14 @@ public class TownyIntegration extends PluginIntegration implements Listener {
         if (!PlayerCacheUtil.getCachePermission(event.getPlayer(), block.getLocation(), block.getType(), TownyPermission.ActionType.DESTROY)) {
             // We do not want to allow players to edit this block if they're not part
             // of this town.
-            event.setAccess(BlockAccessEditMenuEvent.MenuAccess.NONE);
+            event.setCancelled(true);
         }
 
         Town town = TownyAPI.getInstance().getTown(block.getLocation());
         if (residentEqualsPlayer(town.getMayor(), event.getPlayer()) && shouldAllowMayorToSeeBlockInfo()) {
             event.setAccess(BlockAccessEditMenuEvent.MenuAccess.INFO);
+        } else if (town.isRuined() && shouldBypassProtectionsInRuinedTowns()) {
+            event.setCancelled(true);
         }
     }
 

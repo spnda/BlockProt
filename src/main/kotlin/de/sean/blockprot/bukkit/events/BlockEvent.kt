@@ -46,19 +46,19 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
     @EventHandler
     fun playerBlockBreak(event: BlockBreakEvent) {
         if (!BlockProt.defaultConfig.isLockable(event.block.type)) return // We only want to check for Tiles.
-        if (BlockProt.defaultConfig.isLockableShulkerBox(event.block.type) && event.isDropItems) {
+        val handler = BlockNBTHandler(event.block)
+        if (!handler.isOwner(event.player.uniqueId.toString()) && handler.isProtected) {
+            // Prevent unauthorized players from breaking locked blocks.
+            event.isCancelled = true
+        } else if (BlockProt.defaultConfig.isLockableShulkerBox(event.block.type) && event.isDropItems) {
+            // The player can break the block. We will now check if its a shulker box,
+            // so we can add NBT to the shulker box that it gets locked upon placing again.
             event.isDropItems = false // Prevent the event from dropping items itself
             val itemsToDrop = event.block.drops.first() // Shulker blocks should only have a single drop anyway
             val nbtTile = NBTTileEntity(event.block.state).persistentDataContainer
             val nbtItem = NBTItem(itemsToDrop, true)
             nbtItem.getOrCreateCompound("BlockEntityTag").getOrCreateCompound("PublicBukkitValues").mergeCompound(nbtTile)
             event.player.world.dropItemNaturally(event.block.state.location, itemsToDrop)
-        } else {
-            val handler = BlockNBTHandler(event.block)
-            if (!handler.isOwner(event.player.uniqueId.toString()) && handler.isProtected) {
-                // Prevent unauthorized players from breaking locked blocks.
-                event.isCancelled = true
-            }
         }
     }
 

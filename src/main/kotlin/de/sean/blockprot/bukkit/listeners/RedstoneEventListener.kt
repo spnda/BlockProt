@@ -15,20 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with BlockProt.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.sean.blockprot.bukkit.events
+package de.sean.blockprot.bukkit.listeners
 
 import de.sean.blockprot.BlockProt
-import de.sean.blockprot.bukkit.tasks.UpdateChecker
-import org.bukkit.Bukkit
+import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.block.BlockRedstoneEvent
 
-class JoinEvent : Listener {
+class RedstoneEventListener : Listener {
     @EventHandler
-    fun onJoin(event: PlayerJoinEvent) {
-        if (BlockProt.defaultConfig.shouldNotifyOpOfUpdates() && event.player.isOp) {
-            Bukkit.getScheduler().runTaskAsynchronously(BlockProt.instance, UpdateChecker(listOf(event.player), BlockProt.instance.description))
+    fun onRedstone(event: BlockRedstoneEvent) {
+        // If this is a lockable block and the redstone protection is activated, set the redstone current to 0
+        if (BlockProt.getDefaultConfig().isLockableBlock(event.block.type) && !BlockNBTHandler(event.block).redstone) {
+            event.newCurrent = 0
         }
     }
 }

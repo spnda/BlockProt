@@ -17,6 +17,7 @@
  */
 package de.sean.blockprot.bukkit.inventories
 
+import de.sean.blockprot.bukkit.events.BlockAccessEditMenuEvent
 import org.bukkit.OfflinePlayer
 import org.bukkit.block.Block
 import java.util.*
@@ -51,6 +52,11 @@ data class InventoryState(val block: Block?) {
      * The friend we currently want to modify with [FriendDetailInventory].
      */
     var curFriend: OfflinePlayer? = null
+
+    /**
+     * The current cached menu access for this state.
+     */
+    var menuAccess: BlockAccessEditMenuEvent.MenuAccess = BlockAccessEditMenuEvent.MenuAccess.NONE
 
     companion object {
         /**

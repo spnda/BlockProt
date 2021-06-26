@@ -111,7 +111,7 @@ class BlockInfoInventory : BlockProtInventory() {
         )
         setBackButton(InventoryConstants.lineLength - 1)
 
-        Bukkit.getScheduler().runTaskAsynchronously(BlockProt.instance) { _ ->
+        Bukkit.getScheduler().runTaskAsynchronously(BlockProt.getInstance()) { _ ->
             var i = 0
             while (i < InventoryConstants.doubleLine && i < state.friendResultCache.size) {
                 setPlayerSkull(InventoryConstants.lineLength + i, state.friendResultCache[i])

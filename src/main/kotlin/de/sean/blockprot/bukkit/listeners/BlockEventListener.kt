@@ -15,9 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with BlockProt.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.sean.blockprot.bukkit.events
+package de.sean.blockprot.bukkit.listeners
 
 import de.sean.blockprot.BlockProt
+import de.sean.blockprot.bukkit.events.BlockDestroyEvent
+import de.sean.blockprot.bukkit.events.BlockLockOnPlaceEvent
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler
 import de.sean.blockprot.bukkit.tasks.DoubleChestLocker
@@ -32,25 +34,41 @@ import org.bukkit.event.block.BlockBurnEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.plugin.java.JavaPlugin
 
-class BlockEvent(private val plugin: JavaPlugin) : Listener {
+class BlockEventListener(private val plugin: JavaPlugin) : Listener {
     @EventHandler
     fun blockBurn(event: BlockBurnEvent) {
-        if (!BlockProt.defaultConfig.isLockable(event.block.type)) return
-        val handler = BlockNBTHandler(event.block)
-        // If the block is protected by any user, prevent it from burning down.
-        if (handler.isProtected) {
+        if (!BlockProt.getDefaultConfig().isLockable(event.block.type)) return
+        val destroyEvent = BlockDestroyEvent(event.block)
+        Bukkit.getPluginManager().callEvent(destroyEvent)
+        if (destroyEvent.isCancelled) {
             event.isCancelled = true
+        } else {
+            // The event hasn't been cancelled already, we'll check if need
+            // to cancel it manually.
+            val handler = BlockNBTHandler(event.block)
+            // If the block is protected by any user, prevent it from burning down.
+            if (handler.isProtected) {
+                event.isCancelled = true
+            }
         }
     }
 
     @EventHandler
     fun playerBlockBreak(event: BlockBreakEvent) {
-        if (!BlockProt.defaultConfig.isLockable(event.block.type)) return // We only want to check for Tiles.
+        if (!BlockProt.getDefaultConfig().isLockable(event.block.type)) return // We only want to check for Tiles.
+
+        val destroyEvent = BlockDestroyEvent(event.block)
+        Bukkit.getPluginManager().callEvent(destroyEvent)
+        if (destroyEvent.isCancelled) {
+            event.isCancelled = true
+            return
+        }
+
         val handler = BlockNBTHandler(event.block)
         if (!handler.isOwner(event.player.uniqueId.toString()) && handler.isProtected) {
             // Prevent unauthorized players from breaking locked blocks.
             event.isCancelled = true
-        } else if (BlockProt.defaultConfig.isLockableShulkerBox(event.block.type) && event.isDropItems) {
+        } else if (BlockProt.getDefaultConfig().isLockableShulkerBox(event.block.type) && event.isDropItems) {
             // The player can break the block. We will now check if its a shulker box,
             // so we can add NBT to the shulker box that it gets locked upon placing again.
             event.isDropItems = false // Prevent the event from dropping items itself
@@ -84,25 +102,36 @@ class BlockEvent(private val plugin: JavaPlugin) : Listener {
                 )
 
                 if (PlayerSettingsHandler(event.player).lockOnPlace) {
-                    handler.lockBlock(event.player, event.player.isOp, null)
-                    val settingsHandler = PlayerSettingsHandler(event.player)
-                    val friends = settingsHandler.defaultFriends
-                    for (friend in friends) {
-                        handler.addFriend(friend)
+                    val lockOnPlaceEvent = BlockLockOnPlaceEvent(event.block, event.player)
+                    Bukkit.getPluginManager().callEvent(lockOnPlaceEvent)
+                    if (!lockOnPlaceEvent.isCancelled) {
+                        handler.lockBlock(event.player, event.player.isOp, null)
+                        val settingsHandler = PlayerSettingsHandler(event.player)
+                        val friends = settingsHandler.defaultFriends
+                        for (friend in friends) {
+                            handler.addFriend(friend)
+                        }
                     }
-                    if (BlockProt.defaultConfig.disallowRedstoneOnPlace()) {
+
+                    if (BlockProt.getDefaultConfig().disallowRedstoneOnPlace()) {
                         handler.redstone = false
                     }
                 }
             }
-            BlockProt.defaultConfig.isLockableTileEntity(event.block.type) || BlockProt.defaultConfig.isLockableBlock(event.block.type) -> {
+            BlockProt.getDefaultConfig().isLockableTileEntity(event.block.type) || BlockProt.getDefaultConfig().isLockableBlock(event.block.type) -> {
                 val handler = BlockNBTHandler(block)
                 // We only try to lock the block if it isn't locked already.
                 // Shulker boxes might already be locked, from previous placing.
                 if (handler.isNotProtected) {
-                    // Assign a empty string for no owner to not have NPEs when reading
-                    handler.owner = if (PlayerSettingsHandler(event.player).lockOnPlace) playerUuid else ""
-                    if (BlockProt.defaultConfig.disallowRedstoneOnPlace()) {
+                    val lockOnPlaceEvent = BlockLockOnPlaceEvent(event.block, event.player)
+                    Bukkit.getPluginManager().callEvent(lockOnPlaceEvent)
+                    if (!lockOnPlaceEvent.isCancelled) {
+                        // Assign a empty string for no owner to not have NPEs when reading
+                        handler.owner =
+                            if (PlayerSettingsHandler(event.player).lockOnPlace) playerUuid
+                            else ""
+                    }
+                    if (BlockProt.getDefaultConfig().disallowRedstoneOnPlace()) {
                         handler.redstone = false
                     }
                 }

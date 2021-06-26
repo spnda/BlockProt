@@ -20,9 +20,9 @@ package de.sean.blockprot.bukkit.inventories
 import de.sean.blockprot.BlockProt
 import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
+import de.sean.blockprot.bukkit.events.BlockAccessEditMenuEvent
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
 import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
-import de.sean.blockprot.bukkit.nbt.NBTHandler
 import de.tr7zw.changeme.nbtapi.NBTTileEntity
 import org.bukkit.Material
 import org.bukkit.block.Block
@@ -46,7 +46,7 @@ class BlockLockInventory : BlockProtInventory() {
         val inv: Inventory
 
         when {
-            BlockProt.defaultConfig.isLockable(item.type) -> {
+            BlockProt.getDefaultConfig().isLockable(item.type) -> {
                 val doubleChest = getDoubleChest(block, player.world)
                 applyChanges(block, player, true, true) {
                     it.lockBlock(
@@ -94,6 +94,8 @@ class BlockLockInventory : BlockProtInventory() {
     }
 
     fun fill(player: Player, material: Material, handler: BlockNBTHandler): Inventory {
+        val state = InventoryState.get(player.uniqueId) ?: return inventory
+
         val playerUuid = player.uniqueId.toString()
         val owner = handler.owner
         redstone = handler.redstone
@@ -104,14 +106,16 @@ class BlockLockInventory : BlockProtInventory() {
                 material,
                 TranslationKey.INVENTORIES__LOCK
             )
-        } else if (owner == playerUuid || player.hasPermission(NBTHandler.PERMISSION_ADMIN)) {
+        } else if (owner == playerUuid ||
+            state.menuAccess == BlockAccessEditMenuEvent.MenuAccess.ADMIN
+        ) {
             setItemStack(
                 0,
                 material,
                 TranslationKey.INVENTORIES__UNLOCK
             )
         }
-        if (owner == playerUuid) {
+        if (owner == playerUuid && state.menuAccess == BlockAccessEditMenuEvent.MenuAccess.NORMAL) {
             setItemStack(
                 1,
                 if (redstone) Material.REDSTONE else Material.GUNPOWDER,
@@ -124,11 +128,8 @@ class BlockLockInventory : BlockProtInventory() {
                 TranslationKey.INVENTORIES__FRIENDS__MANAGE
             )
         }
-        if (owner.isNotEmpty() && (
-            player.isOp ||
-                player.hasPermission(NBTHandler.PERMISSION_INFO) ||
-                player.hasPermission(NBTHandler.PERMISSION_ADMIN)
-            )
+        if (owner.isNotEmpty() &&
+            state.menuAccess.ordinal >= BlockAccessEditMenuEvent.MenuAccess.INFO.ordinal
         ) {
             setItemStack(
                 InventoryConstants.lineLength - 2,

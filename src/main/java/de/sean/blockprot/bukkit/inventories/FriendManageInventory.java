@@ -212,7 +212,7 @@ public final class FriendManageInventory extends BlockProtInventory {
 
         Bukkit.getScheduler()
             .runTaskAsynchronously(
-                BlockProt.instance,
+                BlockProt.getInstance(),
                 () -> {
                     int i = 0;
                     while (i < maxSkulls && i < state.getFriendResultCache().size()) {

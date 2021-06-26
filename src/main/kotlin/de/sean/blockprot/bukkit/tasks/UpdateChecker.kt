@@ -58,7 +58,7 @@ class UpdateChecker(private val receivingPlayers: List<Player>, private val desc
                     log("${description.name} is up to date. (${latest.currentVersion}).", false, BlockProtMessenger.LogSeverity.LOG)
             }
         } catch (e: IOException) {
-            BlockProt.instance.logger.warning(e.toString())
+            BlockProt.getInstance().logger.warning(e.toString())
             return
         } finally {
             inputStream?.close()

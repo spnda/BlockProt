@@ -15,20 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with BlockProt.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.sean.blockprot.bukkit.events
+package de.sean.blockprot.bukkit.events;
 
-import de.sean.blockprot.BlockProt
-import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.block.BlockRedstoneEvent
+import org.bukkit.block.Block;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.block.BlockEvent;
+import org.jetbrains.annotations.NotNull;
 
-class RedstoneEvent : Listener {
-    @EventHandler
-    fun onRedstone(event: BlockRedstoneEvent) {
-        // If this is a lockable block and the redstone protection is activated, set the redstone current to 0
-        if (BlockProt.defaultConfig.isLockableBlock(event.block.type) && !BlockNBTHandler(event.block).redstone) {
-            event.newCurrent = 0
-        }
+public abstract class BaseBlockEvent extends BlockEvent {
+    private final HandlerList handlers = new HandlerList();
+
+    public BaseBlockEvent(@NotNull Block block) {
+        super(block);
+    }
+
+    @NotNull
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
     }
 }

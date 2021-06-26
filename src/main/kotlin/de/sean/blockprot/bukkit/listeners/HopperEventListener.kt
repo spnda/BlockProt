@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with BlockProt.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.sean.blockprot.bukkit.events
+package de.sean.blockprot.bukkit.listeners
 
 import de.sean.blockprot.BlockProt
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
@@ -26,13 +26,13 @@ import org.bukkit.event.inventory.InventoryMoveItemEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.InventoryHolder
 
-class HopperEvent : Listener {
+class HopperEventListener : Listener {
     @EventHandler
     fun onItemMove(event: InventoryMoveItemEvent) {
         if (event.destination.type == InventoryType.HOPPER) {
             // This is a hopper trying to pull from something.
             when {
-                BlockProt.defaultConfig.isLockableInventory(event.source.type) -> {
+                BlockProt.getDefaultConfig().isLockableInventory(event.source.type) -> {
                     // This hopper is trying to pull from some inventory which *may* be locked.
                     // Note: we do not have to check for double chests, as both sides of a chest are individually locked.
                     val sourceLocation = getBlock(event.source.holder ?: return) ?: return

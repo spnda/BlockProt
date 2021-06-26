@@ -53,9 +53,9 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
         super();
         this.block = block;
 
-        if (BlockProt.defaultConfig.isLockableBlock(this.block.getType())) {
+        if (BlockProt.getDefaultConfig().isLockableBlock(this.block.getType())) {
             container = new NBTBlock(block).getData();
-        } else if (BlockProt.defaultConfig.isLockableTileEntity(this.block.getType())) {
+        } else if (BlockProt.getDefaultConfig().isLockableTileEntity(this.block.getType())) {
             container = new NBTTileEntity(block.getState()).getPersistentDataContainer();
         } else {
             throw new RuntimeException("Given block " + block.getType() + " is not a lockable block/tile entity");
@@ -301,7 +301,7 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
     }
 
     public void applyToDoor(@NotNull final Block block) {
-        if (BlockProt.defaultConfig.isLockableDoor(block.getType())) {
+        if (BlockProt.getDefaultConfig().isLockableDoor(block.getType())) {
             final BlockState blockState = block.getState();
             final Door door = (Door) blockState.getBlockData();
             final Location other = blockState.getLocation();
@@ -317,6 +317,10 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
         }
     }
 
+    /**
+     * Clears all values from this block and resets it to the
+     * defaults.
+     */
     public void clear() {
         this.setOwner("");
         this.setFriends(Collections.emptyList());

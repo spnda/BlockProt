@@ -38,7 +38,7 @@ object FriendSearchInventory {
             }
             .text("Name")
             .title(inventoryName)
-            .plugin(BlockProt.instance)
+            .plugin(BlockProt.getInstance())
             // .preventClose() // Allow the user to close
             .open(requestingPlayer)
     }

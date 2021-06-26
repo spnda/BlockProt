@@ -20,6 +20,7 @@ package de.sean.blockprot.bukkit.inventories
 import de.sean.blockprot.BlockProt
 import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
+import de.sean.blockprot.bukkit.integrations.PluginIntegration
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
 import de.sean.blockprot.bukkit.nbt.FriendModifyAction
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler
@@ -27,6 +28,7 @@ import de.sean.blockprot.bukkit.util.ItemUtil
 import org.apache.commons.lang.StringUtils
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
@@ -107,6 +109,9 @@ class FriendSearchResultInventory : BlockProtInventory() {
                 compareStrings(it.name!!, searchQuery) > 0.3 -> true
                 else -> it.name!!.contains(searchQuery, ignoreCase = true)
             }
+        }
+        if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH) {
+            PluginIntegration.filterFriends(players as ArrayList<OfflinePlayer>, player, state.block)
         }
         state.friendResultCache.clear()
         state.friendResultCache.addAll(players)

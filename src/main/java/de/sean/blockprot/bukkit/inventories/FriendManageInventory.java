@@ -20,6 +20,7 @@ package de.sean.blockprot.bukkit.inventories;
 import de.sean.blockprot.BlockProt;
 import de.sean.blockprot.TranslationKey;
 import de.sean.blockprot.Translator;
+import de.sean.blockprot.bukkit.integrations.PluginIntegration;
 import de.sean.blockprot.bukkit.inventories.InventoryState.FriendSearchState;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
@@ -34,6 +35,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -156,6 +158,7 @@ public final class FriendManageInventory extends BlockProtInventory {
                 final BlockNBTHandler handler =
                     new BlockNBTHandler(Objects.requireNonNull(state.getBlock()));
                 players = mapFriendsToPlayer(handler.getFriendsStream());
+                PluginIntegration.filterFriends((ArrayList<OfflinePlayer>) players, player, state.getBlock());
                 break;
             }
             case DEFAULT_FRIEND_SEARCH: {

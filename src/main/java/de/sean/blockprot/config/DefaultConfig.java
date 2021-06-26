@@ -131,7 +131,7 @@ public final class DefaultConfig extends BlockProtConfig {
     }
 
     public boolean isLockableTileEntity(Material type) {
-        return lockableTileEntities.contains(type);
+        return lockableTileEntities.contains(type) || shulkerBoxes.contains(type);
     }
 
     public boolean isLockableDoor(Material type) {

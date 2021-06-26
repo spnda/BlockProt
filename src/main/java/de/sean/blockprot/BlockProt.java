@@ -2,6 +2,7 @@ package de.sean.blockprot;
 
 import de.sean.blockprot.bukkit.commands.BlockProtCommand;
 import de.sean.blockprot.bukkit.integrations.PluginIntegration;
+import de.sean.blockprot.bukkit.integrations.TownyIntegration;
 import de.sean.blockprot.bukkit.listeners.*;
 import de.sean.blockprot.bukkit.tasks.UpdateChecker;
 import de.sean.blockprot.config.DefaultConfig;
@@ -72,6 +73,9 @@ public class BlockProt extends JavaPlugin {
         registerEvent(pm, new RedstoneEventListener());
 
         registerCommand("blockprot", new BlockProtCommand());
+
+        if (getPlugin("Towny") != null)
+            registerIntegration(new TownyIntegration());
 
         super.onEnable();
     }

@@ -14,10 +14,15 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    name: Build
+    runs-on: ubuntu-latest
     # Setting any container image breaks actions/checkout@v2.
     # container:
     #   image: openjdk:16-jdk
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'java' ]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -28,15 +33,32 @@ jobs:
           java-version: '16'
           distribution: 'adopt'
       - uses: gradle/wrapper-validation-action@v1
+      - name: Init CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: ${{ matrix.language }}
+      # This will also build and therefore test the project.
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v1
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Artifacts
+          path: build/libs/
+
+  # A linter job that uses github/super-linter to lint Kotlin code
+  # and then uses CodeQL to scan the Java code.
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
       - name: Check for errors
         uses: docker://ghcr.io/github/super-linter:slim-v4 # Use the super-linter:slim package, see https://github.com/github/super-linter#slim-image why.
         env:
           DEFAULT_BRANCH: master
           FILTER_REGEX_INCLUDE: .*\.kt
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build with Gradle
-        run: ./gradlew build
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Artifacts
-          path: build/libs/

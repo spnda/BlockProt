@@ -79,7 +79,7 @@ repositories {
 }
 
 dependencies {
-    implementation("de.tr7zw:item-nbt-api:2.8.0") // item-nbt-api
+    implementation("de.tr7zw:item-nbt-api:2.8.1-SNAPSHOT") // item-nbt-api
 
     // Use anvils as inventories. They're stupid and require NMS, making renaming much easier.
     implementation("net.wesjd:anvilgui:1.5.1-SNAPSHOT")

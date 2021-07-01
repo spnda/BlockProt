@@ -15,24 +15,42 @@
  * You should have received a copy of the GNU General Public License
  * along with BlockProt.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.sean.blockprot.bukkit.nbt;
+package de.sean.blockprot.bukkit.events;
 
-import de.tr7zw.changeme.nbtapi.NBTCompound;
+import org.bukkit.block.Block;
+import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class NBTHandler<T extends NBTCompound> {
-    public static final String PERMISSION_LOCK = "blockprot.lock";
-    public static final String PERMISSION_INFO = "blockprot.info";
-    public static final String PERMISSION_ADMIN = "blockprot.admin";
-    public static final String PERMISSION_BYPASS = "blockprot.bypass";
+/**
+ * Called when a block is destroyed.
+ * This event implements {@link Cancellable} and if cancelled, the
+ * block will not be destroyed.
+ */
+public final class BlockDestroyEvent extends BaseBlockEvent implements Cancellable {
+    private boolean isCancelled;
 
     /**
-     * The NBT container for this handler.
+     * @see BlockDestroyEvent
+     *
+     * @param block The block that was placed.
      */
-    T container;
-
-    protected NBTHandler() {
+    public BlockDestroyEvent(@NotNull final Block block) {
+        super(block);
     }
 
-    public abstract void mergeHandler(@NotNull final NBTHandler<?> handler);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isCancelled() {
+        return this.isCancelled;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setCancelled(final boolean cancel) {
+        this.isCancelled = cancel;
+    }
 }

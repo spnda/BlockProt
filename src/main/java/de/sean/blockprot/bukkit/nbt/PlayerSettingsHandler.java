@@ -84,5 +84,6 @@ public class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
     }
 
     @Override
-    public void mergeHandler(@NotNull NBTHandler<?> handler) {}
+    public void mergeHandler(@NotNull NBTHandler<?> handler) {
+    }
 }

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with BlockProt.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.sean.blockprot.bukkit.events
+package de.sean.blockprot.bukkit.listeners
 
 import de.sean.blockprot.BlockProt
 import de.sean.blockprot.bukkit.inventories.*
@@ -27,7 +27,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.BlockInventoryHolder
 
-class InventoryEvent : Listener {
+class InventoryEventListener : Listener {
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
         val player = event.whoClicked as Player
@@ -49,7 +49,7 @@ class InventoryEvent : Listener {
                 // Casting null does not trigger a ClassCastException.
                 if (event.inventory.holder == null) return
                 val blockHolder = event.inventory.holder as BlockInventoryHolder
-                if (BlockProt.defaultConfig.isLockable(blockHolder.block.type)) {
+                if (BlockProt.getDefaultConfig().isLockable(blockHolder.block.type)) {
                     // Ok, we have a lockable block, check if they can write anything to this.
                     // TODO: Implement a Cache for this lookup, it seems to be quite expensive.
                     //       We should probably use a MultiMap, or implement our own Key that

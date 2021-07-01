@@ -161,7 +161,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
         @NotNull final Player player,
         @NotNull final OfflinePlayer friend,
         @NotNull final FriendModifyAction action
-        ) {
+    ) {
         final InventoryState.FriendSearchState searchState = state.getFriendSearchState();
         if (searchState == InventoryState.FriendSearchState.FRIEND_SEARCH) {
             if (state.getBlock() == null) return;
@@ -201,12 +201,13 @@ public abstract class BlockProtInventory implements InventoryHolder {
     /**
      * Creates a temporary {@link BlockNBTHandler} and allows the callback
      * {@code changes} to apply any changes using the handler.
-     * @param block The block to use for the handler.
-     * @param player The player to send the message to or exit the inventory of.
-     * @param exit Whether we should exit the inventory using {@link #exit(Player)}.
+     *
+     * @param block       The block to use for the handler.
+     * @param player      The player to send the message to or exit the inventory of.
+     * @param exit        Whether we should exit the inventory using {@link #exit(Player)}.
      * @param sendMessage Whether to send the message from the {@link LockReturnValue}
      *                    returned by the callback.
-     * @param changes The callback.
+     * @param changes     The callback.
      */
     protected void applyChanges(
         @NotNull final Block block,
@@ -250,8 +251,9 @@ public abstract class BlockProtInventory implements InventoryHolder {
     /**
      * Map a {@link Stream} of {@link String} to a {@link List} of {@link OfflinePlayer} using
      * {@link UUID#fromString(String)} and {@link Bukkit#getOfflinePlayer(UUID)}.
+     *
      * @param friends A {@link Stream} of {@link String} in which each entry should be parseable
-     *        by {@link UUID#fromString(String)}.
+     *                by {@link UUID#fromString(String)}.
      * @return A list of all players that mapped successfully.
      */
     @NotNull
@@ -270,7 +272,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @param check      A callback function, allowing the caller to easily define custom filter logic.
      *                   If false, we shall filter the item out of the original list.
      * @return A list of all {@link OfflinePlayer} in {@code allPlayers} which were valid as by
-     *         {@code check}.
+     * {@code check}.
      */
     @NotNull
     protected <T, U> List<T> filterList(

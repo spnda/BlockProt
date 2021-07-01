@@ -1,0 +1,19 @@
+# BlockProt's Towny plugin integration config.
+
+# When a plot is cleared, unclaimed or the town is unclaimed
+# or gets ruined, whether or not we should cleanup block protections.
+cleanup_plots_after_unclaim: true
+
+# Restrict the access to residents only. If true, unlocked
+# blocks will be only accessible by town residents and only
+# residents can be added as friends.
+# Blocks however can always only be locked by residents.
+restrict_access_to_residents: false
+
+# This allows any Mayor to view the block info, similarly
+# to what the "blockprot.info" permission would do.
+allow_mayor_to_see_block_info: false
+
+# Whether or not players are allowed to bypass protections in
+# ruined towns.
+bypass_protection_in_ruined_towns: true

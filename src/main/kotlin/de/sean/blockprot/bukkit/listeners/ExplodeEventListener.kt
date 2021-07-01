@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with BlockProt.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.sean.blockprot.bukkit.events
+package de.sean.blockprot.bukkit.listeners
 
 import de.sean.blockprot.BlockProt
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
@@ -26,7 +26,7 @@ import org.bukkit.event.block.BlockExplodeEvent
 import org.bukkit.event.entity.EntityExplodeEvent
 import java.util.logging.Logger
 
-class ExplodeEvent : Listener {
+class ExplodeEventListener : Listener {
     @EventHandler
     fun onBlockExplode(e: BlockExplodeEvent) {
         Logger.getLogger(this.javaClass.simpleName).info(e.block.type.toString())
@@ -43,7 +43,7 @@ class ExplodeEvent : Listener {
         while (it.hasNext()) {
             val b = it.next()
             when {
-                BlockProt.defaultConfig.isLockableTileEntity(b.type) || BlockProt.defaultConfig.isLockableBlock(b.type) -> {
+                BlockProt.getDefaultConfig().isLockableTileEntity(b.type) || BlockProt.getDefaultConfig().isLockableBlock(b.type) -> {
                     // Someone owns this block, block its destroying.
                     val handler = BlockNBTHandler(b)
                     if (handler.isProtected) it.remove()

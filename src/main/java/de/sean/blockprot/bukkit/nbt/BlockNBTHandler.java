@@ -53,9 +53,9 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
         super();
         this.block = block;
 
-        if (BlockProt.defaultConfig.isLockableBlock(this.block.getType())) {
+        if (BlockProt.getDefaultConfig().isLockableBlock(this.block.getType())) {
             container = new NBTBlock(block).getData();
-        } else if (BlockProt.defaultConfig.isLockableTileEntity(this.block.getType())) {
+        } else if (BlockProt.getDefaultConfig().isLockableTileEntity(this.block.getType())) {
             container = new NBTTileEntity(block.getState()).getPersistentDataContainer();
         } else {
             throw new RuntimeException("Given block " + block.getType() + " is not a lockable block/tile entity");
@@ -70,6 +70,7 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
 
     /**
      * Reads the current owner from the NBT container.
+     *
      * @return The owner as a UUID-String read from the container, or an empty String.
      */
     @NotNull
@@ -125,6 +126,7 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
     /**
      * Filters the results of {@link #getFriends()} for any entry which
      * id qualifies for {@link String#equals(Object)}.
+     *
      * @param id The String ID to check for. Usually a UUID as a String as {@link UUID#toString()}.
      * @return The first {@link FriendHandler} found, or none.
      */
@@ -148,6 +150,7 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
 
     /**
      * Adds a new friend to the NBT.
+     *
      * @param friend The friend to add.
      */
     public void addFriend(@NotNull final String friend) {
@@ -157,6 +160,7 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
 
     /**
      * Removes a friend from the NBT.
+     *
      * @param friend The friend to remove.
      */
     public void removeFriend(@NotNull final String friend) {
@@ -167,6 +171,7 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
     /**
      * If true, redstone should be allowed for this block and should not be blocked.
      * If redstone has not been set for this block yet, the default value is true
+     *
      * @return Whether redstone should be allowed or not.
      */
     public boolean getRedstone() {
@@ -204,6 +209,7 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
 
     /**
      * Checks whether or not given {@code player} is the owner of this block.
+     *
      * @param player A String representing a players UUID.
      */
     public boolean isOwner(@NotNull final String player) {
@@ -301,7 +307,7 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
     }
 
     public void applyToDoor(@NotNull final Block block) {
-        if (BlockProt.defaultConfig.isLockableDoor(block.getType())) {
+        if (BlockProt.getDefaultConfig().isLockableDoor(block.getType())) {
             final BlockState blockState = block.getState();
             final Door door = (Door) blockState.getBlockData();
             final Location other = blockState.getLocation();
@@ -317,6 +323,10 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
         }
     }
 
+    /**
+     * Clears all values from this block and resets it to the
+     * defaults.
+     */
     public void clear() {
         this.setOwner("");
         this.setFriends(Collections.emptyList());
@@ -325,6 +335,7 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
 
     /**
      * Merges this handler with another {@link NBTHandler}.
+     *
      * @param handler The handler to merge with. If {@code handler} is not an instance
      *                of {@link BlockNBTHandler}, this will do nothing.
      */

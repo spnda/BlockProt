@@ -20,6 +20,7 @@ package de.sean.blockprot.bukkit.inventories;
 import de.sean.blockprot.BlockProt;
 import de.sean.blockprot.TranslationKey;
 import de.sean.blockprot.Translator;
+import de.sean.blockprot.bukkit.integrations.PluginIntegration;
 import de.sean.blockprot.bukkit.inventories.InventoryState.FriendSearchState;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
@@ -34,6 +35,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -58,7 +60,7 @@ public final class FriendManageInventory extends BlockProtInventory {
      * or the {@link UserSettingsInventory} respectively.
      *
      * @param player The player to open/close the inventory for.
-     * @param state The {@code player}'s state.
+     * @param state  The {@code player}'s state.
      */
     public final void exitModifyInventory(@NotNull final Player player, @NotNull final InventoryState state) {
         player.closeInventory();
@@ -155,7 +157,9 @@ public final class FriendManageInventory extends BlockProtInventory {
             case FRIEND_SEARCH: {
                 final BlockNBTHandler handler =
                     new BlockNBTHandler(Objects.requireNonNull(state.getBlock()));
-                players = mapFriendsToPlayer(handler.getFriendsStream());
+                // Let the players be filtered by any plugin integration.
+                players = PluginIntegration.filterFriends(
+                    (ArrayList<OfflinePlayer>) mapFriendsToPlayer(handler.getFriendsStream()), player, state.getBlock());
                 break;
             }
             case DEFAULT_FRIEND_SEARCH: {
@@ -179,7 +183,6 @@ public final class FriendManageInventory extends BlockProtInventory {
             }
         }
 
-        Bukkit.getLogger().info(players.toString());
         // Fill the first page inventory with skeleton skulls.
         state.getFriendResultCache().clear();
         int pageOffset = maxSkulls * state.getFriendPage();
@@ -212,7 +215,7 @@ public final class FriendManageInventory extends BlockProtInventory {
 
         Bukkit.getScheduler()
             .runTaskAsynchronously(
-                BlockProt.instance,
+                BlockProt.getInstance(),
                 () -> {
                     int i = 0;
                     while (i < maxSkulls && i < state.getFriendResultCache().size()) {

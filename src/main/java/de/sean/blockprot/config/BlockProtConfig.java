@@ -49,9 +49,10 @@ public abstract class BlockProtConfig {
     /**
      * Filter a list of enum values by a list of names. The enum values are filtered
      * by {@code names}.
+     *
      * @param enumValues The list of enum values we want to filter.
-     * @param names The list strings we want to filter by. Warning: This list will be modified.
-     * @param <T> The enum class.
+     * @param names      The list strings we want to filter by. Warning: This list will be modified.
+     * @param <T>        The enum class.
      * @return A set of all {@code <T>} enum values that we found.
      */
     @NotNull

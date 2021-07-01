@@ -26,6 +26,7 @@ plugins {
 }
 
 val env: MutableMap<String, String> = System.getenv()
+val townyVersion: String by project
 
 fun gitBranchName(): String {
     val env = System.getenv()
@@ -75,18 +76,23 @@ repositories {
             includeGroup("net.wesjd")
         }
     }
+    maven("https://jitpack.io") {
+        name = "JitPack"
+    }
     mavenCentral()
 }
 
 dependencies {
-    implementation("de.tr7zw:item-nbt-api:2.8.1-SNAPSHOT") // item-nbt-api
+    // Spigot
+    compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
 
-    // Use anvils as inventories. They're stupid and require NMS, making renaming much easier.
-    implementation("net.wesjd:anvilgui:1.5.1-SNAPSHOT")
-
+    // bStats
     api("org.bstats:bstats-bukkit:2.2.1")
 
-    compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT") // Spigot
+    // Dependencies
+    implementation("de.tr7zw:item-nbt-api:2.8.0")
+    implementation("net.wesjd:anvilgui:1.5.1-SNAPSHOT") // Allows us to use anvils as inventories without using NMS.
+    implementation("com.github.TownyAdvanced:Towny:$townyVersion")
 }
 
 spotless {
@@ -145,6 +151,10 @@ tasks.shadowJar {
     relocate("net.wesjd.anvilgui", "de.sean.blockprot.shaded.anvilgui")
     relocate("org.bstats", "de.sean.blockprot.metrics")
     minimize()
+
+    dependencies {
+        this.exclude(dependency("com.github.TownyAdvanced:Towny:$townyVersion"))
+    }
 
     val classifier: String? = null
     archiveClassifier.set(classifier)

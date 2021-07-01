@@ -20,6 +20,7 @@ package de.sean.blockprot.bukkit.inventories
 import de.sean.blockprot.BlockProt
 import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
+import de.sean.blockprot.bukkit.integrations.PluginIntegration
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
 import de.sean.blockprot.bukkit.nbt.FriendModifyAction
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler
@@ -27,6 +28,7 @@ import de.sean.blockprot.bukkit.util.ItemUtil
 import org.apache.commons.lang.StringUtils
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
@@ -108,6 +110,9 @@ class FriendSearchResultInventory : BlockProtInventory() {
                 else -> it.name!!.contains(searchQuery, ignoreCase = true)
             }
         }
+        if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH) {
+            players = PluginIntegration.filterFriends(players as ArrayList<OfflinePlayer>, player, state.block!!)
+        }
         state.friendResultCache.clear()
         state.friendResultCache.addAll(players)
 
@@ -118,7 +123,7 @@ class FriendSearchResultInventory : BlockProtInventory() {
         for (i in 0 until maxPlayers) {
             inventory.setItem(i, ItemUtil.getItemStack(1, Material.SKELETON_SKULL, players[i].name))
         }
-        Bukkit.getScheduler().runTaskAsynchronously(BlockProt.instance) { _ ->
+        Bukkit.getScheduler().runTaskAsynchronously(BlockProt.getInstance()!!) { _ ->
             // Only show the 9 * 3 - 2 most relevant players. Don't show any more.
             var playersIndex = 0
             while (playersIndex < maxPlayers && playersIndex < players.size) {

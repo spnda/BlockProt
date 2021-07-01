@@ -111,7 +111,7 @@ class FriendSearchResultInventory : BlockProtInventory() {
             }
         }
         if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH) {
-            PluginIntegration.filterFriends(players as ArrayList<OfflinePlayer>, player, state.block)
+            players = PluginIntegration.filterFriends(players as ArrayList<OfflinePlayer>, player, state.block)
         }
         state.friendResultCache.clear()
         state.friendResultCache.addAll(players)

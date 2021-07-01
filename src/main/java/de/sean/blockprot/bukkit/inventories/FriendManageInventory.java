@@ -157,8 +157,9 @@ public final class FriendManageInventory extends BlockProtInventory {
             case FRIEND_SEARCH: {
                 final BlockNBTHandler handler =
                     new BlockNBTHandler(Objects.requireNonNull(state.getBlock()));
-                players = mapFriendsToPlayer(handler.getFriendsStream());
-                PluginIntegration.filterFriends((ArrayList<OfflinePlayer>) players, player, state.getBlock());
+                // Let the players be filtered by any plugin integration.
+                players = PluginIntegration.filterFriends(
+                    (ArrayList<OfflinePlayer>) mapFriendsToPlayer(handler.getFriendsStream()), player, state.getBlock());
                 break;
             }
             case DEFAULT_FRIEND_SEARCH: {
@@ -182,7 +183,6 @@ public final class FriendManageInventory extends BlockProtInventory {
             }
         }
 
-        Bukkit.getLogger().info(players.toString());
         // Fill the first page inventory with skeleton skulls.
         state.getFriendResultCache().clear();
         int pageOffset = maxSkulls * state.getFriendPage();

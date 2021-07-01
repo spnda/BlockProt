@@ -61,10 +61,11 @@ public abstract class PluginIntegration {
      * @param player The player that is trying to add these friends.
      * @param block The block these friends are being added to.
      */
-    public static void filterFriends(@NotNull ArrayList<OfflinePlayer> friends, Player player, Block block) {
+    public static ArrayList<OfflinePlayer> filterFriends(@NotNull ArrayList<OfflinePlayer> friends, Player player, Block block) {
         for (PluginIntegration integration : BlockProt.getInstance().getIntegrations()) {
             integration.filterFriendsInternal(friends, player, block);
         }
+        return friends;
     }
 
     protected void registerListener(@NotNull final Listener listener) {

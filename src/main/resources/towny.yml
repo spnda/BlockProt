@@ -5,7 +5,9 @@
 cleanup_plots_after_unclaim: true
 
 # Restrict the access to residents only. If true, unlocked
-# blocks are only accessible by residents of that town.
+# blocks will be only accessible by town residents and only
+# residents can be added as friends.
+# Blocks however can always only be locked by residents.
 restrict_access_to_residents: false
 
 # This allows any Mayor to view the block info, similarly

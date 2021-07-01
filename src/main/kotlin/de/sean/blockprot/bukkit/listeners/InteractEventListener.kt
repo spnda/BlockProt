@@ -66,7 +66,12 @@ open class InteractEventListener : Listener {
 
                 val accessEditMenuEvent = BlockAccessEditMenuEvent(event.clickedBlock!!, player)
                 Bukkit.getPluginManager().callEvent(accessEditMenuEvent)
-                if (accessEditMenuEvent.isCancelled) return
+                if (accessEditMenuEvent.isCancelled ||
+                    accessEditMenuEvent.access == BlockAccessEditMenuEvent.MenuAccess.NONE
+                ) {
+                    sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION))
+                    return
+                }
 
                 if (player.hasPermission(BlockNBTHandler.PERMISSION_ADMIN)) {
                     accessEditMenuEvent.access = BlockAccessEditMenuEvent.MenuAccess.ADMIN

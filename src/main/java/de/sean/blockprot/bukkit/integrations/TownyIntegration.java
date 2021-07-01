@@ -84,8 +84,10 @@ public class TownyIntegration extends PluginIntegration implements Listener {
             return;
 
         Town town = TownyAPI.getInstance().getTown(block.getLocation());
+        if (town == null) return; // Shouldn't happen, as we already previously check for the wilderness.
         friends.removeIf(friend -> {
-            Resident resident = TownyAPI.getInstance().getResident(player.getUniqueId());
+            // We remove all friends/players that are not part of this town.
+            Resident resident = TownyAPI.getInstance().getResident(friend.getUniqueId());
             return resident == null || !town.hasResident(resident);
         });
     }

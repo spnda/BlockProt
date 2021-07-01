@@ -10,7 +10,6 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -57,7 +56,7 @@ public class BlockProt extends JavaPlugin {
             : defaultConfig.getLanguageFile());
 
         /* Check for updates */
-        Bukkit.getScheduler().runTaskAsynchronously(this, new UpdateChecker(new ArrayList<Player>(), this.getDescription()));
+        Bukkit.getScheduler().runTaskAsynchronously(this, new UpdateChecker(new ArrayList<>(), this.getDescription()));
 
         /* bStats Metrics */
         metrics = new Metrics(this, pluginId);

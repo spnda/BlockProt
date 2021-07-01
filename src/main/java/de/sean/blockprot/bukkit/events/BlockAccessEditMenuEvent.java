@@ -81,6 +81,6 @@ public class BlockAccessEditMenuEvent extends BaseBlockEvent implements Cancella
         NONE,
         INFO,
         NORMAL,
-        ADMIN;
+        ADMIN
     }
 }

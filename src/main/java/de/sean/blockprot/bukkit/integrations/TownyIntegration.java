@@ -37,11 +37,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
-public class TownyIntegration extends PluginIntegration implements Listener {
+public final class TownyIntegration extends PluginIntegration implements Listener {
     private static final String CLEANUP_PLOTS_AFTER_UNCLAIM = "cleanup_plots_after_unclaim";
     private static final String RESTRICT_ACCESS_TO_RESIDENTS = "restrict_access_to_residents";
     private static final String ALLOW_MAYOR_TO_SEE_BLOCK_INFO = "allow_mayor_to_see_block_info";
@@ -65,8 +66,9 @@ public class TownyIntegration extends PluginIntegration implements Listener {
     @Override
     public void load() {
         final Plugin plugin = BlockProt.getInstance().getPlugin("Towny");
-        if (plugin == null || !plugin.isEnabled())
+        if (plugin == null || !plugin.isEnabled()) {
             return;
+        }
 
         towny = (Towny) plugin;
 
@@ -77,14 +79,20 @@ public class TownyIntegration extends PluginIntegration implements Listener {
      * {@inheritDoc}
      */
     @Override
-    protected void filterFriendsInternal(ArrayList<OfflinePlayer> friends, Player player, Block block) {
-        if (TownyAPI.getInstance().isWilderness(block))
+    protected void filterFriendsInternal(@NotNull final ArrayList<OfflinePlayer> friends,
+                                         @NotNull final Player player,
+                                         @NotNull final Block block) {
+        if (TownyAPI.getInstance().isWilderness(block)
+            || !shouldRestrictAccessToResidents()) {
             return;
-        if (!shouldRestrictAccessToResidents())
-            return;
+        }
 
         Town town = TownyAPI.getInstance().getTown(block.getLocation());
-        if (town == null) return; // Shouldn't happen, as we already previously check for the wilderness.
+        if (town == null) {
+            // Shouldn't happen, as we already previously check
+            // for the wilderness.
+            return;
+        }
         friends.removeIf(friend -> {
             // We remove all friends/players that are not part of this town.
             Resident resident = TownyAPI.getInstance().getResident(friend.getUniqueId());
@@ -97,6 +105,7 @@ public class TownyIntegration extends PluginIntegration implements Listener {
      * blocks will be only accessible by town residents and only
      * residents can be added as friends.
      * Blocks however can always only be locked by residents.
+     * @return Boolean if we should restrict access to residents.
      */
     private boolean shouldRestrictAccessToResidents() {
         return configuration.contains(RESTRICT_ACCESS_TO_RESIDENTS)
@@ -106,6 +115,7 @@ public class TownyIntegration extends PluginIntegration implements Listener {
     /**
      * This allows any Mayor to view the block info, similarly
      * to what the "blockprot.info" permission would do.
+     * @return Boolean if we should allow mayors to see block info.
      */
     private boolean shouldAllowMayorToSeeBlockInfo() {
         return configuration.contains(ALLOW_MAYOR_TO_SEE_BLOCK_INFO)
@@ -115,6 +125,7 @@ public class TownyIntegration extends PluginIntegration implements Listener {
     /**
      * When a plot is cleared, unclaimed or the town is unclaimed
      * or gets ruined, whether or not we should cleanup block protections.
+     * @return Boolean if we should cleanup plots.
      */
     private boolean shouldCleanupAfterUnclaim() {
         return configuration.contains(CLEANUP_PLOTS_AFTER_UNCLAIM)
@@ -124,26 +135,39 @@ public class TownyIntegration extends PluginIntegration implements Listener {
     /**
      * Whether or not players are allowed to bypass protections in
      * ruined towns.
+     * @return Boolean if the protections should be bypassed.
      */
     private boolean shouldBypassProtectionsInRuinedTowns() {
         return configuration.contains(BYPASS_PROTECTIONS_IN_RUINED_TOWNS)
             || configuration.getBoolean(BYPASS_PROTECTIONS_IN_RUINED_TOWNS);
     }
 
-    private boolean residentEqualsPlayer(@Nullable Resident resident, @Nullable Player player) {
-        if (resident == null && player == null) return true;
-        if (resident == null || player == null) return false;
-        if (resident.getPlayer() == null) return false;
+    private boolean residentEqualsPlayer(@Nullable final Resident resident,
+                                         @Nullable final Player player) {
+        if (resident == null && player == null) {
+            return true;
+        }
+
+        if (resident == null
+            || resident.getPlayer() == null
+            || player == null) {
+            return false;
+        }
+
         return resident.getPlayer().equals(player);
     }
 
     /**
      * Clear the protection of all blocks that are inside of the area
      * of {@code worldCoord}.
+     *
      * @param worldCoord The region to clear protections for.
      */
-    private void removeAllProtections(WorldCoord worldCoord) {
-        if (worldCoord == null) return;
+    private void removeAllProtections(@Nullable final WorldCoord worldCoord) {
+        if (worldCoord == null) {
+            return;
+        }
+
         World world = worldCoord.getBukkitWorld();
         int height = world.getMaxHeight() - 1;
         int size = TownySettings.getTownBlockSize();
@@ -153,7 +177,10 @@ public class TownyIntegration extends PluginIntegration implements Listener {
                     int blockX = worldCoord.getX() * size + x;
                     int blockZ = worldCoord.getZ() * size + z;
                     Block block = world.getBlockAt(blockX, y, blockZ);
-                    if (!BlockProt.getDefaultConfig().isLockable(block.getType())) continue;
+                    if (!BlockProt.getDefaultConfig()
+                        .isLockable(block.getType())) {
+                        continue;
+                    }
                     BlockNBTHandler handler = new BlockNBTHandler(block);
                     handler.clear();
                 }
@@ -162,12 +189,15 @@ public class TownyIntegration extends PluginIntegration implements Listener {
     }
 
     @EventHandler
-    public void onAccess(BlockAccessEvent event) {
-        if (towny == null) return;
+    public void onAccess(@NotNull final BlockAccessEvent event) {
+        if (towny == null) {
+            return;
+        }
 
         Block block = event.getBlock();
-        if (TownyAPI.getInstance().isWilderness(block))
+        if (TownyAPI.getInstance().isWilderness(block)) {
             return; // We allow anyone to access blocks in the wilderness.
+        }
 
         Town town = TownyAPI.getInstance().getTown(block.getLocation());
         if (town == null) {
@@ -175,7 +205,8 @@ public class TownyIntegration extends PluginIntegration implements Listener {
         }
 
         if (shouldRestrictAccessToResidents()) {
-            Resident resident = TownyAPI.getInstance().getResident(event.getPlayer().getUniqueId());
+            Resident resident = TownyAPI.getInstance().getResident(
+                event.getPlayer().getUniqueId());
             // Only restrict the block if they're not a resident of this town.
             if (resident == null || !town.hasResident(resident)) {
                 event.setCancelled(true);
@@ -186,18 +217,24 @@ public class TownyIntegration extends PluginIntegration implements Listener {
     }
 
     @EventHandler
-    public void onAccessEditMenu(BlockAccessEditMenuEvent event) {
+    public void onAccessEditMenu(
+        @NotNull final BlockAccessEditMenuEvent event) {
         if (towny == null) {
             return;
         }
 
         Block block = event.getBlock();
-        if (TownyAPI.getInstance().isWilderness(block))
+        if (TownyAPI.getInstance().isWilderness(block)) {
             return; // Allow editing blocks that are in the wilderness.
+        }
 
-        if (!PlayerCacheUtil.getCachePermission(event.getPlayer(), block.getLocation(), block.getType(), TownyPermission.ActionType.DESTROY)) {
-            // We do not want to allow players to edit this block if they're not part
-            // of this town.
+        if (!PlayerCacheUtil.getCachePermission(
+            event.getPlayer(),
+            block.getLocation(),
+            block.getType(),
+            TownyPermission.ActionType.DESTROY)) {
+            // We do not want to allow players to edit this block if
+            // they're not part of this town.
             event.setCancelled(true);
             return;
         }
@@ -207,7 +244,8 @@ public class TownyIntegration extends PluginIntegration implements Listener {
             return;
         }
 
-        if (residentEqualsPlayer(town.getMayor(), event.getPlayer()) && shouldAllowMayorToSeeBlockInfo()) {
+        if (residentEqualsPlayer(town.getMayor(), event.getPlayer())
+            && shouldAllowMayorToSeeBlockInfo()) {
             event.setAccess(BlockAccessEditMenuEvent.MenuAccess.INFO);
         } else if (town.isRuined()) {
             // Cancel the event if we don't want to bypass protections
@@ -217,8 +255,10 @@ public class TownyIntegration extends PluginIntegration implements Listener {
     }
 
     @EventHandler
-    public void onLockOnPlace(BlockLockOnPlaceEvent event) {
-        if (towny == null) return;
+    public void onLockOnPlace(@NotNull final BlockLockOnPlaceEvent event) {
+        if (towny == null) {
+            return;
+        }
 
         Block block = event.getBlock();
         if (TownyAPI.getInstance().isWilderness(block)) {
@@ -228,7 +268,8 @@ public class TownyIntegration extends PluginIntegration implements Listener {
         if (shouldRestrictAccessToResidents()) {
             Town town = TownyAPI.getInstance().getTown(block.getLocation());
             if (town != null) {
-                Resident resident = TownyAPI.getInstance().getResident(event.getPlayer().getUniqueId());
+                Resident resident =
+                    TownyAPI.getInstance().getResident(event.getPlayer().getUniqueId());
                 if (resident == null || town.hasResident(resident)) {
                     event.setCancelled(true);
                 }
@@ -237,24 +278,28 @@ public class TownyIntegration extends PluginIntegration implements Listener {
     }
 
     @EventHandler
-    public void onPlotClear(PlotClearEvent event) {
-        if (!shouldCleanupAfterUnclaim()) return;
-        TownBlock townBlock = event.getTownBlock();
-        if (townBlock == null) return;
-        removeAllProtections(townBlock.getWorldCoord());
+    public void onPlotClear(@NotNull final PlotClearEvent event) {
+        if (!shouldCleanupAfterUnclaim() || event.getTownBlock() == null) {
+            return;
+        }
+        removeAllProtections(event.getTownBlock().getWorldCoord());
     }
 
     @EventHandler
-    public void onTownRuin(TownRuinedEvent event) {
-        if (!shouldCleanupAfterUnclaim()) return;
+    public void onTownRuin(@NotNull final TownRuinedEvent event) {
+        if (!shouldCleanupAfterUnclaim()) {
+            return;
+        }
         for (TownBlock townBlock : new ArrayList<>(event.getTown().getTownBlocks())) {
             removeAllProtections(townBlock.getWorldCoord());
         }
     }
 
     @EventHandler
-    public void onTownUnclaim(TownUnclaimEvent event) {
-        if (!shouldCleanupAfterUnclaim()) return;
+    public void onTownUnclaim(@NotNull final TownUnclaimEvent event) {
+        if (!shouldCleanupAfterUnclaim()) {
+            return;
+        }
         removeAllProtections(event.getWorldCoord());
     }
 }

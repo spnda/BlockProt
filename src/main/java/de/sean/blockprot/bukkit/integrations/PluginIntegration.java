@@ -28,14 +28,28 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
+/**
+ * A plugin integration that can register new event listeners and
+ * add functionality to bring compatibility with another Bukkit
+ * plugin.
+ */
 public abstract class PluginIntegration {
+    /**
+     * The {@link YamlConfiguration} that backs this plugin
+     * integration. The name supplied in {@link #PluginIntegration(String)}
+     * is used as the filename to read this configuration.
+     */
     @NotNull
     protected final YamlConfiguration configuration;
 
+    /**
+     * {@link BlockProt}'s plugin manager to use to get the
+     * instance of the plugin this is trying to integrate.
+     */
     @NotNull
     private final PluginManager pluginManager;
 
-    public PluginIntegration(String name) {
+    public PluginIntegration(@NotNull final String name) {
         configuration =
             BlockProt.getInstance().saveAndLoadConfigFile(name, false);
         pluginManager = BlockProt.getInstance().getServer().getPluginManager();
@@ -48,20 +62,29 @@ public abstract class PluginIntegration {
     /**
      * A integration can freely override this function to change the friends
      * that can be added for a {@code block} by {@code player}.
+     *
      * @param friends The initial (default) list of friends that can be added.
-     * @param player The player that is trying to add these friends.
-     * @param block The block these friends are being added to.
+     * @param player  The player that is trying to add these friends.
+     * @param block   The block these friends are being added to.
      */
-    protected void filterFriendsInternal(ArrayList<OfflinePlayer> friends, Player player, Block block) {}
+    protected void filterFriendsInternal(@NotNull final ArrayList<OfflinePlayer> friends,
+                                         @NotNull final Player player,
+                                         @NotNull final Block block) {
+    }
 
     /**
      * This lets all registered plugin integrations filter out friends that
      * they don't want players to add to {@code block}.
+     *
      * @param friends The initial (default) list of friends that can be added.
-     * @param player The player that is trying to add these friends.
-     * @param block The block these friends are being added to.
+     * @param player  The player that is trying to add these friends.
+     * @param block   The block these friends are being added to.
+     *
+     * @return The new filtered list.
      */
-    public static ArrayList<OfflinePlayer> filterFriends(@NotNull ArrayList<OfflinePlayer> friends, Player player, Block block) {
+    public static ArrayList<OfflinePlayer> filterFriends(@NotNull final ArrayList<OfflinePlayer> friends,
+                                                         @NotNull final Player player,
+                                                         @NotNull final Block block) {
         for (PluginIntegration integration : BlockProt.getInstance().getIntegrations()) {
             integration.filterFriendsInternal(friends, player, block);
         }

@@ -60,7 +60,7 @@ public final class FriendManageInventory extends BlockProtInventory {
      * or the {@link UserSettingsInventory} respectively.
      *
      * @param player The player to open/close the inventory for.
-     * @param state The {@code player}'s state.
+     * @param state  The {@code player}'s state.
      */
     public final void exitModifyInventory(@NotNull final Player player, @NotNull final InventoryState state) {
         player.closeInventory();

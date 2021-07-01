@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2021 spnda
+ * This file is part of BlockProt <https://github.com/spnda/BlockProt>.
+ *
+ * BlockProt is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * BlockProt is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with BlockProt.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package de.sean.blockprot;
 
 import de.sean.blockprot.bukkit.commands.BlockProtCommand;
@@ -24,23 +41,50 @@ import java.util.List;
 import java.util.Objects;
 
 public class BlockProt extends JavaPlugin {
+    /**
+     * The bStats plugin ID.
+     */
     public static final int pluginId = 9999;
+
+    /**
+     * The name of the default language file, which is the english
+     * translation file.
+     */
     public static final String defaultLanguageFile = "translations_en.yml";
 
+    @Nullable
     private static BlockProt instance;
-    private static DefaultConfig defaultConfig;
+
+    @Nullable
+    private static DefaultConfig defaultConfig = null;
 
     protected Metrics metrics;
     private final ArrayList<PluginIntegration> integrations = new ArrayList<>();
 
+    /**
+     * Get the current instance of the {@link BlockProt} plugin.
+     * @return The instance, or null if not enabled yet.
+     */
+    @Nullable
     public static BlockProt getInstance() {
         return instance;
     }
 
-    public static DefaultConfig getDefaultConfig() {
+    /**
+     * Gets the default config. Might throw an {@link AssertionError} if
+     * the config is null.
+     * @return The default config.
+     */
+    @NotNull
+    public static DefaultConfig getDefaultConfig() throws AssertionError {
+        assert defaultConfig != null : "default config should be null.";
         return defaultConfig;
     }
 
+    /**
+     * Gets a {@link ArrayList} of all registered {@link PluginIntegration}.
+     * @return List of all registered integrations.
+     */
     public List<PluginIntegration> getIntegrations() {
         return integrations;
     }
@@ -99,6 +143,7 @@ public class BlockProt extends JavaPlugin {
 
     /**
      * Load the translations from the data folder.
+     *
      * @param fileName The name of the translations file. Defaults to
      *                 {@link BlockProt#defaultLanguageFile} if it can't be found.
      */
@@ -121,7 +166,8 @@ public class BlockProt extends JavaPlugin {
 
     /**
      * Saves a config file and reads it.
-     * @param path The path of the resource.
+     *
+     * @param path    The path of the resource.
      * @param replace Whether or not to replace the file if it already exists.
      * @return The YamlConfiguration.
      */

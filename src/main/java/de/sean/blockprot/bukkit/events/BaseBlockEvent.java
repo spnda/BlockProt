@@ -23,9 +23,21 @@ import org.bukkit.event.block.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseBlockEvent extends BlockEvent {
-    private static final HandlerList handlers = new HandlerList();
+    /**
+     * The internal list of handlers (listeners) for this event,
+     * so that Bukkit/Spigot can differentiate between the different
+     * events.
+     */
+    private static final HandlerList HANDLERS = new HandlerList();
 
-    public BaseBlockEvent(@NotNull Block block) {
+    /**
+     * Creates a new BaseBlockEvent, essentially a {@link BlockEvent}
+     * with integrated handlers.
+     *
+     * @param block The block that backs this event, which is passed
+     *              directly to the {@link BlockEvent}.
+     */
+    public BaseBlockEvent(@NotNull final Block block) {
         super(block);
     }
 
@@ -34,10 +46,18 @@ public abstract class BaseBlockEvent extends BlockEvent {
      */
     @NotNull
     @Override
-    public final HandlerList getHandlers() { return handlers; }
+    public final HandlerList getHandlers() {
+        return HANDLERS;
+    }
 
+    /**
+     * Get the {@link HandlerList} for this event. Only useful for
+     * Bukkit/Spigot's Event API.
+     *
+     * @return The handler list.
+     */
     @NotNull
     public static HandlerList getHandlerList() {
-        return handlers;
+        return HANDLERS;
     }
 }

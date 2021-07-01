@@ -28,7 +28,7 @@ class JoinEventListener : Listener {
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
         if (BlockProt.getDefaultConfig().shouldNotifyOpOfUpdates() && event.player.isOp) {
-            Bukkit.getScheduler().runTaskAsynchronously(BlockProt.getInstance(), UpdateChecker(listOf(event.player), BlockProt.getInstance().description))
+            Bukkit.getScheduler().runTaskAsynchronously(BlockProt.getInstance()!!, UpdateChecker(listOf(event.player), BlockProt.getInstance()!!.description))
         }
     }
 }

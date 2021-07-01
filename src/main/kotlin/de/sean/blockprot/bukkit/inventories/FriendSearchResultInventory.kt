@@ -111,7 +111,7 @@ class FriendSearchResultInventory : BlockProtInventory() {
             }
         }
         if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH) {
-            players = PluginIntegration.filterFriends(players as ArrayList<OfflinePlayer>, player, state.block)
+            players = PluginIntegration.filterFriends(players as ArrayList<OfflinePlayer>, player, state.block!!)
         }
         state.friendResultCache.clear()
         state.friendResultCache.addAll(players)
@@ -123,7 +123,7 @@ class FriendSearchResultInventory : BlockProtInventory() {
         for (i in 0 until maxPlayers) {
             inventory.setItem(i, ItemUtil.getItemStack(1, Material.SKELETON_SKULL, players[i].name))
         }
-        Bukkit.getScheduler().runTaskAsynchronously(BlockProt.getInstance()) { _ ->
+        Bukkit.getScheduler().runTaskAsynchronously(BlockProt.getInstance()!!) { _ ->
             // Only show the 9 * 3 - 2 most relevant players. Don't show any more.
             var playersIndex = 0
             while (playersIndex < maxPlayers && playersIndex < players.size) {

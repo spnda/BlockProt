@@ -27,17 +27,28 @@ import org.jetbrains.annotations.NotNull;
  * This event implements {@link Cancellable} and if cancelled, the
  * access to the block is blocked.
  */
-public class BlockAccessEvent extends BaseBlockEvent implements Cancellable {
+public final class BlockAccessEvent extends BaseBlockEvent implements Cancellable {
     private boolean isCancelled;
 
     @NotNull
     private final Player player;
 
-    public BlockAccessEvent(@NotNull Block block, @NotNull Player player) {
+    /**
+     * @see BlockAccessEvent
+     *
+     * @param block The block that was placed.
+     * @param player The player that placed the block.
+     */
+    public BlockAccessEvent(@NotNull final Block block,
+                            @NotNull final Player player) {
         super(block);
         this.player = player;
     }
 
+    /**
+     * The player that is trying to access this block.
+     * @return The Bukkit player.
+     */
     @NotNull
     public Player getPlayer() {
         return player;
@@ -55,7 +66,7 @@ public class BlockAccessEvent extends BaseBlockEvent implements Cancellable {
      * {@inheritDoc}
      */
     @Override
-    public void setCancelled(boolean cancel) {
+    public void setCancelled(final boolean cancel) {
         this.isCancelled = cancel;
     }
 }

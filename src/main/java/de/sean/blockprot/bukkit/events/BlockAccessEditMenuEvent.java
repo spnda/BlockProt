@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
  * Called when a player is trying to access a blocks lock menu.
  * Can be cancelled to prevent the inventory from opening up.
  */
-public class BlockAccessEditMenuEvent extends BaseBlockEvent implements Cancellable {
+public final class BlockAccessEditMenuEvent extends BaseBlockEvent implements Cancellable {
     private boolean isCancelled = false;
 
     @NotNull
@@ -35,11 +35,22 @@ public class BlockAccessEditMenuEvent extends BaseBlockEvent implements Cancella
     @NotNull
     private MenuAccess access = MenuAccess.NORMAL;
 
-    public BlockAccessEditMenuEvent(@NotNull Block block, @NotNull final Player player) {
+    /**
+     * @see BlockAccessEditMenuEvent
+     *
+     * @param block The block that was placed.
+     * @param player The player that placed the block.
+     */
+    public BlockAccessEditMenuEvent(@NotNull final Block block,
+                                    @NotNull final Player player) {
         super(block);
         this.player = player;
     }
 
+    /**
+     * The player that is trying to access the edit menu.
+     * @return The Bukkit player.
+     */
     @NotNull
     public Player getPlayer() {
         return player;
@@ -48,6 +59,7 @@ public class BlockAccessEditMenuEvent extends BaseBlockEvent implements Cancella
     /**
      * Sets new permissions. If {@code access} is lower than
      * the previous permissions, this call will be ignored.
+     *
      * @param access The new permissions.
      */
     public void setAccess(@NotNull MenuAccess access) {
@@ -73,10 +85,13 @@ public class BlockAccessEditMenuEvent extends BaseBlockEvent implements Cancella
      * If this event is cancelled, the inventory will not be opened.
      */
     @Override
-    public void setCancelled(boolean cancel) {
+    public void setCancelled(final boolean cancel) {
         this.isCancelled = cancel;
     }
 
+    /**
+     * The level of access that a player can have.
+     */
     public enum MenuAccess {
         NONE,
         INFO,

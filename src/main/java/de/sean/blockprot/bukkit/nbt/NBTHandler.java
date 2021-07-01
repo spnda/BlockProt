@@ -31,7 +31,8 @@ public abstract class NBTHandler<T extends NBTCompound> {
      */
     T container;
 
-    protected NBTHandler() { }
+    protected NBTHandler() {
+    }
 
     public abstract void mergeHandler(@NotNull final NBTHandler<?> handler);
 }

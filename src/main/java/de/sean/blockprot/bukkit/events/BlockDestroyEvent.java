@@ -26,10 +26,15 @@ import org.jetbrains.annotations.NotNull;
  * This event implements {@link Cancellable} and if cancelled, the
  * block will not be destroyed.
  */
-public class BlockDestroyEvent extends BaseBlockEvent implements Cancellable {
+public final class BlockDestroyEvent extends BaseBlockEvent implements Cancellable {
     private boolean isCancelled;
 
-    public BlockDestroyEvent(@NotNull Block block) {
+    /**
+     * @see BlockDestroyEvent
+     *
+     * @param block The block that was placed.
+     */
+    public BlockDestroyEvent(@NotNull final Block block) {
         super(block);
     }
 
@@ -45,7 +50,7 @@ public class BlockDestroyEvent extends BaseBlockEvent implements Cancellable {
      * {@inheritDoc}
      */
     @Override
-    public void setCancelled(boolean cancel) {
+    public void setCancelled(final boolean cancel) {
         this.isCancelled = cancel;
     }
 }

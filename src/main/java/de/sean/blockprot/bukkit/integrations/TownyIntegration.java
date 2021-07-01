@@ -90,21 +90,39 @@ public class TownyIntegration extends PluginIntegration implements Listener {
         });
     }
 
+    /**
+     * Restrict the access to residents only. If true, unlocked
+     * blocks will be only accessible by town residents and only
+     * residents can be added as friends.
+     * Blocks however can always only be locked by residents.
+     */
     private boolean shouldRestrictAccessToResidents() {
         return configuration.contains(RESTRICT_ACCESS_TO_RESIDENTS)
             && configuration.getBoolean(RESTRICT_ACCESS_TO_RESIDENTS);
     }
 
+    /**
+     * This allows any Mayor to view the block info, similarly
+     * to what the "blockprot.info" permission would do.
+     */
     private boolean shouldAllowMayorToSeeBlockInfo() {
         return configuration.contains(ALLOW_MAYOR_TO_SEE_BLOCK_INFO)
             && configuration.getBoolean(ALLOW_MAYOR_TO_SEE_BLOCK_INFO);
     }
 
+    /**
+     * When a plot is cleared, unclaimed or the town is unclaimed
+     * or gets ruined, whether or not we should cleanup block protections.
+     */
     private boolean shouldCleanupAfterUnclaim() {
         return configuration.contains(CLEANUP_PLOTS_AFTER_UNCLAIM)
             || configuration.getBoolean(CLEANUP_PLOTS_AFTER_UNCLAIM);
     }
 
+    /**
+     * Whether or not players are allowed to bypass protections in
+     * ruined towns.
+     */
     private boolean shouldBypassProtectionsInRuinedTowns() {
         return configuration.contains(BYPASS_PROTECTIONS_IN_RUINED_TOWNS)
             || configuration.getBoolean(BYPASS_PROTECTIONS_IN_RUINED_TOWNS);
@@ -150,13 +168,14 @@ public class TownyIntegration extends PluginIntegration implements Listener {
             return; // We allow anyone to access blocks in the wilderness.
 
         Town town = TownyAPI.getInstance().getTown(block.getLocation());
-        if (shouldBypassProtectionsInRuinedTowns() && town.isRuined()) {
-            event.setCancelled(false);
-        } else if (shouldRestrictAccessToResidents()) {
+        if (shouldRestrictAccessToResidents()) {
             Resident resident = TownyAPI.getInstance().getResident(event.getPlayer().getUniqueId());
-            if (resident == null || town.hasResident(resident)) {
+            // Only restrict the block if they're not a resident of this town.
+            if (resident == null || !town.hasResident(resident)) {
                 event.setCancelled(true);
             }
+        } else if (shouldBypassProtectionsInRuinedTowns() && town.isRuined()) {
+            event.setCancelled(false);
         }
     }
 
@@ -172,13 +191,16 @@ public class TownyIntegration extends PluginIntegration implements Listener {
             // We do not want to allow players to edit this block if they're not part
             // of this town.
             event.setCancelled(true);
+            return;
         }
 
         Town town = TownyAPI.getInstance().getTown(block.getLocation());
         if (residentEqualsPlayer(town.getMayor(), event.getPlayer()) && shouldAllowMayorToSeeBlockInfo()) {
             event.setAccess(BlockAccessEditMenuEvent.MenuAccess.INFO);
-        } else if (town.isRuined() && shouldBypassProtectionsInRuinedTowns()) {
-            event.setCancelled(true);
+        } else if (town.isRuined()) {
+            // Cancel the event if we don't want to bypass protections
+            // in ruined towns.
+            event.setCancelled(!shouldBypassProtectionsInRuinedTowns());
         }
     }
 

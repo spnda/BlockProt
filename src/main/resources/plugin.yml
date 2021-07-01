@@ -23,3 +23,5 @@ commands:
   blockprot:
     description: The main blockprot command
     usage: "§c/blockprot [update|settings]" # Red error message
+softdepend:
+  - Towny

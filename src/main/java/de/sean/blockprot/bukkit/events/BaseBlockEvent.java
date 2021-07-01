@@ -23,15 +23,21 @@ import org.bukkit.event.block.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseBlockEvent extends BlockEvent {
-    private final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
     public BaseBlockEvent(@NotNull Block block) {
         super(block);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @NotNull
     @Override
-    public HandlerList getHandlers() {
+    public final HandlerList getHandlers() { return handlers; }
+
+    @NotNull
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

@@ -26,6 +26,7 @@ plugins {
 }
 
 val env: MutableMap<String, String> = System.getenv()
+val pluginVersion: String by project
 val townyVersion: String by project
 
 fun gitBranchName(): String {
@@ -56,7 +57,7 @@ fun readEditorConfigRules(): Map<String, String> {
 }
 
 group = "de.sean"
-version = "0.3.3"
+version = pluginVersion
 base.archivesName.set("${project.name}-$version-${gitBranchName()}")
 
 repositories {

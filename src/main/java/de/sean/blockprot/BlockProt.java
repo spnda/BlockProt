@@ -57,12 +57,12 @@ public class BlockProt extends JavaPlugin {
 
     @Nullable
     private static DefaultConfig defaultConfig = null;
-
-    protected Metrics metrics;
     private final ArrayList<PluginIntegration> integrations = new ArrayList<>();
+    protected Metrics metrics;
 
     /**
      * Get the current instance of the {@link BlockProt} plugin.
+     *
      * @return The instance, or null if not enabled yet.
      */
     @Nullable
@@ -73,6 +73,7 @@ public class BlockProt extends JavaPlugin {
     /**
      * Gets the default config. Might throw an {@link AssertionError} if
      * the config is null.
+     *
      * @return The default config.
      */
     @NotNull
@@ -83,6 +84,7 @@ public class BlockProt extends JavaPlugin {
 
     /**
      * Gets a {@link ArrayList} of all registered {@link PluginIntegration}.
+     *
      * @return List of all registered integrations.
      */
     public List<PluginIntegration> getIntegrations() {

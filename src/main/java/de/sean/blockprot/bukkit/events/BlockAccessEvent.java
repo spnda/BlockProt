@@ -28,16 +28,14 @@ import org.jetbrains.annotations.NotNull;
  * access to the block is blocked.
  */
 public final class BlockAccessEvent extends BaseBlockEvent implements Cancellable {
-    private boolean isCancelled;
-
     @NotNull
     private final Player player;
+    private boolean isCancelled;
 
     /**
-     * @see BlockAccessEvent
-     *
-     * @param block The block that was placed.
+     * @param block  The block that was placed.
      * @param player The player that placed the block.
+     * @see BlockAccessEvent
      */
     public BlockAccessEvent(@NotNull final Block block,
                             @NotNull final Player player) {
@@ -47,6 +45,7 @@ public final class BlockAccessEvent extends BaseBlockEvent implements Cancellabl
 
     /**
      * The player that is trying to access this block.
+     *
      * @return The Bukkit player.
      */
     @NotNull

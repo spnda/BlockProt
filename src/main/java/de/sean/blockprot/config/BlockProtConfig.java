@@ -36,6 +36,22 @@ public abstract class BlockProtConfig {
     }
 
     /**
+     * Parse a comma-separated list from a {@link String}. For example {@code "entry, entry"}
+     * would be valid.
+     */
+    @NotNull
+    public static List<String> parseStringList(@Nullable final String stringList) {
+        if (stringList == null) return Collections.emptyList();
+        final String[] tempList =
+            stringList
+                .replaceAll("^\\[|]$", "")
+                .split(", ");
+        final List<String> ret = new ArrayList<>(Arrays.asList(tempList));
+        ret.removeIf(String::isEmpty);
+        return ret;
+    }
+
+    /**
      * Checks whether or not the given {@code list} contains the {@code query} String. It checks
      * each item using {@link String#equalsIgnoreCase(String)}.
      */
@@ -67,22 +83,6 @@ public abstract class BlockProtConfig {
         if (!names.isEmpty()) {
             Bukkit.getLogger().warning("Failed to map following values to enum: " + names);
         }
-        return ret;
-    }
-
-    /**
-     * Parse a comma-separated list from a {@link String}. For example {@code "entry, entry"}
-     * would be valid.
-     */
-    @NotNull
-    public static List<String> parseStringList(@Nullable final String stringList) {
-        if (stringList == null) return Collections.emptyList();
-        final String[] tempList =
-            stringList
-                .replaceAll("^\\[|]$", "")
-                .split(", ");
-        final List<String> ret = new ArrayList<>(Arrays.asList(tempList));
-        ret.removeIf(String::isEmpty);
         return ret;
     }
 }

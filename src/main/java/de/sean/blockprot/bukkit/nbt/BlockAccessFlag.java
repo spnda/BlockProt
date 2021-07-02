@@ -43,26 +43,6 @@ public enum BlockAccessFlag {
     }
 
     /**
-     * Get the translated description of this flag. It uses {@link Translator#get(TranslationKey)}
-     * using the {@link #descriptionKey} to get the corresponding value.
-     *
-     * @return Translated description.
-     */
-    @NotNull
-    public String getDescription() {
-        return Translator.get(descriptionKey);
-    }
-
-    /**
-     * Gets this enum as a bit flag.
-     *
-     * @return Single bit representing this flag.
-     */
-    public int getFlag() {
-        return 1 << ordinal();
-    }
-
-    /**
      * Parse flags from a single int value. This is done at a binary level. They are
      * parsed from their value from {@link BlockAccessFlag#getFlag()}.
      *
@@ -123,5 +103,25 @@ public enum BlockAccessFlag {
             ret.add(builder.toString());
         }
         return ret;
+    }
+
+    /**
+     * Get the translated description of this flag. It uses {@link Translator#get(TranslationKey)}
+     * using the {@link #descriptionKey} to get the corresponding value.
+     *
+     * @return Translated description.
+     */
+    @NotNull
+    public String getDescription() {
+        return Translator.get(descriptionKey);
+    }
+
+    /**
+     * Gets this enum as a bit flag.
+     *
+     * @return Single bit representing this flag.
+     */
+    public int getFlag() {
+        return 1 << ordinal();
     }
 }

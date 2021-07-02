@@ -67,6 +67,10 @@ public class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
         }
     }
 
+    public void setDefaultFriends(@NotNull final List<String> friends) {
+        container.setString(DEFAULT_FRIENDS_ATTRIBUTE, friends.toString());
+    }
+
     @NotNull
     public List<OfflinePlayer> getDefaultFriendsAsPlayers() {
         if (!container.hasKey(DEFAULT_FRIENDS_ATTRIBUTE)) return new ArrayList<>();
@@ -77,10 +81,6 @@ public class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
                 .map(s -> Bukkit.getOfflinePlayer(UUID.fromString(s)))
                 .collect(Collectors.toList());
         }
-    }
-
-    public void setDefaultFriends(@NotNull final List<String> friends) {
-        container.setString(DEFAULT_FRIENDS_ATTRIBUTE, friends.toString());
     }
 
     @Override

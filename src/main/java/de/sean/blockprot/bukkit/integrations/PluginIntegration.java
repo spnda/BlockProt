@@ -55,6 +55,24 @@ public abstract class PluginIntegration {
         pluginManager = BlockProt.getInstance().getServer().getPluginManager();
     }
 
+    /**
+     * This lets all registered plugin integrations filter out friends that
+     * they don't want players to add to {@code block}.
+     *
+     * @param friends The initial (default) list of friends that can be added.
+     * @param player  The player that is trying to add these friends.
+     * @param block   The block these friends are being added to.
+     * @return The new filtered list.
+     */
+    public static ArrayList<OfflinePlayer> filterFriends(@NotNull final ArrayList<OfflinePlayer> friends,
+                                                         @NotNull final Player player,
+                                                         @NotNull final Block block) {
+        for (PluginIntegration integration : BlockProt.getInstance().getIntegrations()) {
+            integration.filterFriendsInternal(friends, player, block);
+        }
+        return friends;
+    }
+
     public abstract boolean isEnabled();
 
     public abstract void load();
@@ -70,25 +88,6 @@ public abstract class PluginIntegration {
     protected void filterFriendsInternal(@NotNull final ArrayList<OfflinePlayer> friends,
                                          @NotNull final Player player,
                                          @NotNull final Block block) {
-    }
-
-    /**
-     * This lets all registered plugin integrations filter out friends that
-     * they don't want players to add to {@code block}.
-     *
-     * @param friends The initial (default) list of friends that can be added.
-     * @param player  The player that is trying to add these friends.
-     * @param block   The block these friends are being added to.
-     *
-     * @return The new filtered list.
-     */
-    public static ArrayList<OfflinePlayer> filterFriends(@NotNull final ArrayList<OfflinePlayer> friends,
-                                                         @NotNull final Player player,
-                                                         @NotNull final Block block) {
-        for (PluginIntegration integration : BlockProt.getInstance().getIntegrations()) {
-            integration.filterFriendsInternal(friends, player, block);
-        }
-        return friends;
     }
 
     protected void registerListener(@NotNull final Listener listener) {

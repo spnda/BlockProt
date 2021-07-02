@@ -124,6 +124,17 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
     }
 
     /**
+     * Set a new list of FriendHandler for the friends list.
+     */
+    public void setFriends(@NotNull final List<FriendHandler> access) {
+        NBTCompound compound = container.getOrCreateCompound(LOCK_ATTRIBUTE);
+        for (FriendHandler handler : access) {
+            NBTCompound newCompound = compound.addCompound(handler.getName());
+            newCompound.mergeCompound(handler.container);
+        }
+    }
+
+    /**
      * Filters the results of {@link #getFriends()} for any entry which
      * id qualifies for {@link String#equals(Object)}.
      *
@@ -135,17 +146,6 @@ public class BlockNBTHandler extends NBTHandler<NBTCompound> {
         return getFriendsStream()
             .filter((f) -> f.getName().equals(id))
             .findFirst();
-    }
-
-    /**
-     * Set a new list of FriendHandler for the friends list.
-     */
-    public void setFriends(@NotNull final List<FriendHandler> access) {
-        NBTCompound compound = container.getOrCreateCompound(LOCK_ATTRIBUTE);
-        for (FriendHandler handler : access) {
-            NBTCompound newCompound = compound.addCompound(handler.getName());
-            newCompound.mergeCompound(handler.container);
-        }
     }
 
     /**

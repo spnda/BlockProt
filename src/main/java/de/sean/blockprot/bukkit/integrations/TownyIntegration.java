@@ -105,6 +105,7 @@ public final class TownyIntegration extends PluginIntegration implements Listene
      * blocks will be only accessible by town residents and only
      * residents can be added as friends.
      * Blocks however can always only be locked by residents.
+     *
      * @return Boolean if we should restrict access to residents.
      */
     private boolean shouldRestrictAccessToResidents() {
@@ -115,6 +116,7 @@ public final class TownyIntegration extends PluginIntegration implements Listene
     /**
      * This allows any Mayor to view the block info, similarly
      * to what the "blockprot.info" permission would do.
+     *
      * @return Boolean if we should allow mayors to see block info.
      */
     private boolean shouldAllowMayorToSeeBlockInfo() {
@@ -125,6 +127,7 @@ public final class TownyIntegration extends PluginIntegration implements Listene
     /**
      * When a plot is cleared, unclaimed or the town is unclaimed
      * or gets ruined, whether or not we should cleanup block protections.
+     *
      * @return Boolean if we should cleanup plots.
      */
     private boolean shouldCleanupAfterUnclaim() {
@@ -135,6 +138,7 @@ public final class TownyIntegration extends PluginIntegration implements Listene
     /**
      * Whether or not players are allowed to bypass protections in
      * ruined towns.
+     *
      * @return Boolean if the protections should be bypassed.
      */
     private boolean shouldBypassProtectionsInRuinedTowns() {

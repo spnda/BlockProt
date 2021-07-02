@@ -30,9 +30,8 @@ public final class BlockDestroyEvent extends BaseBlockEvent implements Cancellab
     private boolean isCancelled;
 
     /**
-     * @see BlockDestroyEvent
-     *
      * @param block The block that was placed.
+     * @see BlockDestroyEvent
      */
     public BlockDestroyEvent(@NotNull final Block block) {
         super(block);

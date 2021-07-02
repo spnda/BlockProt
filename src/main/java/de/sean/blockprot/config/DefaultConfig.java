@@ -30,37 +30,33 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public final class DefaultConfig extends BlockProtConfig {
-    public DefaultConfig(@NotNull final FileConfiguration config) {
-        super(config);
-        this.loadBlocksFromConfig();
-    }
-
     /**
      * A list of all lockable tile entities.
      */
     private final ArrayList<Material> lockableTileEntities = new ArrayList<>();
-
     /**
      * A list of all available shulker boxes, so we
      * can save the protection state even after breaking.
      */
     private final ArrayList<Material> shulkerBoxes = new ArrayList<>();
-
     /**
      * We can only lock normal blocks after 1.16.4. Therefore, in all versions prior this list will
      * be empty. Doors are separately listed inside of [lockableDoors].
      */
     private final ArrayList<Material> lockableBlocks = new ArrayList<>();
-
     /**
      * Doors are separate for LockUtil#applyToDoor and also only work after 1.16.4 Spigot.
      */
     private final ArrayList<Material> lockableDoors = new ArrayList<>();
-
     private final ArrayList<InventoryType> lockableInventories = new ArrayList<>(Arrays.asList(
         InventoryType.CHEST, InventoryType.FURNACE, InventoryType.SMOKER, InventoryType.BLAST_FURNACE, InventoryType.HOPPER,
         InventoryType.BARREL, InventoryType.BREWING, InventoryType.SHULKER_BOX
     ));
+
+    public DefaultConfig(@NotNull final FileConfiguration config) {
+        super(config);
+        this.loadBlocksFromConfig();
+    }
 
     private <T extends Enum<?>> void loadBlockListFromConfig(
         @NotNull String key, @NotNull final ArrayList<T> list, @NotNull final T[] enumValues) {

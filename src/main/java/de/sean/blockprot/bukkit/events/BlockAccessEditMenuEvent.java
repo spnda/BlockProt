@@ -27,19 +27,16 @@ import org.jetbrains.annotations.NotNull;
  * Can be cancelled to prevent the inventory from opening up.
  */
 public final class BlockAccessEditMenuEvent extends BaseBlockEvent implements Cancellable {
-    private boolean isCancelled = false;
-
     @NotNull
     private final Player player;
-
+    private boolean isCancelled = false;
     @NotNull
     private MenuAccess access = MenuAccess.NORMAL;
 
     /**
-     * @see BlockAccessEditMenuEvent
-     *
-     * @param block The block that was placed.
+     * @param block  The block that was placed.
      * @param player The player that placed the block.
+     * @see BlockAccessEditMenuEvent
      */
     public BlockAccessEditMenuEvent(@NotNull final Block block,
                                     @NotNull final Player player) {
@@ -49,11 +46,17 @@ public final class BlockAccessEditMenuEvent extends BaseBlockEvent implements Ca
 
     /**
      * The player that is trying to access the edit menu.
+     *
      * @return The Bukkit player.
      */
     @NotNull
     public Player getPlayer() {
         return player;
+    }
+
+    @NotNull
+    public MenuAccess getAccess() {
+        return access;
     }
 
     /**
@@ -66,11 +69,6 @@ public final class BlockAccessEditMenuEvent extends BaseBlockEvent implements Ca
         if (access.ordinal() > access.ordinal()) {
             this.access = access;
         }
-    }
-
-    @NotNull
-    public MenuAccess getAccess() {
-        return access;
     }
 
     /**

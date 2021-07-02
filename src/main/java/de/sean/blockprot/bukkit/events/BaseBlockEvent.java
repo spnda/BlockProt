@@ -42,15 +42,6 @@ public abstract class BaseBlockEvent extends BlockEvent {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @NotNull
-    @Override
-    public final HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    /**
      * Get the {@link HandlerList} for this event. Only useful for
      * Bukkit/Spigot's Event API.
      *
@@ -58,6 +49,15 @@ public abstract class BaseBlockEvent extends BlockEvent {
      */
     @NotNull
     public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @NotNull
+    @Override
+    public final HandlerList getHandlers() {
         return HANDLERS;
     }
 }

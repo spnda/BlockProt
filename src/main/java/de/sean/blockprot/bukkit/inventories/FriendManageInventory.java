@@ -24,7 +24,6 @@ import de.sean.blockprot.bukkit.integrations.PluginIntegration;
 import de.sean.blockprot.bukkit.inventories.InventoryState.FriendSearchState;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
-import de.sean.blockprot.bukkit.util.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -188,10 +187,8 @@ public final class FriendManageInventory extends BlockProtInventory {
         int pageOffset = maxSkulls * state.getFriendPage();
         for (int i = pageOffset; i < Math.min(players.size() - pageOffset, maxSkulls); i++) {
             final OfflinePlayer curPlayer = players.get(i);
-            inventory.setItem(
-                i - pageOffset,
-                ItemUtil.INSTANCE.getItemStack(
-                    1, Material.SKELETON_SKULL, curPlayer.getName()));
+            ((BlockProtInventory) Objects.requireNonNull(inventory.getHolder()))
+                .setItemStack(1, Material.SKELETON_SKULL, curPlayer.getName());
             state.getFriendResultCache().add(curPlayer);
         }
 
@@ -213,20 +210,18 @@ public final class FriendManageInventory extends BlockProtInventory {
             TranslationKey.INVENTORIES__FRIENDS__SEARCH);
         setBackButton();
 
-        Bukkit.getScheduler()
-            .runTaskAsynchronously(
-                BlockProt.getInstance(),
-                () -> {
-                    int i = 0;
-                    while (i < maxSkulls && i < state.getFriendResultCache().size()) {
-                        inventory.setItem(
-                            i,
-                            ItemUtil.INSTANCE.getPlayerSkull(
-                                state.getFriendResultCache().get(i)));
-                        i++;
-                    }
-                });
+        Bukkit.getScheduler().runTaskAsynchronously(
+            BlockProt.getInstance(),
+            () -> {
+                int i = 0;
+                while (i < maxSkulls && i < state.getFriendResultCache().size()) {
+                    ((BlockProtInventory) Objects.requireNonNull(inventory.getHolder()))
+                        .setPlayerSkull(i, state.getFriendResultCache().get(i));
+                    i++;
+                }
+            });
 
         return inventory;
     }
 }
+

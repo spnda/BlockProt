@@ -24,7 +24,6 @@ import de.sean.blockprot.bukkit.integrations.PluginIntegration
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
 import de.sean.blockprot.bukkit.nbt.FriendModifyAction
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler
-import de.sean.blockprot.bukkit.util.ItemUtil
 import org.apache.commons.lang.StringUtils
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -121,7 +120,8 @@ class FriendSearchResultInventory : BlockProtInventory() {
         // we'll show the same amount of skeleton heads.
         val maxPlayers = players.size.coerceAtMost(InventoryConstants.tripleLine - 2)
         for (i in 0 until maxPlayers) {
-            inventory.setItem(i, ItemUtil.getItemStack(1, Material.SKELETON_SKULL, players[i].name))
+            (inventory.holder as BlockProtInventory)
+                .setItemStack(i, Material.SKELETON_SKULL, players[i].name)
         }
         Bukkit.getScheduler().runTaskAsynchronously(BlockProt.getInstance()!!) { _ ->
             // Only show the 9 * 3 - 2 most relevant players. Don't show any more.

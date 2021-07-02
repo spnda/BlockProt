@@ -20,7 +20,6 @@ package de.sean.blockprot.bukkit.inventories;
 import de.sean.blockprot.TranslationKey;
 import de.sean.blockprot.Translator;
 import de.sean.blockprot.bukkit.nbt.*;
-import de.sean.blockprot.bukkit.util.ItemUtil;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -36,9 +35,12 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.BiFunction;
@@ -310,13 +312,6 @@ public abstract class BlockProtInventory implements InventoryHolder {
     }
 
     /**
-     * Sets a ItemStack with the type {@code material} and the name as {@code text} at {@code index}.
-     */
-    public void setItemStack(int index, Material material, String text) {
-        inventory.setItem(index, ItemUtil.INSTANCE.getItemStack(1, material, text));
-    }
-
-    /**
      * Sets a ItemStack with the type {@code material} and the name translated by {@code text} with
      * {@code lore} at {@code index}.
      */
@@ -325,17 +320,48 @@ public abstract class BlockProtInventory implements InventoryHolder {
     }
 
     /**
+     * Sets a ItemStack with the type {@code material} and the name as {@code text} at {@code index}.
+     */
+    public void setItemStack(int index, Material material, String text) {
+        setItemStack(index, material, text, Collections.emptyList());
+    }
+
+    /**
      * Sets a ItemStack with the type {@code material} and the name as {@code text} with {@code lore}
      * at {@code index}.
      */
     public void setItemStack(int index, Material material, String text, List<String> lore) {
-        inventory.setItem(index, ItemUtil.INSTANCE.getItemStack(1, material, text, lore));
+        final ItemStack stack = new ItemStack(material, 1);
+        ItemMeta meta = stack.getItemMeta();
+        if (meta == null) {
+            meta = Bukkit.getItemFactory().getItemMeta(material);
+        }
+
+        assert meta != null;
+        meta.setDisplayName(text);
+        if (!lore.isEmpty()) {
+            meta.setLore(lore);
+        }
+
+        stack.setItemMeta(meta);
+        inventory.setItem(index, stack);
     }
 
     /**
      * Set a player skull to {@code index}.
      */
     public void setPlayerSkull(int index, OfflinePlayer player) {
-        inventory.setItem(index, ItemUtil.INSTANCE.getPlayerSkull(player));
+        final ItemStack stack = new ItemStack(Material.PLAYER_HEAD, 1);
+        SkullMeta meta = (SkullMeta) stack.getItemMeta();
+        if (meta == null) {
+            meta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.PLAYER_HEAD);
+        }
+
+        assert meta != null;
+        meta.setOwningPlayer(player);
+        meta.setDisplayName(player.getName());
+
+        stack.setItemMeta(meta);
+        inventory.setItem(index, stack);
     }
 }

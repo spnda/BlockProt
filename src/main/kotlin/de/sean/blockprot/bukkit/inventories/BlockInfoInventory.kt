@@ -21,7 +21,6 @@ import de.sean.blockprot.BlockProt
 import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
-import de.sean.blockprot.bukkit.util.ItemUtil
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -81,10 +80,8 @@ class BlockInfoInventory : BlockProtInventory() {
         state.friendResultCache.clear()
         for (i in 0..(friends.size - 1).coerceAtMost(InventoryConstants.doubleLine)) { // Maximum of 2 lines of skulls
             val offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(friends[i].name))
-            inventory.setItem(
-                InventoryConstants.lineLength + i,
-                ItemUtil.getItemStack(1, Material.SKELETON_SKULL, offlinePlayer.name)
-            )
+            (inventory.holder as BlockProtInventory)
+                .setItemStack(InventoryConstants.lineLength + i, Material.SKELETON_SKULL, offlinePlayer.name)
             state.friendResultCache.add(offlinePlayer)
         }
 

@@ -20,7 +20,6 @@ package de.sean.blockprot.bukkit.inventories
 import de.sean.blockprot.TranslationKey
 import de.sean.blockprot.Translator
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler
-import de.sean.blockprot.bukkit.util.ItemUtil
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -40,15 +39,13 @@ class UserSettingsInventory : BlockProtInventory() {
                 val settingsHandler = PlayerSettingsHandler(player)
                 val lockOnPlace = !settingsHandler.lockOnPlace
                 settingsHandler.lockOnPlace = lockOnPlace
-                event.inventory.setItem(
-                    0,
-                    ItemUtil.getItemStack(
-                        1,
+                (event.inventory.holder as BlockProtInventory)
+                    .setItemStack(
+                        0,
                         Material.BARRIER,
                         if (lockOnPlace) Translator.get(TranslationKey.INVENTORIES__LOCK_ON_PLACE__DEACTIVATE)
                         else Translator.get(TranslationKey.INVENTORIES__LOCK_ON_PLACE__ACTIVATE)
                     )
-                )
             }
             Material.PLAYER_HEAD -> {
                 state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH

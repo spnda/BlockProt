@@ -144,7 +144,7 @@ tasks.compileKotlin {
 }
 
 tasks.jar {
-    archiveFileName.set("${base.archivesBaseName}.jar")
+    archiveFileName.set("${base.archivesName.get()}.jar")
 }
 
 tasks.shadowJar {
@@ -160,7 +160,7 @@ tasks.shadowJar {
     val classifier: String? = null
     archiveClassifier.set(classifier)
 
-    archiveFileName.set("${base.archivesBaseName}-all.jar")
+    archiveFileName.set("${base.archivesName.get()}-all.jar")
 }
 
 tasks.build {

@@ -82,6 +82,7 @@ class BlockEventListener(private val plugin: JavaPlugin) : Listener {
 
     @EventHandler
     fun playerBlockPlace(event: BlockPlaceEvent) {
+        if (!event.player.hasPermission(BlockNBTHandler.PERMISSION_LOCK)) return
         val block = event.blockPlaced
         val playerUuid = event.player.uniqueId.toString()
         when {

@@ -144,7 +144,24 @@ tasks.compileKotlin {
 }
 
 tasks.jar {
+    archiveClassifier.set(null as String?)
     archiveFileName.set("${base.archivesName.get()}.jar")
+}
+
+tasks.javadoc {
+    options {
+        source = "8"
+        encoding = "UTF-8"
+        memberLevel = JavadocMemberLevel.PACKAGE
+    }
+
+    this.isFailOnError = false
+}
+
+tasks.create<Jar>("javadocJar") {
+    from(tasks.javadoc)
+    archiveClassifier.set("javadoc")
+    archiveFileName.set("${base.archivesName.get()}-${archiveClassifier.get()}.jar")
 }
 
 tasks.shadowJar {
@@ -157,13 +174,12 @@ tasks.shadowJar {
         this.exclude(dependency("com.github.TownyAdvanced:Towny:$townyVersion"))
     }
 
-    val classifier: String? = null
-    archiveClassifier.set(classifier)
-
-    archiveFileName.set("${base.archivesName.get()}-all.jar")
+    archiveClassifier.set("all")
+    archiveFileName.set("${base.archivesName.get()}-${archiveClassifier.get()}.jar")
 }
 
 tasks.build {
+    dependsOn(tasks.javadoc)
     dependsOn(tasks.shadowJar)
 }
 

@@ -66,7 +66,7 @@ public final class BlockAccessEditMenuEvent extends BaseBlockEvent implements Ca
      * @param access The new permissions.
      */
     public void setAccess(@NotNull MenuAccess access) {
-        if (access.ordinal() > access.ordinal()) {
+        if (access.ordinal() > this.access.ordinal()) {
             this.access = access;
         }
     }

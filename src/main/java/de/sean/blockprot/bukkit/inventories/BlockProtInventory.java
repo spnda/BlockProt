@@ -239,8 +239,9 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @return The index of the item inside the inventory. If not found, {@code -1}.
      */
     protected int findItemIndex(@NotNull final ItemStack item) {
+        ItemStack[] contents = inventory.getContents();
         for (int i = 0; i < inventory.getSize(); i++) {
-            if (inventory.getContents()[i].equals(item)) return i;
+            if (contents[i].equals(item)) return i;
         }
         return -1;
     }
@@ -363,5 +364,24 @@ public abstract class BlockProtInventory implements InventoryHolder {
 
         stack.setItemMeta(meta);
         inventory.setItem(index, stack);
+    }
+
+    /**
+     * This gets the proper material for a block. For example, wall signs
+     * have a different material, but that material does not have its own
+     * item.
+     */
+    protected Material getProperMaterial(Material material) {
+        switch (material) {
+            case ACACIA_WALL_SIGN: return Material.ACACIA_SIGN;
+            case BIRCH_WALL_SIGN: return Material.BIRCH_SIGN;
+            case CRIMSON_WALL_SIGN: return Material.CRIMSON_SIGN;
+            case DARK_OAK_WALL_SIGN: return Material.DARK_OAK_WALL_SIGN;
+            case JUNGLE_WALL_SIGN: return Material.JUNGLE_SIGN;
+            case SPRUCE_WALL_SIGN: return Material.SPRUCE_SIGN;
+            case OAK_WALL_SIGN: return Material.OAK_SIGN;
+            case WARPED_WALL_SIGN: return Material.WARPED_WALL_SIGN;
+            default: return material;
+        }
     }
 }

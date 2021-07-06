@@ -46,7 +46,9 @@ class BlockLockInventory : BlockProtInventory() {
         val inv: Inventory
 
         when {
-            BlockProt.getDefaultConfig().isLockable(item.type) -> {
+            // As there are some conditions in which the item in the inventory differs from
+            // the actual blocks type, we use the blocks type here.
+            BlockProt.getDefaultConfig().isLockable(block.type) && event.slot == 0 -> {
                 val doubleChest = getDoubleChest(block, player.world)
                 applyChanges(block, player, true, true) {
                     it.lockBlock(
@@ -103,7 +105,7 @@ class BlockLockInventory : BlockProtInventory() {
         if (owner.isEmpty()) {
             setItemStack(
                 0,
-                material,
+                getProperMaterial(material),
                 TranslationKey.INVENTORIES__LOCK
             )
         } else if (owner == playerUuid ||
@@ -111,7 +113,7 @@ class BlockLockInventory : BlockProtInventory() {
         ) {
             setItemStack(
                 0,
-                material,
+                getProperMaterial(material),
                 TranslationKey.INVENTORIES__UNLOCK
             )
         }

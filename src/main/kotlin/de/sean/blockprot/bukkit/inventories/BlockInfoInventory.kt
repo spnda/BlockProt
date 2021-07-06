@@ -38,18 +38,22 @@ class BlockInfoInventory : BlockProtInventory() {
         val item = event.currentItem ?: return
         when (item.type) {
             Material.BLACK_STAINED_GLASS_PANE -> {
-                player.closeInventory()
                 if (state.block == null) return
                 val handler = BlockNBTHandler(state.block)
-                val inv = BlockLockInventory().fill(player, state.block.state.type, handler)
-                player.openInventory(inv)
+                closeAndOpen(
+                    player,
+                    BlockLockInventory().fill(player, state.block.state.type, handler)
+                )
             }
             Material.CYAN_STAINED_GLASS_PANE -> {
                 if (state.friendPage >= 1) {
                     state.friendPage = state.friendPage - 1
 
-                    player.closeInventory()
-                    if (state.block != null) player.openInventory(fill(player, BlockNBTHandler(state.block)))
+                    closeAndOpen(
+                        player,
+                        if (state.block != null) fill(player, BlockNBTHandler(state.block))
+                        else null
+                    )
                 }
             }
             Material.BLUE_STAINED_GLASS_PANE -> {
@@ -58,8 +62,11 @@ class BlockInfoInventory : BlockProtInventory() {
                     // There's an item in the last slot => The page is fully filled up, meaning we should go to the next page.
                     state.friendPage = state.friendPage + 1
 
-                    player.closeInventory()
-                    if (state.block != null) player.openInventory(fill(player, BlockNBTHandler(state.block)))
+                    closeAndOpen(
+                        player,
+                        if (state.block != null) fill(player, BlockNBTHandler(state.block))
+                        else null
+                    )
                 }
             }
             else -> {

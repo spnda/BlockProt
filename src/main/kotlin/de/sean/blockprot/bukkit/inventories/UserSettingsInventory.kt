@@ -49,11 +49,9 @@ class UserSettingsInventory : BlockProtInventory() {
             }
             Material.PLAYER_HEAD -> {
                 state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH
-                val inv = FriendManageInventory().fill(player)
-                player.closeInventory()
-                player.openInventory(inv)
+                closeAndOpen(player, FriendManageInventory().fill(player))
             }
-            else -> exit(player) // This also includes Material.BLACK_STAINED_GLASS_PANE
+            else -> closeAndOpen(player, null) // This also includes Material.BLACK_STAINED_GLASS_PANE
         }
         event.isCancelled = true
     }

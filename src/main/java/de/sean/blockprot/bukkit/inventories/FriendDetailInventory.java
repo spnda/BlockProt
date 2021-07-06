@@ -71,7 +71,7 @@ public final class FriendDetailInventory extends BlockProtInventory {
 
         switch (item.getType()) {
             case BLACK_STAINED_GLASS_PANE: {
-                player.openInventory(new FriendManageInventory().fill(player));
+                closeAndOpen(player, new FriendManageInventory().fill(player));
                 break;
             }
             case RED_STAINED_GLASS_PANE: {
@@ -81,7 +81,7 @@ public final class FriendDetailInventory extends BlockProtInventory {
                     state, player, friend, FriendModifyAction.REMOVE_FRIEND);
                 // We remove the friend, so the player does not exist anymore either.
                 this.playerHandler = null;
-                player.openInventory(new FriendManageInventory().fill(player));
+                closeAndOpen(player, new FriendManageInventory().fill(player));
                 break;
             }
             case ENDER_EYE: {
@@ -106,7 +106,7 @@ public final class FriendDetailInventory extends BlockProtInventory {
                 break; // Don't do anything.
             }
             default:
-                exit(player);
+                closeAndOpen(player, null);
         }
         event.setCancelled(true);
     }

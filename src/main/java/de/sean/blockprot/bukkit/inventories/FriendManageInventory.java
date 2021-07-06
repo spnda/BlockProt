@@ -62,12 +62,11 @@ public final class FriendManageInventory extends BlockProtInventory {
      * @param state  The {@code player}'s state.
      */
     public final void exitModifyInventory(@NotNull final Player player, @NotNull final InventoryState state) {
-        player.closeInventory();
-        Inventory inventory;
+        Inventory newInventory;
         switch (state.getFriendSearchState()) {
             case FRIEND_SEARCH: {
                 if (state.getBlock() == null) return;
-                inventory =
+                newInventory =
                     new BlockLockInventory()
                         .fill(
                             player,
@@ -76,12 +75,12 @@ public final class FriendManageInventory extends BlockProtInventory {
                 break;
             }
             case DEFAULT_FRIEND_SEARCH:
-                inventory = new UserSettingsInventory().fill(player);
+                newInventory = new UserSettingsInventory().fill(player);
                 break;
             default:
                 return;
         }
-        player.openInventory(inventory);
+        closeAndOpen(player, newInventory);
     }
 
     @Override
@@ -99,8 +98,7 @@ public final class FriendManageInventory extends BlockProtInventory {
                 if (state.getFriendPage() >= 1) {
                     state.setFriendPage(state.getFriendPage() - 1);
 
-                    player.closeInventory();
-                    player.openInventory(fill(player));
+                    closeAndOpen(player, fill(player));
                 }
                 break;
             }
@@ -111,8 +109,7 @@ public final class FriendManageInventory extends BlockProtInventory {
                     // we should go to the next page.
                     state.setFriendPage(state.getFriendPage() + 1);
 
-                    player.closeInventory();
-                    player.openInventory(fill(player));
+                    closeAndOpen(player, fill(player));
                 }
                 break;
             }
@@ -123,8 +120,7 @@ public final class FriendManageInventory extends BlockProtInventory {
                 OfflinePlayer friend = state.getFriendResultCache().get(index);
                 state.setCurFriend(friend);
                 final Inventory inv = new FriendDetailInventory().fill(player);
-                player.closeInventory();
-                player.openInventory(inv);
+                closeAndOpen(player, inv);
                 break;
             }
             case MAP: {
@@ -133,8 +129,7 @@ public final class FriendManageInventory extends BlockProtInventory {
             }
             default: {
                 // Unexpected, exit the inventory.
-                player.closeInventory();
-                InventoryState.Companion.remove(player.getUniqueId());
+                closeAndOpen(player, null);
                 break;
             }
         }

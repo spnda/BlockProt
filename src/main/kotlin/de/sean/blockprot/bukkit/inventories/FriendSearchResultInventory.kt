@@ -46,15 +46,15 @@ class FriendSearchResultInventory : BlockProtInventory() {
                 // pressing Escape to go back, or closing it to go to the result
                 // inventory, we won't return to the anvil inventory and instead
                 // go right back to the FriendAddInventory.
-                player.openInventory(FriendManageInventory().fill(player))
+                closeAndOpen(player, FriendManageInventory().fill(player))
             }
             Material.PLAYER_HEAD, Material.SKELETON_SKULL -> {
                 val index = findItemIndex(item)
                 val friend = state.friendResultCache[index]
                 modifyFriendsForAction(state, player, friend, FriendModifyAction.ADD_FRIEND)
-                player.openInventory(FriendManageInventory().fill(player))
+                closeAndOpen(player, FriendManageInventory().fill(player))
             }
-            else -> exit(player)
+            else -> closeAndOpen(player, null)
         }
         event.isCancelled = true
     }

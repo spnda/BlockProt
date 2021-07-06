@@ -38,6 +38,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -126,17 +127,6 @@ public abstract class BlockProtInventory implements InventoryHolder {
     }
 
     /**
-     * Exits the currently open inventory for {@code player} and removes the InventoryState
-     * for {@code player}.
-     *
-     * @param player The player currently viewing this inventory.
-     */
-    public void exit(@NotNull final Player player) {
-        player.closeInventory();
-        InventoryState.Companion.remove(player.getUniqueId());
-    }
-
-    /**
      * Allows quick modification of the default friends list with the {@code modify} callback.
      *
      * @param modify The callback function in which the given list can be modified.
@@ -206,7 +196,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      *
      * @param block       The block to use for the handler.
      * @param player      The player to send the message to or exit the inventory of.
-     * @param exit        Whether we should exit the inventory using {@link #exit(Player)}.
+     * @param exit        Whether we should exit the inventory using {@link #closeAndOpen(Player, Inventory)}.
      * @param sendMessage Whether to send the message from the {@link LockReturnValue}
      *                    returned by the callback.
      * @param changes     The callback.
@@ -227,7 +217,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, messageComponent);
         }
         if (exit) {
-            exit(player);
+            closeAndOpen(player, null);
         }
     }
 
@@ -364,6 +354,22 @@ public abstract class BlockProtInventory implements InventoryHolder {
 
         stack.setItemMeta(meta);
         inventory.setItem(index, stack);
+    }
+
+    /**
+     * Closes the player's current inventory and then opens the new
+     * inventory. If inventory is null, we clear the inventory state.
+     * @param player The player to close and open the inventories.
+     * @param inventory The inventory we want to open. If null, we don't
+     *                  open any new inventory.
+     */
+    protected void closeAndOpen(@NotNull final Player player, @Nullable final Inventory inventory) {
+        player.closeInventory();
+        if (inventory != null) {
+            player.openInventory(inventory);
+        } else {
+            InventoryState.Companion.remove(player.getUniqueId());
+        }
     }
 
     /**

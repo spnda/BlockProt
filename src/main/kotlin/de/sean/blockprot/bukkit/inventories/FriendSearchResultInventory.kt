@@ -50,9 +50,11 @@ class FriendSearchResultInventory : BlockProtInventory() {
             }
             Material.PLAYER_HEAD, Material.SKELETON_SKULL -> {
                 val index = findItemIndex(item)
-                val friend = state.friendResultCache[index]
-                modifyFriendsForAction(state, player, friend, FriendModifyAction.ADD_FRIEND)
-                closeAndOpen(player, FriendManageInventory().fill(player))
+                if (index > 0 && index < state.friendResultCache.size) {
+                    val friend = state.friendResultCache[index]
+                    modifyFriendsForAction(state, player, friend, FriendModifyAction.ADD_FRIEND)
+                    closeAndOpen(player, FriendManageInventory().fill(player))
+                }
             }
             else -> closeAndOpen(player, null)
         }

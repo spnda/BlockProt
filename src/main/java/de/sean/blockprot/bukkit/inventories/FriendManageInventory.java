@@ -117,6 +117,7 @@ public final class FriendManageInventory extends BlockProtInventory {
             case PLAYER_HEAD: {
                 // Get the clicked player head and open the detail inventory.
                 int index = findItemIndex(item);
+                if (index < 0 || index > state.getFriendResultCache().size()) break;
                 OfflinePlayer friend = state.getFriendResultCache().get(index);
                 state.setCurFriend(friend);
                 final Inventory inv = new FriendDetailInventory().fill(player);

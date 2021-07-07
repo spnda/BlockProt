@@ -231,7 +231,9 @@ public abstract class BlockProtInventory implements InventoryHolder {
     protected int findItemIndex(@NotNull final ItemStack item) {
         ItemStack[] contents = inventory.getContents();
         for (int i = 0; i < inventory.getSize(); i++) {
-            if (contents[i].equals(item)) return i;
+            ItemStack stack = contents[i];
+            if (stack == null) continue;
+            if (stack.equals(item)) return i;
         }
         return -1;
     }

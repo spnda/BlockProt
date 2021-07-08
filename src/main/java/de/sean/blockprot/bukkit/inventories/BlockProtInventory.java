@@ -384,11 +384,11 @@ public abstract class BlockProtInventory implements InventoryHolder {
             case ACACIA_WALL_SIGN: return Material.ACACIA_SIGN;
             case BIRCH_WALL_SIGN: return Material.BIRCH_SIGN;
             case CRIMSON_WALL_SIGN: return Material.CRIMSON_SIGN;
-            case DARK_OAK_WALL_SIGN: return Material.DARK_OAK_WALL_SIGN;
+            case DARK_OAK_WALL_SIGN: return Material.DARK_OAK_SIGN;
             case JUNGLE_WALL_SIGN: return Material.JUNGLE_SIGN;
             case SPRUCE_WALL_SIGN: return Material.SPRUCE_SIGN;
             case OAK_WALL_SIGN: return Material.OAK_SIGN;
-            case WARPED_WALL_SIGN: return Material.WARPED_WALL_SIGN;
+            case WARPED_WALL_SIGN: return Material.WARPED_SIGN;
             default: return material;
         }
     }

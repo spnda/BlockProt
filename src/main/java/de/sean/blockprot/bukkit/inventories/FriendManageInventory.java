@@ -184,7 +184,7 @@ public final class FriendManageInventory extends BlockProtInventory {
         for (int i = pageOffset; i < Math.min(players.size() - pageOffset, maxSkulls); i++) {
             final OfflinePlayer curPlayer = players.get(i);
             ((BlockProtInventory) Objects.requireNonNull(inventory.getHolder()))
-                .setItemStack(1, Material.SKELETON_SKULL, curPlayer.getName());
+                .setItemStack(i, Material.SKELETON_SKULL, curPlayer.getName());
             state.getFriendResultCache().add(curPlayer);
         }
 

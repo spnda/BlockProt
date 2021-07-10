@@ -115,6 +115,7 @@ public class BlockProt extends JavaPlugin {
         registerEvent(pm, new InteractEventListener());
         registerEvent(pm, new InventoryEventListener());
         registerEvent(pm, new JoinEventListener());
+        registerEvent(pm, new PistonEventListener());
         registerEvent(pm, new RedstoneEventListener());
 
         registerCommand("blockprot", new BlockProtCommand());

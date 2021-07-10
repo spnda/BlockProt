@@ -40,6 +40,7 @@ open class InteractEventListener : Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     open fun playerInteract(event: PlayerInteractEvent) {
         if (event.clickedBlock == null) return
+        if (BlockProt.getDefaultConfig().isWorldExcluded(event.clickedBlock!!.world)) return
         if (!BlockProt.getDefaultConfig().isLockable(event.clickedBlock!!.state.type)) return
         val player = event.player
         when {

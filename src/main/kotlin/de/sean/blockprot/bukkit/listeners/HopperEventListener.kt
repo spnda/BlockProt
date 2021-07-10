@@ -24,11 +24,13 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryMoveItemEvent
 import org.bukkit.event.inventory.InventoryType
+import org.bukkit.inventory.BlockInventoryHolder
 import org.bukkit.inventory.InventoryHolder
 
 class HopperEventListener : Listener {
     @EventHandler
     fun onItemMove(event: InventoryMoveItemEvent) {
+        if (BlockProt.getDefaultConfig().isWorldExcluded((event.source.holder as BlockInventoryHolder).block.world)) return
         if (event.destination.type == InventoryType.HOPPER) {
             // This is a hopper trying to pull from something.
             when {

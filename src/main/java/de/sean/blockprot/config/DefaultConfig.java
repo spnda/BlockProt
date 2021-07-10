@@ -19,6 +19,7 @@ package de.sean.blockprot.config;
 
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryType;
 import org.jetbrains.annotations.NotNull;
@@ -53,8 +54,11 @@ public final class DefaultConfig extends BlockProtConfig {
         InventoryType.BARREL, InventoryType.BREWING, InventoryType.SHULKER_BOX
     ));
 
+    private final List<String> excludedWorlds;
+
     public DefaultConfig(@NotNull final FileConfiguration config) {
         super(config);
+        this.excludedWorlds = config.getStringList("excluded_worlds");
         this.loadBlocksFromConfig();
     }
 
@@ -120,6 +124,18 @@ public final class DefaultConfig extends BlockProtConfig {
         } else {
             return true;
         }
+    }
+
+    /**
+     * Checks if given {@code world} should be excluded from any
+     * block protection functionality.
+     * @param world The world to check for.
+     * @return If true, we shall not allow players to own and protect
+     * any blocks in given {@code world}.
+     * @since 0.4.4
+     */
+    public boolean isWorldExcluded(World world) {
+        return listContainsIgnoreCase(excludedWorlds, world.getName());
     }
 
     /**

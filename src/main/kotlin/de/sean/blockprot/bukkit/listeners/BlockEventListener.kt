@@ -36,6 +36,7 @@ import org.bukkit.plugin.java.JavaPlugin
 class BlockEventListener(private val plugin: JavaPlugin) : Listener {
     @EventHandler
     fun blockBurn(event: BlockBurnEvent) {
+        if (BlockProt.getDefaultConfig().isWorldExcluded(event.block.world)) return
         if (!BlockProt.getDefaultConfig().isLockable(event.block.type)) return
         // The event hasn't been cancelled already, we'll check if need
         // to cancel it manually.
@@ -48,6 +49,7 @@ class BlockEventListener(private val plugin: JavaPlugin) : Listener {
 
     @EventHandler
     fun playerBlockBreak(event: BlockBreakEvent) {
+        if (BlockProt.getDefaultConfig().isWorldExcluded(event.block.world)) return
         if (!BlockProt.getDefaultConfig().isLockable(event.block.type)) return // We only want to check for Tiles.
 
         val handler = BlockNBTHandler(event.block)
@@ -68,6 +70,7 @@ class BlockEventListener(private val plugin: JavaPlugin) : Listener {
 
     @EventHandler
     fun playerBlockPlace(event: BlockPlaceEvent) {
+        if (BlockProt.getDefaultConfig().isWorldExcluded(event.block.world)) return
         if (!event.player.hasPermission(BlockNBTHandler.PERMISSION_LOCK)) return
         val block = event.blockPlaced
         val playerUuid = event.player.uniqueId.toString()

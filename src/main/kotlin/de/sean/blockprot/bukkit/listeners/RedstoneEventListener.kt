@@ -26,6 +26,7 @@ import org.bukkit.event.block.BlockRedstoneEvent
 class RedstoneEventListener : Listener {
     @EventHandler
     fun onRedstone(event: BlockRedstoneEvent) {
+        if (BlockProt.getDefaultConfig().isWorldExcluded(event.block.world)) return
         // If this is a lockable block and the redstone protection is activated, set the redstone current to 0
         if (BlockProt.getDefaultConfig().isLockableBlock(event.block.type) && !BlockNBTHandler(event.block).redstone) {
             event.newCurrent = 0

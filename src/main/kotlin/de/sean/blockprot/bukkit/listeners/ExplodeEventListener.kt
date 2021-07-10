@@ -24,14 +24,13 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockExplodeEvent
 import org.bukkit.event.entity.EntityExplodeEvent
-import java.util.logging.Logger
 
 class ExplodeEventListener : Listener {
     @EventHandler
-    fun onBlockExplode(e: BlockExplodeEvent) {
-        Logger.getLogger(this.javaClass.simpleName).info(e.block.type.toString())
+    fun onBlockExplode(event: BlockExplodeEvent) {
+        if (BlockProt.getDefaultConfig().isWorldExcluded(event.block.world)) return
         // BlockExplodeEvent happens *after* the block has exploded
-        checkBlocks(e.blockList().iterator())
+        checkBlocks(event.blockList().iterator())
     }
 
     @EventHandler

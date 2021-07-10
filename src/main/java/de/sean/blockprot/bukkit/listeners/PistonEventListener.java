@@ -34,6 +34,10 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 public class PistonEventListener implements Listener {
     @EventHandler
     public void onPistonExtend(BlockPistonExtendEvent event) {
+        if (BlockProt.getDefaultConfig().isWorldExcluded(event.getBlock().getWorld())) {
+            return;
+        }
+
         for (Block block : event.getBlocks()) {
             // Check if the block is lockable
             if (BlockProt.getDefaultConfig().isLockableShulkerBox(block.getType())) {

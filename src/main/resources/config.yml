@@ -15,6 +15,14 @@ notify_op_of_updates: false
 # placed block, if the player has lock on place enabled.
 redstone_disallowed_by_default: false
 
+# A list of world names the plugin should not be usable in.
+# The case of each name is ignored.
+# Useful for a mining-only world where a block should not be
+# owned by anyone. For example:
+#   - world_mining
+#   - world_end
+excluded_worlds: []
+
 # Tile entities that should be locked. Tile entities are blocks
 # that can contain items. You can find a detailed list of all
 # possible values at https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html.

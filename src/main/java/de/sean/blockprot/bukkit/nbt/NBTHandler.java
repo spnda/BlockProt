@@ -20,6 +20,15 @@ package de.sean.blockprot.bukkit.nbt;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The base NBT Handler.
+ *
+ * @param <T> The type of the NBT container. {@link NBTCompound}
+ *            is the base of all containers and works with all of them,
+ *            however there are some special conditions and functions
+ *            for specific containers.
+ * @since 0.3.0
+ */
 public abstract class NBTHandler<T extends NBTCompound> {
     public static final String PERMISSION_LOCK = "blockprot.lock";
     public static final String PERMISSION_INFO = "blockprot.info";
@@ -28,11 +37,36 @@ public abstract class NBTHandler<T extends NBTCompound> {
 
     /**
      * The NBT container for this handler.
+     *
+     * @since 0.3.0
      */
-    T container;
+    protected T container;
 
+    /**
+     * Create a new base NBTHandler.
+     *
+     * @since 0.3.0
+     */
     protected NBTHandler() {
     }
 
+    /**
+     * Get the name of the nbt container.
+     *
+     * @return The name, or empty if none exists.
+     * @since 0.4.4
+     */
+    @NotNull
+    public String getName() {
+        String name = container.getName();
+        return name == null ? "" : name;
+    }
+
+    /**
+     * Copies all values of the other handler to this handler.
+     *
+     * @param handler The handler to copy values from.
+     * @since 0.3.2
+     */
     public abstract void mergeHandler(@NotNull final NBTHandler<?> handler);
 }

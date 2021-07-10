@@ -25,6 +25,8 @@ import org.jetbrains.annotations.NotNull;
  * Called when a block is destroyed.
  * This event implements {@link Cancellable} and if cancelled, the
  * block will not be destroyed.
+ *
+ * @since 0.4.0
  */
 public final class BlockDestroyEvent extends BaseBlockEvent implements Cancellable {
     private boolean isCancelled;
@@ -32,6 +34,7 @@ public final class BlockDestroyEvent extends BaseBlockEvent implements Cancellab
     /**
      * @param block The block that was placed.
      * @see BlockDestroyEvent
+     * @since 0.4.0
      */
     public BlockDestroyEvent(@NotNull final Block block) {
         super(block);

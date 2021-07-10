@@ -24,14 +24,21 @@ import java.util.HashMap;
 
 /**
  * Helper to quickly obtain translations from a config by a enum key.
+ *
+ * @since 0.1.10
  */
 public final class Translator {
     /**
      * A HashMap of all possible translation values by key, loaded through
      * {@link Translator#loadFromConfig(YamlConfiguration)}.
+     *
+     * @since 0.1.10
      */
     private static final HashMap<TranslationKey, String> values = new HashMap<>();
 
+    /**
+     * @since 0.2.3
+     */
     private Translator() {
     }
 
@@ -41,6 +48,7 @@ public final class Translator {
      * @param config the configuration to load translations from. See
      *               https://github.com/spnda/BlockProt/blob/master/src/main/resources/translations_en.yml for
      *               an example.
+     * @since 0.2.3
      */
     public static void loadFromConfig(@NotNull final YamlConfiguration config) {
         TranslationKey[] translations = TranslationKey.values();
@@ -63,6 +71,7 @@ public final class Translator {
      *
      * @param key the translation key to search for
      * @return a translated String or an empty string if not found
+     * @since 0.1.10
      */
     @NotNull
     public static String get(@NotNull final TranslationKey key) {

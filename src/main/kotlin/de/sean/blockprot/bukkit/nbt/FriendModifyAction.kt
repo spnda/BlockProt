@@ -17,6 +17,21 @@
  */
 package de.sean.blockprot.bukkit.nbt
 
+/**
+ * @since 0.1.16
+ */
 enum class FriendModifyAction {
-    ADD_FRIEND, REMOVE_FRIEND;
+    /**
+     * We want to add a friend to the block or to the
+     * default friends for a player.
+     * @since 0.1.16
+     */
+    ADD_FRIEND,
+
+    /**
+     * We want to remove a friend to the block or to the
+     * default friends for a player.
+     * @since 0.1.16
+     */
+    REMOVE_FRIEND;
 }

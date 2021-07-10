@@ -28,6 +28,8 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 /**
  * Event listener to block piston extends/retracts from destroying
  * or moving protected blocks.
+ *
+ * @since 0.4.4
  */
 public class PistonEventListener implements Listener {
     @EventHandler

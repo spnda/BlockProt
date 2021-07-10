@@ -37,6 +37,7 @@ public final class BlockAccessEditMenuEvent extends BaseBlockEvent implements Ca
      * @param block  The block that was placed.
      * @param player The player that placed the block.
      * @see BlockAccessEditMenuEvent
+     * @since 0.4.0
      */
     public BlockAccessEditMenuEvent(@NotNull final Block block,
                                     @NotNull final Player player) {
@@ -48,12 +49,19 @@ public final class BlockAccessEditMenuEvent extends BaseBlockEvent implements Ca
      * The player that is trying to access the edit menu.
      *
      * @return The Bukkit player.
+     * @since 0.4.0
      */
     @NotNull
     public Player getPlayer() {
         return player;
     }
 
+    /**
+     * Get the current level of {@link MenuAccess}.
+     *
+     * @return The current access level.
+     * @since 0.4.0
+     */
     @NotNull
     public MenuAccess getAccess() {
         return access;
@@ -64,6 +72,7 @@ public final class BlockAccessEditMenuEvent extends BaseBlockEvent implements Ca
      * the previous permissions, this call will be ignored.
      *
      * @param access The new permissions.
+     * @since 0.4.0
      */
     public void setAccess(@NotNull MenuAccess access) {
         if (access.ordinal() > this.access.ordinal()) {
@@ -73,6 +82,7 @@ public final class BlockAccessEditMenuEvent extends BaseBlockEvent implements Ca
 
     /**
      * If this event is cancelled, the inventory will not be opened.
+     * {@inheritDoc}
      */
     @Override
     public boolean isCancelled() {
@@ -81,6 +91,7 @@ public final class BlockAccessEditMenuEvent extends BaseBlockEvent implements Ca
 
     /**
      * If this event is cancelled, the inventory will not be opened.
+     * {@inheritDoc}
      */
     @Override
     public void setCancelled(final boolean cancel) {
@@ -89,6 +100,8 @@ public final class BlockAccessEditMenuEvent extends BaseBlockEvent implements Ca
 
     /**
      * The level of access that a player can have.
+     *
+     * @since 0.4.0
      */
     public enum MenuAccess {
         NONE,

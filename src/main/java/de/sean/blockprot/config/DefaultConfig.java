@@ -88,6 +88,8 @@ public final class DefaultConfig extends BlockProtConfig {
     /**
      * Get the filename of the language file we use.
      * This file should be located in /plugins/BlockProt/.
+     *
+     * @return The name of the language file.
      */
     @Nullable
     public String getLanguageFile() {
@@ -97,6 +99,8 @@ public final class DefaultConfig extends BlockProtConfig {
     /**
      * Whether or not to we should notify a OP player of any updates
      * when they join the server.
+     *
+     * @return True if a op should be notified of updates.
      */
     public boolean shouldNotifyOpOfUpdates() {
         if (!this.config.contains("notify_op_of_updates")) return false;
@@ -106,6 +110,9 @@ public final class DefaultConfig extends BlockProtConfig {
     /**
      * Checks the config if the "redstone_disallowed_by_default" key is
      * set to true. If it was not found, it defaults to false.
+     *
+     * @return True if redstone should be automatically disabled when a
+     * block is placed.
      */
     public boolean disallowRedstoneOnPlace() {
         if (this.config.contains("redstone_disallowed_by_default")) {
@@ -116,7 +123,10 @@ public final class DefaultConfig extends BlockProtConfig {
     }
 
     /**
-     * Whether the given [type] is either a lockable block or a lockable tile entity.
+     * Whether the given {@code type} is either a lockable block or a lockable tile entity.
+     *
+     * @param type The type to check for.
+     * @return True, if {@code type} is lockable.
      */
     public boolean isLockable(Material type) {
         return isLockableBlock(type) || isLockableTileEntity(type);

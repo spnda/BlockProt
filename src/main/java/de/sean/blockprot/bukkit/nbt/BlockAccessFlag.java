@@ -24,20 +24,35 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+/**
+ * @since 0.2.3
+ */
 public enum BlockAccessFlag {
     /**
      * The user is allowed to see, but not alter, the contents of the inventory.
+     *
+     * @since 0.2.3
      */
     READ(TranslationKey.INVENTORIES__FRIENDS__PERMISSIONS__READ),
 
     /**
      * The user is allowed to add and remove contents of the inventory.
+     *
+     * @since 0.2.3
      */
     WRITE(TranslationKey.INVENTORIES__FRIENDS__PERMISSIONS__WRITE);
 
+    /**
+     * The translation key used for the description of this flag.
+     *
+     * @since 0.2.3
+     */
     @NotNull
     private final TranslationKey descriptionKey;
 
+    /**
+     * @since 0.2.3
+     */
     BlockAccessFlag(@NotNull final TranslationKey description) {
         this.descriptionKey = description;
     }
@@ -47,8 +62,9 @@ public enum BlockAccessFlag {
      * parsed from their value from {@link BlockAccessFlag#getFlag()}.
      *
      * @param value The integer to parse from.
-     * @return A {@link EnumSet<BlockAccessFlag>} with all flags that were parsed from
+     * @return A {@link EnumSet} with all flags that were parsed from
      * given integer.
+     * @since 0.2.3
      */
     public static EnumSet<BlockAccessFlag> parseFlags(final int value) {
         EnumSet<BlockAccessFlag> flags = EnumSet.noneOf(BlockAccessFlag.class);
@@ -70,6 +86,14 @@ public enum BlockAccessFlag {
         return flags;
     }
 
+    /**
+     * Turns a {@link EnumSet} of {@link BlockAccessFlag} into a user-friendly String.
+     *
+     * @param flags The flags which are then called {@link String#toString()} on and
+     *              concatenated together into a user-friendly list.
+     * @return A String of concatenated flags.
+     * @since 0.3.0
+     */
     @NotNull
     public static String accessFlagToString(@NotNull final EnumSet<BlockAccessFlag> flags) {
         if (flags.isEmpty()) return "No access";
@@ -89,6 +113,14 @@ public enum BlockAccessFlag {
         return builder.toString();
     }
 
+    /**
+     * Accumulate the access flag details into a list of strings, where each entry
+     * represents a line. Used for item lore in the GUI.
+     *
+     * @param flags A {@link EnumSet} of flags to convert.
+     * @return List of strings used for item lore.
+     * @since 0.3.0
+     */
     @NotNull
     public static List<String> accumulateAccessFlagLore(@NotNull final EnumSet<BlockAccessFlag> flags) {
         if (flags.isEmpty()) return Collections.singletonList("No access");
@@ -110,6 +142,7 @@ public enum BlockAccessFlag {
      * using the {@link #descriptionKey} to get the corresponding value.
      *
      * @return Translated description.
+     * @since 0.2.3
      */
     @NotNull
     public String getDescription() {
@@ -120,6 +153,7 @@ public enum BlockAccessFlag {
      * Gets this enum as a bit flag.
      *
      * @return Single bit representing this flag.
+     * @since 0.2.3
      */
     public int getFlag() {
         return 1 << ordinal();

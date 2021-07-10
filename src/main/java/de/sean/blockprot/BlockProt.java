@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class BlockProt extends JavaPlugin {
+public final class BlockProt extends JavaPlugin {
     /**
      * The bStats plugin ID.
      */

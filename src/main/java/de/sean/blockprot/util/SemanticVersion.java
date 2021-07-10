@@ -23,10 +23,14 @@ import java.util.Arrays;
 
 /**
  * A semantic versioning helper class to compare two versions.
+ *
+ * @since 0.1.11
  */
 public class SemanticVersion implements Comparable<SemanticVersion> {
     /**
      * The semantic version String separated by the dots.
+     *
+     * @since 0.1.11
      */
     private final String[] parts;
 
@@ -35,6 +39,7 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
      *
      * @param version A version string in the semantic versioning format. E.g. 1.2.4.
      *                Only accepts digits.
+     * @since 0.1.11
      */
     public SemanticVersion(@NotNull final String version) {
         parts = version.split("\\.");
@@ -47,6 +52,7 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
      * @param other The other semantic version to compare against.
      * @return 1 if this is newer than {@code other} and -1 if {@code other} is newer. 0 if the same
      * or parsing failed.
+     * @since 0.1.11
      */
     @Override
     public int compareTo(@NotNull final SemanticVersion other) {
@@ -72,6 +78,7 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
      *
      * @param obj The other object to compare to.
      * @return true if {@code obj} is equals to this.
+     * @since 0.1.11
      */
     @Override
     public boolean equals(Object obj) {
@@ -87,6 +94,7 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
      * then generated using {@link Arrays#hashCode(Object[])}.
      *
      * @return The array hashcode of all the individual digits of this version.
+     * @since 0.1.11
      */
     @Override
     public int hashCode() {

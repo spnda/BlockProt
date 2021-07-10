@@ -26,6 +26,8 @@ import org.jetbrains.annotations.NotNull;
  * Called when a player is trying to access a block and its contents.
  * This event implements {@link Cancellable} and if cancelled, the
  * access to the block is blocked.
+ *
+ * @since 0.4.0
  */
 public final class BlockAccessEvent extends BaseBlockEvent implements Cancellable {
     @NotNull
@@ -36,6 +38,7 @@ public final class BlockAccessEvent extends BaseBlockEvent implements Cancellabl
      * @param block  The block that was placed.
      * @param player The player that placed the block.
      * @see BlockAccessEvent
+     * @since 0.4.0
      */
     public BlockAccessEvent(@NotNull final Block block,
                             @NotNull final Player player) {
@@ -47,6 +50,7 @@ public final class BlockAccessEvent extends BaseBlockEvent implements Cancellabl
      * The player that is trying to access this block.
      *
      * @return The Bukkit player.
+     * @since 0.4.0
      */
     @NotNull
     public Player getPlayer() {

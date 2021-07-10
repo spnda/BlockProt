@@ -106,7 +106,7 @@ class BlockEventListener(private val plugin: JavaPlugin) : Listener {
                     val lockOnPlaceEvent = BlockLockOnPlaceEvent(event.block, event.player)
                     Bukkit.getPluginManager().callEvent(lockOnPlaceEvent)
                     if (!lockOnPlaceEvent.isCancelled) {
-                        handler.lockBlock(event.player, event.player.isOp, null)
+                        handler.lockBlock(event.player, null)
                         val settingsHandler = PlayerSettingsHandler(event.player)
                         val friends = settingsHandler.defaultFriends
                         for (friend in friends) {

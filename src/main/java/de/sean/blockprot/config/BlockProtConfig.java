@@ -37,7 +37,11 @@ public abstract class BlockProtConfig {
 
     /**
      * Parse a comma-separated list from a {@link String}. For example {@code "entry, entry"}
-     * would be valid.
+     * would be valid and would return a {@link List} of {@link String}s with two entries,
+     * both "entry".
+     *
+     * @param stringList The String we want to parse from.
+     * @return The split up and parsed List.
      */
     @NotNull
     public static List<String> parseStringList(@Nullable final String stringList) {
@@ -54,6 +58,11 @@ public abstract class BlockProtConfig {
     /**
      * Checks whether or not the given {@code list} contains the {@code query} String. It checks
      * each item using {@link String#equalsIgnoreCase(String)}.
+     *
+     * @param list  The list of strings to check.
+     * @param query The string to compare to.
+     * @return True, if any item of {@code list} qualifies for {@link String#equalsIgnoreCase(String)}
+     * with {@code query}.
      */
     protected boolean listContainsIgnoreCase(@NotNull final List<String> list, @NotNull final String query) {
         for (String item : list) {

@@ -53,7 +53,6 @@ class BlockLockInventory : BlockProtInventory() {
                 applyChanges(block, player, true, true) {
                     it.lockBlock(
                         player,
-                        player.isOp,
                         if (doubleChest != null) NBTTileEntity(doubleChest) else null
                     )
                 }

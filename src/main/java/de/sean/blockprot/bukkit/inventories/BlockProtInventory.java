@@ -49,11 +49,21 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * A base inventory holder for each of the plugins inventories.
+ *
+ * @since 0.2.2
+ */
 public abstract class BlockProtInventory implements InventoryHolder {
+    /**
+     * @since 0.2.2
+     */
     protected final Inventory inventory;
 
     /**
      * Creates a new inventory using {@link BlockProtInventory#createInventory()}.
+     *
+     * @since 0.2.2
      */
     public BlockProtInventory() {
         inventory = createInventory();
@@ -63,6 +73,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * Get's this holder's inventory. Does not create a new one.
      *
      * @return The inventory for this holder.
+     * @since 0.2.2
      */
     @NotNull
     @Override
@@ -75,6 +86,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * 9.
      *
      * @return The size of this inventory.
+     * @since 0.2.2
      */
     abstract int getSize();
 
@@ -83,6 +95,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * the default TranslationKey for this inventory holder.
      *
      * @return The translated inventory name, or an empty String.
+     * @since 0.2.2
      */
     @NotNull
     abstract String getTranslatedInventoryName();
@@ -92,6 +105,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      *
      * @return The translated inventory name, or this class's simple name if the translation was not
      * found.
+     * @since 0.2.2
      */
     @NotNull
     public final String getDefaultInventoryName() {
@@ -104,6 +118,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      *
      * @param event Bukkit's inventory click event for this inventory.
      * @param state The current players inventory state.
+     * @since 0.2.3
      */
     public abstract void onClick(@NotNull final InventoryClickEvent event, @NotNull final InventoryState state);
 
@@ -112,6 +127,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      *
      * @param event Bukkit's inventory close event for this inventory.
      * @param state The current players inventory state.
+     * @since 0.2.3
      */
     public abstract void onClose(@NotNull final InventoryCloseEvent event, @NotNull final InventoryState state);
 
@@ -120,6 +136,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * returns an empty String, this class's simple name will be used.
      *
      * @return The Bukkit Inventory.
+     * @since 0.2.2
      */
     @NotNull
     protected final Inventory createInventory() {
@@ -129,7 +146,9 @@ public abstract class BlockProtInventory implements InventoryHolder {
     /**
      * Allows quick modification of the default friends list with the {@code modify} callback.
      *
+     * @param player The player who we want to modify the default friends for.
      * @param modify The callback function in which the given list can be modified.
+     * @since 0.3.2
      */
     protected void modifyDefaultFriends(
         @NotNull final Player player, @NotNull final Function<List<String>, ?> modify) {
@@ -147,6 +166,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      *               or the player we want to edit the default friends for.
      * @param friend The friend we want to do {@code action} for.
      * @param action The action to perform with {@code friend}.
+     * @since 0.3.2
      */
     protected final void modifyFriendsForAction(
         @NotNull final InventoryState state,
@@ -200,6 +220,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @param sendMessage Whether to send the message from the {@link LockReturnValue}
      *                    returned by the callback.
      * @param changes     The callback.
+     * @since 0.2.2
      */
     protected void applyChanges(
         @NotNull final Block block,
@@ -227,6 +248,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @param item The item to check for. Every item in this inventory will be checked against this
      *             using {@link ItemStack#equals(Object)}
      * @return The index of the item inside the inventory. If not found, {@code -1}.
+     * @since 0.2.2
      */
     protected int findItemIndex(@NotNull final ItemStack item) {
         ItemStack[] contents = inventory.getContents();
@@ -238,11 +260,6 @@ public abstract class BlockProtInventory implements InventoryHolder {
         return -1;
     }
 
-    @NotNull
-    protected final List<OfflinePlayer> mapFriendsToPlayer(@NotNull final List<FriendHandler> friends) {
-        return mapFriendsToPlayer(friends.stream());
-    }
-
     /**
      * Map a {@link Stream} of {@link String} to a {@link List} of {@link OfflinePlayer} using
      * {@link UUID#fromString(String)} and {@link Bukkit#getOfflinePlayer(UUID)}.
@@ -250,6 +267,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @param friends A {@link Stream} of {@link String} in which each entry should be parseable
      *                by {@link UUID#fromString(String)}.
      * @return A list of all players that mapped successfully.
+     * @since 0.3.0
      */
     @NotNull
     protected final List<OfflinePlayer> mapFriendsToPlayer(@NotNull final Stream<FriendHandler> friends) {
@@ -261,6 +279,10 @@ public abstract class BlockProtInventory implements InventoryHolder {
     /**
      * Allows for quick filtering of a list of {@link String}s for a list of {@link OfflinePlayer}.
      *
+     * @param <T>        The type of the {@code filterList} and is the type used for the
+     *                   returned list.
+     * @param <U>        The type of the {@code input} list, which we check for each
+     *                   entry in {@code filterList}.
      * @param input      A list of {@code U} that can be accessed inside of the
      *                   callback for validation.
      * @param filterList A list of all players to filter by.
@@ -268,6 +290,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      *                   If false, we shall filter the item out of the original list.
      * @return A list of all {@link OfflinePlayer} in {@code allPlayers} which were valid as by
      * {@code check}.
+     * @since 0.3.2
      */
     @NotNull
     protected <T, U> List<T> filterList(
@@ -283,6 +306,8 @@ public abstract class BlockProtInventory implements InventoryHolder {
 
     /**
      * Sets the back button to the last item in the inventory.
+     *
+     * @since 0.2.3
      */
     public void setBackButton() {
         setBackButton(inventory.getSize() - 1);
@@ -290,6 +315,9 @@ public abstract class BlockProtInventory implements InventoryHolder {
 
     /**
      * Sets the back button to the [index] in the inventory.
+     *
+     * @param index The index of the back button inside this inventory.
+     * @since 0.2.3
      */
     public void setBackButton(int index) {
         setItemStack(index, Material.BLACK_STAINED_GLASS_PANE, TranslationKey.INVENTORIES__BACK);
@@ -298,7 +326,10 @@ public abstract class BlockProtInventory implements InventoryHolder {
     /**
      * Sets a ItemStack with the type [material] and the name translated by [key] at [index].
      *
-     * @param key The translation key to use to get the translated name for this item.
+     * @param index    The index of the item inside this inventory.
+     * @param material The material of the item.
+     * @param key      The translation key to use to get the translated name for this item.
+     * @since 0.2.3
      */
     public void setItemStack(int index, Material material, TranslationKey key) {
         setItemStack(index, material, Translator.get(key));
@@ -307,6 +338,13 @@ public abstract class BlockProtInventory implements InventoryHolder {
     /**
      * Sets a ItemStack with the type {@code material} and the name translated by {@code text} with
      * {@code lore} at {@code index}.
+     *
+     * @param index    The index of the item inside this inventory.
+     * @param material The material of the item.
+     * @param key      The translatable text to use.
+     * @param lore     The lore of item, where each entry in the list
+     *                 is one line.
+     * @since 0.2.3
      */
     public void setItemStack(int index, Material material, TranslationKey key, List<String> lore) {
         setItemStack(index, material, Translator.get(key), lore);
@@ -314,6 +352,11 @@ public abstract class BlockProtInventory implements InventoryHolder {
 
     /**
      * Sets a ItemStack with the type {@code material} and the name as {@code text} at {@code index}.
+     *
+     * @param index    The index of the item inside this inventory.
+     * @param material The material of the item.
+     * @param text     The text or name of the item.
+     * @since 0.4.0
      */
     public void setItemStack(int index, Material material, String text) {
         setItemStack(index, material, text, Collections.emptyList());
@@ -322,6 +365,13 @@ public abstract class BlockProtInventory implements InventoryHolder {
     /**
      * Sets a ItemStack with the type {@code material} and the name as {@code text} with {@code lore}
      * at {@code index}.
+     *
+     * @param index    The index of the item inside this inventory.
+     * @param material The material of the item.
+     * @param text     The text or name of the item.
+     * @param lore     The lore of item, where each entry in the list
+     *                 is one line.
+     * @since 0.2.3
      */
     public void setItemStack(int index, Material material, String text, List<String> lore) {
         final ItemStack stack = new ItemStack(material, 1);
@@ -342,6 +392,10 @@ public abstract class BlockProtInventory implements InventoryHolder {
 
     /**
      * Set a player skull to {@code index}.
+     *
+     * @param index  The index of the skull inside this inventory.
+     * @param player The player whose skull should be used.
+     * @since 0.3.2
      */
     public void setPlayerSkull(int index, OfflinePlayer player) {
         final ItemStack stack = new ItemStack(Material.PLAYER_HEAD, 1);
@@ -361,9 +415,11 @@ public abstract class BlockProtInventory implements InventoryHolder {
     /**
      * Closes the player's current inventory and then opens the new
      * inventory. If inventory is null, we clear the inventory state.
-     * @param player The player to close and open the inventories.
+     *
+     * @param player    The player to close and open the inventories.
      * @param inventory The inventory we want to open. If null, we don't
      *                  open any new inventory.
+     * @since 0.4.2
      */
     protected void closeAndOpen(@NotNull final Player player, @Nullable final Inventory inventory) {
         player.closeInventory();
@@ -378,18 +434,31 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * This gets the proper material for a block. For example, wall signs
      * have a different material, but that material does not have its own
      * item.
+     *
+     * @param material The material to fix.
+     * @return The fixed material usable for the item in the inventory.
+     * @since 0.4.2
      */
     protected Material getProperMaterial(Material material) {
         switch (material) {
-            case ACACIA_WALL_SIGN: return Material.ACACIA_SIGN;
-            case BIRCH_WALL_SIGN: return Material.BIRCH_SIGN;
-            case CRIMSON_WALL_SIGN: return Material.CRIMSON_SIGN;
-            case DARK_OAK_WALL_SIGN: return Material.DARK_OAK_SIGN;
-            case JUNGLE_WALL_SIGN: return Material.JUNGLE_SIGN;
-            case SPRUCE_WALL_SIGN: return Material.SPRUCE_SIGN;
-            case OAK_WALL_SIGN: return Material.OAK_SIGN;
-            case WARPED_WALL_SIGN: return Material.WARPED_SIGN;
-            default: return material;
+            case ACACIA_WALL_SIGN:
+                return Material.ACACIA_SIGN;
+            case BIRCH_WALL_SIGN:
+                return Material.BIRCH_SIGN;
+            case CRIMSON_WALL_SIGN:
+                return Material.CRIMSON_SIGN;
+            case DARK_OAK_WALL_SIGN:
+                return Material.DARK_OAK_SIGN;
+            case JUNGLE_WALL_SIGN:
+                return Material.JUNGLE_SIGN;
+            case SPRUCE_WALL_SIGN:
+                return Material.SPRUCE_SIGN;
+            case OAK_WALL_SIGN:
+                return Material.OAK_SIGN;
+            case WARPED_WALL_SIGN:
+                return Material.WARPED_SIGN;
+            default:
+                return material;
         }
     }
 }

@@ -54,6 +54,8 @@ abstract class BaseBlockEvent extends BlockEvent {
 
     /**
      * {@inheritDoc}
+     *
+     * @since 0.4.0
      */
     @NotNull
     @Override

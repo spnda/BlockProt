@@ -17,9 +17,36 @@
  */
 package de.sean.blockprot.bukkit.inventories
 
+/**
+ * Some various inventory constants.
+ * @since 0.2.0
+ */
 object InventoryConstants {
+    /**
+     * The length of a single inventory line
+     * in a normal inventory.
+     * @since 0.2.0
+     */
     const val lineLength = 9
+
+    /**
+     * The length of a single inventory line
+     * in a normal inventory.
+     * @since 0.2.0
+     */
     const val singleLine = 9 * 1
+
+    /**
+     * The length of two inventory line
+     * in a normal inventory.
+     * @since 0.2.0
+     */
     const val doubleLine = 9 * 2
+
+    /**
+     * The length of three inventory line
+     * in a normal inventory.
+     * @since 0.2.0
+     */
     const val tripleLine = 9 * 3
 }

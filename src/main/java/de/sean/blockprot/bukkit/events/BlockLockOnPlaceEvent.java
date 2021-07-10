@@ -25,6 +25,8 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Called when a block has been placed and the player has enabled the
  * "lock on place" setting.
+ *
+ * @since 0.4.0
  */
 public final class BlockLockOnPlaceEvent extends BaseBlockEvent implements Cancellable {
     @NotNull
@@ -35,6 +37,7 @@ public final class BlockLockOnPlaceEvent extends BaseBlockEvent implements Cance
      * @param block  The block that was placed.
      * @param player The player that placed the block.
      * @see BlockLockOnPlaceEvent
+     * @since 0.4.0
      */
     public BlockLockOnPlaceEvent(@NotNull final Block block,
                                  @NotNull final Player player) {
@@ -47,6 +50,7 @@ public final class BlockLockOnPlaceEvent extends BaseBlockEvent implements Cance
      * place setting active.
      *
      * @return The Bukkit player.
+     * @since 0.4.0
      */
     @NotNull
     public Player getPlayer() {

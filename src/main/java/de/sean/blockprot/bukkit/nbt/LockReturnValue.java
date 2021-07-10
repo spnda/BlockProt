@@ -21,17 +21,47 @@ import de.sean.blockprot.TranslationKey;
 import de.sean.blockprot.Translator;
 import org.jetbrains.annotations.NotNull;
 
-public class LockReturnValue {
+/**
+ * A class representing a return value for any of the lock functions,
+ * containing a success boolean and a potential error message.
+ *
+ * @since 0.1.10
+ */
+public final class LockReturnValue {
+    /**
+     * Whether or not the operation completed successfully.
+     *
+     * @since 0.2.3
+     */
     public final boolean success;
 
+    /**
+     * A error/success message for the player.
+     *
+     * @since 0.2.3
+     */
     @NotNull
     public final String message;
 
+    /**
+     * Creates a new LockReturnValue with given values.
+     *
+     * @param success Whether or not the operation completed successfully.
+     * @param message A error/success message for the player.
+     * @since 0.1.10
+     */
     public LockReturnValue(final boolean success, @NotNull final String message) {
         this.success = success;
         this.message = message;
     }
 
+    /**
+     * Creates a new LockReturnValue with given values.
+     *
+     * @param success Whether or not the operation completed successfully.
+     * @param key     A translated error/success message for the player.
+     * @since 0.2.3
+     */
     public LockReturnValue(final boolean success, @NotNull final TranslationKey key) {
         this.success = success;
         this.message = Translator.get(key);

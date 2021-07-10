@@ -24,10 +24,14 @@ import org.bukkit.block.Chest
 import org.bukkit.block.DoubleChest
 import org.bukkit.inventory.DoubleChestInventory
 
+/**
+ * @since 0.2.3
+ */
 object LockUtil {
     /**
      * Get the BlockState of the double chest of given [block].
      * @return The BlockState of the double chest, null if given [block] was not a chest.
+     * @since 0.3.0
      */
     @JvmStatic
     fun getDoubleChest(block: Block, world: World): BlockState? {

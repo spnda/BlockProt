@@ -22,7 +22,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class BaseBlockEvent extends BlockEvent {
+abstract class BaseBlockEvent extends BlockEvent {
     /**
      * The internal list of handlers (listeners) for this event,
      * so that Bukkit/Spigot can differentiate between the different

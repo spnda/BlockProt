@@ -18,7 +18,6 @@
 package de.sean.blockprot.bukkit.listeners
 
 import de.sean.blockprot.BlockProt
-import de.sean.blockprot.bukkit.events.BlockDestroyEvent
 import de.sean.blockprot.bukkit.events.BlockLockOnPlaceEvent
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler
@@ -38,31 +37,18 @@ class BlockEventListener(private val plugin: JavaPlugin) : Listener {
     @EventHandler
     fun blockBurn(event: BlockBurnEvent) {
         if (!BlockProt.getDefaultConfig().isLockable(event.block.type)) return
-        val destroyEvent = BlockDestroyEvent(event.block)
-        Bukkit.getPluginManager().callEvent(destroyEvent)
-        if (destroyEvent.isCancelled) {
+        // The event hasn't been cancelled already, we'll check if need
+        // to cancel it manually.
+        val handler = BlockNBTHandler(event.block)
+        // If the block is protected by any user, prevent it from burning down.
+        if (handler.isProtected) {
             event.isCancelled = true
-        } else {
-            // The event hasn't been cancelled already, we'll check if need
-            // to cancel it manually.
-            val handler = BlockNBTHandler(event.block)
-            // If the block is protected by any user, prevent it from burning down.
-            if (handler.isProtected) {
-                event.isCancelled = true
-            }
         }
     }
 
     @EventHandler
     fun playerBlockBreak(event: BlockBreakEvent) {
         if (!BlockProt.getDefaultConfig().isLockable(event.block.type)) return // We only want to check for Tiles.
-
-        val destroyEvent = BlockDestroyEvent(event.block)
-        Bukkit.getPluginManager().callEvent(destroyEvent)
-        if (destroyEvent.isCancelled) {
-            event.isCancelled = true
-            return
-        }
 
         val handler = BlockNBTHandler(event.block)
         if (!handler.isOwner(event.player.uniqueId.toString()) && handler.isProtected) {

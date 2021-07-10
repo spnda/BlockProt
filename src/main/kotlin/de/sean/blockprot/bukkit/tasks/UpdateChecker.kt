@@ -20,12 +20,12 @@ package de.sean.blockprot.bukkit.tasks
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import de.sean.blockprot.BlockProt
-import de.sean.blockprot.util.BlockProtMessenger
 import de.sean.blockprot.util.SemanticVersion
 import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.HoverEvent
 import net.md_5.bungee.api.chat.TextComponent
 import net.md_5.bungee.api.chat.hover.content.Text
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.PluginDescriptionFile
 import java.io.BufferedReader
@@ -55,7 +55,7 @@ class UpdateChecker(private val receivingPlayers: List<Player>, private val desc
                 latestVersion < SemanticVersion(description.version) ->
                     log("${description.name} is on Version ${description.version}, even though latest is ${latest.currentVersion}.", true)
                 else ->
-                    log("${description.name} is up to date. (${latest.currentVersion}).", false, BlockProtMessenger.LogSeverity.LOG)
+                    log("${description.name} is up to date. (${latest.currentVersion}).", isOutdated = false, warning = false)
             }
         } catch (e: IOException) {
             BlockProt.getInstance()!!.logger.warning(e.toString())
@@ -65,7 +65,7 @@ class UpdateChecker(private val receivingPlayers: List<Player>, private val desc
         }
     }
 
-    private fun log(content: String, isOutdated: Boolean, severity: BlockProtMessenger.LogSeverity = BlockProtMessenger.LogSeverity.WARN) {
+    private fun log(content: String, isOutdated: Boolean, warning: Boolean = true) {
         if (receivingPlayers.isNotEmpty()) {
             val message = TextComponent(content)
             if (isOutdated) {
@@ -76,7 +76,11 @@ class UpdateChecker(private val receivingPlayers: List<Player>, private val desc
                 player.spigot().sendMessage(message)
             }
         } else {
-            BlockProtMessenger.log(content, severity)
+            if (warning) {
+                Bukkit.getLogger().warning(content)
+            } else {
+                Bukkit.getLogger().info(content)
+            }
         }
     }
 

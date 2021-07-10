@@ -117,7 +117,7 @@ class BlockLockInventory : BlockProtInventory() {
                 TranslationKey.INVENTORIES__UNLOCK
             )
         }
-        if (owner == playerUuid && state.menuAccess == BlockAccessEditMenuEvent.MenuAccess.NORMAL) {
+        if (owner == playerUuid && state.menuAccess.ordinal >= BlockAccessEditMenuEvent.MenuAccess.NORMAL.ordinal) {
             setItemStack(
                 1,
                 if (redstone) Material.REDSTONE else Material.GUNPOWDER,

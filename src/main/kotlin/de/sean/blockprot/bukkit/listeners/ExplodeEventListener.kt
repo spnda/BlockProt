@@ -34,8 +34,9 @@ class ExplodeEventListener : Listener {
     }
 
     @EventHandler
-    fun onEntityExplode(e: EntityExplodeEvent) {
-        checkBlocks(e.blockList().iterator())
+    fun onEntityExplode(event: EntityExplodeEvent) {
+        if (BlockProt.getDefaultConfig().isWorldExcluded(event.entity.world)) return
+        checkBlocks(event.blockList().iterator())
     }
 
     private fun checkBlocks(it: MutableIterator<Block>) {

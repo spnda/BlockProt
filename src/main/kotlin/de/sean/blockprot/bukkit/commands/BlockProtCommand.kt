@@ -17,7 +17,7 @@
  */
 package de.sean.blockprot.bukkit.commands
 
-import de.sean.blockprot.BlockProt
+import de.sean.blockprot.bukkit.BlockProt
 import de.sean.blockprot.bukkit.inventories.InventoryState
 import de.sean.blockprot.bukkit.inventories.UserSettingsInventory
 import de.sean.blockprot.bukkit.tasks.UpdateChecker

@@ -17,9 +17,9 @@
  */
 package de.sean.blockprot.bukkit.nbt;
 
-import de.sean.blockprot.BlockProt;
-import de.sean.blockprot.TranslationKey;
-import de.sean.blockprot.config.BlockProtConfig;
+import de.sean.blockprot.bukkit.BlockProt;
+import de.sean.blockprot.bukkit.TranslationKey;
+import de.sean.blockprot.bukkit.config.BlockProtConfig;
 import de.tr7zw.changeme.nbtapi.NBTBlock;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;

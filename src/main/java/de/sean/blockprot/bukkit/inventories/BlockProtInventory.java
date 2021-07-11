@@ -17,8 +17,8 @@
  */
 package de.sean.blockprot.bukkit.inventories;
 
-import de.sean.blockprot.TranslationKey;
-import de.sean.blockprot.Translator;
+import de.sean.blockprot.bukkit.TranslationKey;
+import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.*;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import net.md_5.bungee.api.ChatMessageType;

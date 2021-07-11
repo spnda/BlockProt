@@ -1,6 +1,6 @@
 name: BlockProt
 version: ${version}
-main: de.sean.blockprot.BlockProt
+main: de.sean.blockprot.bukkit.BlockProt
 api-version: 1.14
 authors: [ spnda ]
 description: A simple block protection plugin

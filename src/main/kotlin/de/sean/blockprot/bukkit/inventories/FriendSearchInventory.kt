@@ -17,9 +17,9 @@
  */
 package de.sean.blockprot.bukkit.inventories
 
-import de.sean.blockprot.BlockProt
-import de.sean.blockprot.TranslationKey
-import de.sean.blockprot.Translator
+import de.sean.blockprot.bukkit.BlockProt
+import de.sean.blockprot.bukkit.TranslationKey
+import de.sean.blockprot.bukkit.Translator
 import net.wesjd.anvilgui.AnvilGUI
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory

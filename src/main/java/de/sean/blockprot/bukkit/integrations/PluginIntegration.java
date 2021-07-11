@@ -17,7 +17,7 @@
  */
 package de.sean.blockprot.bukkit.integrations;
 
-import de.sean.blockprot.BlockProt;
+import de.sean.blockprot.bukkit.BlockProt;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;

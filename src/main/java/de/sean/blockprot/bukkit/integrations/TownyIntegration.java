@@ -25,7 +25,7 @@ import com.palmergames.bukkit.towny.event.town.TownRuinedEvent;
 import com.palmergames.bukkit.towny.event.town.TownUnclaimEvent;
 import com.palmergames.bukkit.towny.object.*;
 import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
-import de.sean.blockprot.BlockProt;
+import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.events.BlockAccessEditMenuEvent;
 import de.sean.blockprot.bukkit.events.BlockAccessEvent;
 import de.sean.blockprot.bukkit.events.BlockLockOnPlaceEvent;

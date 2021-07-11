@@ -17,7 +17,7 @@
  */
 package de.sean.blockprot.bukkit.listeners
 
-import de.sean.blockprot.BlockProt
+import de.sean.blockprot.bukkit.BlockProt
 import de.sean.blockprot.bukkit.events.BlockLockOnPlaceEvent
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler

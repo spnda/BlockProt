@@ -17,9 +17,9 @@
  */
 package de.sean.blockprot.bukkit.inventories
 
-import de.sean.blockprot.BlockProt
-import de.sean.blockprot.TranslationKey
-import de.sean.blockprot.Translator
+import de.sean.blockprot.bukkit.BlockProt
+import de.sean.blockprot.bukkit.TranslationKey
+import de.sean.blockprot.bukkit.Translator
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
 import org.bukkit.Bukkit
 import org.bukkit.Material

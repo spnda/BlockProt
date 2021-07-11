@@ -17,8 +17,8 @@
  */
 package de.sean.blockprot.bukkit.inventories;
 
-import de.sean.blockprot.TranslationKey;
-import de.sean.blockprot.Translator;
+import de.sean.blockprot.bukkit.TranslationKey;
+import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.BlockAccessFlag;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.FriendHandler;

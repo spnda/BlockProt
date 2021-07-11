@@ -17,9 +17,9 @@
  */
 package de.sean.blockprot.bukkit.listeners
 
-import de.sean.blockprot.BlockProt
-import de.sean.blockprot.TranslationKey
-import de.sean.blockprot.Translator
+import de.sean.blockprot.bukkit.BlockProt
+import de.sean.blockprot.bukkit.TranslationKey
+import de.sean.blockprot.bukkit.Translator
 import de.sean.blockprot.bukkit.events.BlockAccessEditMenuEvent
 import de.sean.blockprot.bukkit.events.BlockAccessEvent
 import de.sean.blockprot.bukkit.inventories.BlockLockInventory

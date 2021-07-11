@@ -19,7 +19,7 @@ package de.sean.blockprot.bukkit.tasks
 
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
-import de.sean.blockprot.BlockProt
+import de.sean.blockprot.bukkit.BlockProt
 import de.sean.blockprot.util.SemanticVersion
 import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.HoverEvent

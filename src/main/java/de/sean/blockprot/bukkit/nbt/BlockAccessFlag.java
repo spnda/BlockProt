@@ -17,8 +17,8 @@
  */
 package de.sean.blockprot.bukkit.nbt;
 
-import de.sean.blockprot.TranslationKey;
-import de.sean.blockprot.Translator;
+import de.sean.blockprot.bukkit.TranslationKey;
+import de.sean.blockprot.bukkit.Translator;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 

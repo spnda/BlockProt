@@ -17,7 +17,7 @@
  */
 package de.sean.blockprot.bukkit.listeners
 
-import de.sean.blockprot.BlockProt
+import de.sean.blockprot.bukkit.BlockProt
 import de.sean.blockprot.bukkit.inventories.*
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
 import org.bukkit.entity.Player

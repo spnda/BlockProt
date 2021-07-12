@@ -20,8 +20,11 @@ package de.sean.blockprot.bukkit.config;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.BlockInventoryHolder;
+import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -136,6 +139,31 @@ public final class DefaultConfig extends BlockProtConfig {
      */
     public boolean isWorldExcluded(World world) {
         return listContainsIgnoreCase(excludedWorlds, world.getName());
+    }
+
+    /**
+     * Checks if the world of the block held by {@code inventory}
+     * is excluded from any block protection functionality.
+     * @param holder The inventory we want to use. If it is not a known
+     *               exception, we try to cast it to {@link BlockInventoryHolder}.
+     * @return True, if the world is excluded or the {@code holder} was
+     * unable to be cast to {@link BlockInventoryHolder} and we do not
+     * know how to extract the World information from it.
+     * This is done to prevent this plugin to, for example, interact
+     * with other plugins' inventories.
+     * @since 0.4.5
+     */
+    public boolean isWorldExcluded(InventoryHolder holder) {
+        try {
+            if (holder instanceof DoubleChest) {
+                @Nullable World world = ((DoubleChest) holder).getWorld();
+                if (world == null) return true;
+                return listContainsIgnoreCase(excludedWorlds, world.getName());
+            }
+            return isWorldExcluded(((BlockInventoryHolder) holder).getBlock().getWorld());
+        } catch (ClassCastException e) {
+            return true;
+        }
     }
 
     /**

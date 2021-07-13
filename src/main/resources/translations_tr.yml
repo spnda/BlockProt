@@ -1,0 +1,39 @@
+# Turkish translation file
+# Thanks to @wuuthradd on GitHub
+inventories:
+  back: "Geri"
+  last_page: "Önceki Sayfa"
+  next_page: "Sonraki Sayfa"
+  block_lock: "Blok Kilidi"
+  user_settings: "Kullanıcı Ayarları"
+  block_info: "Blok Bilgisi"
+  lock: "Kilitle"
+  unlock: "Kilidi Aç"
+  redstone:
+    allowed: "Kızıltaş Kullanılabilir"
+    disallowed: "Kızıltaş Kullanılamaz"
+    allow: "Kızıltaşı Etkinleştir"
+    disallow: "Kızıltaşı Devre Dışı Bırak"
+  lock_on_place:
+    activate: "Her zaman ilk koyulduğunda kilitle"
+    deactivate: "Asla ilk koyulduğunda kilitleme"
+  friends:
+    manage: "Arkadaşları Yönet"
+    edit: "Arkadaşı Düzenle"
+    remove: "Arkadaşı Sil"
+    search: "Oyuncuları Ara"
+    result: "Oyuncular Bulundu"
+    permissions:
+      read: "Oku"
+      write: "Yaz"
+
+messages:
+  permission_granted: "İzin verildi."
+  unlocked: "Kilidi açıldı."
+  no_permission: "İznin yok."
+  friend_added: "Arkadaş eklendi."
+  friend_removed: "Arkadaş silindi."
+  friend_already_added: "Arkadaş zaten ekli."
+  friend_cant_be_removed: "Arkadaş silinemez."
+  redstone_added: "Kızıltaş koruması eklendi."
+  redstone_removed: "Kızıltaş koruması kaldırıldı."

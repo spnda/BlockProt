@@ -22,8 +22,6 @@ import de.sean.blockprot.bukkit.TranslationKey
 import de.sean.blockprot.bukkit.Translator
 import de.sean.blockprot.bukkit.events.BlockAccessEditMenuEvent
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
-import de.sean.blockprot.bukkit.util.BlockUtil.getDoubleChest
-import de.tr7zw.changeme.nbtapi.NBTTileEntity
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
@@ -49,11 +47,9 @@ class BlockLockInventory : BlockProtInventory() {
             // As there are some conditions in which the item in the inventory differs from
             // the actual blocks type, we use the blocks type here.
             BlockProt.getDefaultConfig().isLockable(block.type) && event.slot == 0 -> {
-                val doubleChest = getDoubleChest(block)
                 applyChanges(block, player, true, true) {
                     it.lockBlock(
                         player,
-                        if (doubleChest != null) NBTTileEntity(doubleChest) else null
                     )
                 }
             }
@@ -83,11 +79,9 @@ class BlockLockInventory : BlockProtInventory() {
 
     override fun onClose(event: InventoryCloseEvent, state: InventoryState) {
         if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH && state.block != null) {
-            val doubleChest = getDoubleChest(state.block)
             applyChanges(state.block, event.player as Player, false, false) {
                 return@applyChanges it.lockRedstoneForBlock(
                     event.player.uniqueId.toString(),
-                    if (doubleChest != null) NBTTileEntity(doubleChest) else null,
                     redstone,
                 )
             }

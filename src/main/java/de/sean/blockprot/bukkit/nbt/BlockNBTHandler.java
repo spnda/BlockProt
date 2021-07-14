@@ -25,6 +25,7 @@ import de.tr7zw.changeme.nbtapi.NBTBlock;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -293,9 +294,24 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
      * @return A {@link LockReturnValue} whether or not the block was successfully locked,
      * else there might have been issues with permissions.
      * @since 0.2.3
+     * @deprecated Use {@link #lockBlock(Player)} instead.
      */
+    @Deprecated
     @NotNull
     public LockReturnValue lockBlock(@NotNull final Player player, @Nullable final NBTTileEntity doubleChest) {
+        return lockBlock(player);
+    }
+
+    /**
+     * Locks this block for given {@code player} as the owner.
+     *
+     * @param player The player to set as an owner.
+     * @return A {@link LockReturnValue} whether or not the block was successfully locked,
+     * else there might have been issues with permissions.
+     * @since 0.4.6
+     */
+    @NotNull
+    public LockReturnValue lockBlock(@NotNull final Player player) {
         String owner = getOwner();
         final String playerUuid = player.getUniqueId().toString();
 
@@ -303,16 +319,11 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
             // This block is not owned by anyone, this user can claim this block
             owner = playerUuid;
             setOwner(owner);
-            if (doubleChest != null) {
-                new BlockNBTHandler(doubleChest.getPersistentDataContainer()).setOwner(owner);
-            }
+            this.applyToOtherContainer();
             return new LockReturnValue(true, TranslationKey.MESSAGES__PERMISSION_GRANTED);
         } else if (owner.equals(playerUuid) || player.isOp() || player.hasPermission(PERMISSION_ADMIN)) {
             this.clear();
-            if (doubleChest != null) {
-                final BlockNBTHandler doubleChestHandler = new BlockNBTHandler(doubleChest.getPersistentDataContainer());
-                doubleChestHandler.clear();
-            }
+            this.applyToOtherContainer();
             return new LockReturnValue(true, TranslationKey.MESSAGES__UNLOCKED);
         }
         return new LockReturnValue(false, TranslationKey.MESSAGES__NO_PERMISSION);
@@ -329,15 +340,30 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
      * @return A {@link LockReturnValue} whether or not the redstone was switched
      * successfully.
      * @since 0.2.3
+     * @deprecated Use {@link #lockRedstoneForBlock(String, Boolean)} instead.
      */
+    @Deprecated
     @NotNull
     public LockReturnValue lockRedstoneForBlock(@NotNull final String player, @Nullable final NBTTileEntity doubleChest, @Nullable final Boolean value) {
+        return lockRedstoneForBlock(player, value);
+    }
+
+    /**
+     * Locks redstone for this block.
+     *
+     * @param player The player requesting this command, should be the owner.
+     * @param value  The value we want to set it to. If null, we just flip
+     *               the current value.
+     * @return A {@link LockReturnValue} whether or not the redstone was switched
+     * successfully.
+     * @since 0.4.6
+     */
+    @NotNull
+    public LockReturnValue lockRedstoneForBlock(@NotNull final String player, @Nullable final Boolean value) {
         if (isOwner(player)) {
             boolean redstone = value == null ? !getRedstone() : value;
             setRedstone(redstone);
-            if (doubleChest != null) {
-                new BlockNBTHandler(doubleChest.getPersistentDataContainer()).setRedstone(redstone);
-            }
+            this.applyToOtherContainer();
             return new LockReturnValue(true, redstone ? TranslationKey.MESSAGES__REDSTONE_REMOVED : TranslationKey.MESSAGES__REDSTONE_ADDED);
         }
         return new LockReturnValue(false, TranslationKey.MESSAGES__NO_PERMISSION);
@@ -362,13 +388,31 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
      * @param friend      The friend do to {@code action} with.
      * @param action      The action we should perform with {@code friend} on this block.
      * @param doubleChest A double chest we also want to apply this to. This
-     *                    parameter is optional and can be null.
+     *                    parameter is optional and can be null. This parameter will be ignored
+     *                    due to deprecation.
      * @return A {@link LockReturnValue} whether or not the friends were modified
      * successfully.
      * @since 0.2.3
+     * @deprecated Use {@link #modifyFriends(String, String, FriendModifyAction)} instead.
      */
+    @Deprecated
     @NotNull
     public LockReturnValue modifyFriends(@NotNull final String player, @NotNull final String friend, @NotNull final FriendModifyAction action, @Nullable final NBTTileEntity doubleChest) {
+        return modifyFriends(player, friend, action);
+    }
+
+    /**
+     * Modifies the friends of this block for given {@code action}.
+     *
+     * @param player The player requesting this command, should be the owner.
+     * @param friend The friend do to {@code action} with.
+     * @param action The action we should perform with {@code friend} on this block.
+     * @return A {@link LockReturnValue} whether or not the friends were modified
+     * successfully.
+     * @since 0.4.6
+     */
+    @NotNull
+    public LockReturnValue modifyFriends(@NotNull final String player, @NotNull final String friend, @NotNull final FriendModifyAction action) {
         // This theoretically shouldn't happen, though we will still check for it just to be sure
         if (!isOwner(player)) return new LockReturnValue(
             false,
@@ -382,18 +426,14 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
                     return new LockReturnValue(false, TranslationKey.MESSAGES__FRIEND_ALREADY_ADDED);
                 } else {
                     addFriend(friend);
-                    if (doubleChest != null) {
-                        new BlockNBTHandler(doubleChest.getPersistentDataContainer()).addFriend(friend);
-                    }
+                    this.applyToOtherContainer();
                     return new LockReturnValue(true, TranslationKey.MESSAGES__FRIEND_ADDED);
                 }
             }
             case REMOVE_FRIEND: {
                 if (containsFriend(friends, friend)) {
                     removeFriend(friend);
-                    if (doubleChest != null) {
-                        new BlockNBTHandler(doubleChest.getPersistentDataContainer()).removeFriend(friend);
-                    }
+                    this.applyToOtherContainer();
                     return new LockReturnValue(true, TranslationKey.MESSAGES__FRIEND_REMOVED);
                 } else {
                     return new LockReturnValue(false, TranslationKey.MESSAGES__FRIEND_CANT_BE_REMOVED);
@@ -412,13 +452,41 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
      *
      * @param block The original door block, can be the bottom or top half.
      * @since 0.2.3
+     * @deprecated Use {@link #applyToOtherContainer()} instead.
      */
+    @Deprecated
     public void applyToDoor(@NotNull final Block block) {
         if (BlockProt.getDefaultConfig().isLockableDoor(block.getType())) {
             final Block otherDoor = BlockUtil.getOtherDoorHalf(block.getState());
             if (otherDoor == null) return;
             final BlockNBTHandler otherDoorHandler = new BlockNBTHandler(otherDoor);
             otherDoorHandler.mergeHandler(this);
+        }
+    }
+
+    /**
+     * This applies any changes to this container to a possible other
+     * half. For example doors consist from two blocks, as do double
+     * chests. Without this call, all methods will modify only the local,
+     * current block.
+     *
+     * This method is specifically not called on each modification of NBT,
+     * as this would be a massive, unnecessary performance penalty.
+     *
+     * @since 0.4.6
+     */
+    public void applyToOtherContainer() {
+        if (BlockProt.getDefaultConfig().isLockableDoor(block.getType())) {
+            final Block otherDoor = BlockUtil.getOtherDoorHalf(block.getState());
+            if (otherDoor == null) return;
+            final BlockNBTHandler otherDoorHandler = new BlockNBTHandler(otherDoor);
+            otherDoorHandler.mergeHandler(this);
+        } else {
+            final BlockState doubleChestState = BlockUtil.getDoubleChest(this.block);
+            if (doubleChestState != null) {
+                final BlockNBTHandler doubleChestHandler = new BlockNBTHandler(doubleChestState.getBlock());
+                doubleChestHandler.mergeHandler(this);
+            }
         }
     }
 

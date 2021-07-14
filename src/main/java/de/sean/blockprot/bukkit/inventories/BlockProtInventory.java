@@ -20,8 +20,6 @@ package de.sean.blockprot.bukkit.inventories;
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.*;
-import de.sean.blockprot.bukkit.util.BlockUtil;
-import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -29,7 +27,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -178,21 +175,16 @@ public abstract class BlockProtInventory implements InventoryHolder {
         final InventoryState.FriendSearchState searchState = state.getFriendSearchState();
         if (searchState == InventoryState.FriendSearchState.FRIEND_SEARCH) {
             if (state.getBlock() == null) return;
-            final BlockState doubleChest = BlockUtil.getDoubleChest(state.getBlock());
             applyChanges(
                 state.getBlock(),
                 player,
                 false,
                 true,
-                (handler) -> {
-                    final NBTTileEntity doubleChestNBT = doubleChest == null ? null : new NBTTileEntity(doubleChest);
-                    return handler.modifyFriends(
-                        player.getUniqueId().toString(),
-                        friend.getUniqueId().toString(),
-                        action,
-                        doubleChestNBT
-                    );
-                }
+                (handler) -> handler.modifyFriends(
+                    player.getUniqueId().toString(),
+                    friend.getUniqueId().toString(),
+                    action
+                )
             );
         } else if (searchState == InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH) {
             modifyDefaultFriends(
@@ -232,7 +224,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
         BlockNBTHandler handler = new BlockNBTHandler(block);
         LockReturnValue ret = changes.apply(handler);
         if (ret.success) {
-            handler.applyToDoor(handler.block);
+            handler.applyToOtherContainer();
         }
         if (sendMessage) {
             BaseComponent[] messageComponent = TextComponent.fromLegacyText(ret.message);

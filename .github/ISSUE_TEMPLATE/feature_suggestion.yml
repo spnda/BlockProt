@@ -1,0 +1,13 @@
+name: Feature Suggestion
+description: Write a feature suggestion that you would like to see in a future version of the plugin.
+title: '[Feature]: '
+labels: enhancement
+assignees: spnda
+body:
+  - type: textarea
+    id: feature_description
+    attributes:
+      label: Feature description
+      description: Here you can write up your feature. Please be as clear and concise as possible and why you want this feature and what possible issues it might solve. If you want to, you can also add images or sketches of your ideas to further illustrate your idea.
+    validations:
+      required: true

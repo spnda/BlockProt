@@ -1,6 +1,8 @@
 # German translation file
 inventories:
   back: "Zurück"
+  last_page: "Vorherige Seite"
+  next_page: "Nächste Seite"
   block_lock: "Block Sperren"
   user_settings: "Nutzereinstellungen"
   block_info: "Informationen"

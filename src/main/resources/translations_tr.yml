@@ -1,5 +1,7 @@
 # Turkish translation file
 # Thanks to @wuuthradd on GitHub
+locale: tr
+
 inventories:
   back: "Geri"
   last_page: "Önceki Sayfa"

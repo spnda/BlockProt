@@ -21,6 +21,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 /**
  * Helper to quickly obtain translations from a config by a enum key.
@@ -29,12 +30,31 @@ import java.util.HashMap;
  */
 public final class Translator {
     /**
-     * A HashMap of all possible translation values by key, loaded through
-     * {@link Translator#loadFromConfig(YamlConfiguration)}.
+     * The default locale we use for default translation
+     * values.
      *
-     * @since 0.1.10
+     * @since 0.4.6
      */
-    private static final HashMap<TranslationKey, String> values = new HashMap<>();
+    @NotNull
+    public static final Locale defaultLocale = Locale.UK;
+
+    /**
+     * A HashMap of all possible translation values by key, loaded through
+     * {@link Translator#loadFromConfigs(YamlConfiguration, YamlConfiguration)}.
+     *
+     * @since 0.4.6
+     */
+    @NotNull
+    private static final HashMap<TranslationKey, TranslationValue> values = new HashMap<>();
+
+    /**
+     * Represents the locale of the translated values. Defaults
+     * to being {@link #defaultLocale}.
+     *
+     * @since 0.4.6
+     */
+    @NotNull
+    private static Locale locale = defaultLocale;
 
     /**
      * @since 0.2.3
@@ -49,8 +69,11 @@ public final class Translator {
      *               https://github.com/spnda/BlockProt/blob/master/src/main/resources/translations_en.yml for
      *               an example.
      * @since 0.2.3
+     * @deprecated Use {@link #loadFromConfigs(YamlConfiguration, YamlConfiguration)}
+     * instead, as we now expect default translation values.
      */
-    public static void loadFromConfig(@NotNull final YamlConfiguration config) {
+    @Deprecated
+    public static void loadFromConfigs(@NotNull final YamlConfiguration config) {
         TranslationKey[] translations = TranslationKey.values();
         for (TranslationKey translation : translations) {
             String translationKey = translation.toString();
@@ -59,23 +82,82 @@ public final class Translator {
             }
             Object value = config.get(translationKey);
             if (value instanceof String) {
-                values.put(translation, (String) value);
+                values.put(translation, new TranslationValue("", (String) value));
             } else {
-                values.put(translation, "Unknown Translation.");
+                values.put(translation, new TranslationValue(
+                    TranslationValue.UNKNOWN_TRANSLATION, TranslationValue.UNKNOWN_TRANSLATION));
             }
         }
     }
 
     /**
-     * Get the translated String by key or an empty String if none found.
+     * Initialize the translations from given configuration and sets the
+     * internal locale to a locale, which is read from the configs themselves.
+     * If the configurations do not provide a locale, we instead use
+     * {@link Locale#ROOT}.
      *
-     * @param key the translation key to search for
-     * @return a translated String or an empty string if not found
+     * @param config the configuration to load translations from. See
+     *               https://github.com/spnda/BlockProt/blob/master/src/main/resources/translations_en.yml for
+     *               an example.
+     * @since 0.4.6
+     */
+    public static void loadFromConfigs(@NotNull final YamlConfiguration defaultConfig, @NotNull final YamlConfiguration config) {
+        String locale = config.getString("locale");
+        Translator.locale = (locale == null)
+            ? Locale.ROOT
+            : new Locale(locale);
+
+        TranslationKey[] translations = TranslationKey.values();
+        for (TranslationKey translation : translations) {
+            String translationKey = translation.toString();
+            // Ignore keys that both configs do not contain.
+            if (!defaultConfig.contains(translationKey, true) &&
+                !config.contains(translationKey, true)) {
+                continue;
+            }
+
+            // Get the default config value. Set it to
+            // UNKNOWN_TRANSLATION if we don't have it.
+            Object defaultValue = defaultConfig.get(translationKey);
+            TranslationValue translationValue = new TranslationValue(
+                (defaultValue instanceof String)
+                    ? (String) defaultValue
+                    : TranslationValue.UNKNOWN_TRANSLATION
+            );
+
+            Object translatedValue = config.get(translationKey);
+            if (translatedValue instanceof String) {
+                translationValue.setTranslatedValue((String) translatedValue);
+            }
+            values.put(translation, translationValue);
+        }
+    }
+
+    /**
+     * Get the translated String by translation key. This will use
+     * {@link TranslationValue#getValue()}, so values that are not
+     * translated still use their default value.
+     *
+     * @param key the translation key to search for.
+     * @return A translated String or an empty string if not found.
      * @since 0.1.10
      */
     @NotNull
     public static String get(@NotNull final TranslationKey key) {
-        String value = values.get(key);
-        return value == null ? "" : value;
+        TranslationValue value = values.get(key);
+        return value == null ? "" : value.getValue();
+    }
+
+    /**
+     * Get the currently used for the current translator. This value
+     * is used to identify the translation file and might be useful
+     * for knowing the language used by this plugin.
+     *
+     * @return The locale of translations.
+     * @since 0.4.6
+     */
+    @NotNull
+    public static Locale getLocale() {
+        return locale;
     }
 }

@@ -18,11 +18,11 @@
 package de.sean.blockprot.bukkit;
 
 import de.sean.blockprot.bukkit.commands.BlockProtCommand;
+import de.sean.blockprot.bukkit.config.DefaultConfig;
 import de.sean.blockprot.bukkit.integrations.PluginIntegration;
 import de.sean.blockprot.bukkit.integrations.TownyIntegration;
 import de.sean.blockprot.bukkit.listeners.*;
 import de.sean.blockprot.bukkit.tasks.UpdateChecker;
-import de.sean.blockprot.bukkit.config.DefaultConfig;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.TabExecutor;
@@ -34,8 +34,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -147,24 +149,33 @@ public final class BlockProt extends JavaPlugin {
     /**
      * Load the translations from the data folder.
      *
-     * @param fileName The name of the translations file. Defaults to
-     *                 {@link BlockProt#defaultLanguageFile} if it can't be found.
+     * @param fileName The name of the translations file.
      */
     private void loadTranslations(String fileName) {
-        File file = new File(this.getDataFolder(), fileName);
-        /* Only save the resource if it exists inside the JAR and it has not
-         * been saved to the dataFolder yet. */
-        InputStream resource = this.getResource(fileName);
-        if (resource == null && !file.exists()) {
-            Bukkit.getLogger().warning("Could not find language file: $fileName. Defaulting to $defaultLanguageFile");
-            this.saveResource(defaultLanguageFile, true);
-            file = new File(this.getDataFolder(), defaultLanguageFile);
-        } else if (resource != null && !file.exists()) {
-            this.saveResource(fileName, true);
-            if (!file.exists()) throw new RuntimeException("Could not load language file: $fileName");
+        // Get the default language file. We specifically use the InputStream
+        // if we cannot find the file in the data folder, to avoid having to
+        // interact with edited files.
+        File defLangFile = new File(this.getDataFolder(), defaultLanguageFile);
+        YamlConfiguration defaultConfig;
+        if (!defLangFile.exists()) {
+            InputStream defaultConfigStream = this.getResource(defaultLanguageFile);
+            // The JAR has been modified and there are files missing.
+            assert defaultConfigStream != null;
+            defaultConfig = YamlConfiguration.loadConfiguration(new BufferedReader(new InputStreamReader(defaultConfigStream)));
+        } else {
+            defaultConfig = YamlConfiguration.loadConfiguration(defLangFile);
         }
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        Translator.loadFromConfig(config);
+
+        // Get the wanted language file.
+        File langFile = new File(this.getDataFolder(), fileName);
+        if (!langFile.exists()) {
+            this.saveResource(fileName, true);
+            langFile = new File(this.getDataFolder(), fileName);
+        }
+
+        // Load the configurations and initialize the Translator.
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(langFile);
+        Translator.loadFromConfigs(defaultConfig, config);
     }
 
     /**

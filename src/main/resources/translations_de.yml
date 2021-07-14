@@ -1,4 +1,6 @@
 # German translation file
+locale: de
+
 inventories:
   back: "Zurück"
   last_page: "Vorherige Seite"

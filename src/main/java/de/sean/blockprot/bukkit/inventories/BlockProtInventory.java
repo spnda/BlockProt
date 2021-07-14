@@ -20,6 +20,7 @@ package de.sean.blockprot.bukkit.inventories;
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.*;
+import de.sean.blockprot.bukkit.util.BlockUtil;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -177,7 +178,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
         final InventoryState.FriendSearchState searchState = state.getFriendSearchState();
         if (searchState == InventoryState.FriendSearchState.FRIEND_SEARCH) {
             if (state.getBlock() == null) return;
-            final BlockState doubleChest = LockUtil.getDoubleChest(state.getBlock(), player.getWorld());
+            final BlockState doubleChest = BlockUtil.getDoubleChest(state.getBlock());
             applyChanges(
                 state.getBlock(),
                 player,

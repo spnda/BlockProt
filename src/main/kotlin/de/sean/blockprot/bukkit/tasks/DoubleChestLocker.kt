@@ -18,7 +18,7 @@
 package de.sean.blockprot.bukkit.tasks
 
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
-import de.sean.blockprot.bukkit.nbt.LockUtil.getDoubleChest
+import de.sean.blockprot.bukkit.util.BlockUtil.getDoubleChest
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import java.util.function.Consumer
@@ -30,7 +30,7 @@ class DoubleChestLocker(
     private val callback: Consumer<Boolean>
 ) : Runnable {
     override fun run() {
-        val doubleChest = getDoubleChest(block, player.world)
+        val doubleChest = getDoubleChest(block)
         if (doubleChest == null) {
             callback.accept(true)
             return

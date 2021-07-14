@@ -20,14 +20,11 @@ package de.sean.blockprot.bukkit.nbt;
 import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.config.BlockProtConfig;
+import de.sean.blockprot.bukkit.util.BlockUtil;
 import de.tr7zw.changeme.nbtapi.NBTBlock;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.data.Bisected;
-import org.bukkit.block.data.type.Door;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -410,23 +407,16 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
 
     /**
      * Merges this handler with the handler of the other half of given
-     * {@code block}, if that is a door.
+     * {@code block}, if that is a door. Will fail silently if the given
+     * block is not a door.
      *
      * @param block The original door block, can be the bottom or top half.
      * @since 0.2.3
      */
     public void applyToDoor(@NotNull final Block block) {
         if (BlockProt.getDefaultConfig().isLockableDoor(block.getType())) {
-            final BlockState blockState = block.getState();
-            final Door door = (Door) blockState.getBlockData();
-            final Location other = blockState.getLocation();
-            if (door.getHalf() == Bisected.Half.TOP) {
-                other.subtract(0f, 1f, 0f);
-            } else {
-                other.add(0f, 1f, 0f);
-            }
-
-            final Block otherDoor = block.getWorld().getBlockAt(other);
+            final Block otherDoor = BlockUtil.getOtherDoorHalf(block.getState());
+            if (otherDoor == null) return;
             final BlockNBTHandler otherDoorHandler = new BlockNBTHandler(otherDoor);
             otherDoorHandler.mergeHandler(this);
         }

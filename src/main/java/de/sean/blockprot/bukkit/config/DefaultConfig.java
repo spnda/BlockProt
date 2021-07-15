@@ -17,6 +17,7 @@
  */
 package de.sean.blockprot.bukkit.config;
 
+import de.sean.blockprot.bukkit.BlockProt;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -33,6 +34,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The default config of the {@link BlockProt} plugin.
+ */
 public final class DefaultConfig extends BlockProtConfig {
     /**
      * A list of all lockable tile entities.
@@ -59,6 +63,11 @@ public final class DefaultConfig extends BlockProtConfig {
 
     private final List<String> excludedWorlds;
 
+    /**
+     * Create a new default configuration from given {@code config}.
+     * @param config The yaml configuration, should be the {@code config.yml}.
+     * @since 0.3.3
+     */
     public DefaultConfig(@NotNull final FileConfiguration config) {
         super(config);
         this.excludedWorlds = config.getStringList("excluded_worlds");
@@ -80,6 +89,7 @@ public final class DefaultConfig extends BlockProtConfig {
     /**
      * Loads all the different lists from the config.yml file and adds
      * them to the various lists in LockUtil.
+     * @since 0.3.3
      */
     private void loadBlocksFromConfig() {
         loadBlockListFromConfig("lockable_tile_entities", this.lockableTileEntities, Material.values());
@@ -97,6 +107,7 @@ public final class DefaultConfig extends BlockProtConfig {
      * This file should be located in /plugins/BlockProt/.
      *
      * @return The name of the language file.
+     * @since 0.3.3
      */
     @Nullable
     public String getLanguageFile() {
@@ -108,6 +119,7 @@ public final class DefaultConfig extends BlockProtConfig {
      * when they join the server.
      *
      * @return True if a op should be notified of updates.
+     * @since 0.3.3
      */
     public boolean shouldNotifyOpOfUpdates() {
         if (!this.config.contains("notify_op_of_updates")) return false;
@@ -120,6 +132,7 @@ public final class DefaultConfig extends BlockProtConfig {
      *
      * @return True if redstone should be automatically disabled when a
      * block is placed.
+     * @since 0.3.3
      */
     public boolean disallowRedstoneOnPlace() {
         if (this.config.contains("redstone_disallowed_by_default")) {
@@ -167,19 +180,43 @@ public final class DefaultConfig extends BlockProtConfig {
     }
 
     /**
-     * Whether the given {@code type} is either a lockable block or a lockable tile entity.
+     * <p> Whether the given {@code type} is either a lockable block or a lockable tile entity.
+     *
+     * <p> Keep in mind, that only tile entities are lockable through this plugin after Spigot 1.16_R3.
+     *
+     * <p> To add to this, this merely checks the material from the config. This means that a server author
+     * might accidentally add a material which is not a block or tile entity.
      *
      * @param type The type to check for.
      * @return True, if {@code type} is lockable.
+     * @since 0.3.3
      */
     public boolean isLockable(Material type) {
         return isLockableBlock(type) || isLockableTileEntity(type);
     }
 
+    /**
+     * Whether the given {@code type} is a lockable block. Be aware, this only
+     * works after Spigot 1.16_R3 and the config might have some invalid values.
+     *
+     * @see #isLockable(Material)
+     * @param type The material to check for.
+     * @return True, if {@code type} is a lockable block.
+     * @since 0.3.3
+     */
     public boolean isLockableBlock(Material type) {
         return lockableBlocks.contains(type);
     }
 
+    /**
+     * Whether the given {@code type} is a lockable tile entity. Be aware,
+     * the config might have some invalid values.
+     *
+     * @see #isLockable(Material)
+     * @param type The material to check for.
+     * @return True, if {@code type} is a lockable tile entity.
+     * @since 0.3.3
+     */
     public boolean isLockableTileEntity(Material type) {
         return lockableTileEntities.contains(type) || shulkerBoxes.contains(type);
     }

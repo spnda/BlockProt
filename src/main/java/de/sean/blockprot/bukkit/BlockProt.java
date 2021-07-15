@@ -141,6 +141,13 @@ public final class BlockProt extends JavaPlugin {
         this.integrations.add(integration);
     }
 
+    /**
+     * Get a plugin by string ID from Bukkit's {@link PluginManager}.
+     *
+     * @param pluginName The ID of the plugin to get.
+     * @return The main plugin instance or null if not found.
+     * @since 0.4.0
+     */
     @Nullable
     public Plugin getPlugin(String pluginName) {
         return this.getServer().getPluginManager().getPlugin(pluginName);

@@ -96,6 +96,8 @@ public final class Translator {
      * If the configurations do not provide a locale, we instead use
      * {@link Locale#ROOT}.
      *
+     * @param defaultConfig The default configuration we use to get the default
+     *                      translation values.
      * @param config the configuration to load translations from. See
      *               https://github.com/spnda/BlockProt/blob/master/src/main/resources/translations_en.yml for
      *               an example.

@@ -24,6 +24,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+/**
+ * Represents a basic YAML configuration file with some
+ * basic utility functions for manipulating common config
+ * data.
+ */
 public abstract class BlockProtConfig {
     /**
      * The FileConfiguration backing this {@link BlockProtConfig} wrapper.
@@ -31,6 +36,10 @@ public abstract class BlockProtConfig {
     @NotNull
     protected final FileConfiguration config;
 
+    /**
+     * Create a new config.
+     * @param config The {@link FileConfiguration} to use.
+     */
     public BlockProtConfig(@NotNull final FileConfiguration config) {
         this.config = config;
     }

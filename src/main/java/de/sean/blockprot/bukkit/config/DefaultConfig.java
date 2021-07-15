@@ -58,7 +58,7 @@ public final class DefaultConfig extends BlockProtConfig {
     private final ArrayList<Material> lockableDoors = new ArrayList<>();
     private final ArrayList<InventoryType> lockableInventories = new ArrayList<>(Arrays.asList(
         InventoryType.CHEST, InventoryType.FURNACE, InventoryType.SMOKER, InventoryType.BLAST_FURNACE, InventoryType.HOPPER,
-        InventoryType.BARREL, InventoryType.BREWING, InventoryType.SHULKER_BOX
+        InventoryType.BARREL, InventoryType.BREWING, InventoryType.SHULKER_BOX, InventoryType.ANVIL
     ));
 
     private final List<String> excludedWorlds;

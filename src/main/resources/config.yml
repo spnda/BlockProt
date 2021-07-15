@@ -36,6 +36,9 @@ lockable_tile_entities:
   - HOPPER
   - BARREL
   - BREWING_STAND
+  - DISPENSER
+  - DROPPER
+  - LECTERN
 
 # All varieties of shulker boxes that should be lockable.
 lockable_shulker_boxes:

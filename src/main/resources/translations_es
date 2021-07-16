@@ -1,0 +1,47 @@
+# Reference translation file for English
+# All colour codes can be used, as found here: https://www.spigotmc.org/wiki/textcosmetics-colors-and-formats/
+# We would be very happy if you submit your translations onto the
+# GitHub repository: https://github.com/spnda/BlockProt/pulls
+
+# We use ISO 639-1 or 639-2 codes for internationalization, it
+# is however safer to use the ISO 639-1 codes for backwards compatibility.
+# See this link for a good list of all codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes.
+locale: es
+
+inventories:
+  back: "Volver"
+  last_page: "Última página"
+  next_page: "Siguiente página"
+  block_lock: "Proteger"
+  user_settings: "Configuración de Usuario"
+  block_info: "Información del Bloque"
+  lock: "Proteger"
+  unlock: "Desproteger"
+  redstone:
+    allowed: "Se permite le uso de Redstone"
+    disallowed: "No se permite el uso de Redstone"
+    allow: "Permitir redstone"
+    disallow: "Bloquear redstone"
+  lock_on_place:
+    activate: "Proteger siempre al colocar"
+    deactivate: "No proteger al colocar"
+  friends:
+    manage: "Administrar permisos"
+    edit: "Modificar permisos"
+    remove: "Eliminar permisos"
+    search: "Buscar Jugadores"
+    result: "Jugadores encontrados"
+    permissions:
+      read: "Leer"
+      write: "Escribir"
+
+messages:
+  permission_granted: "Protegido."
+  unlocked: "Desprotegido."
+  no_permission: "No tienes permiso."
+  friend_added: "Permiso añadido."
+  friend_removed: "Permiso eliminado."
+  friend_already_added: "Ya tiene permiso."
+  friend_cant_be_removed: "No se puede retirar el permiso."
+  redstone_added: "Se ha añadido protección contra Redstone."
+  redstone_removed: "Se ha eliminado la protección contra Redstone."

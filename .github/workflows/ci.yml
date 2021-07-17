@@ -4,7 +4,8 @@ on:
   push:
     branches: [ master ]
     paths:
-      - 'src/**'
+      - 'src/main/java/**'
+      - 'src/main/kotlin/**'
       - 'gradle/**'
       - '**.gradle'
       - '**.gradle.kts'

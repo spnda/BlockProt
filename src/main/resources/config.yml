@@ -4,6 +4,11 @@
 # You can create your own language files and edit existing ones.
 # Translations can be missing from this file and will instead be loaded
 # from "translations_en.yml".
+# Current pre-defined languages include:
+#   - translations_de.yml: German
+#   - translations_en.yml: English
+#   - translations_es.yml: Spanish
+#   - translations_tr.yml: Turkish
 language_file: translations_en.yml
 
 # If set to "true", anytime an admin joins the server, they will

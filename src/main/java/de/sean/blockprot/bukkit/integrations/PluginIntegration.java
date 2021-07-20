@@ -63,7 +63,7 @@ public abstract class PluginIntegration {
      */
     public PluginIntegration(@NotNull final String name) {
         configuration =
-            BlockProt.getInstance().saveAndLoadConfigFile(name, false);
+            BlockProt.getInstance().saveAndLoadConfigFile("integrations/", name, false);
         pluginManager = BlockProt.getInstance().getServer().getPluginManager();
     }
 

@@ -17,6 +17,7 @@
  */
 package de.sean.blockprot.bukkit;
 
+import com.google.common.collect.Sets;
 import de.sean.blockprot.bukkit.commands.BlockProtCommand;
 import de.sean.blockprot.bukkit.config.DefaultConfig;
 import de.sean.blockprot.bukkit.integrations.PluginIntegration;
@@ -159,49 +160,52 @@ public final class BlockProt extends JavaPlugin {
      * @param fileName The name of the translations file.
      */
     private void loadTranslations(String fileName) {
+        final String langFolder = "lang/";
+
+        // Ensure that all translation files have been saved properly.
+        // For now, we will simply hard code these values.
+        for (String resource : Sets.newHashSet("translations_de.yml", "translations_en.yml", "translations_es.yml", "translations_tr.yml")) {
+            if ((new File(this.getDataFolder(), langFolder + resource)).exists()) continue;
+            this.saveResource(langFolder + resource, false);
+        }
+
         // Get the default language file. We specifically use the InputStream
         // if we cannot find the file in the data folder, to avoid having to
         // interact with edited files.
-        File defLangFile = new File(this.getDataFolder(), defaultLanguageFile);
+        File defLangFile = new File(this.getDataFolder(), langFolder + defaultLanguageFile);
         YamlConfiguration defaultConfig;
         if (!defLangFile.exists()) {
-            InputStream defaultConfigStream = this.getResource(defaultLanguageFile);
+            InputStream defaultConfigStream = this.getResource(langFolder + defaultLanguageFile);
+
             // The JAR has been modified and there are files missing.
-            assert defaultConfigStream != null;
+            if (defaultConfigStream == null) {
+                throw new RuntimeException("Failed to get default language file. Possibly corrupt plugin?");
+            }
             defaultConfig = YamlConfiguration.loadConfiguration(new BufferedReader(new InputStreamReader(defaultConfigStream)));
         } else {
             defaultConfig = YamlConfiguration.loadConfiguration(defLangFile);
         }
 
-        // Get the wanted language file.
-        File langFile = new File(this.getDataFolder(), fileName);
-        if (!langFile.exists()) {
-            this.saveResource(fileName, true);
-            langFile = new File(this.getDataFolder(), fileName);
-        }
-
+        // Get the wanted language file and load its config.
         // Load the configurations and initialize the Translator.
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(langFile);
-        Translator.loadFromConfigs(defaultConfig, config);
+        YamlConfiguration wantedConfig = saveAndLoadConfigFile(langFolder, fileName, false);
+        Translator.loadFromConfigs(defaultConfig, wantedConfig);
     }
 
     /**
-     * Saves a config file and reads it.
+     * Saves a config file and reads it. Relative to {@link JavaPlugin#getDataFolder()}.
      *
-     * @param path    The path of the resource.
+     * @param folder  The name of the folder where the file is located.
+     * @param name    The name of the resource.
      * @param replace Whether or not to replace the file if it already exists.
      * @return The YamlConfiguration.
      */
     @NotNull
-    public YamlConfiguration saveAndLoadConfigFile(String path, boolean replace) {
+    public YamlConfiguration saveAndLoadConfigFile(String folder, String name, boolean replace) {
+        final String path = folder + (folder.endsWith("/") ? "" : "/") + name;
         File file = new File(this.getDataFolder(), path);
-        if (!file.exists()) {
-            InputStream resource = this.getResource(path);
-            if (resource != null)
-                this.saveResource(path, replace);
-            else
-                throw new RuntimeException("Failed to save resource at: " + path);
-        }
+        if (!file.exists())
+            this.saveResource(path, replace);
         return YamlConfiguration.loadConfiguration(file);
     }
 }

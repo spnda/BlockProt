@@ -21,7 +21,7 @@ import de.sean.blockprot.bukkit.BlockProt
 import de.sean.blockprot.bukkit.events.BlockLockOnPlaceEvent
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler
-import de.sean.blockprot.bukkit.tasks.DoubleChestLocker
+import de.sean.blockprot.bukkit.util.BlockUtil
 import de.tr7zw.changeme.nbtapi.NBTItem
 import de.tr7zw.changeme.nbtapi.NBTTileEntity
 import org.bukkit.Bukkit
@@ -81,11 +81,13 @@ class BlockEventListener(private val plugin: JavaPlugin) : Listener {
                 // After placing, it takes 1 tick for the chests to connect.
                 Bukkit.getScheduler().runTaskLater(
                     plugin,
-                    DoubleChestLocker(handler, block, event.player) { allowed ->
-                        if (!allowed) {
+                    Runnable {
+                        val doubleChest = BlockUtil.getDoubleChest(block) ?: return@Runnable
+                        val otherChestHandler = BlockNBTHandler(doubleChest.block)
+                        if (otherChestHandler.isProtected && otherChestHandler.owner != playerUuid) {
                             // We can't cancel the event 1 tick later, its already executed. We'll just need to destroy the block and drop it.
-                            val location = block.location
-                            event.player.world.getBlockAt(location).breakNaturally() // Let it break and drop itself
+                            handler.mergeHandler(otherChestHandler)
+                            event.player.world.getBlockAt(block.location).breakNaturally()
                         }
                     },
                     1

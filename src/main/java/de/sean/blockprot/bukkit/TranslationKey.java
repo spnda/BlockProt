@@ -15,15 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with BlockProt.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.sean.blockprot.bukkit
+package de.sean.blockprot.bukkit;
 
-import java.util.*
+import java.util.Locale;
 
 /**
  * A translation key for a single string in a translations_xx.yml file.
  * Double underscores are replaced with dots when querying for YAML keys.
+ * @since 0.1.10
  */
-enum class TranslationKey {
+public enum TranslationKey {
     INVENTORIES__BACK,
     INVENTORIES__LAST_PAGE,
     INVENTORIES__NEXT_PAGE,
@@ -57,11 +58,13 @@ enum class TranslationKey {
     MESSAGES__REDSTONE_REMOVED;
 
     /**
-     * Get the string representation of this [TranslationKey] as a valid
-     * YAML key. [TranslationKey.INVENTORIES__BACK] becomes "inventories.back",
-     * whereas [TranslationKey.INVENTORIES__BLOCK_LOCK] becomes "inventories.block_lock".
+     * Get the string representation of this {@link TranslationKey} as
+     * a valid YAML key. {@link TranslationKey#INVENTORIES__BACK} becomes
+     * "inventories.back", whereas {@link TranslationKey#INVENTORIES__BLOCK_LOCK}
+     * becomes "inventories.block_lock".
      */
-    override fun toString(): String {
-        return name.replace("__", ".").lowercase(Locale.ENGLISH)
+    @Override
+    public String toString() {
+        return name().replace("__", ".").toLowerCase(Locale.ENGLISH);
     }
 }

@@ -35,7 +35,7 @@ public final class InventoryState {
      * @since 0.4.7
      */
     @NotNull
-    public ArrayList<OfflinePlayer> friendResultCache = new ArrayList<>();
+    public final ArrayList<OfflinePlayer> friendResultCache = new ArrayList<>();
 
     /**
      * The current index of the {@link BlockProtInventory} page.

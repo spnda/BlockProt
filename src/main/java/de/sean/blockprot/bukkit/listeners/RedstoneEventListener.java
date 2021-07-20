@@ -15,21 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with BlockProt.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.sean.blockprot.bukkit.listeners
+package de.sean.blockprot.bukkit.listeners;
 
-import de.sean.blockprot.bukkit.BlockProt
-import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.block.BlockRedstoneEvent
+import de.sean.blockprot.bukkit.BlockProt;
+import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockRedstoneEvent;
 
-class RedstoneEventListener : Listener {
+public class RedstoneEventListener implements Listener {
     @EventHandler
-    fun onRedstone(event: BlockRedstoneEvent) {
-        if (BlockProt.getDefaultConfig().isWorldExcluded(event.block.world)) return
+    public void onRedstone(BlockRedstoneEvent event) {
+        if (BlockProt.getDefaultConfig().isWorldExcluded(event.getBlock().getWorld())) return;
         // If this is a lockable block and the redstone protection is activated, set the redstone current to 0
-        if (BlockProt.getDefaultConfig().isLockableBlock(event.block.type) && !BlockNBTHandler(event.block).redstone) {
-            event.newCurrent = 0
+        if (!BlockProt.getDefaultConfig().isLockableBlock(event.getBlock().getType())) return;
+        final BlockNBTHandler handler = new BlockNBTHandler(event.getBlock());
+        if (!handler.getRedstone()) {
+            event.setNewCurrent(0);
         }
     }
 }

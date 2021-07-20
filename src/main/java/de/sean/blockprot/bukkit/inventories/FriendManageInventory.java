@@ -124,7 +124,7 @@ public final class FriendManageInventory extends BlockProtInventory {
                 break;
             }
             case MAP: {
-                FriendSearchInventory.INSTANCE.openAnvilInventory(player);
+                FriendSearchInventory.openAnvilInventory(player);
                 break;
             }
             default: {

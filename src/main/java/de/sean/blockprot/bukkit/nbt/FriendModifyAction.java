@@ -15,20 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with BlockProt.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.sean.blockprot.bukkit.listeners
+package de.sean.blockprot.bukkit.nbt;
 
-import de.sean.blockprot.bukkit.BlockProt
-import de.sean.blockprot.bukkit.tasks.UpdateChecker
-import org.bukkit.Bukkit
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.player.PlayerJoinEvent
+/**
+ * @since 0.1.16
+ */
+public enum FriendModifyAction {
+    /**
+     * We want to add a friend to the block or to the
+     * default friends for a player.
+     * @since 0.1.16
+     */
+    ADD_FRIEND,
 
-class JoinEventListener : Listener {
-    @EventHandler
-    fun onJoin(event: PlayerJoinEvent) {
-        if (BlockProt.getDefaultConfig().shouldNotifyOpOfUpdates() && event.player.isOp) {
-            Bukkit.getScheduler().runTaskAsynchronously(BlockProt.getInstance()!!, UpdateChecker(listOf(event.player), BlockProt.getInstance()!!.description))
-        }
-    }
+    /**
+     * We want to remove a friend to the block or to the
+     * default friends for a player.
+     * @since 0.1.16
+     */
+    REMOVE_FRIEND
 }

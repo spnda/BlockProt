@@ -18,12 +18,10 @@
 package de.sean.blockprot.bukkit.listeners
 
 import de.sean.blockprot.bukkit.BlockProt
+import de.sean.blockprot.bukkit.BlockProtAPI
 import de.sean.blockprot.bukkit.TranslationKey
 import de.sean.blockprot.bukkit.Translator
-import de.sean.blockprot.bukkit.events.BlockAccessEditMenuEvent
 import de.sean.blockprot.bukkit.events.BlockAccessEvent
-import de.sean.blockprot.bukkit.inventories.BlockLockInventory
-import de.sean.blockprot.bukkit.inventories.InventoryState
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler
 import de.sean.blockprot.bukkit.nbt.NBTHandler
 import net.md_5.bungee.api.ChatMessageType
@@ -62,39 +60,12 @@ open class InteractEventListener : Listener {
             event.action == Action.RIGHT_CLICK_BLOCK && player.isSneaking && player.hasPermission(NBTHandler.PERMISSION_LOCK) -> {
                 if (event.item != null) return // Only enter the menu with an empty hand.
 
-                val handler = BlockNBTHandler(event.clickedBlock!!)
                 event.isCancelled = true
-
-                val accessEditMenuEvent = BlockAccessEditMenuEvent(event.clickedBlock!!, player)
-                Bukkit.getPluginManager().callEvent(accessEditMenuEvent)
-                if (accessEditMenuEvent.isCancelled ||
-                    accessEditMenuEvent.access == BlockAccessEditMenuEvent.MenuAccess.NONE
-                ) {
+                val inv = BlockProtAPI.getInstance()?.getLockInventoryForBlock(event.clickedBlock!!, player)
+                if (inv == null) {
                     sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION))
-                    return
-                }
-
-                if (player.hasPermission(BlockNBTHandler.PERMISSION_ADMIN)) {
-                    accessEditMenuEvent.access = BlockAccessEditMenuEvent.MenuAccess.ADMIN
-                } else if (player.hasPermission(BlockNBTHandler.PERMISSION_INFO) || event.player.isOp) {
-                    accessEditMenuEvent.access = BlockAccessEditMenuEvent.MenuAccess.INFO
-                } else if (handler.isNotProtected || handler.owner == player.uniqueId.toString()) {
-                    accessEditMenuEvent.access = BlockAccessEditMenuEvent.MenuAccess.NORMAL
                 } else {
-                    accessEditMenuEvent.access = BlockAccessEditMenuEvent.MenuAccess.NONE
-                }
-
-                // Only open the menu if the player is the owner of this block
-                // or if this block is not protected or if they have the special permissions.
-                if (accessEditMenuEvent.access != BlockAccessEditMenuEvent.MenuAccess.NONE) {
-                    val state = InventoryState(event.clickedBlock!!)
-                    state.menuAccess = accessEditMenuEvent.access
-                    state.friendSearchState = InventoryState.FriendSearchState.FRIEND_SEARCH
-                    InventoryState.set(player.uniqueId, state)
-                    val inv = BlockLockInventory().fill(player, event.clickedBlock!!.type, handler)
                     player.openInventory(inv)
-                } else {
-                    sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION))
                 }
             }
         }

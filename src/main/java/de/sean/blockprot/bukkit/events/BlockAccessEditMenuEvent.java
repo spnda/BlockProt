@@ -25,6 +25,8 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Called when a player is trying to access a blocks lock menu.
  * Can be cancelled to prevent the inventory from opening up.
+ *
+ * @since 0.4.0
  */
 public final class BlockAccessEditMenuEvent extends BaseBlockEvent implements Cancellable {
     @NotNull

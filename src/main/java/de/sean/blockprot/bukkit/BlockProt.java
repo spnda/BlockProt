@@ -44,6 +44,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * The main plugin instance of BlockProt.
+ */
 public final class BlockProt extends JavaPlugin {
     /**
      * The bStats plugin ID.
@@ -68,6 +71,7 @@ public final class BlockProt extends JavaPlugin {
      * Get the current instance of the {@link BlockProt} plugin.
      *
      * @return The instance, or null if not enabled yet.
+     * @since 0.4.0
      */
     @Nullable
     public static BlockProt getInstance() {
@@ -79,6 +83,7 @@ public final class BlockProt extends JavaPlugin {
      * the config is null.
      *
      * @return The default config.
+     * @since 0.4.0
      */
     @NotNull
     public static DefaultConfig getDefaultConfig() throws AssertionError {
@@ -90,6 +95,7 @@ public final class BlockProt extends JavaPlugin {
      * Gets a unmodifiable list of all registered {@link PluginIntegration}s.
      *
      * @return List of all registered integrations.
+     * @since 0.4.0
      */
     public List<PluginIntegration> getIntegrations() {
         return Collections.unmodifiableList(integrations);
@@ -98,6 +104,7 @@ public final class BlockProt extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        new BlockProtAPI(this); // Init the API.
         this.saveDefaultConfig();
         defaultConfig = new DefaultConfig(this.getConfig());
 
@@ -138,7 +145,7 @@ public final class BlockProt extends JavaPlugin {
         Objects.requireNonNull(this.getCommand(name)).setExecutor(executor);
     }
 
-    private void registerIntegration(@NotNull PluginIntegration integration) {
+    protected void registerIntegration(@NotNull PluginIntegration integration) {
         integration.load();
         this.integrations.add(integration);
     }
@@ -200,6 +207,7 @@ public final class BlockProt extends JavaPlugin {
      * @param name    The name of the resource.
      * @param replace Whether or not to replace the file if it already exists.
      * @return The YamlConfiguration.
+     * @since 0.4.7
      */
     @NotNull
     public YamlConfiguration saveAndLoadConfigFile(String folder, String name, boolean replace) {

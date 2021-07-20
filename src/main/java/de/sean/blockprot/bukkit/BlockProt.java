@@ -40,6 +40,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -86,12 +87,12 @@ public final class BlockProt extends JavaPlugin {
     }
 
     /**
-     * Gets a {@link ArrayList} of all registered {@link PluginIntegration}.
+     * Gets a unmodifiable list of all registered {@link PluginIntegration}s.
      *
      * @return List of all registered integrations.
      */
     public List<PluginIntegration> getIntegrations() {
-        return integrations;
+        return Collections.unmodifiableList(integrations);
     }
 
     @Override

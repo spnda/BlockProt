@@ -75,7 +75,7 @@ public final class FriendDetailInventory extends BlockProtInventory {
                 break;
             }
             case RED_STAINED_GLASS_PANE: {
-                OfflinePlayer friend = state.getCurFriend();
+                OfflinePlayer friend = state.currentFriend;
                 assert friend != null;
                 modifyFriendsForAction(
                     state, player, friend, FriendModifyAction.REMOVE_FRIEND);
@@ -118,17 +118,17 @@ public final class FriendDetailInventory extends BlockProtInventory {
     }
 
     public Inventory fill(@NotNull Player player) {
-        final InventoryState state = InventoryState.Companion.get(player.getUniqueId());
+        final InventoryState state = InventoryState.get(player.getUniqueId());
         if (state == null) return inventory;
 
-        final OfflinePlayer friend = state.getCurFriend();
+        final OfflinePlayer friend = state.currentFriend;
         if (friend == null) return inventory;
 
-        setPlayerSkull(0, state.getCurFriend());
+        setPlayerSkull(0, state.currentFriend);
         setItemStack(
             1, Material.RED_STAINED_GLASS_PANE, TranslationKey.INVENTORIES__FRIENDS__REMOVE);
 
-        if (state.getFriendSearchState() == InventoryState.FriendSearchState.FRIEND_SEARCH) {
+        if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH) {
             /* Get the current FriendHandler */
             BlockNBTHandler handler = new BlockNBTHandler(Objects.requireNonNull(state.getBlock()));
             final Optional<FriendHandler> friendHandler =

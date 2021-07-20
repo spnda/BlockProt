@@ -37,7 +37,7 @@ class BlockLockInventory : BlockProtInventory() {
 
     override fun onClick(event: InventoryClickEvent, state: InventoryState) {
         if (state.block == null) return
-        val block: Block = state.block
+        val block: Block = state.block!!
         val item = event.currentItem ?: return
 
         val player = event.whoClicked as Player
@@ -79,7 +79,7 @@ class BlockLockInventory : BlockProtInventory() {
 
     override fun onClose(event: InventoryCloseEvent, state: InventoryState) {
         if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH && state.block != null) {
-            applyChanges(state.block, event.player as Player, false, false) {
+            applyChanges(state.block!!, event.player as Player, false, false) {
                 return@applyChanges it.lockRedstoneForBlock(
                     event.player.uniqueId.toString(),
                     redstone,

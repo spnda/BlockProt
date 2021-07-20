@@ -127,9 +127,9 @@ public final class BlockProtAPI {
             return null;
         } else {
             InventoryState state = new InventoryState(block);
-            state.setMenuAccess(event.getAccess());
-            state.setFriendSearchState(InventoryState.FriendSearchState.FRIEND_SEARCH);
-            InventoryState.Companion.set(player.getUniqueId(), state);
+            state.menuAccess = event.getAccess();
+            state.friendSearchState = InventoryState.FriendSearchState.FRIEND_SEARCH;
+            InventoryState.set(player.getUniqueId(), state);
 
             return new BlockLockInventory().fill(player, block.getType(), handler);
         }

@@ -63,7 +63,7 @@ public final class FriendManageInventory extends BlockProtInventory {
      */
     public final void exitModifyInventory(@NotNull final Player player, @NotNull final InventoryState state) {
         Inventory newInventory;
-        switch (state.getFriendSearchState()) {
+        switch (state.friendSearchState) {
             case FRIEND_SEARCH: {
                 if (state.getBlock() == null) return;
                 newInventory =
@@ -95,8 +95,8 @@ public final class FriendManageInventory extends BlockProtInventory {
                 break;
             }
             case CYAN_STAINED_GLASS_PANE: {
-                if (state.getFriendPage() >= 1) {
-                    state.setFriendPage(state.getFriendPage() - 1);
+                if (state.friendPage >= 1) {
+                    state.friendPage -= 1;
 
                     closeAndOpen(player, fill(player));
                 }
@@ -107,7 +107,7 @@ public final class FriendManageInventory extends BlockProtInventory {
                 if (lastFriendInInventory != null && lastFriendInInventory.getAmount() == 0) {
                     // There's an item in the last slot => The page is fully filled up, meaning
                     // we should go to the next page.
-                    state.setFriendPage(state.getFriendPage() + 1);
+                    state.friendPage += 1;
 
                     closeAndOpen(player, fill(player));
                 }
@@ -117,9 +117,8 @@ public final class FriendManageInventory extends BlockProtInventory {
             case PLAYER_HEAD: {
                 // Get the clicked player head and open the detail inventory.
                 int index = findItemIndex(item);
-                if (index < 0 || index >= state.getFriendResultCache().size()) break;
-                OfflinePlayer friend = state.getFriendResultCache().get(index);
-                state.setCurFriend(friend);
+                if (index < 0 || index >= state.friendResultCache.size()) break;
+                state.currentFriend = state.friendResultCache.get(index);
                 final Inventory inv = new FriendDetailInventory().fill(player);
                 closeAndOpen(player, inv);
                 break;
@@ -144,11 +143,11 @@ public final class FriendManageInventory extends BlockProtInventory {
 
     @NotNull
     public Inventory fill(@NotNull Player player) {
-        final InventoryState state = InventoryState.Companion.get(player.getUniqueId());
+        final InventoryState state = InventoryState.get(player.getUniqueId());
         if (state == null) return inventory;
 
         List<OfflinePlayer> players;
-        switch (state.getFriendSearchState()) {
+        switch (state.friendSearchState) {
             case FRIEND_SEARCH: {
                 final BlockNBTHandler handler =
                     new BlockNBTHandler(Objects.requireNonNull(state.getBlock()));
@@ -174,22 +173,22 @@ public final class FriendManageInventory extends BlockProtInventory {
                     "Could not build "
                         + this.getClass().getName()
                         + " due to invalid friend search state: "
-                        + state.getFriendSearchState());
+                        + state.friendSearchState);
             }
         }
 
         // Fill the first page inventory with skeleton skulls.
-        state.getFriendResultCache().clear();
-        int pageOffset = maxSkulls * state.getFriendPage();
+        state.friendResultCache.clear();
+        int pageOffset = maxSkulls * state.friendPage;
         for (int i = pageOffset; i < Math.min(players.size() - pageOffset, maxSkulls); i++) {
             final OfflinePlayer curPlayer = players.get(i);
             ((BlockProtInventory) Objects.requireNonNull(inventory.getHolder()))
                 .setItemStack(i, Material.SKELETON_SKULL, curPlayer.getName());
-            state.getFriendResultCache().add(curPlayer);
+            state.friendResultCache.add(curPlayer);
         }
 
         // Only show the page buttons if there's more than 1 page.
-        if (state.getFriendPage() == 0 && players.size() >= maxSkulls) {
+        if (state.friendPage == 0 && players.size() >= maxSkulls) {
             setItemStack(
                 maxSkulls,
                 Material.CYAN_STAINED_GLASS_PANE,
@@ -210,9 +209,9 @@ public final class FriendManageInventory extends BlockProtInventory {
             BlockProt.getInstance(),
             () -> {
                 int i = 0;
-                while (i < maxSkulls && i < state.getFriendResultCache().size()) {
+                while (i < maxSkulls && i < state.friendResultCache.size()) {
                     ((BlockProtInventory) Objects.requireNonNull(inventory.getHolder()))
-                        .setPlayerSkull(i, state.getFriendResultCache().get(i));
+                        .setPlayerSkull(i, state.friendResultCache.get(i));
                     i++;
                 }
             });

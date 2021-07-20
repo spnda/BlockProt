@@ -39,10 +39,10 @@ class BlockInfoInventory : BlockProtInventory() {
         when (item.type) {
             Material.BLACK_STAINED_GLASS_PANE -> {
                 if (state.block == null) return
-                val handler = BlockNBTHandler(state.block)
+                val handler = BlockNBTHandler(state.block!!)
                 closeAndOpen(
                     player,
-                    BlockLockInventory().fill(player, state.block.state.type, handler)
+                    BlockLockInventory().fill(player, state.block!!.state.type, handler)
                 )
             }
             Material.CYAN_STAINED_GLASS_PANE -> {
@@ -51,7 +51,7 @@ class BlockInfoInventory : BlockProtInventory() {
 
                     closeAndOpen(
                         player,
-                        if (state.block != null) fill(player, BlockNBTHandler(state.block))
+                        if (state.block != null) fill(player, BlockNBTHandler(state.block!!))
                         else null
                     )
                 }
@@ -64,7 +64,7 @@ class BlockInfoInventory : BlockProtInventory() {
 
                     closeAndOpen(
                         player,
-                        if (state.block != null) fill(player, BlockNBTHandler(state.block))
+                        if (state.block != null) fill(player, BlockNBTHandler(state.block!!))
                         else null
                     )
                 }

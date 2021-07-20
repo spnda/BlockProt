@@ -172,7 +172,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
         @NotNull final OfflinePlayer friend,
         @NotNull final FriendModifyAction action
     ) {
-        final InventoryState.FriendSearchState searchState = state.getFriendSearchState();
+        final InventoryState.FriendSearchState searchState = state.friendSearchState;
         if (searchState == InventoryState.FriendSearchState.FRIEND_SEARCH) {
             if (state.getBlock() == null) return;
             applyChanges(
@@ -419,7 +419,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
         if (inventory != null) {
             player.openInventory(inventory);
         } else {
-            InventoryState.Companion.remove(player.getUniqueId());
+            InventoryState.remove(player.getUniqueId());
         }
     }
 

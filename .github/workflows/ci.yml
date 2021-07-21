@@ -5,7 +5,6 @@ on:
     branches: [ master ]
     paths:
       - 'src/main/java/**'
-      - 'src/main/kotlin/**'
       - 'gradle/**'
       - '**.gradle'
       - '**.gradle.kts'
@@ -47,19 +46,3 @@ jobs:
         with:
           name: Artifacts
           path: build/libs/
-
-  # A linter job that uses github/super-linter to lint Kotlin code
-  # and then uses CodeQL to scan the Java code.
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-      - name: Check for errors
-        uses: docker://ghcr.io/github/super-linter:slim-v4 # Use the super-linter:slim package, see https://github.com/github/super-linter#slim-image why.
-        env:
-          DEFAULT_BRANCH: master
-          FILTER_REGEX_INCLUDE: .*\.kt
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

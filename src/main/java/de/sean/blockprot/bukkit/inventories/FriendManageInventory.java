@@ -96,7 +96,7 @@ public final class FriendManageInventory extends BlockProtInventory {
             }
             case CYAN_STAINED_GLASS_PANE: {
                 if (state.friendPage >= 1) {
-                    state.friendPage -= 1;
+                    state.friendPage--;
 
                     closeAndOpen(player, fill(player));
                 }
@@ -107,7 +107,7 @@ public final class FriendManageInventory extends BlockProtInventory {
                 if (lastFriendInInventory != null && lastFriendInInventory.getAmount() == 0) {
                     // There's an item in the last slot => The page is fully filled up, meaning
                     // we should go to the next page.
-                    state.friendPage += 1;
+                    state.friendPage++;
 
                     closeAndOpen(player, fill(player));
                 }

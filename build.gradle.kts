@@ -18,8 +18,8 @@ buildscript {
 }
 
 plugins {
+    id("org.gradle.java-library")
     id("com.github.johnrengelman.shadow") version "7.0.0"
-    id("org.jetbrains.kotlin.jvm") version "1.5.21"
     id("com.matthewprenger.cursegradle") version "1.4.0"
     id("org.ajoberstar.grgit") version "4.1.0"
     id("com.diffplug.spotless") version "5.14.1"
@@ -86,11 +86,13 @@ repositories {
 dependencies {
     // Spigot
     compileOnly("org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT")
+    compileOnly("org.apache.commons:commons-lang3:3.0")
 
     // bStats
     api("org.bstats:bstats-bukkit:2.2.1")
 
     // Dependencies
+    implementation("org.jetbrains:annotations:16.0.2")
     implementation("de.tr7zw:item-nbt-api:2.8.0")
     implementation("net.wesjd:anvilgui:1.5.1-SNAPSHOT") // Allows us to use anvils as inventories without using NMS.
     implementation("com.github.TownyAdvanced:Towny:$townyVersion")
@@ -109,17 +111,11 @@ spotless {
         licenseHeaderFile(project.file("HEADER.txt")).yearSeparator(", ")
     }
 
-    kotlin {
+    kotlinGradle {
         // We can start using ktlint through spotless as soon as
         // https://github.com/diffplug/spotless/issues/142 is fixed.
         // For now we use ec4j to read the editorconfig manually and
         // pass the read values to ktlint.
-        ktlint("0.41.0").userData(editorConfig)
-
-        licenseHeaderFile(project.file("HEADER.txt")).yearSeparator(", ")
-    }
-
-    kotlinGradle {
         ktlint("0.41.0").userData(editorConfig)
     }
 }
@@ -135,12 +131,6 @@ tasks.processResources {
 tasks.compileJava {
     java.sourceCompatibility = JavaVersion.VERSION_1_8
     java.targetCompatibility = JavaVersion.VERSION_1_8
-}
-
-tasks.compileKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
 }
 
 tasks.jar {

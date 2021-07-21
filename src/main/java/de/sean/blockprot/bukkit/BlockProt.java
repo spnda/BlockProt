@@ -69,12 +69,15 @@ public final class BlockProt extends JavaPlugin {
 
     /**
      * Get the current instance of the {@link BlockProt} plugin.
+     * Might throw a {@link AssertionError} if this plugin has not
+     * been enabled yet.
      *
-     * @return The instance, or null if not enabled yet.
+     * @return The instance.
      * @since 0.4.0
      */
-    @Nullable
+    @NotNull
     public static BlockProt getInstance() {
+        assert instance != null;
         return instance;
     }
 

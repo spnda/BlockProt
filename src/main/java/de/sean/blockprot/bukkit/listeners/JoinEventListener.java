@@ -32,8 +32,10 @@ public class JoinEventListener implements Listener {
         if (BlockProt.getDefaultConfig().shouldNotifyOpOfUpdates() && event.getPlayer().isOp()) {
             Bukkit.getScheduler().runTaskAsynchronously(
                 BlockProt.getInstance(),
-                new UpdateChecker(Collections.singletonList(event.getPlayer()),
-                BlockProt.getInstance().getDescription())
+                new UpdateChecker(
+                    BlockProt.getInstance().getDescription(),
+                    Collections.singletonList(event.getPlayer())
+                )
             );
         }
     }

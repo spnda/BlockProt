@@ -100,4 +100,13 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
     public int hashCode() {
         return Arrays.hashCode(parts);
     }
+
+    /**
+     * {@inheritDoc}
+     * @since 0.4.7
+     */
+    @Override
+    public String toString() {
+        return String.join(".", parts);
+    }
 }

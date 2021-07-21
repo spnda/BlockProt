@@ -113,7 +113,7 @@ public final class BlockProt extends JavaPlugin {
             : defaultConfig.getLanguageFile());
 
         /* Check for updates */
-        Bukkit.getScheduler().runTaskAsynchronously(this, new UpdateChecker(new ArrayList<>(), this.getDescription()));
+        Bukkit.getScheduler().runTaskAsynchronously(this, new UpdateChecker(this.getDescription()));
 
         /* bStats Metrics */
         metrics = new Metrics(this, pluginId);

@@ -135,5 +135,10 @@ public final class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
      */
     @Override
     public void mergeHandler(@NotNull NBTHandler<?> handler) {
+        if (!(handler instanceof PlayerSettingsHandler)) return;
+        final PlayerSettingsHandler playerSettingsHandler = (PlayerSettingsHandler) handler;
+        this.setLockOnPlace(playerSettingsHandler.getLockOnPlace());
+        this.container.setString(DEFAULT_FRIENDS_ATTRIBUTE,
+            playerSettingsHandler.container.getString(DEFAULT_FRIENDS_ATTRIBUTE));
     }
 }

@@ -54,6 +54,18 @@ public final class FriendHandler extends NBTHandler<NBTCompound> {
     }
 
     /**
+     * Read the access flags of this block as a bitset.
+     *
+     * @return A bitset of all access flags of this block.
+     * @see #getAccessFlags()
+     * @since 0.4.7
+     */
+    private int getAccessFlagsBitset() {
+        if (!container.hasKey(ACCESS_FLAGS_ATTRIBUTE)) return BlockAccessFlag.READ.getFlag() | BlockAccessFlag.WRITE.getFlag();
+        else return container.getInteger(ACCESS_FLAGS_ATTRIBUTE);
+    }
+
+    /**
      * Read the access flags of this block.
      *
      * @return A {@link EnumSet} of all flags for this block.
@@ -61,8 +73,19 @@ public final class FriendHandler extends NBTHandler<NBTCompound> {
      */
     @NotNull
     public EnumSet<BlockAccessFlag> getAccessFlags() {
+        // We don't just use #getAccessFlagsBitset, as it would have a minor overhead due to
+        // using the BlockAccessFlag#parseFlags method.
         if (!container.hasKey(ACCESS_FLAGS_ATTRIBUTE)) return EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE);
         else return BlockAccessFlag.parseFlags(container.getInteger(ACCESS_FLAGS_ATTRIBUTE));
+    }
+
+    /**
+     * Sets the access flag bitset for this block.
+     * @param flagsBitset The new bitset.
+     * @since 0.4.7
+     */
+    private void setAccessFlagsBitset(final int flagsBitset) {
+        container.setInteger(ACCESS_FLAGS_ATTRIBUTE, flagsBitset);
     }
 
     /**
@@ -102,8 +125,15 @@ public final class FriendHandler extends NBTHandler<NBTCompound> {
 
     /**
      * {@inheritDoc}
+     *
+     * This only merges values if {@code handler} is an instance of {@link FriendHandler},
+     * and only merges the access flags.
+     * @since 0.4.7
      */
     @Override
     public void mergeHandler(@NotNull NBTHandler<?> handler) {
+        if (handler instanceof FriendHandler) {
+            this.setAccessFlagsBitset(((FriendHandler) handler).getAccessFlagsBitset());
+        }
     }
 }

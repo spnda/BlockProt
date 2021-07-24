@@ -42,20 +42,24 @@ public final class DefaultConfig extends BlockProtConfig {
      * A list of all lockable tile entities.
      */
     private final ArrayList<Material> lockableTileEntities = new ArrayList<>();
+
     /**
      * A list of all available shulker boxes, so we
      * can save the protection state even after breaking.
      */
     private final ArrayList<Material> shulkerBoxes = new ArrayList<>();
+
     /**
      * We can only lock normal blocks after 1.16.4. Therefore, in all versions prior this list will
      * be empty. Doors are separately listed inside of [lockableDoors].
      */
     private final ArrayList<Material> lockableBlocks = new ArrayList<>();
+
     /**
      * Doors are separate for LockUtil#applyToDoor and also only work after 1.16.4 Spigot.
      */
     private final ArrayList<Material> lockableDoors = new ArrayList<>();
+
     private final ArrayList<InventoryType> lockableInventories = new ArrayList<>(Arrays.asList(
         InventoryType.CHEST, InventoryType.FURNACE, InventoryType.SMOKER, InventoryType.BLAST_FURNACE, InventoryType.HOPPER,
         InventoryType.BARREL, InventoryType.BREWING, InventoryType.SHULKER_BOX, InventoryType.ANVIL, InventoryType.DISPENSER,
@@ -66,6 +70,7 @@ public final class DefaultConfig extends BlockProtConfig {
 
     /**
      * Create a new default configuration from given {@code config}.
+     *
      * @param config The yaml configuration, should be the {@code config.yml}.
      * @since 0.3.3
      */
@@ -90,6 +95,7 @@ public final class DefaultConfig extends BlockProtConfig {
     /**
      * Loads all the different lists from the config.yml file and adds
      * them to the various lists in LockUtil.
+     *
      * @since 0.3.3
      */
     private void loadBlocksFromConfig() {
@@ -146,6 +152,7 @@ public final class DefaultConfig extends BlockProtConfig {
     /**
      * Checks if given {@code world} should be excluded from any
      * block protection functionality.
+     *
      * @param world The world to check for.
      * @return If true, we shall not allow players to own and protect
      * any blocks in given {@code world}.
@@ -158,6 +165,7 @@ public final class DefaultConfig extends BlockProtConfig {
     /**
      * Checks if the world of the block held by {@code inventory}
      * is excluded from any block protection functionality.
+     *
      * @param holder The inventory we want to use. If it is not a known
      *               exception, we try to cast it to {@link BlockInventoryHolder}.
      * @return True, if the world is excluded or the {@code holder} was
@@ -200,9 +208,9 @@ public final class DefaultConfig extends BlockProtConfig {
      * Whether the given {@code type} is a lockable block. Be aware, this only
      * works after Spigot 1.16_R3 and the config might have some invalid values.
      *
-     * @see #isLockable(Material)
      * @param type The material to check for.
      * @return True, if {@code type} is a lockable block.
+     * @see #isLockable(Material)
      * @since 0.3.3
      */
     public boolean isLockableBlock(Material type) {
@@ -213,9 +221,9 @@ public final class DefaultConfig extends BlockProtConfig {
      * Whether the given {@code type} is a lockable tile entity. Be aware,
      * the config might have some invalid values.
      *
-     * @see #isLockable(Material)
      * @param type The material to check for.
      * @return True, if {@code type} is a lockable tile entity.
+     * @see #isLockable(Material)
      * @since 0.3.3
      */
     public boolean isLockableTileEntity(Material type) {

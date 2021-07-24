@@ -64,7 +64,9 @@ public final class BlockProt extends JavaPlugin {
 
     @Nullable
     private static DefaultConfig defaultConfig = null;
+
     private final ArrayList<PluginIntegration> integrations = new ArrayList<>();
+
     protected Metrics metrics;
 
     /**

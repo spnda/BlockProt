@@ -43,7 +43,6 @@ public class HopperEventListener implements Listener {
             DoubleChest doubleChest = (DoubleChest) holder;
             if (doubleChest.getWorld() == null) return null;
             return doubleChest.getWorld().getBlockAt(doubleChest.getLocation());
-        }
-        else return null;
+        } else return null;
     }
 }

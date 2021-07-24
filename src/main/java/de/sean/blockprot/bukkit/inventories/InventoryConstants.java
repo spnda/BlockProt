@@ -19,12 +19,14 @@ package de.sean.blockprot.bukkit.inventories;
 
 /**
  * Some various inventory constants.
+ *
  * @since 0.2.0
  */
 public final class InventoryConstants {
     /**
      * The length of a single inventory line
      * in a normal inventory.
+     *
      * @since 0.2.0
      */
     public static final int lineLength = 9;
@@ -32,6 +34,7 @@ public final class InventoryConstants {
     /**
      * The length of a single inventory line
      * in a normal inventory.
+     *
      * @since 0.2.0
      */
     public static final int singleLine = 9;
@@ -39,6 +42,7 @@ public final class InventoryConstants {
     /**
      * The length of two inventory line
      * in a normal inventory.
+     *
      * @since 0.2.0
      */
     public static final int doubleLine = 9 * 2;
@@ -46,6 +50,7 @@ public final class InventoryConstants {
     /**
      * The length of three inventory line
      * in a normal inventory.
+     *
      * @since 0.2.0
      */
     public static final int tripleLine = 9 * 3;

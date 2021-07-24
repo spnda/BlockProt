@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 public final class BlockAccessEvent extends BaseBlockEvent implements Cancellable {
     @NotNull
     private final Player player;
+
     private boolean isCancelled;
 
     /**

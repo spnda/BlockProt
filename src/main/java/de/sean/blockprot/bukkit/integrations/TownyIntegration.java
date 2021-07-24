@@ -44,8 +44,11 @@ import java.util.ArrayList;
 
 public final class TownyIntegration extends PluginIntegration implements Listener {
     private static final String CLEANUP_PLOTS_AFTER_UNCLAIM = "cleanup_plots_after_unclaim";
+
     private static final String RESTRICT_ACCESS_TO_RESIDENTS = "restrict_access_to_residents";
+
     private static final String ALLOW_MAYOR_TO_SEE_BLOCK_INFO = "allow_mayor_to_see_block_info";
+
     private static final String BYPASS_PROTECTIONS_IN_RUINED_TOWNS = "bypass_protection_in_ruined_towns";
 
     /**

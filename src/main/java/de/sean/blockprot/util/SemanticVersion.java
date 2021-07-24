@@ -103,6 +103,7 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
 
     /**
      * {@inheritDoc}
+     *
      * @since 0.4.7
      */
     @Override

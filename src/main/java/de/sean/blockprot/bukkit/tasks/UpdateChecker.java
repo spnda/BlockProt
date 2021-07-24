@@ -50,6 +50,7 @@ public final class UpdateChecker implements Runnable {
     /**
      * Creates a new update checker. This uses a empty list of players and
      * therefore only prints the message to the console.
+     *
      * @param description The plugin.yml file of the plugin. See
      *                    {@link JavaPlugin#getDescription()}.
      */
@@ -61,9 +62,10 @@ public final class UpdateChecker implements Runnable {
     /**
      * Creates a new update checker. This exclusively messages the players
      * that were passed in the list.
+     *
      * @param description The plugin.yml file of the plugin. See
      *                    {@link JavaPlugin#getDescription()}.+
-     * @param recipients The list of players to message.
+     * @param recipients  The list of players to message.
      */
     public UpdateChecker(@NotNull final PluginDescriptionFile description, @Nullable final List<Player> recipients) {
         this.recipients = recipients;
@@ -145,6 +147,7 @@ public final class UpdateChecker implements Runnable {
         /**
          * Converts the {@link #currentVersion} to a {@link SemanticVersion},
          * for easily comparing the version.
+         *
          * @return The semantic version of this current version.
          */
         public SemanticVersion asSemantic() {

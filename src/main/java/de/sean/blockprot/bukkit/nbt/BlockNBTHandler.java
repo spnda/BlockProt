@@ -45,8 +45,11 @@ import java.util.stream.Stream;
  */
 public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
     static final String OWNER_ATTRIBUTE = "splugin_owner";
+
     static final String OLD_LOCK_ATTRIBUTE = "splugin_lock";
+
     static final String LOCK_ATTRIBUTE = "blockprot_friends";
+
     static final String REDSTONE_ATTRIBUTE = "splugin_lock_redstone";
 
     private static final boolean DEFAULT_REDSTONE = true;
@@ -469,7 +472,7 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
      * half. For example doors consist from two blocks, as do double
      * chests. Without this call, all methods will modify only the local,
      * current block.
-     *
+     * <p>
      * This method is specifically not called on each modification of NBT,
      * as this would be a massive, unnecessary performance penalty.
      *

@@ -21,8 +21,10 @@ public final class TranslationValue {
      */
     @NotNull
     public static final String UNKNOWN_TRANSLATION = "Unknown Translation";
+
     @NotNull
     private final String defaultValue;
+
     @NotNull
     private String translatedValue;
 

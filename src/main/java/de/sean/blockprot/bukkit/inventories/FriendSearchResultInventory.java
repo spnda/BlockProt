@@ -82,7 +82,8 @@ public class FriendSearchResultInventory extends BlockProtInventory {
         String longer = str1;
         String shorter = str2;
         if (str1.length() < str2.length()) {
-            longer = str2; shorter = str1;
+            longer = str2;
+            shorter = str1;
         }
         final int longerLength = longer.length();
         if (longerLength == 0) return 1.0; // They match 100% if both Strings are empty

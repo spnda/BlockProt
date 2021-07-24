@@ -89,7 +89,7 @@ public class BlockLockInventory extends BlockProtInventory {
     public void onClose(@NotNull InventoryCloseEvent event, @NotNull InventoryState state) {
         if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH && state.getBlock() != null) {
             applyChanges(
-                (Player)event.getPlayer(),
+                (Player) event.getPlayer(),
                 (handler) -> handler.lockRedstoneForBlock(
                     event.getPlayer().getUniqueId().toString(),
                     redstone

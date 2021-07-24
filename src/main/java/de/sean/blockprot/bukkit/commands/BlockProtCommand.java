@@ -30,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -62,6 +61,7 @@ public final class BlockProtCommand implements TabExecutor {
                     state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH;
                     InventoryState.set(player.getUniqueId(), state);
                     player.openInventory(new UserSettingsInventory().fill(player));
+                    return true;
                 } else {
                     return false;
                 }
@@ -75,11 +75,11 @@ public final class BlockProtCommand implements TabExecutor {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (args.length <= 1) {
-            String[] arr = {"settings"};
+            List<String> list = new ArrayList<>(Collections.singletonList("settings"));
             if (sender.isOp()) {
-                arr[arr.length - 1] = "update";
+                list.add("update");
             }
-            return Arrays.asList(arr);
+            return list;
         }
 
         return Collections.emptyList();

@@ -38,6 +38,7 @@ public abstract class BlockProtConfig {
 
     /**
      * Create a new config.
+     *
      * @param config The {@link FileConfiguration} to use.
      */
     public BlockProtConfig(@NotNull final FileConfiguration config) {

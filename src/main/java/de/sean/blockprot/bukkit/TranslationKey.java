@@ -22,6 +22,7 @@ import java.util.Locale;
 /**
  * A translation key for a single string in a translations_xx.yml file.
  * Double underscores are replaced with dots when querying for YAML keys.
+ *
  * @since 0.1.10
  */
 public enum TranslationKey {

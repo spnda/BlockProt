@@ -17,12 +17,14 @@ import java.util.List;
 
 /**
  * BlockProt's class for external API methods.
+ *
  * @author spnda
  * @since 0.4.7
  */
 public final class BlockProtAPI {
     @Nullable
     static BlockProtAPI instance;
+
     private final BlockProt blockProt;
 
     BlockProtAPI(BlockProt blockProt) {
@@ -34,6 +36,7 @@ public final class BlockProtAPI {
      * Get the current instance of this API. Remember to
      * softdepend this plugin, otherwise this API will not be
      * initialized and this will return null.
+     *
      * @return The instance or null if not initialized
      * @since 0.4.7
      */
@@ -48,6 +51,7 @@ public final class BlockProtAPI {
      * {@link #getIntegrations()}) which is used for friend handling. This does not ensure
      * that there are no duplicates of a integration, so please beware to only register your
      * integration once.
+     *
      * @param integration The integration to register.
      * @since 0.4.7
      */
@@ -60,6 +64,7 @@ public final class BlockProtAPI {
      * {@link #registerIntegration(PluginIntegration)}. There might possibly
      * be duplicates of some integrations, if the author of those registered them
      * more than once.
+     *
      * @return A unmodifiable list of all registered integrations.
      * @since 0.4.7
      */
@@ -71,6 +76,7 @@ public final class BlockProtAPI {
     /**
      * Get the handler for given blocks. This is used to get information
      * about the owner, the friends and the redstone protection.
+     *
      * @param block The block to get the handler for.
      * @return The {@link BlockNBTHandler} for the given block.
      * @since 0.4.7
@@ -84,6 +90,7 @@ public final class BlockProtAPI {
      * Get the player settings handler for given player. This is used
      * to retrieve default friends or other globally applicable settings
      * for the player.
+     *
      * @param player The player.
      * @return The {@link PlayerSettingsHandler} for the given player.
      * @since 0.4.7
@@ -98,7 +105,8 @@ public final class BlockProtAPI {
      * triggers the {@link BlockAccessEditMenuEvent} event and checks
      * if it succeeded and what permissions the player has and bases the
      * inventory on that information.
-     * @param block The block the {@code player} is trying to access.
+     *
+     * @param block  The block the {@code player} is trying to access.
      * @param player The player.
      * @return The inventory or null, if the request was denied, possibly
      * due to permissions.

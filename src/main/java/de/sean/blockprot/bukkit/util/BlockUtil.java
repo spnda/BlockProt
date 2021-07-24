@@ -15,11 +15,13 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Various utilities for manipulating and getting block
  * related data.
+ *
  * @since 0.4.6
  */
 public final class BlockUtil {
     /**
      * Get the BlockState of the double chest of given {@code block}.
+     *
      * @param block The other half of the chest. Can be any block, this will check for
      *              it.
      * @return The BlockState of the double chest, null if given {@code block} was not a chest.
@@ -42,9 +44,13 @@ public final class BlockUtil {
         // "middle" is referring to exactly the middle between
         // the two sides of the chest.
         final Location middle = doubleChest.getLocation();
-        if (block.getX() > middle.getX()) { middle.subtract(.5, .0, .0); }
-        else if (block.getZ() > middle.getZ()) { middle.subtract(.0, .0, .5); }
-        else { middle.add(.5, .0, .5); }
+        if (block.getX() > middle.getX()) {
+            middle.subtract(.5, .0, .0);
+        } else if (block.getZ() > middle.getZ()) {
+            middle.subtract(.0, .0, .5);
+        } else {
+            middle.add(.5, .0, .5);
+        }
 
         return block.getWorld().getBlockAt(middle).getState();
     }
@@ -52,6 +58,7 @@ public final class BlockUtil {
     /**
      * Gets the other half of the door, as per the block
      * given.
+     *
      * @param state The BlockState of the door half.
      * @return Returns the other half of the door, or null
      * if the given state is not a door.

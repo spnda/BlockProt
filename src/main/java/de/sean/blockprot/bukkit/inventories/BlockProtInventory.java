@@ -179,9 +179,9 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * Creates a temporary {@link BlockNBTHandler} or {@link PlayerSettingsHandler}
      * depending on {@link InventoryState#friendSearchState},
      *
-     * @param player The player we use to obtain the {@link InventoryState} for.
-     * @param onBlockChanges A callback to easily modify a {@link BlockNBTHandler}. Can
-     *                       be null, if this path is not intended.
+     * @param player            The player we use to obtain the {@link InventoryState} for.
+     * @param onBlockChanges    A callback to easily modify a {@link BlockNBTHandler}. Can
+     *                          be null, if this path is not intended.
      * @param onSettingsChanges A callback to easily modify a {@link PlayerSettingsHandler}.
      *                          Can be null, if this path is not intended.
      * @since 0.4.7

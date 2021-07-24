@@ -31,7 +31,9 @@ import org.jetbrains.annotations.NotNull;
 public final class BlockAccessEditMenuEvent extends BaseBlockEvent implements Cancellable {
     @NotNull
     private final Player player;
+
     private boolean isCancelled = false;
+
     @NotNull
     private MenuAccess access = MenuAccess.NORMAL;
 

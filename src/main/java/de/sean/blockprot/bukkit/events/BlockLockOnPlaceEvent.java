@@ -31,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 public final class BlockLockOnPlaceEvent extends BaseBlockEvent implements Cancellable {
     @NotNull
     private final Player player;
+
     private boolean isCancelled;
 
     /**

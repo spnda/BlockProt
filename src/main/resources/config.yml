@@ -27,7 +27,7 @@ redstone_disallowed_by_default: false
 # owned by anyone. For example:
 #   - world_mining
 #   - world_end
-excluded_worlds: []
+excluded_worlds: [ ]
 
 # Tile entities that should be locked. Tile entities are blocks
 # that can contain items. You can find a detailed list of all

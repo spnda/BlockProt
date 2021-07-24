@@ -33,6 +33,46 @@ If you find bugs or any issues related to this plugin, please report them over o
 [GitHub issue tracker](https://github.com/spnda/BlockProt/issues). If you require more support or want to ask questions,
 please use the [Discord server](https://discord.gg/WVy6DHScFb) for chatting.
 
+## Developing Addons
+
+This plugin offers a basic API which other developers can use to add new features and provide support and
+compatibility with other plugins. BlockProt can be accessed via the [jitpack.io repository](https://jitpack.io/#spnda/BlockProt).
+
+Your `build.gradle` file may look like this:
+```groovy
+repositories {
+    maven 'https://jitpack.io'
+}
+
+dependencies {
+    // This version might be slightly outdated. See https://github.com/spnda/BlockProt/releases.
+    implementation 'com.github.spnda:BlockProt:0.4.7'
+}
+```
+
+From here on, you're good to go. We provide an easy to use `BlockProtAPI` class and other utility methods
+to easily add new functionality, with low amount of boilerplate. In the following examples you can see how
+to use that class.
+```java
+// A BlockNBTHandler is a NBT Handler designed to lock blocks, add friends and edit other settings.
+// This handler exists on a per-block basis.
+BlockNBTHandler handler = BlockProtAPI.getInstance().getBlockHandler(block);
+
+// The PlayerSettingsHandler is made to handle settings that are commonly accessible
+// through the "/blockprot settings" command.
+PlayerSettingsHandler playerHandler = BlockProtAPI.getInstance().getPlayerSettings(player);
+```
+
+We also offer a variety of events that you can listen to. For an up-to-date and more detailed list, see
+[here](https://github.com/spnda/BlockProt/tree/master/src/main/java/de/sean/blockprot/bukkit/events). You can
+use these to block players from accessing some blocks based on custom conditions and much more. For even more
+fine grain control over events, you can write a `PluginIntegration`. A `PluginIntegration` is designed to be
+specific to a single other plugin and is only activated when the referenced plugin is actually loaded through
+Bukkit. It also provides utilities to quickly load a single config file and register listeners. BlockProt 
+natively includes a plugin integration for Towny, which you can find
+[here](https://github.com/spnda/BlockProt/blob/master/src/main/java/de/sean/blockprot/bukkit/integrations/TownyIntegration.java).
+You can freely use this as an example.
+
 ## License
 
 BlockProt is licensed under GPLv3 license, view `LICENSE` to learn more.

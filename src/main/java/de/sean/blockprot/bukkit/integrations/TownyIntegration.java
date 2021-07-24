@@ -85,7 +85,8 @@ public final class TownyIntegration extends PluginIntegration implements Listene
     protected void filterFriendsInternal(@NotNull final ArrayList<OfflinePlayer> friends,
                                          @NotNull final Player player,
                                          @NotNull final Block block) {
-        if (TownyAPI.getInstance().isWilderness(block)
+        if (towny == null
+            || TownyAPI.getInstance().isWilderness(block)
             || !shouldRestrictAccessToResidents()) {
             return;
         }

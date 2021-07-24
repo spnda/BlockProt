@@ -81,7 +81,8 @@ public abstract class PluginIntegration {
                                                          @NotNull final Player player,
                                                          @NotNull final Block block) {
         for (PluginIntegration integration : BlockProt.getInstance().getIntegrations()) {
-            integration.filterFriendsInternal(friends, player, block);
+            if (integration.isEnabled())
+                integration.filterFriendsInternal(friends, player, block);
         }
         return friends;
     }

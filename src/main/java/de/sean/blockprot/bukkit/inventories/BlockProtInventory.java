@@ -388,10 +388,10 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @since 0.4.2
      */
     protected void closeAndOpen(@NotNull final Player player, @Nullable final Inventory inventory) {
-        player.closeInventory();
         if (inventory != null) {
             player.openInventory(inventory);
         } else {
+            player.closeInventory();
             InventoryState.remove(player.getUniqueId());
         }
     }

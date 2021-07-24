@@ -41,18 +41,8 @@ public class InventoryEventListener implements Listener {
             // We have some sort of inventory state, so we'll
             // assume the player is currently in some of our inventories.
             InventoryHolder holder = event.getInventory().getHolder();
-            if (holder instanceof BlockLockInventory) {
-                ((BlockLockInventory) holder).onClick(event, state);
-            } else if (holder instanceof BlockInfoInventory) {
-                ((BlockInfoInventory) holder).onClick(event, state);
-            } else if (holder instanceof FriendDetailInventory) {
-                ((FriendDetailInventory) holder).onClick(event, state);
-            } else if (holder instanceof FriendManageInventory) {
-                ((FriendManageInventory) holder).onClick(event, state);
-            } else if (holder instanceof FriendSearchResultInventory) {
-                ((FriendSearchResultInventory) holder).onClick(event, state);
-            } else if (holder instanceof UserSettingsInventory) {
-                ((UserSettingsInventory) holder).onClick(event, state);
+            if (holder instanceof BlockProtInventory) {
+                ((BlockProtInventory) holder).onClick(event, state);
             }
         } else {
             // No state, let's check if they're in some block inventory.
@@ -92,18 +82,8 @@ public class InventoryEventListener implements Listener {
         if (state == null) return;
 
         InventoryHolder holder = event.getInventory().getHolder();
-        if (holder instanceof BlockLockInventory) {
-            ((BlockLockInventory) holder).onClose(event, state);
-        } else if (holder instanceof BlockInfoInventory) {
-            ((BlockInfoInventory) holder).onClose(event, state);
-        } else if (holder instanceof FriendDetailInventory) {
-            ((FriendDetailInventory) holder).onClose(event, state);
-        } else if (holder instanceof FriendManageInventory) {
-            ((FriendManageInventory) holder).onClose(event, state);
-        } else if (holder instanceof FriendSearchResultInventory) {
-            ((FriendSearchResultInventory) holder).onClose(event, state);
-        } else if (holder instanceof UserSettingsInventory) {
-            ((UserSettingsInventory) holder).onClose(event, state);
+        if (holder instanceof BlockProtInventory) {
+            ((BlockProtInventory) holder).onClose(event, state);
         }
     }
 }

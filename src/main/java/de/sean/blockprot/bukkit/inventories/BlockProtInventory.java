@@ -20,13 +20,9 @@ package de.sean.blockprot.bukkit.inventories;
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.*;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -142,96 +138,73 @@ public abstract class BlockProtInventory implements InventoryHolder {
     }
 
     /**
-     * Allows quick modification of the default friends list with the {@code modify} callback.
-     *
-     * @param player The player who we want to modify the default friends for.
-     * @param modify The callback function in which the given list can be modified.
-     * @since 0.3.2
-     */
-    protected void modifyDefaultFriends(
-        @NotNull final Player player, @NotNull final Function<List<String>, ?> modify) {
-        final PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(player);
-        List<String> currentFriends = settingsHandler.getDefaultFriends();
-        modify.apply(currentFriends);
-        settingsHandler.setDefaultFriends(currentFriends);
-    }
-
-    /**
      * Modifies given {@code friend} for given {@code action}.
      *
-     * @param state  The current inventory state for {@code player}.
      * @param player The player, or better the owner of the block we want to modify
      *               or the player we want to edit the default friends for.
      * @param friend The friend we want to do {@code action} for.
      * @param action The action to perform with {@code friend}.
-     * @since 0.3.2
+     * @since 0.4.7
      */
     protected final void modifyFriendsForAction(
-        @NotNull final InventoryState state,
         @NotNull final Player player,
         @NotNull final OfflinePlayer friend,
         @NotNull final FriendModifyAction action
     ) {
-        final InventoryState.FriendSearchState searchState = state.friendSearchState;
-        if (searchState == InventoryState.FriendSearchState.FRIEND_SEARCH) {
-            if (state.getBlock() == null) return;
-            applyChanges(
-                state.getBlock(),
-                player,
-                false,
-                true,
-                (handler) -> handler.modifyFriends(
-                    player.getUniqueId().toString(),
-                    friend.getUniqueId().toString(),
-                    action
-                )
-            );
-        } else if (searchState == InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH) {
-            modifyDefaultFriends(
-                player,
-                (l) -> {
-                    switch (action) {
-                        case ADD_FRIEND:
-                            return l.add(friend.getUniqueId().toString());
-                        case REMOVE_FRIEND:
-                            return l.remove(friend.getUniqueId().toString());
-                        default:
-                            return null;
-                    }
+        applyChanges(
+            player,
+            (handler) -> handler.modifyFriends(
+                player.getUniqueId().toString(),
+                friend.getUniqueId().toString(),
+                action
+            ),
+            (handler) -> {
+                List<String> currentFriends = handler.getDefaultFriends();
+                switch (action) {
+                    case ADD_FRIEND:
+                        currentFriends.add(friend.getUniqueId().toString());
+                        handler.setDefaultFriends(currentFriends);
+                        break;
+                    case REMOVE_FRIEND:
+                        currentFriends.remove(friend.getUniqueId().toString());
+                        handler.setDefaultFriends(currentFriends);
+                        break;
                 }
-            );
-        }
+                return null;
+            }
+        );
     }
 
     /**
-     * Creates a temporary {@link BlockNBTHandler} and allows the callback
-     * {@code changes} to apply any changes using the handler.
+     * Creates a temporary {@link BlockNBTHandler} or {@link PlayerSettingsHandler}
+     * depending on {@link InventoryState#friendSearchState},
      *
-     * @param block       The block to use for the handler.
-     * @param player      The player to send the message to or exit the inventory of.
-     * @param exit        Whether we should exit the inventory using {@link #closeAndOpen(Player, Inventory)}.
-     * @param sendMessage Whether to send the message from the {@link LockReturnValue}
-     *                    returned by the callback.
-     * @param changes     The callback.
-     * @since 0.2.2
+     * @param player The player we use to obtain the {@link InventoryState} for.
+     * @param onBlockChanges A callback to easily modify a {@link BlockNBTHandler}. Can
+     *                       be null, if this path is not intended.
+     * @param onSettingsChanges A callback to easily modify a {@link PlayerSettingsHandler}.
+     *                          Can be null, if this path is not intended.
+     * @since 0.4.7
      */
     protected void applyChanges(
-        @NotNull final Block block,
         @NotNull final Player player,
-        final boolean exit,
-        final boolean sendMessage,
-        @NotNull final Function<BlockNBTHandler, LockReturnValue> changes) {
-        BlockNBTHandler handler = new BlockNBTHandler(block);
-        LockReturnValue ret = changes.apply(handler);
-        if (ret.success) {
-            handler.applyToOtherContainer();
-        }
-        if (sendMessage) {
-            BaseComponent[] messageComponent = TextComponent.fromLegacyText(ret.message);
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, messageComponent);
-        }
-        if (exit) {
-            closeAndOpen(player, null);
+        @Nullable final Function<BlockNBTHandler, LockReturnValue> onBlockChanges,
+        @Nullable final Function<PlayerSettingsHandler, Void> onSettingsChanges) {
+        InventoryState state = InventoryState.get(player.getUniqueId());
+        switch (state.friendSearchState) {
+            case FRIEND_SEARCH:
+                if (onBlockChanges == null) return;
+                assert state.getBlock() != null;
+                BlockNBTHandler nbtHandler = new BlockNBTHandler(state.getBlock());
+                LockReturnValue ret = onBlockChanges.apply(nbtHandler);
+                if (ret.success)
+                    nbtHandler.applyToOtherContainer();
+                break;
+            case DEFAULT_FRIEND_SEARCH:
+                if (onSettingsChanges == null) return;
+                PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(player);
+                onSettingsChanges.apply(settingsHandler);
+                break;
         }
     }
 

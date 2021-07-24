@@ -58,7 +58,7 @@ public class FriendSearchResultInventory extends BlockProtInventory {
                 int index = findItemIndex(item);
                 if (index >= 0 && index < state.friendResultCache.size()) {
                     OfflinePlayer friend = state.friendResultCache.get(index);
-                    modifyFriendsForAction(state, player, friend, FriendModifyAction.ADD_FRIEND);
+                    modifyFriendsForAction(player, friend, FriendModifyAction.ADD_FRIEND);
                     closeAndOpen(player, new FriendManageInventory().fill(player));
                 }
                 break;

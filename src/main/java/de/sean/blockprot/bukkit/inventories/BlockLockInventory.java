@@ -54,8 +54,10 @@ public class BlockLockInventory extends BlockProtInventory {
 
         Player player = (Player) event.getWhoClicked();
         if (BlockProt.getDefaultConfig().isLockable(block.getType()) && event.getSlot() == 0) {
-            applyChanges(block, player, true, true,
-                (handler) -> handler.lockBlock(player)
+            applyChanges(
+                player,
+                (handler) -> handler.lockBlock(player),
+                null
             );
         } else if (item.getType() == Material.REDSTONE || item.getType() == Material.GUNPOWDER) {
             redstone = !redstone;
@@ -86,11 +88,13 @@ public class BlockLockInventory extends BlockProtInventory {
     @Override
     public void onClose(@NotNull InventoryCloseEvent event, @NotNull InventoryState state) {
         if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH && state.getBlock() != null) {
-            applyChanges(state.getBlock(), (Player)event.getPlayer(), false, false,
+            applyChanges(
+                (Player)event.getPlayer(),
                 (handler) -> handler.lockRedstoneForBlock(
                     event.getPlayer().getUniqueId().toString(),
                     redstone
-                )
+                ),
+                null
             );
         }
     }

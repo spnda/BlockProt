@@ -77,8 +77,7 @@ public final class FriendDetailInventory extends BlockProtInventory {
             case RED_STAINED_GLASS_PANE: {
                 OfflinePlayer friend = state.currentFriend;
                 assert friend != null;
-                modifyFriendsForAction(
-                    state, player, friend, FriendModifyAction.REMOVE_FRIEND);
+                modifyFriendsForAction(player, friend, FriendModifyAction.REMOVE_FRIEND);
                 // We remove the friend, so the player does not exist anymore either.
                 this.playerHandler = null;
                 closeAndOpen(player, new FriendManageInventory().fill(player));

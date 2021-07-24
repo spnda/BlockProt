@@ -4,12 +4,12 @@ on: [workflow_dispatch]
 
 jobs:
   release_build:
-    runs-on: ubuntu-latest
-    # container:
-    #   image: openjdk:16-jdk
-    # options: --user root
+    runs-on: ubuntu-20.04
+    container:
+      image: adoptopenjdk:16-jdk
+      options: --user root
     steps:
-      - run: apt update && apt install git -y && git --version # Ensure Git is installed for the changelog script.
+      - run: apt-get update && apt-get install git -y && git --version # Ensure Git is installed for the changelog script.
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0

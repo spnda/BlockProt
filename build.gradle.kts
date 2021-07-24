@@ -207,7 +207,7 @@ tasks.register("github") {
 
         val releaseBuilder = GHReleaseBuilder(repository, version as String)
         releaseBuilder.name(version as String)
-        releaseBuilder.body("A changelog can be found at https://github.com/spnda/BlockProt/commits")
+        releaseBuilder.body(env["CHANGELOG"] ?: "No changelog.")
         releaseBuilder.commitish(gitBranchName())
 
         val ghRelease = releaseBuilder.create()

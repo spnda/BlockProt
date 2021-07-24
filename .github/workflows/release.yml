@@ -3,13 +3,22 @@ name: Release
 on: [workflow_dispatch]
 
 jobs:
-  build:
-    runs-on: ubuntu-20.04
+  release_build:
+    runs-on: ubuntu-latest
     # container:
     #   image: openjdk:16-jdk
     # options: --user root
     steps:
+      - run: apt update && apt install git -y && git --version # Ensure Git is installed for the changelog script.
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: spnda/fabric-action-scripts@v1
+        id: changelog
+        with:
+          context: changelog
+          workflow_id: release.yml
+          commit_regex: (Codechange|Refactor)(.*) # We want to exclude these commits in the changelog.
       - name: Set up JDK 16
         uses: actions/setup-java@v2
         with:
@@ -20,6 +29,7 @@ jobs:
         env:
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CHANGELOG: ${{ steps.changelog.outputs.changelog }}
       - uses: actions/upload-artifact@v2
         with:
           name: Artifacts

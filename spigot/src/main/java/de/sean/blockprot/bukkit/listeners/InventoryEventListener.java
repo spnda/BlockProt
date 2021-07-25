@@ -19,7 +19,8 @@
 package de.sean.blockprot.bukkit.listeners;
 
 import de.sean.blockprot.bukkit.BlockProt;
-import de.sean.blockprot.bukkit.inventories.*;
+import de.sean.blockprot.bukkit.inventories.BlockProtBukkitScreen;
+import de.sean.blockprot.bukkit.inventories.InventoryState;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.FriendHandler;
 import org.bukkit.entity.Player;
@@ -42,8 +43,8 @@ public class InventoryEventListener implements Listener {
             // We have some sort of inventory state, so we'll
             // assume the player is currently in some of our inventories.
             InventoryHolder holder = event.getInventory().getHolder();
-            if (holder instanceof BlockProtInventory) {
-                ((BlockProtInventory) holder).onClick(event, state);
+            if (holder instanceof BlockProtBukkitScreen) {
+                ((BlockProtBukkitScreen) holder).onClick(event, state);
             }
         } else {
             // No state, let's check if they're in some block inventory.
@@ -83,8 +84,8 @@ public class InventoryEventListener implements Listener {
         if (state == null) return;
 
         InventoryHolder holder = event.getInventory().getHolder();
-        if (holder instanceof BlockProtInventory) {
-            ((BlockProtInventory) holder).onClose(event, state);
+        if (holder instanceof BlockProtBukkitScreen) {
+            ((BlockProtBukkitScreen) holder).onClose(event, state);
         }
     }
 }

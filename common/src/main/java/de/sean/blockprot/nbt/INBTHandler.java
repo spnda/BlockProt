@@ -16,29 +16,20 @@
  * along with BlockProt.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.sean.blockprot.bukkit.nbt;
+package de.sean.blockprot.nbt;
 
-import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * The base NBT Handler.
  *
- * @param <T> The type of the NBT container. {@link NBTCompound}
- *            is the base of all containers and works with all of them,
- *            however there are some special conditions and functions
- *            for specific containers.
+ * @param <T> The type of the NBT container. A NBT compound should the
+ *            base of all containers and works with all of them, however
+ *            there are some special conditions and functions for specific
+ *            containers.
  * @since 0.3.0
  */
-public abstract class NBTHandler<T extends NBTCompound> {
-    public static final String PERMISSION_LOCK = "blockprot.lock";
-
-    public static final String PERMISSION_INFO = "blockprot.info";
-
-    public static final String PERMISSION_ADMIN = "blockprot.admin";
-
-    public static final String PERMISSION_BYPASS = "blockprot.bypass";
-
+public abstract class INBTHandler<T> {
     /**
      * The NBT container for this handler.
      *
@@ -51,7 +42,18 @@ public abstract class NBTHandler<T extends NBTCompound> {
      *
      * @since 0.3.0
      */
-    protected NBTHandler() {
+    protected INBTHandler() {
+    }
+
+    /**
+     * Get a copy of the underlying NBT container.
+     *
+     * @return The NBT container.
+     * @since 0.4.7
+     */
+    @NotNull
+    public T getContainer() {
+        return container;
     }
 
     /**
@@ -61,10 +63,7 @@ public abstract class NBTHandler<T extends NBTCompound> {
      * @since 0.4.4
      */
     @NotNull
-    public String getName() {
-        String name = container.getName();
-        return name == null ? "" : name;
-    }
+    public abstract String getName();
 
     /**
      * Copies all values of the other handler to this handler.
@@ -72,5 +71,5 @@ public abstract class NBTHandler<T extends NBTCompound> {
      * @param handler The handler to copy values from.
      * @since 0.3.2
      */
-    public abstract void mergeHandler(@NotNull final NBTHandler<?> handler);
+    public abstract void mergeHandler(@NotNull final INBTHandler<?> handler);
 }

@@ -19,8 +19,8 @@
 package de.sean.blockprot.bukkit.inventories;
 
 import de.sean.blockprot.bukkit.BlockProt;
-import de.sean.blockprot.bukkit.TranslationKey;
-import de.sean.blockprot.bukkit.Translator;
+import de.sean.blockprot.bukkit.translation.TranslationKey;
+import de.sean.blockprot.bukkit.translation.Translator;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.nbt.FriendModifyAction;
 import org.bukkit.Bukkit;
@@ -41,12 +41,12 @@ import java.util.UUID;
  * searched for. This can be used to easily add a player that they
  * had just searched for again.
  */
-public class FriendSearchHistoryInventory extends BlockProtInventory {
+public class FriendSearchHistoryScreen extends BlockProtBukkitScreen {
     private final int maxSkulls = getSize() - 2;
 
     @Override
-    int getSize() {
-        return InventoryConstants.tripleLine;
+    public int getRows() {
+        return 3;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class FriendSearchHistoryInventory extends BlockProtInventory {
         if (item == null) return;
         switch (item.getType()) {
             case BLACK_STAINED_GLASS_PANE: {
-                closeAndOpen(player, new FriendManageInventory().fill(player));
+                closeAndOpen(player, new FriendManageScreen().fill(player));
                 break;
             }
             case PLAYER_HEAD:
@@ -70,7 +70,7 @@ public class FriendSearchHistoryInventory extends BlockProtInventory {
                 if (index >= 0 && index < state.friendResultCache.size()) {
                     OfflinePlayer friend = state.friendResultCache.get(index);
                     modifyFriendsForAction(player, friend, FriendModifyAction.ADD_FRIEND);
-                    closeAndOpen(player, new FriendManageInventory().fill(player));
+                    closeAndOpen(player, new FriendManageScreen().fill(player));
                 }
                 break;
             }

@@ -20,7 +20,7 @@ package de.sean.blockprot.bukkit.commands;
 
 import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.inventories.InventoryState;
-import de.sean.blockprot.bukkit.inventories.UserSettingsInventory;
+import de.sean.blockprot.bukkit.inventories.UserSettingsScreen;
 import de.sean.blockprot.bukkit.tasks.UpdateChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -28,7 +28,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,7 +60,7 @@ public final class BlockProtCommand implements TabExecutor {
                     InventoryState state = new InventoryState(null);
                     state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH;
                     InventoryState.set(player.getUniqueId(), state);
-                    player.openInventory(new UserSettingsInventory().fill(player));
+                    player.openInventory(new UserSettingsScreen().fill(player));
                     return true;
                 } else {
                     return false;
@@ -72,7 +71,7 @@ public final class BlockProtCommand implements TabExecutor {
         return false;
     }
 
-    @Nullable
+    @NotNull
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (args.length <= 1) {

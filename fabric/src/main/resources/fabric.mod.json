@@ -1,0 +1,38 @@
+{
+    "schemaVersion": 1,
+    "id": "blockprot",
+    "version": "${version}",
+    "name": "BlockProt",
+    "description": "A simple block protection plugin",
+    "authors": [
+        "spnda"
+    ],
+    "contact": {
+        "homepage": "https://github.com/spnda/BukkitPlugins",
+        "sources": "https://github.com/spnda/BukkitPlugins"
+    },
+    "license": "GPLv3",
+    "icon": "assets/blockprot/icon.png",
+    "environment": "server",
+    "entrypoints": {
+        "server": [
+            "de.sean.blockprot.fabric.BlockProt"
+        ]
+    },
+    "mixins": [
+        "blockprot.mixins.json"
+    ],
+    "accessWidener": "blockprot.accesswidener",
+    "depends": {
+        "fabricloader": ">=0.11.3",
+        "fabric": "*",
+        "minecraft": "1.17.x",
+        "java": ">=16",
+        "sgui": "*"
+    },
+    "custom": {
+        "modmenu": {
+
+        }
+    }
+}

@@ -20,12 +20,13 @@ package de.sean.blockprot.bukkit.inventories;
 
 import de.sean.blockprot.nbt.FriendModifyAction;
 import de.sean.blockprot.bukkit.BlockProt;
-import de.sean.blockprot.bukkit.TranslationKey;
-import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.integrations.PluginIntegration;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.FriendHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
+import de.sean.blockprot.bukkit.translation.TranslationKey;
+import de.sean.blockprot.bukkit.translation.Translator;
+import de.sean.blockprot.nbt.FriendModifyAction;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -44,9 +45,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FriendSearchResultInventory extends BlockProtInventory {
+public class FriendSearchResultScreen extends BlockProtBukkitScreen {
     @Override
-    int getSize() {
+    public int getRows() {
         return InventoryConstants.tripleLine;
     }
 
@@ -69,7 +70,7 @@ public class FriendSearchResultInventory extends BlockProtInventory {
                 // go right back to the FriendAddInventory.
                 closeAndOpen(
                     player,
-                    new FriendManageInventory().fill(player)
+                    new FriendManageScreen().fill(player)
                 );
                 break;
             case PLAYER_HEAD:
@@ -78,7 +79,7 @@ public class FriendSearchResultInventory extends BlockProtInventory {
                 if (index >= 0 && index < state.friendResultCache.size()) {
                     OfflinePlayer friend = state.friendResultCache.get(index);
                     modifyFriendsForAction(player, friend, FriendModifyAction.ADD_FRIEND);
-                    closeAndOpen(player, new FriendManageInventory().fill(player));
+                    closeAndOpen(player, new FriendManageScreen().fill(player));
 
                     // Update the search history
                     PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(player);

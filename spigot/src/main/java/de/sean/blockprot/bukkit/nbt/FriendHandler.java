@@ -18,6 +18,7 @@
 
 package de.sean.blockprot.bukkit.nbt;
 
+import de.sean.blockprot.nbt.IFriendHandler;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,15 +32,13 @@ import java.util.EnumSet;
  *
  * @since 0.3.0
  */
-public final class FriendHandler extends NBTHandler<NBTCompound> {
-    static final String ACCESS_FLAGS_ATTRIBUTE = "blockprot_access_flags";
-
+public final class FriendHandler extends IFriendHandler<NBTCompound, BlockAccessFlag> {
     /**
      * @param compound The NBT compound used.
      * @since 0.3.0
      */
     public FriendHandler(@NotNull final NBTCompound compound) {
-        super();
+        super(compound.getName());
         this.container = compound;
     }
 
@@ -48,6 +47,7 @@ public final class FriendHandler extends NBTHandler<NBTCompound> {
      *
      * @since 0.3.0
      */
+    @Override
     @NotNull
     public String getName() {
         String name = container.getName();
@@ -61,7 +61,7 @@ public final class FriendHandler extends NBTHandler<NBTCompound> {
      * @see #getAccessFlags()
      * @since 0.4.7
      */
-    private int getAccessFlagsBitset() {
+    protected int getAccessFlagsBitset() {
         if (!container.hasKey(ACCESS_FLAGS_ATTRIBUTE)) return BlockAccessFlag.READ.getFlag() | BlockAccessFlag.WRITE.getFlag();
         else return container.getInteger(ACCESS_FLAGS_ATTRIBUTE);
     }
@@ -72,7 +72,7 @@ public final class FriendHandler extends NBTHandler<NBTCompound> {
      * @param flagsBitset The new bitset.
      * @since 0.4.7
      */
-    private void setAccessFlagsBitset(final int flagsBitset) {
+    protected void setAccessFlagsBitset(final int flagsBitset) {
         container.setInteger(ACCESS_FLAGS_ATTRIBUTE, flagsBitset);
     }
 
@@ -101,42 +101,13 @@ public final class FriendHandler extends NBTHandler<NBTCompound> {
         container.setInteger(ACCESS_FLAGS_ATTRIBUTE, flags.stream().mapToInt(BlockAccessFlag::getFlag).sum());
     }
 
-    /**
-     * Checks if this player can read the contents of the parents
-     * block.
-     *
-     * @return True, if the player is allowed to see the container's
-     * contents.
-     * @since 0.3.0
-     */
+    @Override
     public boolean canRead() {
         return getAccessFlags().contains(BlockAccessFlag.READ);
     }
 
-    /**
-     * Checks if this player can write the contents of the parents
-     * block. This means that the player should be allowed to
-     * take and add items at their will.
-     *
-     * @return True, if the player has write access to this block.
-     * @since 0.3.0
-     */
+    @Override
     public boolean canWrite() {
         return getAccessFlags().contains(BlockAccessFlag.WRITE);
-    }
-
-    /**
-     * {@inheritDoc}
-     * <p>
-     * This only merges values if {@code handler} is an instance of {@link FriendHandler},
-     * and only merges the access flags.
-     *
-     * @since 0.4.7
-     */
-    @Override
-    public void mergeHandler(@NotNull NBTHandler<?> handler) {
-        if (handler instanceof FriendHandler) {
-            this.setAccessFlagsBitset(((FriendHandler) handler).getAccessFlagsBitset());
-        }
     }
 }

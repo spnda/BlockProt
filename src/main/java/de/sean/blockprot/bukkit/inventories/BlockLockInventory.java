@@ -59,6 +59,7 @@ public class BlockLockInventory extends BlockProtInventory {
                 (handler) -> handler.lockBlock(player),
                 null
             );
+            closeAndOpen(player, null);
         } else if (item.getType() == Material.REDSTONE || item.getType() == Material.GUNPOWDER) {
             redstone = !redstone;
             setItemStack(

@@ -22,7 +22,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.0.0"
     id("com.matthewprenger.cursegradle") version "1.4.0"
     id("org.ajoberstar.grgit") version "4.1.0"
-    id("com.diffplug.spotless") version "5.14.1"
+    id("com.diffplug.spotless") version "5.14.2"
 }
 
 val env: MutableMap<String, String> = System.getenv()

@@ -113,12 +113,12 @@ public class BlockEventListener implements Listener {
                 1
             );
 
-            if ((new PlayerSettingsHandler(event.getPlayer())).getLockOnPlace()) {
+            PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(event.getPlayer());
+            if (settingsHandler.getLockOnPlace()) {
                 BlockLockOnPlaceEvent lockOnPlaceEvent = new BlockLockOnPlaceEvent(event.getBlock(), event.getPlayer());
                 Bukkit.getPluginManager().callEvent(lockOnPlaceEvent);
                 if (!lockOnPlaceEvent.isCancelled()) {
                     handler.lockBlock(event.getPlayer());
-                    PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(event.getPlayer());
                     List<String> friends = settingsHandler.getDefaultFriends();
                     for (String friend : friends) {
                         handler.addFriend(friend);

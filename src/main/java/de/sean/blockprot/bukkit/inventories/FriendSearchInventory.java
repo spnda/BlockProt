@@ -33,9 +33,6 @@ public class FriendSearchInventory {
     @NotNull
     private static final String inventoryName = Translator.get(TranslationKey.INVENTORIES__FRIENDS__SEARCH);
 
-    @NotNull
-    private static final Map<UUID, Inventory> playerInventories = new HashMap<>();
-
     public static void openAnvilInventory(@NotNull final Player requestingPlayer) {
         (new AnvilGUI.Builder())
             .onComplete(FriendSearchInventory::onCompleteCallback)
@@ -48,7 +45,6 @@ public class FriendSearchInventory {
 
     private static AnvilGUI.Response onCompleteCallback(@NotNull final Player player, @NotNull final String searchQuery) {
         Inventory inventory = new FriendSearchResultInventory().fill(player, searchQuery);
-        playerInventories.put(player.getUniqueId(), inventory);
-        return AnvilGUI.Response.openInventory(playerInventories.get(player.getUniqueId()));
+        return AnvilGUI.Response.openInventory(inventory);
     }
 }

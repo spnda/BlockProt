@@ -86,7 +86,7 @@ repositories {
 dependencies {
     // Spigot
     compileOnly("org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT")
-    compileOnly("org.apache.commons:commons-lang3:3.0")
+    compileOnly("org.apache.commons:commons-lang3:3.12.0")
 
     // bStats
     api("org.bstats:bstats-bukkit:2.2.1")

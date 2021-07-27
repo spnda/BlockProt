@@ -173,10 +173,13 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
      * @since 0.3.0
      */
     public void setFriends(@NotNull final List<FriendHandler> access) {
-        NBTCompound compound = container.getOrCreateCompound(LOCK_ATTRIBUTE);
-        for (FriendHandler handler : access) {
-            NBTCompound newCompound = compound.addCompound(handler.getName());
-            newCompound.mergeCompound(handler.container);
+        container.removeKey(LOCK_ATTRIBUTE);
+        if (!access.isEmpty()) {
+            NBTCompound compound = container.addCompound(LOCK_ATTRIBUTE);
+            for (FriendHandler handler : access) {
+                NBTCompound newCompound = compound.addCompound(handler.getName());
+                newCompound.mergeCompound(handler.container);
+            }
         }
     }
 
@@ -309,7 +312,7 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
      * Locks this block for given {@code player} as the owner.
      *
      * @param player The player to set as an owner.
-     * @return A {@link LockReturnValue} whether or not the block was successfully locked,
+     * @return A {@link LockReturnValue} whether the block was successfully locked,
      * else there might have been issues with permissions.
      * @since 0.4.6
      */

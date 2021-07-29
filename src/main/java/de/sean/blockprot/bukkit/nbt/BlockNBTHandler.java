@@ -18,7 +18,6 @@
 package de.sean.blockprot.bukkit.nbt;
 
 import de.sean.blockprot.bukkit.BlockProt;
-import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.config.BlockProtConfig;
 import de.sean.blockprot.bukkit.util.BlockUtil;
 import de.tr7zw.changeme.nbtapi.NBTBlock;
@@ -326,13 +325,13 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
             owner = playerUuid;
             setOwner(owner);
             this.applyToOtherContainer();
-            return new LockReturnValue(true, TranslationKey.MESSAGES__PERMISSION_GRANTED);
+            return new LockReturnValue(true);
         } else if (owner.equals(playerUuid) || player.isOp() || player.hasPermission(PERMISSION_ADMIN)) {
             this.clear();
             this.applyToOtherContainer();
-            return new LockReturnValue(true, TranslationKey.MESSAGES__UNLOCKED);
+            return new LockReturnValue(true);
         }
-        return new LockReturnValue(false, TranslationKey.MESSAGES__NO_PERMISSION);
+        return new LockReturnValue(false);
     }
 
     /**
@@ -370,9 +369,9 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
             boolean redstone = value == null ? !getRedstone() : value;
             setRedstone(redstone);
             this.applyToOtherContainer();
-            return new LockReturnValue(true, redstone ? TranslationKey.MESSAGES__REDSTONE_REMOVED : TranslationKey.MESSAGES__REDSTONE_ADDED);
+            return new LockReturnValue(true);
         }
-        return new LockReturnValue(false, TranslationKey.MESSAGES__NO_PERMISSION);
+        return new LockReturnValue(false);
     }
 
     /**
@@ -421,32 +420,31 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
     public LockReturnValue modifyFriends(@NotNull final String player, @NotNull final String friend, @NotNull final FriendModifyAction action) {
         // This theoretically shouldn't happen, though we will still check for it just to be sure
         if (!isOwner(player)) return new LockReturnValue(
-            false,
-            TranslationKey.MESSAGES__NO_PERMISSION
+            false
         );
 
         final List<FriendHandler> friends = getFriends();
         switch (action) {
             case ADD_FRIEND: {
                 if (containsFriend(friends, friend)) {
-                    return new LockReturnValue(false, TranslationKey.MESSAGES__FRIEND_ALREADY_ADDED);
+                    return new LockReturnValue(false);
                 } else {
                     addFriend(friend);
                     this.applyToOtherContainer();
-                    return new LockReturnValue(true, TranslationKey.MESSAGES__FRIEND_ADDED);
+                    return new LockReturnValue(true);
                 }
             }
             case REMOVE_FRIEND: {
                 if (containsFriend(friends, friend)) {
                     removeFriend(friend);
                     this.applyToOtherContainer();
-                    return new LockReturnValue(true, TranslationKey.MESSAGES__FRIEND_REMOVED);
+                    return new LockReturnValue(true);
                 } else {
-                    return new LockReturnValue(false, TranslationKey.MESSAGES__FRIEND_CANT_BE_REMOVED);
+                    return new LockReturnValue(false);
                 }
             }
             default: {
-                return new LockReturnValue(false, "Unknown error occured.");
+                return new LockReturnValue(false);
             }
         }
     }

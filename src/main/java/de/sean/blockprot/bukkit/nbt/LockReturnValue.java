@@ -29,27 +29,41 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class LockReturnValue {
     /**
-     * Whether or not the operation completed successfully.
+     * Whether the operation completed successfully.
      *
      * @since 0.2.3
      */
     public final boolean success;
 
     /**
-     * A error/success message for the player.
+     * An error/success message for the player.
      *
      * @since 0.2.3
      */
+    @Deprecated
     @NotNull
     public final String message;
 
     /**
+     * Create a new lock return value.
+     *
+     * @param success Whether the operation completed successfully.
+     * @since 0.5.0
+     */
+    public LockReturnValue(final boolean success) {
+        this.success = success;
+        this.message = "";
+    }
+
+    /**
      * Creates a new LockReturnValue with given values.
      *
-     * @param success Whether or not the operation completed successfully.
-     * @param message A error/success message for the player.
+     * @param success Whether the operation completed successfully.
+     * @param message An error/success message for the player.
      * @since 0.1.10
+     * @deprecated since 0.5.0. Use {@link #LockReturnValue(boolean)} instead.
      */
+    @Deprecated
     public LockReturnValue(final boolean success, @NotNull final String message) {
         this.success = success;
         this.message = message;
@@ -58,10 +72,12 @@ public final class LockReturnValue {
     /**
      * Creates a new LockReturnValue with given values.
      *
-     * @param success Whether or not the operation completed successfully.
+     * @param success Whether the operation completed successfully.
      * @param key     A translated error/success message for the player.
      * @since 0.2.3
+     * @deprecated since 0.5.0. Use {@link #LockReturnValue(boolean)} instead.
      */
+    @Deprecated
     public LockReturnValue(final boolean success, @NotNull final TranslationKey key) {
         this.success = success;
         this.message = Translator.get(key);

@@ -103,11 +103,12 @@ public class BlockEventListener implements Listener {
                 () -> {
                     BlockState doubleChest = BlockUtil.getDoubleChest(block);
                     if (doubleChest == null) return;
-                    BlockNBTHandler otherChestHandler = new BlockNBTHandler(doubleChest.getBlock());
-                    if (otherChestHandler.isProtected() && otherChestHandler.isOwner(playerUuid)) {
+                    BlockNBTHandler originalChestHandler = new BlockNBTHandler(doubleChest.getBlock());
+                    if (originalChestHandler.isProtected() && !originalChestHandler.isOwner(playerUuid)) {
                         // We can't cancel the event 1 tick later, its already executed. We'll just need to destroy the block and drop it.
-                        handler.mergeHandler(otherChestHandler);
                         event.getPlayer().getWorld().getBlockAt(block.getLocation()).breakNaturally();
+                    } else {
+                        handler.mergeHandler(originalChestHandler);
                     }
                 },
                 1

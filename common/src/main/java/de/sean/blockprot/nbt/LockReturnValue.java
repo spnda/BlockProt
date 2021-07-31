@@ -47,7 +47,7 @@ public final class LockReturnValue {
      * Create a new lock return value.
      *
      * @param success Whether the operation completed successfully.
-     * @since 0.5.0
+     * @since 0.4.9
      */
     public LockReturnValue(final boolean success) {
         this.success = success;
@@ -60,7 +60,7 @@ public final class LockReturnValue {
      * @param success Whether the operation completed successfully.
      * @param message An error/success message for the player.
      * @since 0.1.10
-     * @deprecated since 0.5.0. Use {@link #LockReturnValue(boolean)} instead.
+     * @deprecated since 0.4.9. Use {@link #LockReturnValue(boolean)} instead.
      */
     @Deprecated
     public LockReturnValue(final boolean success, @NotNull final String message) {

@@ -1,5 +1,7 @@
+import okhttp3.OkHttpClient
 import org.kohsuke.github.GHReleaseBuilder
-import org.kohsuke.github.GitHub
+import org.kohsuke.github.GitHubBuilder
+import org.kohsuke.github.extras.okhttp3.OkHttpConnector
 
 buildscript {
     repositories {
@@ -8,6 +10,7 @@ buildscript {
 
     dependencies {
         classpath("org.kohsuke:github-api:1.132")
+        classpath("com.squareup.okhttp3:okhttp:4.9.1")
     }
 }
 
@@ -83,7 +86,13 @@ tasks.register("github") {
     }
 
     doLast {
-        val github = GitHub.connectUsingOAuth(env["GITHUB_TOKEN"] as String)
+        val github = GitHubBuilder
+            .fromEnvironment()
+            // We have to use OkHttpClient for reflection reasons in JDK 16
+            // See https://github.com/hub4j/github-api/issues/1202
+            .withConnector(OkHttpConnector(OkHttpClient()))
+            .withOAuthToken(env["GITHUB_TOKEN"] as String)
+            .build()
         val repository = github.getRepository(env["GITHUB_REPOSITORY"])
 
         val releaseBuilder = GHReleaseBuilder(repository, version as String)
@@ -104,6 +113,7 @@ tasks.register("github") {
         files.forEach {
             ghRelease.uploadAsset(it, "application/java-archive")
         }
-        ghRelease.update().name("BlockProt $version").update() // We set the proper name here, as "releaseBuilder.name" is also used for the tag name.
+        // We set the proper name here, as "releaseBuilder.name" is also used for the tag name.
+        ghRelease.update().name("BlockProt $version").update()
     }
 }

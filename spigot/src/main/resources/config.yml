@@ -9,6 +9,7 @@
 #   - translations_en.yml: English
 #   - translations_es.yml: Spanish
 #   - translations_tr.yml: Turkish
+#   - translations_zh_CN.yml: Chinese
 language_file: translations_en.yml
 
 # If set to "true", anytime an admin joins the server, they will

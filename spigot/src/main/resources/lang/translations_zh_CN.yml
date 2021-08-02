@@ -1,11 +1,5 @@
-# Reference translation file for English
-# All colour codes can be used, as found here: https://www.spigotmc.org/wiki/textcosmetics-colors-and-formats/
-# We would be very happy if you submit your translations onto the
-# GitHub repository: https://github.com/spnda/BlockProt/pulls
-
-# We use ISO 639-1 or 639-2 codes for internationalization, it
-# is however safer to use the ISO 639-1 codes for backwards compatibility.
-# See this link for a good list of all codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes.
+# Chinese translation file
+# Translated by MODcraft
 locale: zh_CN
 
 inventories:

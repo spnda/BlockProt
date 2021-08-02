@@ -1,0 +1,47 @@
+# Reference translation file for English
+# All colour codes can be used, as found here: https://www.spigotmc.org/wiki/textcosmetics-colors-and-formats/
+# We would be very happy if you submit your translations onto the
+# GitHub repository: https://github.com/spnda/BlockProt/pulls
+
+# We use ISO 639-1 or 639-2 codes for internationalization, it
+# is however safer to use the ISO 639-1 codes for backwards compatibility.
+# See this link for a good list of all codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes.
+locale: zh_CN
+
+inventories:
+  back: "返回"
+  last_page: "上一页"
+  next_page: "下一页"
+  block_lock: "方块锁"
+  user_settings: "用户设置"
+  block_info: "方块信息"
+  lock: "上锁"
+  unlock: "解锁"
+  redstone:
+    allowed: "已允许红石"
+    disallowed: "已禁止红石"
+    allow: "允许红石"
+    disallow: "禁止红石"
+  lock_on_place:
+    activate: "在放置时自动上锁"
+    deactivate: "永远不在放置时上锁"
+  friends:
+    manage: "管理信任者"
+    edit: "编辑信任者"
+    remove: "移除信任者"
+    search: "搜索玩家"
+    result: "已找到玩家"
+    permissions:
+      read: "查看"
+      write: "放入/拿出"
+
+messages:
+  permission_granted: "许可已授予."
+  unlocked: "已解锁."
+  no_permission: "无权限."
+  friend_added: "已添加信任者."
+  friend_removed: "已移除信任者."
+  friend_already_added: "该信任玩家已经添加过了."
+  friend_cant_be_removed: "该信任玩家无法被移除."
+  redstone_added: "已添加红石保护."
+  redstone_removed: "已移除红石保护."

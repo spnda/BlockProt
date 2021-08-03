@@ -178,7 +178,8 @@ public final class BlockProt extends JavaPlugin {
 
         // Ensure that all translation files have been saved properly.
         // For now, we will simply hard code these values.
-        for (String resource : Sets.newHashSet("translations_de.yml", "translations_en.yml", "translations_es.yml", "translations_tr.yml")) {
+        // TODO: Implement a dynamic system for this. Through gradle possibly?
+        for (String resource : Sets.newHashSet("translations_de.yml", "translations_en.yml", "translations_es.yml", "translations_ko.yml", "translations_tr.yml", "translations_zh_CN.yml")) {
             if ((new File(this.getDataFolder(), langFolder + resource)).exists()) continue;
             this.saveResource(langFolder + resource, false);
         }

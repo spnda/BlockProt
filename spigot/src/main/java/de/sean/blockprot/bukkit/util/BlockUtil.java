@@ -86,9 +86,9 @@ public final class BlockUtil {
     public static Block getOtherDoorHalf(@NotNull final BlockState state) {
         try {
             final Door door = (Door) state.getBlockData();
-            final Location other = state.getLocation();
-            if (door.getHalf() == Bisected.Half.TOP) other.subtract(.0, 1.0, .0);
-            else other.add(.0, 1.0, 0.0);
+            final Location other = state.getLocation().clone();
+            if (door.getHalf() == Bisected.Half.TOP) other.setY(other.getY() - 1);
+            else other.setY(other.getY() + 1);
             return state.getWorld().getBlockAt(other);
         } catch (ClassCastException e) {
             return null;

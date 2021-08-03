@@ -18,14 +18,16 @@
 
 package de.sean.blockprot.bukkit.nbt;
 
+import de.sean.blockprot.bukkit.BlockProt;
+import de.sean.blockprot.bukkit.util.BlockUtil;
 import de.sean.blockprot.nbt.FriendModifyAction;
 import de.sean.blockprot.nbt.LockReturnValue;
 import de.sean.blockprot.util.BlockProtUtil;
-import de.sean.blockprot.bukkit.BlockProt;
-import de.sean.blockprot.bukkit.util.BlockUtil;
 import de.tr7zw.changeme.nbtapi.NBTBlock;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
@@ -36,6 +38,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -61,6 +65,7 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
      *
      * @since 0.2.3
      */
+    @NotNull
     public final Block block;
 
     /**
@@ -83,19 +88,6 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
         } else {
             throw new RuntimeException("Given block " + block.getType() + " is not a lockable block/tile entity");
         }
-    }
-
-    /**
-     * Creates a new handler without a block. This should only be used
-     * for temporary internal operations.
-     *
-     * @param compound The compound value we should use.
-     * @since 0.3.0
-     */
-    private BlockNBTHandler(@NotNull final NBTCompound compound) {
-        super();
-        this.container = compound;
-        this.block = null;
     }
 
     /**
@@ -472,6 +464,15 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
     }
 
     /**
+     * @see #applyToOtherContainer(Predicate, Consumer).
+     * @since 0.4.6
+     */
+    public void applyToOtherContainer() {
+        this.applyToOtherContainer(handler -> true, handler -> {
+        });
+    }
+
+    /**
      * This applies any changes to this container to a possible other
      * half. For example doors consist from two blocks, as do double
      * chests. Without this call, all methods will modify only the local,
@@ -480,19 +481,32 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
      * This method is specifically not called on each modification of NBT,
      * as this would be a massive, unnecessary performance penalty.
      *
-     * @since 0.4.6
+     * @param condition A predicate defining whether the data should be merged
+     *                  over from the given {@link BlockNBTHandler}.
+     * @param orElse    If {@code condition} is not true, this function can be used
+     *                  as a callback when applying fails.
+     * @since 0.4.10
      */
-    public void applyToOtherContainer() {
+    public void applyToOtherContainer(@NotNull Predicate<BlockNBTHandler> condition, @NotNull Consumer<BlockNBTHandler> orElse) {
         if (BlockProt.getDefaultConfig().isLockableDoor(block.getType())) {
             final Block otherDoor = BlockUtil.getOtherDoorHalf(block.getState());
             if (otherDoor == null) return;
             final BlockNBTHandler otherDoorHandler = new BlockNBTHandler(otherDoor);
-            otherDoorHandler.mergeHandler(this);
-        } else {
+            if (condition.test(otherDoorHandler)) {
+                Bukkit.getLogger().info("Applying to other door!");
+                otherDoorHandler.mergeHandler(this);
+            } else {
+                orElse.accept(otherDoorHandler);
+            }
+        } else if (this.block.getType() == Material.CHEST || this.block.getType() == Material.TRAPPED_CHEST) {
             final BlockState doubleChestState = BlockUtil.getDoubleChest(this.block);
             if (doubleChestState != null) {
                 final BlockNBTHandler doubleChestHandler = new BlockNBTHandler(doubleChestState.getBlock());
-                doubleChestHandler.mergeHandler(this);
+                if (condition.test(doubleChestHandler)) {
+                    doubleChestHandler.mergeHandler(this);
+                } else {
+                    orElse.accept(doubleChestHandler);
+                }
             }
         }
     }

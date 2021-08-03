@@ -23,14 +23,12 @@ import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.events.BlockLockOnPlaceEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
-import de.sean.blockprot.bukkit.util.BlockUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -95,22 +93,18 @@ public class BlockEventListener implements Listener {
         Block block = event.getBlockPlaced();
         String playerUuid = event.getPlayer().getUniqueId().toString();
 
-        if (block.getType() == Material.CHEST) {
+        if (block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST) {
             BlockNBTHandler handler = new BlockNBTHandler(block);
 
             // After placing, it takes 1 tick for the chests to connect.
             Bukkit.getScheduler().runTaskLater(
                 this.blockProt,
                 () -> {
-                    BlockState doubleChest = BlockUtil.getDoubleChest(block);
-                    if (doubleChest == null) return;
-                    BlockNBTHandler originalChestHandler = new BlockNBTHandler(doubleChest.getBlock());
-                    if (originalChestHandler.isProtected() && !originalChestHandler.isOwner(playerUuid)) {
+                    handler.applyToOtherContainer(
+                        (otherHandler) -> otherHandler.isNotProtected() || otherHandler.isOwner(playerUuid),
                         // We can't cancel the event 1 tick later, its already executed. We'll just need to destroy the block and drop it.
-                        event.getPlayer().getWorld().getBlockAt(block.getLocation()).breakNaturally();
-                    } else {
-                        handler.mergeHandler(originalChestHandler);
-                    }
+                        (otherHandler) -> event.getPlayer().getWorld().getBlockAt(block.getLocation()).breakNaturally()
+                    );
                 },
                 1
             );
@@ -132,6 +126,7 @@ public class BlockEventListener implements Listener {
                 }
             }
         } else if (BlockProt.getDefaultConfig().isLockable(event.getBlock().getType())) {
+            Bukkit.getLogger().info(event.getBlock().getType().toString());
             BlockNBTHandler handler = new BlockNBTHandler(block);
             // We only try to lock the block if it isn't locked already.
             // Shulker boxes might already be locked, from previous placing.
@@ -139,7 +134,7 @@ public class BlockEventListener implements Listener {
                 BlockLockOnPlaceEvent lockOnPlaceEvent = new BlockLockOnPlaceEvent(event.getBlock(), event.getPlayer());
                 Bukkit.getPluginManager().callEvent(lockOnPlaceEvent);
                 if (!lockOnPlaceEvent.isCancelled()) {
-                    // Assign a empty string for no owner to not have NPEs when reading
+                    // Assign an empty string for no owner to not have NPEs when reading
                     PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(event.getPlayer());
                     handler.setOwner(
                         settingsHandler.getLockOnPlace() ? playerUuid : ""
@@ -148,6 +143,13 @@ public class BlockEventListener implements Listener {
                 if (BlockProt.getDefaultConfig().disallowRedstoneOnPlace()) {
                     handler.setRedstone(false);
                 }
+
+                // So that other half's of doors lock properly.
+                Bukkit.getScheduler().runTaskLater(
+                    this.blockProt,
+                    handler::applyToOtherContainer,
+                    1
+                );
             }
         }
     }

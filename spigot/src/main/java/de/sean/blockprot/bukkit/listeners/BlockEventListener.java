@@ -30,6 +30,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
@@ -60,7 +61,7 @@ public class BlockEventListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent event) {
         if (BlockProt.getDefaultConfig().isWorldExcluded(event.getBlock().getWorld())) return;
         if (!BlockProt.getDefaultConfig().isLockable(event.getBlock().getType())) return; // We only want to check for lockable blocks.
@@ -83,6 +84,14 @@ public class BlockEventListener implements Listener {
             nbtItem.getOrCreateCompound("BlockEntityTag").getOrCreateCompound("PublicBukkitValues").mergeCompound(nbtTile);
 
             event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(), item);
+        }
+
+        // If access was denied and the event has been cancelled.
+        if (event.isCancelled()) {
+            // For blocks, we want to clear the NBT data, as that lives
+            // independently of the actual block state.
+            handler.clear();
+            handler.applyToOtherContainer();
         }
     }
 

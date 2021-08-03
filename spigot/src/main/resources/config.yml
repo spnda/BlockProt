@@ -8,6 +8,7 @@
 #   - translations_de.yml: German
 #   - translations_en.yml: English
 #   - translations_es.yml: Spanish
+#   - translations_ko.yml: Korean
 #   - translations_tr.yml: Turkish
 #   - translations_zh_CN.yml: Chinese
 language_file: translations_en.yml

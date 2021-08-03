@@ -1,0 +1,41 @@
+# Korean translation file
+# Thanks to https://www.spigotmc.org/members/hoehoetvhs.1347576/
+locale: ko
+
+inventories:
+  back: "뒤로"
+  last_page: "마지막 페이지"
+  next_page: "다음 페이지"
+  block_lock: "블럭 잠금 설정"
+  user_settings: "환경 설정"
+  block_info: "블럭 정보"
+  lock: "잠금"
+  unlock: "잠금 해제"
+  redstone:
+    allowed: "레드스톤이 활성화됨"
+    disallowed: "레드스톤이 비활성화됨"
+    allow: "레드스톤 활성화"
+    disallow: "레드스톤 비활성화"
+  lock_on_place:
+    activate: "설치 시 항상 잠굽니다."
+    deactivate: "설치 시 잠구지 않습니다."
+  friends:
+    manage: "친구 관리"
+    edit: "친구 수정"
+    remove: "친구 삭제"
+    search: "친구 검색"
+    result: "친구 검색 결과"
+    permissions:
+      read: "읽기"
+      write: "쓰기"
+
+messages:
+  permission_granted: "권한이 생성되었습니다!"
+  unlocked: "잠금이 해제되었습니다!"
+  no_permission: "당신에겐 권한이 없습니다!"
+  friend_added: "친구가 추가되었습니다!"
+  friend_removed: "친구가 삭제되었습니다!"
+  friend_already_added: "친구가 이미 추가가 되어있습니다!"
+  friend_cant_be_removed: "친구를 제거할 수 없습니다!"
+  redstone_added: "레드스톤 보호가 추가되었습니다!"
+  redstone_removed: "레드스톤 보호가 삭제되었습니다!"

@@ -5,7 +5,7 @@ api-version: 1.14
 authors: [ spnda ]
 description: A simple block protection plugin
 prefix: BlockProt
-website: https://www.github.com/spnda/BukkitPlugins
+website: https://www.github.com/spnda/BlockProt
 permissions:
   blockprot.lock:
     default: true

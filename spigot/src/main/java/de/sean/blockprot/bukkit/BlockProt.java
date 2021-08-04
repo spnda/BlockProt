@@ -18,7 +18,6 @@
 
 package de.sean.blockprot.bukkit;
 
-import com.google.common.collect.Sets;
 import de.sean.blockprot.bukkit.commands.BlockProtCommand;
 import de.sean.blockprot.bukkit.config.DefaultConfig;
 import de.sean.blockprot.bukkit.integrations.PluginIntegration;
@@ -179,7 +178,7 @@ public final class BlockProt extends JavaPlugin {
         // Ensure that all translation files have been saved properly.
         // For now, we will simply hard code these values.
         // TODO: Implement a dynamic system for this. Through gradle possibly?
-        for (String resource : Sets.newHashSet("translations_de.yml", "translations_en.yml", "translations_es.yml", "translations_ko.yml", "translations_tr.yml", "translations_zh_CN.yml")) {
+        for (String resource : Translator.DEFAULT_TRANSLATION_FILES) {
             if ((new File(this.getDataFolder(), langFolder + resource)).exists()) continue;
             this.saveResource(langFolder + resource, false);
         }

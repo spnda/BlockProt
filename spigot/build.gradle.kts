@@ -11,6 +11,7 @@ buildscript {
 plugins {
     id("com.github.johnrengelman.shadow") version "7.0.0"
     id("org.ajoberstar.grgit")
+    id("net.kyori.blossom") version "1.3.0"
 }
 
 val townyVersion: String by project
@@ -36,6 +37,22 @@ dependencies {
     implementation("de.tr7zw:item-nbt-api:2.8.0")
     implementation("net.wesjd:anvilgui:1.5.1-SNAPSHOT") // Allows us to use anvils as inventories without using NMS.
     implementation("com.github.TownyAdvanced:Towny:$townyVersion")
+}
+
+blossom {
+    // We use blossom to dynamically get the list of language files
+    // and inject them into the Translator.java source file.
+    replaceToken(
+        "\$TRANSLATION_FILES",
+        // Get the first sourceSet and iterate over all resource files.
+        fileTree(sourceSets["main"].resources.srcDirs.first()).files.filter {
+            // Use a regex string to only include translations_xx.yml files.
+            it.path.contains("translations_[a-z].+?.yml".toRegex())
+        }.map {
+            it.name
+        }.toString(),
+        "src/main/java/de/sean/blockprot/bukkit/Translator.java"
+    )
 }
 
 tasks.processResources {

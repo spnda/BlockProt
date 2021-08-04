@@ -18,10 +18,13 @@
 
 package de.sean.blockprot.bukkit;
 
+import com.google.common.collect.Sets;
+import de.sean.blockprot.util.BlockProtUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 
 /**
@@ -30,6 +33,12 @@ import java.util.Locale;
  * @since 0.1.10
  */
 public final class Translator {
+    /**
+     * The list of all included translation files. This is updated at compile
+     * time from our gradle buildscript.
+     */
+    public static final HashSet<String> DEFAULT_TRANSLATION_FILES = Sets.newHashSet(BlockProtUtil.parseStringList("$TRANSLATION_FILES"));
+
     /**
      * The default locale we use for default translation
      * values.

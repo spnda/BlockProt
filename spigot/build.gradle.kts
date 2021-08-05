@@ -1,8 +1,4 @@
 buildscript {
-    dependencies {
-        classpath("org.ec4j.core:ec4j-core:0.3.0")
-    }
-
     repositories {
         maven("https://plugins.gradle.org/m2/")
     }
@@ -10,7 +6,6 @@ buildscript {
 
 plugins {
     id("com.github.johnrengelman.shadow") version "7.0.0"
-    id("org.ajoberstar.grgit")
     id("net.kyori.blossom") version "1.3.0"
 }
 

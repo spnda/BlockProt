@@ -37,9 +37,11 @@ import java.util.List;
 import java.util.UUID;
 
 public class BlockInfoInventory extends BlockProtInventory {
+    private final int maxSkulls = getSize() - InventoryConstants.singleLine;
+
     @Override
     int getSize() {
-        return InventoryConstants.tripleLine;
+        return 9 * 6;
     }
 
     @NotNull
@@ -56,6 +58,7 @@ public class BlockInfoInventory extends BlockProtInventory {
         switch (item.getType()) {
             case BLACK_STAINED_GLASS_PANE:
                 if (state.getBlock() == null) break;
+                state.friendPage = 0;
                 BlockNBTHandler handler = new BlockNBTHandler(state.getBlock());
                 closeAndOpen(
                     player,
@@ -66,22 +69,20 @@ public class BlockInfoInventory extends BlockProtInventory {
                 if (state.getBlock() == null) break;
                 if (state.friendPage >= 1) {
                     state.friendPage--;
-                    closeAndOpen(
-                        player,
-                        this.fill(player, new BlockNBTHandler(state.getBlock()))
-                    );
+
+                    closeAndOpen(player,
+                        this.fill(player, new BlockNBTHandler(state.getBlock())));
                 }
                 break;
             case BLUE_STAINED_GLASS_PANE:
                 if (state.getBlock() == null) break;
-                final ItemStack lastFriendInInventory = inventory.getItem(InventoryConstants.tripleLine - 1);
+                final ItemStack lastFriendInInventory = inventory.getItem(maxSkulls - 1);
                 if (lastFriendInInventory != null && lastFriendInInventory.getAmount() != 0) {
                     // There's an item in the last slot => The page is fully filled up, meaning we should go to the next page.
                     state.friendPage++;
-                    closeAndOpen(
-                        player,
-                        this.fill(player, new BlockNBTHandler(state.getBlock()))
-                    );
+
+                    closeAndOpen(player,
+                        this.fill(player, new BlockNBTHandler(state.getBlock())));
                 }
                 break;
         }
@@ -102,11 +103,11 @@ public class BlockInfoInventory extends BlockProtInventory {
         List<FriendHandler> friends = handler.getFriends();
         boolean redstone = handler.getRedstone();
 
-        inventory.clear();
+        this.inventory.clear();
         state.friendResultCache.clear();
-        int max = Math.min(friends.size() - 1, InventoryConstants.doubleLine); // Maximum of 2 lines of skulls
-        for (int i = 0; i < max; i++) {
-            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(friends.get(i).getName()));
+        int pageOffset = maxSkulls * state.friendPage;
+        for (int i = 0; i < Math.min(friends.size() - pageOffset, maxSkulls); i++) {
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(friends.get(pageOffset + i).getName()));
             this.setItemStack(InventoryConstants.lineLength + i, Material.SKELETON_SKULL, offlinePlayer.getName());
             state.friendResultCache.add(offlinePlayer);
         }
@@ -114,7 +115,7 @@ public class BlockInfoInventory extends BlockProtInventory {
         if (!owner.isEmpty()) {
             setPlayerSkull(0, Bukkit.getOfflinePlayer(UUID.fromString(owner)));
         }
-        if (state.friendPage == 0 && friends.size() >= InventoryConstants.doubleLine) {
+        if (friends.size() >= maxSkulls) {
             setItemStack(
                 InventoryConstants.lineLength - 3,
                 Material.CYAN_STAINED_GLASS_PANE,
@@ -137,7 +138,7 @@ public class BlockInfoInventory extends BlockProtInventory {
             BlockProt.getInstance(),
             () -> {
                 int i = 0;
-                while (i < InventoryConstants.doubleLine && i < state.friendResultCache.size()) {
+                while (i < maxSkulls && i < state.friendResultCache.size()) {
                     setPlayerSkull(InventoryConstants.lineLength + i, state.friendResultCache.get(i));
                     i++;
                 }

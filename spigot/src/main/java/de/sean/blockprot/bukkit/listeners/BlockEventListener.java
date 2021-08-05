@@ -23,12 +23,14 @@ import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.events.BlockLockOnPlaceEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
+import de.sean.blockprot.bukkit.util.BlockUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -109,11 +111,19 @@ public class BlockEventListener implements Listener {
             Bukkit.getScheduler().runTaskLater(
                 this.blockProt,
                 () -> {
-                    handler.applyToOtherContainer(
-                        (otherHandler) -> otherHandler.isNotProtected() || otherHandler.isOwner(playerUuid),
-                        // We can't cancel the event 1 tick later, its already executed. We'll just need to destroy the block and drop it.
-                        (otherHandler) -> event.getPlayer().getWorld().getBlockAt(block.getLocation()).breakNaturally()
-                    );
+                    // We cannot use BlockNBTHandler#applyToOtherContainer, because we want the
+                    // data to be copied to this new chest, instead of the old chest being effectively
+                    // cleared.
+                    final BlockState doubleChestState = BlockUtil.getDoubleChest(block);
+                    if (doubleChestState != null) {
+                        final BlockNBTHandler doubleChestHandler = new BlockNBTHandler(doubleChestState.getBlock());
+                        if (doubleChestHandler.isNotProtected() || doubleChestHandler.isOwner(playerUuid)) {
+                            handler.mergeHandler(doubleChestHandler);
+                        } else {
+                            // We can't cancel the event 1 tick later, its already executed. We'll just need to destroy the block and drop it.
+                            event.getPlayer().getWorld().getBlockAt(block.getLocation()).breakNaturally();
+                        }
+                    }
                 },
                 1
             );

@@ -91,7 +91,8 @@ public final class FriendManageInventory extends BlockProtInventory {
         if (item == null) return;
         switch (item.getType()) {
             case BLACK_STAINED_GLASS_PANE: {
-                // Exit the modify inventory and return to the base lock inventory.
+                // Exit the friend modify inventory and return to the base lock inventory.
+                state.friendPage = 0;
                 exitModifyInventory(player, state);
                 break;
             }
@@ -104,8 +105,8 @@ public final class FriendManageInventory extends BlockProtInventory {
                 break;
             }
             case BLUE_STAINED_GLASS_PANE: {
-                ItemStack lastFriendInInventory = event.getInventory().getItem(maxSkulls);
-                if (lastFriendInInventory != null && lastFriendInInventory.getAmount() == 0) {
+                ItemStack lastFriendInInventory = event.getInventory().getItem(maxSkulls - 1);
+                if (lastFriendInInventory != null && lastFriendInInventory.getAmount() != 0) {
                     // There's an item in the last slot => The page is fully filled up, meaning
                     // we should go to the next page.
                     state.friendPage++;
@@ -162,8 +163,7 @@ public final class FriendManageInventory extends BlockProtInventory {
                 // for one more friend.
                 maxSkulls += 1;
                 final PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(player);
-                List<String> currentFriends = settingsHandler.getDefaultFriends();
-                players = currentFriends
+                players = settingsHandler.getDefaultFriends()
                     .stream()
                     .map((friend) -> Bukkit.getOfflinePlayer(UUID.fromString(friend)))
                     .collect(Collectors.toList());
@@ -180,16 +180,19 @@ public final class FriendManageInventory extends BlockProtInventory {
 
         // Fill the first page inventory with skeleton skulls.
         state.friendResultCache.clear();
+
+        // We call fill() with the page buttons on this same holder. Clear the inventory too.
+        this.inventory.clear();
+
         int pageOffset = maxSkulls * state.friendPage;
-        for (int i = pageOffset; i < Math.min(players.size() - pageOffset, maxSkulls); i++) {
-            final OfflinePlayer curPlayer = players.get(i);
-            ((BlockProtInventory) Objects.requireNonNull(inventory.getHolder()))
-                .setItemStack(i, Material.SKELETON_SKULL, curPlayer.getName());
+        for (int i = 0; i < Math.min(players.size() - pageOffset, maxSkulls); i++) {
+            final OfflinePlayer curPlayer = players.get(pageOffset + i);
+            this.setItemStack(i, Material.SKELETON_SKULL, curPlayer.getName());
             state.friendResultCache.add(curPlayer);
         }
 
         // Only show the page buttons if there's more than 1 page.
-        if (state.friendPage == 0 && players.size() >= maxSkulls) {
+        if (players.size() >= maxSkulls) {
             setItemStack(
                 maxSkulls,
                 Material.CYAN_STAINED_GLASS_PANE,
@@ -211,8 +214,7 @@ public final class FriendManageInventory extends BlockProtInventory {
             () -> {
                 int i = 0;
                 while (i < maxSkulls && i < state.friendResultCache.size()) {
-                    ((BlockProtInventory) Objects.requireNonNull(inventory.getHolder()))
-                        .setPlayerSkull(i, state.friendResultCache.get(i));
+                    this.setPlayerSkull(i, state.friendResultCache.get(i));
                     i++;
                 }
             });

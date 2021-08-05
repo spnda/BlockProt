@@ -42,11 +42,11 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public final class FriendManageInventory extends BlockProtInventory {
-    private int maxSkulls = InventoryConstants.tripleLine - 5;
+    private int maxSkulls = getSize() - 5;
 
     @Override
     public int getSize() {
-        return InventoryConstants.tripleLine;
+        return 9 * 6; // 6 Lines of inventory go brr
     }
 
     @NotNull
@@ -207,12 +207,12 @@ public final class FriendManageInventory extends BlockProtInventory {
         }
 
         setItemStack(
-            InventoryConstants.tripleLine - 3,
+            getSize() - 3,
             Material.BOOK,
             TranslationKey.INVENTORIES__FRIENDS__SEARCH_HISTORY
         );
         setItemStack(
-            InventoryConstants.tripleLine - 2,
+            getSize() - 2,
             Material.MAP,
             TranslationKey.INVENTORIES__FRIENDS__SEARCH);
         setBackButton();

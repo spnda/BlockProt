@@ -175,12 +175,13 @@ public final class BlockProt extends JavaPlugin {
     private void loadTranslations(String fileName) {
         final String langFolder = "lang/";
 
+        assert defaultConfig != null;
         // Ensure that all translation files have been saved properly.
         // For now, we will simply hard code these values.
         // TODO: Implement a dynamic system for this. Through gradle possibly?
         for (String resource : Translator.DEFAULT_TRANSLATION_FILES) {
             if ((new File(this.getDataFolder(), langFolder + resource)).exists()) continue;
-            this.saveResource(langFolder + resource, false);
+            this.saveResource(langFolder + resource, defaultConfig.shouldReplaceTranslations());
         }
 
         // Get the default language file. We specifically use the InputStream
@@ -202,7 +203,7 @@ public final class BlockProt extends JavaPlugin {
 
         // Get the wanted language file and load its config.
         // Load the configurations and initialize the Translator.
-        YamlConfiguration wantedConfig = saveAndLoadConfigFile(langFolder, fileName, false);
+        YamlConfiguration wantedConfig = saveAndLoadConfigFile(langFolder, fileName, BlockProt.defaultConfig.shouldReplaceTranslations());
         Translator.loadFromConfigs(defaultConfig, wantedConfig);
     }
 

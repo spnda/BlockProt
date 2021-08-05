@@ -123,6 +123,18 @@ public final class DefaultConfig extends BlockProtConfig {
     }
 
     /**
+     * Whether we should replace the translation files on each startup
+     * and therefore discard any potential changes made to the files
+     * by the server admin.
+     *
+     * @return True if translation files should be replaced.
+     */
+    public boolean shouldReplaceTranslations() {
+        if (!this.config.contains("replace_translations")) return true;
+        return this.config.getBoolean("replace_translations");
+    }
+
+    /**
      * Whether or not to we should notify a OP player of any updates
      * when they join the server.
      *

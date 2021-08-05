@@ -13,6 +13,13 @@
 #   - translations_zh_CN.yml: Chinese
 language_file: translations_en.yml
 
+# If this is true, we will copy and replace the translation files on
+# each startup. This is so that when you should update this plugin, any
+# new or updated translations are automatically copied and applied. If
+# you want to modify and included translation file, you will have to make
+# this false.
+replace_translations: true
+
 # If set to "true", anytime an admin joins the server, they will
 # receive an in-game message if this plugin is outdated.
 # If set to "false", no message will be sent but /blockprot update

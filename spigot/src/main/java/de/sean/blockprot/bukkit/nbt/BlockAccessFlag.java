@@ -23,7 +23,10 @@ import de.sean.blockprot.bukkit.Translator;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
 
 /**
  * @since 0.2.3
@@ -34,14 +37,14 @@ public enum BlockAccessFlag {
      *
      * @since 0.2.3
      */
-    READ(TranslationKey.INVENTORIES__FRIENDS__PERMISSIONS__READ),
+    READ(TranslationKey.INVENTORIES__FRIENDS__PERMISSION__READ),
 
     /**
      * The user is allowed to add and remove contents of the inventory.
      *
      * @since 0.2.3
      */
-    WRITE(TranslationKey.INVENTORIES__FRIENDS__PERMISSIONS__WRITE);
+    WRITE(TranslationKey.INVENTORIES__FRIENDS__PERMISSION__WRITE);
 
     /**
      * The translation key used for the description of this flag.
@@ -94,24 +97,22 @@ public enum BlockAccessFlag {
      *              concatenated together into a user-friendly list.
      * @return A String of concatenated flags.
      * @since 0.3.0
+     * @deprecated Use {@link #toBaseString()} instead.
      */
+    @Deprecated
     @NotNull
     public static String accessFlagToString(@NotNull final EnumSet<BlockAccessFlag> flags) {
-        if (flags.isEmpty()) return "No access";
-        StringBuilder builder = new StringBuilder();
-        int i = 0;
-        for (BlockAccessFlag flag : flags) {
-            String flagStr = flag.toString();
-            builder
-                .append(ChatColor.ITALIC)
-                .append(flagStr.substring(0, 1).toUpperCase(Locale.ENGLISH)) // Uppercase first letter.
-                .append(flagStr.substring(1).toLowerCase(Locale.ENGLISH));
-            if (i < (flags.size() - 1)) {
-                builder.append(ChatColor.RESET).append(", ");
-            }
-            i++;
-        }
-        return builder.toString();
+        return toBaseString();
+    }
+
+    /**
+     * Gets a user-friendly name of the permissions item title, that should be used together
+     * with {@link #accumulateAccessFlagLore(EnumSet)}.
+     *
+     * @return Simple title string.
+     */
+    public static String toBaseString() {
+        return Translator.get(TranslationKey.INVENTORIES__FRIENDS__PERMISSIONS);
     }
 
     /**

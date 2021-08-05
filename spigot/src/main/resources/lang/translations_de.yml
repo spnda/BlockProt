@@ -25,7 +25,8 @@ inventories:
     search: "Spieler suchen"
     search_history: "Suchverlauf"
     result: "Spieler gefunden"
-    permissions:
+    permissions: "Berechtigungen"
+    permission:
       read: "Inhalt einsehen"
       write: "Editieren"
 

@@ -25,7 +25,7 @@ inventories:
     remove: "Eliminar permisos"
     search: "Buscar Jugadores"
     result: "Jugadores encontrados"
-    permissions:
+    permission:
       read: "Leer"
       write: "Escribir"
 

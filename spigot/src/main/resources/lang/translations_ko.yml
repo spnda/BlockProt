@@ -25,7 +25,7 @@ inventories:
     remove: "친구 삭제"
     search: "친구 검색"
     result: "친구 검색 결과"
-    permissions:
+    permission:
       read: "읽기"
       write: "쓰기"
 

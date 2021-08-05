@@ -32,7 +32,8 @@ inventories:
     search: "Search Players"
     search_history: "Search history"
     result: "Players found"
-    permissions:
+    permissions: "Permissions"
+    permission:
       read: "Read"
       write: "Write"
 

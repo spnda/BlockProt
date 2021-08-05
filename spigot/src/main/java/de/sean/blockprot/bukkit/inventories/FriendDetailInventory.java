@@ -94,10 +94,12 @@ public final class FriendDetailInventory extends BlockProtInventory {
                 if (curIndex + 1 >= accessFlagCombinations.size()) curIndex = 0;
                 else curIndex += 1;
                 curFlags = accessFlagCombinations.get(curIndex);
+
+                assert curFlags != null;
                 setItemStack(
                     2,
                     Material.ENDER_EYE,
-                    BlockAccessFlag.accessFlagToString(curFlags),
+                    BlockAccessFlag.toBaseString(),
                     BlockAccessFlag.accumulateAccessFlagLore(curFlags)
                 );
                 break;
@@ -146,7 +148,7 @@ public final class FriendDetailInventory extends BlockProtInventory {
             setItemStack(
                 2,
                 Material.ENDER_EYE,
-                BlockAccessFlag.accessFlagToString(curFlags),
+                BlockAccessFlag.toBaseString(),
                 BlockAccessFlag.accumulateAccessFlagLore(curFlags)
             );
         }

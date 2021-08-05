@@ -25,7 +25,7 @@ inventories:
     remove: "移除信任者"
     search: "搜索玩家"
     result: "已找到玩家"
-    permissions:
+    permission:
       read: "查看"
       write: "放入/拿出"
 

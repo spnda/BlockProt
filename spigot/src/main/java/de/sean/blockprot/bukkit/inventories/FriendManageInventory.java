@@ -42,7 +42,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public final class FriendManageInventory extends BlockProtInventory {
-    private int maxSkulls = InventoryConstants.tripleLine - 4;
+    private int maxSkulls = InventoryConstants.tripleLine - 5;
 
     @Override
     public int getSize() {
@@ -129,6 +129,9 @@ public final class FriendManageInventory extends BlockProtInventory {
                 FriendSearchInventory.openAnvilInventory(player);
                 break;
             }
+            case BOOK:
+                closeAndOpen(player, new FriendSearchHistoryInventory().fill(player));
+                break;
             default: {
                 // Unexpected, exit the inventory.
                 closeAndOpen(player, null);
@@ -203,6 +206,11 @@ public final class FriendManageInventory extends BlockProtInventory {
                 TranslationKey.INVENTORIES__NEXT_PAGE);
         }
 
+        setItemStack(
+            InventoryConstants.tripleLine - 3,
+            Material.BOOK,
+            TranslationKey.INVENTORIES__FRIENDS__SEARCH_HISTORY
+        );
         setItemStack(
             InventoryConstants.tripleLine - 2,
             Material.MAP,

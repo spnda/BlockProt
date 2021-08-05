@@ -78,6 +78,10 @@ public class FriendSearchResultInventory extends BlockProtInventory {
                     OfflinePlayer friend = state.friendResultCache.get(index);
                     modifyFriendsForAction(player, friend, FriendModifyAction.ADD_FRIEND);
                     closeAndOpen(player, new FriendManageInventory().fill(player));
+
+                    // Update the search history
+                    PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(player);
+                    settingsHandler.addPlayerToSearchHistory(friend);
                 }
                 break;
             default:
@@ -155,13 +159,13 @@ public class FriendSearchResultInventory extends BlockProtInventory {
         // To not delay when the inventory opens, we'll asynchronously get the items after
         // the inventory has been opened and later add them to the inventory. In the meantime,
         // we'll show the same amount of skeleton heads.
-        int maxPlayers = Math.min(potentialFriends.size(), InventoryConstants.tripleLine - 2);
+        final int maxPlayers = Math.min(potentialFriends.size(), InventoryConstants.tripleLine - 1);
         for (int i = 0; i < maxPlayers; i++) {
             this.setItemStack(i, Material.SKELETON_SKULL, potentialFriends.get(i).getName());
         }
         final List<OfflinePlayer> finalPotentialFriends = potentialFriends;
         Bukkit.getScheduler().runTaskAsynchronously(BlockProt.getInstance(), () -> {
-            // Only show the 9 * 3 - 2 most relevant players. Don't show any more.
+            // Only show the 9 * 3 - 1 most relevant players. Don't show any extra.
             int playersIndex = 0;
             while (playersIndex < maxPlayers && playersIndex < finalPotentialFriends.size()) {
                 // Only add to the inventory if this is not a friend (yet)

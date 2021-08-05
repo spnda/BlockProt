@@ -30,6 +30,7 @@ inventories:
     edit: "Edit Friend"
     remove: "Remove Friend"
     search: "Search Players"
+    search_history: "Search history"
     result: "Players found"
     permissions:
       read: "Read"

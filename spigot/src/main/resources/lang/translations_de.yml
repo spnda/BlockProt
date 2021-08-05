@@ -23,6 +23,7 @@ inventories:
     edit: "Freund editieren"
     remove: "Freund entfernen"
     search: "Spieler suchen"
+    search_history: "Suchverlauf"
     result: "Spieler gefunden"
     permissions:
       read: "Inhalt einsehen"

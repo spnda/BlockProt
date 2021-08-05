@@ -18,6 +18,7 @@
 
 package de.sean.blockprot.bukkit.nbt;
 
+import de.sean.blockprot.bukkit.inventories.InventoryConstants;
 import de.sean.blockprot.util.BlockProtUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
@@ -40,6 +41,10 @@ public final class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
     static final String LOCK_ON_PLACE_ATTRIBUTE = "splugin_lock_on_place";
 
     static final String DEFAULT_FRIENDS_ATTRIBUTE = "blockprot_default_friends";
+
+    static final String PLAYER_SEARCH_HISTORY = "blockprot_player_search_history";
+
+    private static final int MAX_HISTORY_SIZE = InventoryConstants.tripleLine - 2;
 
     /**
      * The player that this settings handler is getting values
@@ -130,6 +135,47 @@ public final class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
             .stream()
             .map(s -> Bukkit.getOfflinePlayer(UUID.fromString(s)))
             .collect(Collectors.toList());
+    }
+
+    /**
+     * Get the current search history for this player.
+     * 
+     * @return A list of UUIDs for each player this player has
+     * searched for.
+     */
+    public List<String> getSearchHistory() {
+        if (!container.hasKey(PLAYER_SEARCH_HISTORY)) return new ArrayList<>();
+        else {
+            return BlockProtUtil
+                .parseStringList(container.getString(PLAYER_SEARCH_HISTORY));
+        }
+    }
+
+    /**
+     * Add a player to the search history.
+     * 
+     * @param player The player to add.
+     */
+    public void addPlayerToSearchHistory(@NotNull final OfflinePlayer player) {
+        this.addPlayerToSearchHistory(player.getUniqueId().toString());
+    }
+
+    /**
+     * Add a player to the search history.
+     * 
+     * @param playerUuid The player UUID to add.
+     */
+    public void addPlayerToSearchHistory(@NotNull final String playerUuid) {
+        List<String> history = getSearchHistory();
+        if (!history.contains(playerUuid)) {
+            // We want the list to not be bigger than MAX_HISTORY_SIZE,
+            // therefore we remove the first entry if we would exceed that size.
+            if (history.size() == MAX_HISTORY_SIZE) {
+                history.remove(0);
+            }
+            history.add(playerUuid);
+            container.setString(PLAYER_SEARCH_HISTORY, history.toString());
+        }
     }
 
     /**

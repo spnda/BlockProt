@@ -158,6 +158,10 @@ public class BlockEventListener implements Listener {
                     handler.setOwner(
                         settingsHandler.getLockOnPlace() ? playerUuid : ""
                     );
+                    List<String> friends = settingsHandler.getDefaultFriends();
+                    for (String friend : friends) {
+                        handler.addFriend(friend);
+                    }
                 }
                 if (BlockProt.getDefaultConfig().disallowRedstoneOnPlace()) {
                     handler.setRedstone(false);

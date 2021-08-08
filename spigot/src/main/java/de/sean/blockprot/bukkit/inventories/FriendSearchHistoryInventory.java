@@ -42,6 +42,8 @@ import java.util.UUID;
  * had just searched for again.
  */
 public class FriendSearchHistoryInventory extends BlockProtInventory {
+    private final int maxSkulls = getSize() - 2;
+
     @Override
     int getSize() {
         return InventoryConstants.tripleLine;
@@ -90,7 +92,8 @@ public class FriendSearchHistoryInventory extends BlockProtInventory {
         final List<String> searchHistory = settingsHandler.getSearchHistory();
 
         state.friendResultCache.clear();
-        for (int i = 0; i < searchHistory.size(); i++) {
+        final int max = Math.min(searchHistory.size(), maxSkulls);
+        for (int i = 0; i < max; i++) {
             this.setItemStack(i, Material.SKELETON_SKULL, searchHistory.get(i));
             state.friendResultCache.add(Bukkit.getOfflinePlayer(UUID.fromString(searchHistory.get(i))));
         }
@@ -100,7 +103,7 @@ public class FriendSearchHistoryInventory extends BlockProtInventory {
         Bukkit.getScheduler().runTaskAsynchronously(
             BlockProt.getInstance(),
             () -> {
-                for (int i = 0; i < searchHistory.size(); i++) {
+                for (int i = 0; i < max; i++) {
                     this.setPlayerSkull(i, state.friendResultCache.get(i));
                 }
             }

@@ -38,6 +38,13 @@ redstone_disallowed_by_default: false
 #   - world_end
 excluded_worlds: [ ]
 
+# Setting this to 'false' will make every new player have
+# their lock and place setting set to of. This will be by
+# default set to 'true'.
+# Note: This does NOT affect players who have previously
+# changed this setting.
+lock_on_place_by_default: true
+
 # Tile entities that should be locked. Tile entities are blocks
 # that can contain items. You can find a detailed list of all
 # possible values at https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html.

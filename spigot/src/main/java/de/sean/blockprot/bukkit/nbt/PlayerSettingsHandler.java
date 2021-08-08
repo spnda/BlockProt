@@ -18,6 +18,7 @@
 
 package de.sean.blockprot.bukkit.nbt;
 
+import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.inventories.InventoryConstants;
 import de.sean.blockprot.util.BlockProtUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -68,17 +69,18 @@ public final class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
     }
 
     /**
-     * Check if the given [player] wants their blocks to be locked when
+     * Check if the player wants their blocks to be locked when
      * placed.
      *
-     * @return Returns true, if lock on place has not been set, otherwise
-     * will return the player's setting.
+     * @return Will return the default setting from the config, or the
+     * value the player has set it to.
      * @since 0.2.3
      */
     public boolean getLockOnPlace() {
         // We will default to 'true'. The default value for a boolean is 'false',
         // which would also be the default value for NBTCompound#getBoolean
-        if (!container.hasKey(LOCK_ON_PLACE_ATTRIBUTE)) return true;
+        if (!container.hasKey(LOCK_ON_PLACE_ATTRIBUTE))
+            return BlockProt.getDefaultConfig().lockOnPlaceByDefault();
         return container.getBoolean(LOCK_ON_PLACE_ATTRIBUTE);
     }
 

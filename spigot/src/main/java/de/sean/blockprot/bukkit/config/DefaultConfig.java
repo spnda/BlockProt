@@ -202,6 +202,17 @@ public final class DefaultConfig extends BlockProtConfig {
     }
 
     /**
+     * Whether the lock on place setting should be enabled by default.
+     *
+     * @return Boolean for the default value of lock on place.
+     * @since 0.4.11
+     */
+    public boolean lockOnPlaceByDefault() {
+        if (!this.config.contains("lock_on_place_by_default")) return true;
+        return this.config.getBoolean("lock_on_place_by_default");
+    }
+
+    /**
      * <p> Whether the given {@code type} is either a lockable block or a lockable tile entity.
      *
      * <p> Keep in mind, that only tile entities are lockable through this plugin after Spigot 1.16_R3.

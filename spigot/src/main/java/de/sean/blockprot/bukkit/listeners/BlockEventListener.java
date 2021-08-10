@@ -28,6 +28,7 @@ import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -72,7 +73,7 @@ public class BlockEventListener implements Listener {
         if (!handler.isOwner(event.getPlayer().getUniqueId().toString()) && handler.isProtected()) {
             // Prevent unauthorized players from breaking locked blocks.
             event.setCancelled(true);
-        } else if (BlockProt.getDefaultConfig().isLockableShulkerBox(event.getBlock().getType()) && event.isDropItems()) {
+        } else if (BlockProt.getDefaultConfig().isLockableShulkerBox(event.getBlock().getType()) && event.isDropItems() && event.getPlayer().getGameMode() != GameMode.CREATIVE) {
             // The player can break the block. We will now check if its a shulker box,
             // so we can add NBT to the shulker box that it gets locked upon placing again.
             event.setDropItems(false); // Prevent the event from dropping items itself

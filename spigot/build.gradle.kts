@@ -5,6 +5,7 @@ buildscript {
 }
 
 plugins {
+    id("maven-publish")
     id("com.github.johnrengelman.shadow") version "7.0.0"
     id("net.kyori.blossom") version "1.3.0"
 }
@@ -50,6 +51,11 @@ blossom {
     )
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 tasks.processResources {
     inputs.property("version", project.version)
 
@@ -73,12 +79,6 @@ tasks.javadoc {
     this.isFailOnError = false
 }
 
-tasks.create<Jar>("javadocJar") {
-    dependsOn(tasks.javadoc)
-    archiveClassifier.set("javadoc")
-    from(tasks.javadoc)
-}
-
 tasks.shadowJar {
     relocate("de.tr7zw.changeme.nbtapi", "de.sean.blockprot.bukkit.shaded.nbtapi")
     relocate("net.wesjd.anvilgui", "de.sean.blockprot.bukkit.shaded.anvilgui")
@@ -98,4 +98,19 @@ tasks.shadowJar {
 tasks.build {
     dependsOn(tasks["javadocJar"])
     dependsOn(tasks.shadowJar)
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            groupId = project.group as String
+            artifactId = project.name
+            version = project.version as String
+
+            from(components["java"])
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
 }

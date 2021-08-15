@@ -69,7 +69,7 @@ public final class TownyIntegration extends PluginIntegration implements Listene
 
     @Override
     public void load() {
-        final Plugin plugin = BlockProt.getInstance().getPlugin("Towny");
+        final Plugin plugin = getPlugin();
         if (plugin == null || !plugin.isEnabled()) {
             return;
         }
@@ -77,6 +77,13 @@ public final class TownyIntegration extends PluginIntegration implements Listene
         towny = (Towny) plugin;
 
         this.registerListener(this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Plugin getPlugin() {
+        return BlockProt.getInstance().getPlugin("Towny");
     }
 
     /**

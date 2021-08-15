@@ -136,8 +136,7 @@ public final class BlockProt extends JavaPlugin {
 
         registerCommand("blockprot", new BlockProtCommand());
 
-        if (getPlugin("Towny") != null)
-            registerIntegration(new TownyIntegration());
+        registerIntegration(new TownyIntegration());
 
         super.onEnable();
     }
@@ -150,7 +149,7 @@ public final class BlockProt extends JavaPlugin {
         Objects.requireNonNull(this.getCommand(name)).setExecutor(executor);
     }
 
-    protected void registerIntegration(@NotNull PluginIntegration integration) {
+    void registerIntegration(@NotNull PluginIntegration integration) {
         integration.load();
         this.integrations.add(integration);
     }

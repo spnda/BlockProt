@@ -24,15 +24,19 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
 /**
  * A plugin integration that can register new event listeners and
  * add functionality to bring compatibility with another Bukkit
- * plugin.
+ * plugin. Integrations should be always registered and only its
+ * listeners and other functionality loaded in the {@link #load()}
+ * function when the dependent plugin is loaded.
  *
  * @since 0.4.0
  */
@@ -103,6 +107,16 @@ public abstract class PluginIntegration {
      * @since 0.4.0
      */
     public abstract void load();
+
+    /**
+     * Get the plugin this integration depends on. Can be null,
+     * if the dependency is not loaded.
+     *
+     * @return The plugin this integration depends on.
+     * @since 0.4.12
+     */
+    @Nullable
+    public abstract Plugin getPlugin();
 
     /**
      * A integration can freely override this function to change the friends

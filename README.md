@@ -49,7 +49,7 @@ repositories {
 
 dependencies {
     // This version might be slightly outdated. See https://github.com/spnda/BlockProt/releases.
-    implementation 'com.github.spnda.BlockProt:blockprot-spigot:0.4.7'
+    implementation 'com.github.spnda.BlockProt:blockprot-spigot:0.4.11'
 }
 ```
 

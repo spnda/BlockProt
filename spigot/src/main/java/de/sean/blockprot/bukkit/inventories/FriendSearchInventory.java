@@ -33,7 +33,6 @@ public class FriendSearchInventory {
     public static void openAnvilInventory(@NotNull final Player requestingPlayer) {
         (new AnvilGUI.Builder())
             .onComplete(FriendSearchInventory::onCompleteCallback)
-            .onClose(FriendSearchInventory::onCloseCallback)
             .text("Name")
             .title(inventoryName)
             .plugin(BlockProt.getInstance())
@@ -44,10 +43,5 @@ public class FriendSearchInventory {
     private static AnvilGUI.Response onCompleteCallback(@NotNull final Player player, @NotNull final String searchQuery) {
         Inventory inventory = new FriendSearchResultInventory().fill(player, searchQuery);
         return AnvilGUI.Response.openInventory(inventory);
-    }
-
-    private static void onCloseCallback(@NotNull final Player player) {
-        // See https://github.com/WesJD/AnvilGUI/issues/160.
-        player.giveExpLevels(0);
     }
 }

@@ -90,7 +90,7 @@ tasks.shadowJar {
     }
 
     archiveClassifier.set(
-        if (ext["gitBranchName"] == "master") "all"
+        if (ext["gitBranchName"] == "master" || ext["gitBranchName"] == "HEAD") "all"
         else "${ext["gitBranchName"]}-all")
     // archiveFileName.set("${base.archivesName.get()}-${archiveClassifier.get()}.jar")
 }

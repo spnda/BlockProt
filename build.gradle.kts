@@ -63,7 +63,7 @@ allprojects {
         // The default configuration for the archivesName is
         // [baseName]-[appendix]-[version]-[classifier].[extension]
         archiveClassifier.set(
-            if (ext["gitBranchName"] == "master") (null as String?)
+            if (ext["gitBranchName"] == "master" || ext["gitBranchName"] == "HEAD") null
             else (ext["gitBranchName"] as String))
     }
 

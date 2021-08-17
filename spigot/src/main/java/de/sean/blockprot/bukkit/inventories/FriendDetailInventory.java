@@ -132,7 +132,8 @@ public final class FriendDetailInventory extends BlockProtInventory {
 
         if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH) {
             /* Get the current FriendHandler */
-            BlockNBTHandler handler = new BlockNBTHandler(Objects.requireNonNull(state.getBlock()));
+            BlockNBTHandler handler = getNbtHandlerOrNull(Objects.requireNonNull(state.getBlock()));
+            if (handler == null) return inventory;
             final Optional<FriendHandler> friendHandler =
                 handler.getFriend(friend.getUniqueId().toString());
 

@@ -74,9 +74,12 @@ public class BlockLockInventory extends BlockProtInventory {
                 new FriendManageInventory().fill(player)
             );
         } else if (item.getType() == Material.OAK_SIGN) {
+            BlockNBTHandler handler = getNbtHandlerOrNull(block);
             closeAndOpen(
                 player,
-                new BlockInfoInventory().fill(player, new BlockNBTHandler(block))
+                handler == null
+                    ? null
+                    : new BlockInfoInventory().fill(player, handler)
             );
         } else {
             closeAndOpen(

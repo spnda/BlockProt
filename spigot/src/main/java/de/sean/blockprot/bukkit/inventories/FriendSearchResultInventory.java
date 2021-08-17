@@ -37,6 +37,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -112,6 +113,7 @@ public class FriendSearchResultInventory extends BlockProtInventory {
         else return (longerLength - StringUtils.getLevenshteinDistance(longer, shorter)) / (double) longerLength;
     }
 
+    @Nullable
     public Inventory fill(Player player, String searchQuery) {
         InventoryState state = InventoryState.get(player.getUniqueId());
         if (state == null) return inventory;
@@ -123,8 +125,11 @@ public class FriendSearchResultInventory extends BlockProtInventory {
         switch (state.friendSearchState) {
             case FRIEND_SEARCH:
                 final Block block = state.getBlock();
-                if (block == null) return inventory;
-                existingFriends = (new BlockNBTHandler(block)).getFriends()
+                if (block == null) return null;
+                BlockNBTHandler handler = getNbtHandlerOrNull(block);
+                if (handler == null) return null; // We return null to indicate an issue.
+
+                existingFriends = handler.getFriends()
                     .stream()
                     .map(FriendHandler::getName)
                     .collect(Collectors.toList());

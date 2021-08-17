@@ -34,6 +34,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,17 +63,21 @@ public final class FriendManageInventory extends BlockProtInventory {
      * @param player The player to open/close the inventory for.
      * @param state  The {@code player}'s state.
      */
-    public final void exitModifyInventory(@NotNull final Player player, @NotNull final InventoryState state) {
+    public void exitModifyInventory(@NotNull final Player player, @NotNull final InventoryState state) {
         Inventory newInventory;
         switch (state.friendSearchState) {
             case FRIEND_SEARCH: {
                 if (state.getBlock() == null) return;
-                newInventory =
-                    new BlockLockInventory()
-                        .fill(
-                            player,
-                            state.getBlock().getState().getType(),
-                            new BlockNBTHandler(state.getBlock()));
+                BlockNBTHandler handler = getNbtHandlerOrNull(state.getBlock());
+                if (handler == null) {
+                    newInventory = null;
+                } else {
+                    newInventory = new BlockLockInventory()
+                            .fill(
+                                player,
+                                state.getBlock().getState().getType(),
+                                handler);
+                }
                 break;
             }
             case DEFAULT_FRIEND_SEARCH:
@@ -146,7 +151,7 @@ public final class FriendManageInventory extends BlockProtInventory {
 
     }
 
-    @NotNull
+    @Nullable
     public Inventory fill(@NotNull Player player) {
         final InventoryState state = InventoryState.get(player.getUniqueId());
         if (state == null) return inventory;
@@ -155,7 +160,8 @@ public final class FriendManageInventory extends BlockProtInventory {
         switch (state.friendSearchState) {
             case FRIEND_SEARCH: {
                 final BlockNBTHandler handler =
-                    new BlockNBTHandler(Objects.requireNonNull(state.getBlock()));
+                    getNbtHandlerOrNull(Objects.requireNonNull(state.getBlock()));
+                if (handler == null) return null;
                 // Let the players be filtered by any plugin integration.
                 players = PluginIntegration.filterFriends(
                     (ArrayList<OfflinePlayer>) mapFriendsToPlayer(handler.getFriendsStream()), player, state.getBlock());

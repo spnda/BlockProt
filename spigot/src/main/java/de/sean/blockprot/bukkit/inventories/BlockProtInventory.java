@@ -18,14 +18,17 @@
 
 package de.sean.blockprot.bukkit.inventories;
 
-import de.sean.blockprot.nbt.FriendModifyAction;
-import de.sean.blockprot.nbt.LockReturnValue;
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
-import de.sean.blockprot.bukkit.nbt.*;
+import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
+import de.sean.blockprot.bukkit.nbt.FriendHandler;
+import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
+import de.sean.blockprot.nbt.FriendModifyAction;
+import de.sean.blockprot.nbt.LockReturnValue;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -198,7 +201,8 @@ public abstract class BlockProtInventory implements InventoryHolder {
             case FRIEND_SEARCH:
                 if (onBlockChanges == null) return;
                 assert state.getBlock() != null;
-                BlockNBTHandler nbtHandler = new BlockNBTHandler(state.getBlock());
+                BlockNBTHandler nbtHandler = getNbtHandlerOrNull(state.getBlock());
+                if (nbtHandler == null) return;
                 LockReturnValue ret = onBlockChanges.apply(nbtHandler);
                 if (ret.success)
                     nbtHandler.applyToOtherContainer();
@@ -428,6 +432,24 @@ public abstract class BlockProtInventory implements InventoryHolder {
                 return Material.WARPED_SIGN;
             default:
                 return material;
+        }
+    }
+
+    /**
+     * This gets the NBT Handler for the block requested by the player. If
+     * a {@link RuntimeException} is triggered due to the block being invalid,
+     * possibly by another player breaking it, we return null, indicating the
+     * caller should close the inventory.
+     *
+     * @param block The block
+     * @return The nbt handler, or null, if none.
+     */
+    @Nullable
+    protected BlockNBTHandler getNbtHandlerOrNull(Block block) {
+        try {
+            return new BlockNBTHandler(block);
+        } catch (RuntimeException e) {
+            return null;
         }
     }
 }

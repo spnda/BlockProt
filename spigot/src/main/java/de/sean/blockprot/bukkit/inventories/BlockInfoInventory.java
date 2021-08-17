@@ -57,21 +57,29 @@ public class BlockInfoInventory extends BlockProtInventory {
         if (item == null) return;
         switch (item.getType()) {
             case BLACK_STAINED_GLASS_PANE:
-                if (state.getBlock() == null) break;
-                state.friendPage = 0;
-                BlockNBTHandler handler = new BlockNBTHandler(state.getBlock());
-                closeAndOpen(
-                    player,
-                    new BlockLockInventory().fill(player, state.getBlock().getType(), handler)
-                );
+                if (state.getBlock() != null) {
+                    state.friendPage = 0;
+                    BlockNBTHandler handler = getNbtHandlerOrNull(state.getBlock());
+                    closeAndOpen(
+                        player,
+                        handler == null
+                            ? null
+                            : new BlockLockInventory().fill(player, state.getBlock().getType(), handler)
+                    );
+                }
                 break;
             case CYAN_STAINED_GLASS_PANE:
                 if (state.getBlock() == null) break;
                 if (state.friendPage >= 1) {
                     state.friendPage--;
 
-                    closeAndOpen(player,
-                        this.fill(player, new BlockNBTHandler(state.getBlock())));
+                    BlockNBTHandler handler = getNbtHandlerOrNull(state.getBlock());
+                    closeAndOpen(
+                        player,
+                        handler == null
+                            ? null
+                            : this.fill(player, handler)
+                    );
                 }
                 break;
             case BLUE_STAINED_GLASS_PANE:
@@ -81,8 +89,13 @@ public class BlockInfoInventory extends BlockProtInventory {
                     // There's an item in the last slot => The page is fully filled up, meaning we should go to the next page.
                     state.friendPage++;
 
-                    closeAndOpen(player,
-                        this.fill(player, new BlockNBTHandler(state.getBlock())));
+                    BlockNBTHandler handler = getNbtHandlerOrNull(state.getBlock());
+                    closeAndOpen(
+                        player,
+                        handler == null
+                            ? null
+                            : this.fill(player, handler)
+                    );
                 }
                 break;
         }

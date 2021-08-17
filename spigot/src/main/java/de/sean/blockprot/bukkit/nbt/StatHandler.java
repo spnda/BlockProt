@@ -121,6 +121,9 @@ public final class StatHandler extends NBTHandler<NBTCompound> {
      * use {@link #getStatistic(BukkitStatistic, Player)}.
      */
     public static void getStatistic(@NotNull BukkitStatistic<?> statistic) {
+        if (statistic.getType() == StatisticType.PLAYER) {
+            throw new RuntimeException("StatHandler#getStatistic with player statistic called without player");
+        }
         getStatistic(statistic, null);
     }
 

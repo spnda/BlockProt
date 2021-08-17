@@ -11,11 +11,14 @@ plugins {
 }
 
 val townyVersion: String by project
+val papiVersion: String by project
 
 repositories {
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") {
         name = "Spigot"
     }
+    maven("https://oss.sonatype.org/content/repositories/snapshots/")
+    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
 }
 
 dependencies {
@@ -31,7 +34,10 @@ dependencies {
     // Dependencies
     implementation("de.tr7zw:item-nbt-api:2.8.0")
     implementation("net.wesjd:anvilgui:1.5.3-SNAPSHOT") // Allows us to use anvils as inventories without using NMS.
+
+    // Integrations
     implementation("com.github.TownyAdvanced:Towny:$townyVersion")
+    implementation("me.clip:placeholderapi:$papiVersion")
 }
 
 blossom {

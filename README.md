@@ -76,6 +76,10 @@ natively includes a plugin integration for Towny, which you can find
 [here](https://github.com/spnda/BlockProt/blob/master/src/main/java/de/sean/blockprot/bukkit/integrations/TownyIntegration.java).
 You can freely use this as an example.
 
+## bStats
+
+[![bStats Graph](https://bstats.org/signatures/bukkit/BlockProt.svg)](https://bstats.org/plugin/bukkit/BlockProt)
+
 ## License
 
 BlockProt is licensed under GPLv3 license, view `LICENSE` to learn more.

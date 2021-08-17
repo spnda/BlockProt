@@ -11,11 +11,13 @@ plugins {
 }
 
 val townyVersion: String by project
+val coreProtectVersion: String by project
 
 repositories {
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") {
         name = "Spigot"
     }
+    maven("https://maven.playpro.com") // CoreProtect
 }
 
 dependencies {
@@ -33,6 +35,7 @@ dependencies {
     implementation("de.tr7zw:item-nbt-api:2.8.0")
     implementation("net.wesjd:anvilgui:1.5.3-SNAPSHOT") // Allows us to use anvils as inventories without using NMS.
     implementation("com.github.TownyAdvanced:Towny:$townyVersion")
+    implementation("net.coreprotect:coreprotect:$coreProtectVersion")
 }
 
 blossom {
@@ -87,6 +90,7 @@ tasks.shadowJar {
 
     dependencies {
         this.exclude(dependency("com.github.TownyAdvanced:Towny:$townyVersion"))
+        this.exclude(dependency("net.coreprotect:coreprotect:$coreProtectVersion"))
     }
 
     archiveClassifier.set(

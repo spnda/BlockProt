@@ -20,6 +20,7 @@ package de.sean.blockprot.bukkit;
 
 import de.sean.blockprot.bukkit.commands.BlockProtCommand;
 import de.sean.blockprot.bukkit.config.DefaultConfig;
+import de.sean.blockprot.bukkit.integrations.CoreProtectIntegration;
 import de.sean.blockprot.bukkit.integrations.PluginIntegration;
 import de.sean.blockprot.bukkit.integrations.TownyIntegration;
 import de.sean.blockprot.bukkit.listeners.*;
@@ -136,6 +137,7 @@ public final class BlockProt extends JavaPlugin {
 
         registerCommand("blockprot", new BlockProtCommand());
 
+        registerIntegration(new CoreProtectIntegration());
         registerIntegration(new TownyIntegration());
 
         super.onEnable();

@@ -89,8 +89,8 @@ public class BlockEventListener implements Listener {
             event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(), item);
         }
 
-        // If access was denied and the event has been cancelled.
-        if (event.isCancelled()) {
+        // If access is not cancelled and the player is allowed to break the block.
+        if (!event.isCancelled()) {
             // For blocks, we want to clear the NBT data, as that lives
             // independently of the actual block state.
             handler.clear();

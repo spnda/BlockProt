@@ -1,0 +1,41 @@
+# Chinese (Taiwan) translation file
+# Translated by https://github.com/vincentwang0905
+locale: zh_TW
+
+inventories:
+  back: "返回"
+  last_page: "上一頁"
+  next_page: "下一頁"
+  block_lock: "方塊鎖"
+  user_settings: "玩家設置"
+  block_info: "方塊訊息"
+  lock: "上鎖"
+  unlock: "解鎖"
+  redstone:
+    allowed: "已允許紅石"
+    disallowed: "已禁止紅石"
+    allow: "允許紅石"
+    disallow: "禁止紅石"
+  lock_on_place:
+    activate: "在放置时自動上鎖"
+    deactivate: "不要在放置時上鎖"
+  friends:
+    manage: "管理信任者"
+    edit: "編輯信任者"
+    remove: "移除信任者"
+    search: "搜索玩家"
+    result: "已找到玩家"
+    permission:
+      read: "查看"
+      write: "放入/拿出"
+
+messages:
+  permission_granted: "許可已授予."
+  unlocked: "已解鎖"
+  no_permission: "您沒有權限"
+  friend_added: "已添加信任者"
+  friend_removed: "已移除信任者"
+  friend_already_added: "該信任玩家已经添加過了"
+  friend_cant_be_removed: "該信任玩家無法被移除"
+  redstone_added: "已添加红石保護"
+  redstone_removed: "已移除红石保護"

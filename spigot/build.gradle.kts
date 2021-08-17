@@ -83,7 +83,7 @@ tasks.shadowJar {
     relocate("de.tr7zw.changeme.nbtapi", "de.sean.blockprot.bukkit.shaded.nbtapi")
     relocate("net.wesjd.anvilgui", "de.sean.blockprot.bukkit.shaded.anvilgui")
     relocate("org.bstats", "de.sean.blockprot.bukkit.metrics")
-    minimize()
+    // minimize()
 
     dependencies {
         this.exclude(dependency("com.github.TownyAdvanced:Towny:$townyVersion"))

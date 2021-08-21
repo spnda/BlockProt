@@ -14,13 +14,14 @@ inventories:
   redstone:
 
   lock_on_place:
-    activate: "在放置时自動上鎖"
-    deactivate: "不要在放置時上鎖"
+    activate: "在放置時自動上鎖"
+    deactivate: "不要在放置時自動上鎖"
   friends:
     manage: "管理信任者"
     edit: "編輯信任者"
     remove: "移除信任者"
     search: "搜索玩家"
+    search_history: "搜索歷史"
     result: "已找到玩家"
     permission:
       read: "查看"
@@ -32,7 +33,7 @@ messages:
   no_permission: "您沒有權限"
   friend_added: "已添加信任者"
   friend_removed: "已移除信任者"
-  friend_already_added: "該信任玩家已经添加過了"
+  friend_already_added: "該信任玩家已經添加過了"
   friend_cant_be_removed: "該信任玩家無法被移除"
   redstone_added: "已添加红石保護"
   redstone_removed: "已移除红石保護"

@@ -20,7 +20,7 @@ package de.sean.blockprot.bukkit;
 
 import de.sean.blockprot.bukkit.events.BlockAccessEditMenuEvent;
 import de.sean.blockprot.bukkit.integrations.PluginIntegration;
-import de.sean.blockprot.bukkit.inventories.BlockLockInventory;
+import de.sean.blockprot.bukkit.inventories.BlockLockScreen;
 import de.sean.blockprot.bukkit.inventories.InventoryState;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
@@ -157,7 +157,7 @@ public final class BlockProtAPI {
             state.friendSearchState = InventoryState.FriendSearchState.FRIEND_SEARCH;
             InventoryState.set(player.getUniqueId(), state);
 
-            return new BlockLockInventory().fill(player, block.getType(), handler);
+            return new BlockLockScreen().fill(player, block.getType(), handler);
         }
     }
 }

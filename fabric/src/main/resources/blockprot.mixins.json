@@ -1,0 +1,16 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "de.sean.blockprot.fabric.mixin",
+    "compatibilityLevel": "JAVA_16",
+    "server": [
+        "MixinBlockEntity",
+        "MixinPlayerEntity"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "mixins": [
+        "MixinBlock"
+    ]
+}

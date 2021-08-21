@@ -19,10 +19,10 @@
 package de.sean.blockprot.bukkit.inventories;
 
 import de.sean.blockprot.bukkit.BlockProt;
-import de.sean.blockprot.bukkit.TranslationKey;
-import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.FriendHandler;
+import de.sean.blockprot.bukkit.translation.TranslationKey;
+import de.sean.blockprot.bukkit.translation.Translator;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -36,12 +36,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.UUID;
 
-public class BlockInfoInventory extends BlockProtInventory {
-    private final int maxSkulls = getSize() - InventoryConstants.singleLine;
+public class BlockInfoScreen extends BlockProtBukkitScreen {
+    private final int maxSkulls = getRows() - InventoryConstants.singleLine;
 
     @Override
-    int getSize() {
-        return 9 * 6;
+    public int getRows() {
+        return 6;
     }
 
     @NotNull
@@ -64,7 +64,7 @@ public class BlockInfoInventory extends BlockProtInventory {
                         player,
                         handler == null
                             ? null
-                            : new BlockLockInventory().fill(player, state.getBlock().getType(), handler)
+                            : new BlockLockScreen().fill(player, state.getBlock().getType(), handler)
                     );
                 }
                 break;

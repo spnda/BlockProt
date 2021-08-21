@@ -11,3 +11,6 @@ bin
 .settings
 .classpath
 .project
+
+# Fabric specific folders
+fabric/run/

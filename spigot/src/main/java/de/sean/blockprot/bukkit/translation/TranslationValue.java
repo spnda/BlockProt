@@ -16,9 +16,8 @@
  * along with BlockProt.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.sean.blockprot.bukkit;
+package de.sean.blockprot.bukkit.translation;
 
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +25,7 @@ import java.util.StringJoiner;
 
 /**
  * Represents the default string value and a translated value
- * of it, as loaded through {@link Translator#loadFromConfigs(YamlConfiguration, YamlConfiguration)}.
+ * of it.
  *
  * @since 0.4.6
  */
@@ -54,7 +53,7 @@ public final class TranslationValue {
      * @see #setTranslatedValue(String)
      * @since 0.4.6
      */
-    TranslationValue(@NotNull final String defaultValue) {
+    public TranslationValue(@NotNull final String defaultValue) {
         this.defaultValue = defaultValue;
         this.translatedValue = UNKNOWN_TRANSLATION;
     }
@@ -106,7 +105,7 @@ public final class TranslationValue {
      *              if it is invalid.
      * @since 0.4.6
      */
-    protected void setTranslatedValue(@NotNull final String value) {
+    public void setTranslatedValue(@NotNull final String value) {
         this.translatedValue = value;
     }
 

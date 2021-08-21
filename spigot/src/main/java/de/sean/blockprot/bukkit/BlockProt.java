@@ -24,6 +24,7 @@ import de.sean.blockprot.bukkit.integrations.PluginIntegration;
 import de.sean.blockprot.bukkit.integrations.TownyIntegration;
 import de.sean.blockprot.bukkit.listeners.*;
 import de.sean.blockprot.bukkit.tasks.UpdateChecker;
+import de.sean.blockprot.bukkit.translation.Translator;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.TabExecutor;
@@ -211,7 +212,7 @@ public final class BlockProt extends JavaPlugin {
      *
      * @param folder  The name of the folder where the file is located.
      * @param name    The name of the resource.
-     * @param replace Whether or not to replace the file if it already exists.
+     * @param replace  Whether to replace the file if it already exists.
      * @return The YamlConfiguration.
      * @since 0.4.7
      */

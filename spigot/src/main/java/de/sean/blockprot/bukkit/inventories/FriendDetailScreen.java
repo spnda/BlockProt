@@ -18,12 +18,12 @@
 
 package de.sean.blockprot.bukkit.inventories;
 
-import de.sean.blockprot.nbt.FriendModifyAction;
-import de.sean.blockprot.bukkit.TranslationKey;
-import de.sean.blockprot.bukkit.Translator;
-import de.sean.blockprot.bukkit.nbt.BlockAccessFlag;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.FriendHandler;
+import de.sean.blockprot.bukkit.translation.TranslationKey;
+import de.sean.blockprot.bukkit.translation.Translator;
+import de.sean.blockprot.bukkit.nbt.BlockAccessFlag;
+import de.sean.blockprot.nbt.FriendModifyAction;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -40,7 +40,7 @@ import java.util.*;
 /**
  * The detail inventory for managing a single friend and their permission.
  */
-public final class FriendDetailInventory extends BlockProtInventory {
+public final class FriendDetailScreen extends BlockProtBukkitScreen {
     @NotNull
     private static final List<EnumSet<BlockAccessFlag>> accessFlagCombinations =
         Arrays.asList(
@@ -54,7 +54,7 @@ public final class FriendDetailInventory extends BlockProtInventory {
     private FriendHandler playerHandler = null;
 
     @Override
-    public int getSize() {
+    public int getRows() {
         return InventoryConstants.singleLine;
     }
 
@@ -72,7 +72,7 @@ public final class FriendDetailInventory extends BlockProtInventory {
 
         switch (item.getType()) {
             case BLACK_STAINED_GLASS_PANE: {
-                closeAndOpen(player, new FriendManageInventory().fill(player));
+                closeAndOpen(player, new FriendManageScreen().fill(player));
                 break;
             }
             case RED_STAINED_GLASS_PANE: {
@@ -81,7 +81,7 @@ public final class FriendDetailInventory extends BlockProtInventory {
                 modifyFriendsForAction(player, friend, FriendModifyAction.REMOVE_FRIEND);
                 // We remove the friend, so the player does not exist anymore either.
                 this.playerHandler = null;
-                closeAndOpen(player, new FriendManageInventory().fill(player));
+                closeAndOpen(player, new FriendManageScreen().fill(player));
                 break;
             }
             case ENDER_EYE: {

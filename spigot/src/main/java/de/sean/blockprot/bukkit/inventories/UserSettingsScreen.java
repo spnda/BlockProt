@@ -18,9 +18,9 @@
 
 package de.sean.blockprot.bukkit.inventories;
 
-import de.sean.blockprot.bukkit.TranslationKey;
-import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
+import de.sean.blockprot.bukkit.translation.TranslationKey;
+import de.sean.blockprot.bukkit.translation.Translator;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -29,9 +29,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class UserSettingsInventory extends BlockProtInventory {
+public class UserSettingsScreen extends BlockProtBukkitScreen {
     @Override
-    int getSize() {
+    public int getRows() {
         return InventoryConstants.singleLine;
     }
 
@@ -62,7 +62,7 @@ public class UserSettingsInventory extends BlockProtInventory {
                 break;
             case PLAYER_HEAD:
                 state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH;
-                closeAndOpen(player, new FriendManageInventory().fill(player));
+                closeAndOpen(player, new FriendManageScreen().fill(player));
                 break;
             default:
                 closeAndOpen(player, null); // This also includes Material.BLACK_STAINED_GLASS_PANE

@@ -1,0 +1,4 @@
+accessWidener v1 named
+
+accessible    field    net/minecraft/nbt/NbtCompound                         entries      Ljava/util/Map;
+accessible    field    net/minecraft/screen/GenericContainerScreenHandler    inventory    Lnet/minecraft/inventory/Inventory;

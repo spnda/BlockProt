@@ -19,8 +19,8 @@
 package de.sean.blockprot.bukkit.inventories;
 
 import de.sean.blockprot.bukkit.BlockProt;
-import de.sean.blockprot.bukkit.TranslationKey;
-import de.sean.blockprot.bukkit.Translator;
+import de.sean.blockprot.bukkit.translation.TranslationKey;
+import de.sean.blockprot.bukkit.translation.Translator;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -41,7 +41,7 @@ public class FriendSearchInventory {
     }
 
     private static AnvilGUI.Response onCompleteCallback(@NotNull final Player player, @NotNull final String searchQuery) {
-        Inventory inventory = new FriendSearchResultInventory().fill(player, searchQuery);
+        Inventory inventory = new FriendSearchResultScreen().fill(player, searchQuery);
         if (inventory == null) return AnvilGUI.Response.close();
         return AnvilGUI.Response.openInventory(inventory);
     }

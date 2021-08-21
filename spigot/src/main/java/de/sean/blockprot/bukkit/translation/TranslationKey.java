@@ -16,7 +16,7 @@
  * along with BlockProt.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.sean.blockprot.bukkit;
+package de.sean.blockprot.bukkit.translation;
 
 import java.util.Locale;
 

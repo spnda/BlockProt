@@ -20,6 +20,8 @@ package de.sean.blockprot.bukkit.nbt;
 
 import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.inventories.InventoryConstants;
+import de.sean.blockprot.nbt.INBTHandler;
+import de.sean.blockprot.nbt.IPlayerSettingsHandler;
 import de.sean.blockprot.util.BlockProtUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
@@ -38,22 +40,8 @@ import java.util.stream.Collectors;
  *
  * @since 0.2.3
  */
-public final class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
-    static final String LOCK_ON_PLACE_ATTRIBUTE = "splugin_lock_on_place";
-
-    static final String DEFAULT_FRIENDS_ATTRIBUTE = "blockprot_default_friends";
-
-    static final String PLAYER_SEARCH_HISTORY = "blockprot_player_search_history";
-
+public final class PlayerSettingsHandler extends IPlayerSettingsHandler<NBTCompound, OfflinePlayer> {
     private static final int MAX_HISTORY_SIZE = InventoryConstants.tripleLine - 2;
-
-    /**
-     * The player that this settings handler is getting values
-     * for.
-     *
-     * @since 0.2.3
-     */
-    public final Player player;
 
     /**
      * Create a new settings handler.
@@ -62,20 +50,14 @@ public final class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
      * @since 0.2.3
      */
     public PlayerSettingsHandler(@NotNull final Player player) {
-        super();
-        this.player = player;
-
+        super(player);
         this.container = new NBTEntity(player).getPersistentDataContainer();
     }
 
     /**
-     * Check if the player wants their blocks to be locked when
-     * placed.
-     *
-     * @return Will return the default setting from the config, or the
-     * value the player has set it to.
-     * @since 0.2.3
+     * {@inheritDoc}
      */
+    @Override
     public boolean getLockOnPlace() {
         // We will default to 'true'. The default value for a boolean is 'false',
         // which would also be the default value for NBTCompound#getBoolean
@@ -85,23 +67,17 @@ public final class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
     }
 
     /**
-     * Set the value of the lock on place setting. If true, the
-     * player wants to lock any block right after placing it.
-     *
-     * @param lockOnPlace The boolean value to set it to.
-     * @since 0.2.3
+     * {@inheritDoc}
      */
-    public void setLockOnPlace(final boolean lockOnPlace) {
-        container.setBoolean(LOCK_ON_PLACE_ATTRIBUTE, lockOnPlace);
+    @Override
+    public void setLockOnPlace(final boolean value) {
+        container.setBoolean(LOCK_ON_PLACE_ATTRIBUTE, value);
     }
 
     /**
-     * Get the {@link List} of default friends for this player.
-     *
-     * @return A List of Player {@link UUID}s as {@link String}s
-     * representing each friend.
-     * @since 0.2.3
+     * {@inheritDoc}
      */
+    @Override
     @NotNull
     public List<String> getDefaultFriends() {
         if (!container.hasKey(DEFAULT_FRIENDS_ATTRIBUTE)) return new ArrayList<>();
@@ -112,24 +88,17 @@ public final class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
     }
 
     /**
-     * Set a new list of default friends. These have to be UUID-based,
-     * otherwise other callers using {@link #getDefaultFriends()} will
-     * experience issues. This does not get checked.
-     *
-     * @param friends A list of UUIDs representing a list of friends.
-     * @since 0.2.3
+     * {@inheritDoc}
      */
+    @Override
     public void setDefaultFriends(@NotNull final List<String> friends) {
         container.setString(DEFAULT_FRIENDS_ATTRIBUTE, friends.toString());
     }
 
     /**
-     * Gets the default friends as a list of {@link OfflinePlayer}. Uses
-     * {@link #getDefaultFriends} as a base.
-     *
-     * @return All default friends as a list of {@link OfflinePlayer}.
-     * @since 0.2.3
+     * {@inheritDoc}
      */
+    @Override
     @NotNull
     public List<OfflinePlayer> getDefaultFriendsAsPlayers() {
         ArrayList<String> friends = (ArrayList<String>) getDefaultFriends();
@@ -137,6 +106,12 @@ public final class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
             .stream()
             .map(s -> Bukkit.getOfflinePlayer(UUID.fromString(s)))
             .collect(Collectors.toList());
+    }
+
+    @Override
+    public @NotNull String getName() {
+        String name = container.getName();
+        return name == null ? "" : name;
     }
 
     /**
@@ -184,7 +159,7 @@ public final class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
      * {@inheritDoc}
      */
     @Override
-    public void mergeHandler(@NotNull NBTHandler<?> handler) {
+    public void mergeHandler(@NotNull INBTHandler<?> handler) {
         if (!(handler instanceof PlayerSettingsHandler)) return;
         final PlayerSettingsHandler playerSettingsHandler = (PlayerSettingsHandler) handler;
         this.setLockOnPlace(playerSettingsHandler.getLockOnPlace());

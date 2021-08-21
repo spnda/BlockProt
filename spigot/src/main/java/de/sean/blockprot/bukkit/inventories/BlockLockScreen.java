@@ -19,10 +19,10 @@
 package de.sean.blockprot.bukkit.inventories;
 
 import de.sean.blockprot.bukkit.BlockProt;
-import de.sean.blockprot.bukkit.TranslationKey;
-import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.events.BlockAccessEditMenuEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
+import de.sean.blockprot.bukkit.translation.TranslationKey;
+import de.sean.blockprot.bukkit.translation.Translator;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -32,11 +32,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class BlockLockInventory extends BlockProtInventory {
+public class BlockLockScreen extends BlockProtBukkitScreen {
     private boolean redstone = false;
 
     @Override
-    int getSize() {
+    public int getRows() {
         return InventoryConstants.singleLine;
     }
 
@@ -71,7 +71,7 @@ public class BlockLockInventory extends BlockProtInventory {
         } else if (item.getType() == Material.PLAYER_HEAD) {
             closeAndOpen(
                 player,
-                new FriendManageInventory().fill(player)
+                new FriendManageScreen().fill(player)
             );
         } else if (item.getType() == Material.OAK_SIGN) {
             BlockNBTHandler handler = getNbtHandlerOrNull(block);
@@ -79,7 +79,7 @@ public class BlockLockInventory extends BlockProtInventory {
                 player,
                 handler == null
                     ? null
-                    : new BlockInfoInventory().fill(player, handler)
+                    : new BlockInfoScreen().fill(player, handler)
             );
         } else {
             closeAndOpen(

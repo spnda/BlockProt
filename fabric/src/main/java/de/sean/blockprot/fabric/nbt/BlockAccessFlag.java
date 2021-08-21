@@ -16,17 +16,13 @@
  * along with BlockProt.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.sean.blockprot.bukkit.nbt;
+package de.sean.blockprot.fabric.nbt;
 
-
-import de.sean.blockprot.bukkit.translation.TranslationKey;
-import de.sean.blockprot.bukkit.translation.Translator;
+import de.sean.blockprot.fabric.translation.TranslationIdentifier;
+import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * @since 0.2.3
@@ -37,14 +33,14 @@ public enum BlockAccessFlag {
      *
      * @since 0.2.3
      */
-    READ(TranslationKey.INVENTORIES__FRIENDS__PERMISSION__READ),
+    READ(TranslationIdentifier.SCREEN_FRIENDS_PERMISSION_READ),
 
     /**
      * The user is allowed to add and remove contents of the inventory.
      *
      * @since 0.2.3
      */
-    WRITE(TranslationKey.INVENTORIES__FRIENDS__PERMISSION__WRITE);
+    WRITE(TranslationIdentifier.SCREEN_FRIENDS_PERMISSION_WRITE);
 
     /**
      * The translation key used for the description of this flag.
@@ -52,12 +48,12 @@ public enum BlockAccessFlag {
      * @since 0.2.3
      */
     @NotNull
-    private final TranslationKey descriptionKey;
+    private final TranslationIdentifier descriptionKey;
 
     /**
      * @since 0.2.3
      */
-    BlockAccessFlag(@NotNull final TranslationKey description) {
+    BlockAccessFlag(@NotNull final TranslationIdentifier description) {
         this.descriptionKey = description;
     }
 
@@ -97,22 +93,24 @@ public enum BlockAccessFlag {
      *              concatenated together into a user-friendly list.
      * @return A String of concatenated flags.
      * @since 0.3.0
-     * @deprecated Use {@link #toBaseString()} instead.
      */
-    @Deprecated
     @NotNull
     public static String accessFlagToString(@NotNull final EnumSet<BlockAccessFlag> flags) {
-        return toBaseString();
-    }
-
-    /**
-     * Gets a user-friendly name of the permissions item title, that should be used together
-     * with {@link #accumulateAccessFlagLore(EnumSet)}.
-     *
-     * @return Simple title string.
-     */
-    public static String toBaseString() {
-        return Translator.get(TranslationKey.INVENTORIES__FRIENDS__PERMISSIONS);
+        if (flags.isEmpty()) return "No access";
+        StringBuilder builder = new StringBuilder();
+        int i = 0;
+        for (BlockAccessFlag flag : flags) {
+            String flagStr = flag.toString();
+            builder
+                //.append(ChatColor.ITALIC)
+                .append(flagStr.substring(0, 1).toUpperCase(Locale.ENGLISH)) // Uppercase first letter.
+                .append(flagStr.substring(1).toLowerCase(Locale.ENGLISH));
+            if (i < (flags.size() - 1)) {
+                //builder.append(ChatColor.RESET).append(", ");
+            }
+            i++;
+        }
+        return builder.toString();
     }
 
     /**
@@ -140,15 +138,14 @@ public enum BlockAccessFlag {
     }
 
     /**
-     * Get the translated description of this flag. It uses {@link Translator#get(TranslationKey)}
-     * using the {@link #descriptionKey} to get the corresponding value.
+     * Get the translated description of this flag.
      *
      * @return Translated description.
      * @since 0.2.3
      */
     @NotNull
-    public String getDescription() {
-        return Translator.get(descriptionKey);
+    public TranslatableText getDescription() {
+        return this.descriptionKey.asTranslatableText();
     }
 
     /**

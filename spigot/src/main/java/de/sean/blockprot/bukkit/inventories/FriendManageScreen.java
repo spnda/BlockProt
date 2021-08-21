@@ -19,12 +19,12 @@
 package de.sean.blockprot.bukkit.inventories;
 
 import de.sean.blockprot.bukkit.BlockProt;
-import de.sean.blockprot.bukkit.TranslationKey;
-import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.integrations.PluginIntegration;
 import de.sean.blockprot.bukkit.inventories.InventoryState.FriendSearchState;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
+import de.sean.blockprot.bukkit.translation.TranslationKey;
+import de.sean.blockprot.bukkit.translation.Translator;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -42,12 +42,12 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public final class FriendManageInventory extends BlockProtInventory {
+public final class FriendManageScreen extends BlockProtBukkitScreen {
     private int maxSkulls = getSize() - 5;
 
     @Override
-    public int getSize() {
-        return 9 * 6; // 6 Lines of inventory go brr
+    public int getRows() {
+        return 6; // 6 Lines of inventory go brr
     }
 
     @NotNull
@@ -57,8 +57,8 @@ public final class FriendManageInventory extends BlockProtInventory {
     }
 
     /**
-     * Exits this inventory depending on {@code state}'s {@link FriendSearchState} back to the {@link BlockLockInventory}
-     * or the {@link UserSettingsInventory} respectively.
+     * Exits this inventory depending on {@code state}'s {@link FriendSearchState} back to the {@link BlockLockScreen}
+     * or the {@link UserSettingsScreen} respectively.
      *
      * @param player The player to open/close the inventory for.
      * @param state  The {@code player}'s state.
@@ -72,7 +72,7 @@ public final class FriendManageInventory extends BlockProtInventory {
                 if (handler == null) {
                     newInventory = null;
                 } else {
-                    newInventory = new BlockLockInventory()
+                    newInventory = new BlockLockScreen()
                             .fill(
                                 player,
                                 state.getBlock().getState().getType(),
@@ -81,7 +81,7 @@ public final class FriendManageInventory extends BlockProtInventory {
                 break;
             }
             case DEFAULT_FRIEND_SEARCH:
-                newInventory = new UserSettingsInventory().fill(player);
+                newInventory = new UserSettingsScreen().fill(player);
                 break;
             default:
                 return;
@@ -126,7 +126,7 @@ public final class FriendManageInventory extends BlockProtInventory {
                 int index = findItemIndex(item);
                 if (index < 0 || index >= state.friendResultCache.size()) break;
                 state.currentFriend = state.friendResultCache.get(index);
-                final Inventory inv = new FriendDetailInventory().fill(player);
+                final Inventory inv = new FriendDetailScreen().fill(player);
                 closeAndOpen(player, inv);
                 break;
             }
@@ -135,7 +135,7 @@ public final class FriendManageInventory extends BlockProtInventory {
                 break;
             }
             case BOOK:
-                closeAndOpen(player, new FriendSearchHistoryInventory().fill(player));
+                closeAndOpen(player, new FriendSearchHistoryScreen().fill(player));
                 break;
             default: {
                 // Unexpected, exit the inventory.

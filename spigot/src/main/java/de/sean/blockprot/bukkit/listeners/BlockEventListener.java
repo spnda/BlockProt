@@ -73,8 +73,29 @@ public class BlockEventListener implements Listener {
         if (!handler.isOwner(event.getPlayer().getUniqueId().toString()) && handler.isProtected()) {
             // Prevent unauthorized players from breaking locked blocks.
             event.setCancelled(true);
-        } else if (BlockProt.getDefaultConfig().isLockableShulkerBox(event.getBlock().getType()) && event.isDropItems() && event.getPlayer().getGameMode() != GameMode.CREATIVE) {
-            // The player can break the block. We will now check if its a shulker box,
+        }
+
+        // If access is not cancelled and the player is allowed to break the block.
+        if (!event.isCancelled()) {
+            // For blocks, we want to clear the NBT data, as that lives
+            // independently of the actual block state.
+            handler.clear();
+            handler.applyToOtherContainer();
+        }
+    }
+
+    /**
+     * We need to catch shulker box breaks separately with the lowest priority possible,
+     * as otherwise other plugins might have cancelled it and a player could dupe the box.
+     */
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onShulkerBoxBreak(BlockBreakEvent event) {
+        if (BlockProt.getDefaultConfig().isWorldExcluded(event.getBlock().getWorld())) return;
+        if (!BlockProt.getDefaultConfig().isLockableShulkerBox(event.getBlock().getType())) return;
+
+        BlockNBTHandler handler = new BlockNBTHandler(event.getBlock());
+        if ((handler.isOwner(event.getPlayer().getUniqueId().toString())) || (event.isCancelled() && event.isDropItems() && event.getPlayer().getGameMode() != GameMode.CREATIVE)) {
+            // The player can break the block. We will now check if it's a shulker box,
             // so we can add NBT to the shulker box that it gets locked upon placing again.
             event.setDropItems(false); // Prevent the event from dropping items itself
             Collection<ItemStack> itemsToDrop = event.getBlock().getDrops();
@@ -87,14 +108,6 @@ public class BlockEventListener implements Listener {
             nbtItem.getOrCreateCompound("BlockEntityTag").getOrCreateCompound("PublicBukkitValues").mergeCompound(nbtTile);
 
             event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(), item);
-        }
-
-        // If access is not cancelled and the player is allowed to break the block.
-        if (!event.isCancelled()) {
-            // For blocks, we want to clear the NBT data, as that lives
-            // independently of the actual block state.
-            handler.clear();
-            handler.applyToOtherContainer();
         }
     }
 

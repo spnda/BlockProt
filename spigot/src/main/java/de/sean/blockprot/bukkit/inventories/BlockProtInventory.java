@@ -29,11 +29,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -451,5 +453,39 @@ public abstract class BlockProtInventory implements InventoryHolder {
         } catch (RuntimeException e) {
             return null;
         }
+    }
+
+    /**
+     * Adds an enchantment to {@code stack} and then hides it from
+     * the player.
+     * @param stack The stack to "enchant".
+     */
+    protected ItemStack toggleEnchants(@NotNull final ItemStack stack) {
+        return toggleEnchants(stack, null);
+    }
+
+    /**
+     * Adds an enchantment to {@code stack} and then hides it from
+     * the player.
+     * @param stack The stack to "enchant".
+     * @param toggle The value to toggle to. Can be null, to just switch its
+     *               current value.
+     */
+    @NotNull
+    protected ItemStack toggleEnchants(@NotNull ItemStack stack, final @Nullable Boolean toggle) {
+        ItemMeta meta = stack.getItemMeta();
+        if (meta == null) {
+            meta = Bukkit.getItemFactory().getItemMeta(stack.getType());
+        }
+        if (meta != null) {
+            if (meta.hasEnchants() && (toggle == null || !toggle)) {
+                meta.removeEnchant(Enchantment.ARROW_INFINITE);
+            } else if (!meta.hasEnchants() && (toggle == null || toggle)) {
+                meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
+            }
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            stack.setItemMeta(meta);
+        }
+        return stack;
     }
 }

@@ -114,7 +114,6 @@ public class BlockInfoInventory extends BlockProtInventory {
 
         String owner = handler.getOwner();
         List<FriendHandler> friends = handler.getFriends();
-        boolean redstone = handler.getRedstone();
 
         this.inventory.clear();
         state.friendResultCache.clear();
@@ -140,11 +139,11 @@ public class BlockInfoInventory extends BlockProtInventory {
                 TranslationKey.INVENTORIES__NEXT_PAGE
             );
         }
-        setItemStack(
+        /*setItemStack(
             1,
             redstone ? Material.REDSTONE : Material.GUNPOWDER,
             redstone ? TranslationKey.INVENTORIES__REDSTONE__ALLOWED : TranslationKey.INVENTORIES__REDSTONE__DISALLOWED
-        );
+        );*/
         setBackButton(InventoryConstants.lineLength - 1);
 
         Bukkit.getScheduler().runTaskAsynchronously(

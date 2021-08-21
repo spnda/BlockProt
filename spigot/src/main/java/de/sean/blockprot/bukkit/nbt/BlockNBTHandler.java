@@ -53,12 +53,10 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
     static final String OWNER_ATTRIBUTE = "splugin_owner";
 
     static final String OLD_LOCK_ATTRIBUTE = "splugin_lock";
-
     static final String LOCK_ATTRIBUTE = "blockprot_friends";
 
-    static final String REDSTONE_ATTRIBUTE = "splugin_lock_redstone";
-
-    private static final boolean DEFAULT_REDSTONE = true;
+    static final String OLD_REDSTONE_ATTRIBUTE = "splugin_lock_redstone";
+    static final String REDSTONE_ATTRIBUTE = "blockprot_redstone";
 
     /**
      * The backing block this handler handles.
@@ -215,31 +213,50 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
     }
 
     /**
-     * If true, redstone should be allowed for this block and should not be blocked.
-     * If redstone has not been set for this block yet, the default value is true
-     *
-     * @return Whether redstone should be allowed or not.
+     * @return The handler's redstone-current protection value.
      * @since 0.2.3
+     * @deprecated Use {@link #getRedstoneHandler()}.
      */
+    @Deprecated
     public boolean getRedstone() {
-        // We will default to 'true'. The default value for a boolean is 'false',
-        // which would also be the default value for NBTCompound#getBoolean
-        if (!container.hasKey(REDSTONE_ATTRIBUTE)) {
-            container.setBoolean(REDSTONE_ATTRIBUTE, DEFAULT_REDSTONE);
-            return DEFAULT_REDSTONE;
-        }
-        return container.getBoolean(REDSTONE_ATTRIBUTE);
+        return !getRedstoneHandler().getCurrentProtection();
     }
 
     /**
-     * Set the new value for redstone. See {@link #getRedstone()} for more
-     * details on the values.
+     * Gets the redstone settings handler for this block. Will remap
+     * any legacy redstone settings to the new system.
      *
+     * @return The redstone settings handler.
+     */
+    public @NotNull RedstoneSettingsHandler getRedstoneHandler() {
+        RedstoneSettingsHandler redstoneHandler = new RedstoneSettingsHandler(
+            container.getOrCreateCompound(REDSTONE_ATTRIBUTE));
+
+        // Used to port the old values from previous versions to the new
+        // handler based redstone system.
+        if (container.hasKey(OLD_REDSTONE_ATTRIBUTE)) {
+            // We flip the value because its meaning has changed.
+            boolean oldValue = !container.getBoolean(OLD_REDSTONE_ATTRIBUTE);
+            redstoneHandler.setAll(oldValue);
+            container.removeKey(OLD_REDSTONE_ATTRIBUTE);
+        }
+        return redstoneHandler;
+    }
+
+    /**
      * @param redstone The boolean value to set.
      * @since 0.2.3
+     * @deprecated Use {@link #getRedstoneHandler()}
      */
+    @Deprecated
     public void setRedstone(final boolean redstone) {
-        container.setBoolean(REDSTONE_ATTRIBUTE, redstone);
+        getRedstoneHandler().setCurrentProtection(redstone);
+    }
+
+    public void setRedstoneHandler(RedstoneSettingsHandler redstoneHandler) {
+        container
+            .getOrCreateCompound(REDSTONE_ATTRIBUTE)
+            .mergeCompound(redstoneHandler.container);
     }
 
     /**
@@ -340,11 +357,10 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
      * @return A {@link LockReturnValue} whether or not the redstone was switched
      * successfully.
      * @since 0.2.3
-     * @deprecated Use {@link #lockRedstoneForBlock(String, Boolean)} instead.
+     * @deprecated See {@link #getRedstoneHandler()}.
      */
     @Deprecated
-    @NotNull
-    public LockReturnValue lockRedstoneForBlock(@NotNull final String player, @Nullable final NBTTileEntity doubleChest, @Nullable final Boolean value) {
+    public @NotNull LockReturnValue lockRedstoneForBlock(@NotNull final String player, @Nullable final NBTTileEntity doubleChest, @Nullable final Boolean value) {
         return lockRedstoneForBlock(player, value);
     }
 
@@ -357,9 +373,10 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
      * @return A {@link LockReturnValue} whether or not the redstone was switched
      * successfully.
      * @since 0.4.6
+     * @deprecated See {@link #getRedstoneHandler()}.
      */
-    @NotNull
-    public LockReturnValue lockRedstoneForBlock(@NotNull final String player, @Nullable final Boolean value) {
+    @Deprecated
+    public @NotNull LockReturnValue lockRedstoneForBlock(@NotNull final String player, @Nullable final Boolean value) {
         if (isOwner(player)) {
             boolean redstone = value == null ? !getRedstone() : value;
             setRedstone(redstone);
@@ -520,7 +537,7 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
     public void clear() {
         this.setOwner("");
         this.setFriends(Collections.emptyList());
-        this.setRedstone(DEFAULT_REDSTONE);
+        this.getRedstoneHandler().setAll();
     }
 
     /**
@@ -536,6 +553,6 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
         final BlockNBTHandler blockNBTHandler = (BlockNBTHandler) handler;
         this.setOwner(blockNBTHandler.getOwner());
         this.setFriends(blockNBTHandler.getFriends());
-        this.setRedstone(blockNBTHandler.getRedstone());
+        this.getRedstoneHandler().mergeHandler(blockNBTHandler.getRedstoneHandler());
     }
 }

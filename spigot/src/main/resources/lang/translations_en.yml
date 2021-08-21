@@ -18,10 +18,12 @@ inventories:
   lock: "Lock"
   unlock: "Unlock"
   redstone:
-    allowed: "Redstone allowed"
-    disallowed: "Redstone disallowed"
-    allow: "Allow redstone"
-    disallow: "Disallow redstone"
+    settings: "Redstone Settings"
+    redstone_enabled: "Redstone protection enabled"
+    pistons_enabled: "Piston protection enabled"
+    hoppers_enabled: "Hopper protection enabled"
+    enable_all: "Enable all"
+    disable_all: "Disable all"
   lock_on_place:
     activate: "Always lock on placing"
     deactivate: "Never lock on placing"

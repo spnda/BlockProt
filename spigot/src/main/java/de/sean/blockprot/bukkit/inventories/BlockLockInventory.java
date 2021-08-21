@@ -33,8 +33,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class BlockLockInventory extends BlockProtInventory {
-    private boolean redstone = false;
-
     @Override
     int getSize() {
         return InventoryConstants.singleLine;
@@ -62,11 +60,12 @@ public class BlockLockInventory extends BlockProtInventory {
             );
             closeAndOpen(player, null);
         } else if (item.getType() == Material.REDSTONE || item.getType() == Material.GUNPOWDER) {
-            redstone = !redstone;
-            setItemStack(
-                1,
-                redstone ? Material.REDSTONE : Material.GUNPOWDER,
-                redstone ? TranslationKey.INVENTORIES__REDSTONE__DISALLOW : TranslationKey.INVENTORIES__REDSTONE__ALLOW
+            BlockNBTHandler handler = getNbtHandlerOrNull(block);
+            closeAndOpen(
+                player,
+                handler == null
+                    ? null
+                    : new RedstoneSettingsInventory().fill(player, state)
             );
         } else if (item.getType() == Material.PLAYER_HEAD) {
             closeAndOpen(
@@ -92,16 +91,6 @@ public class BlockLockInventory extends BlockProtInventory {
 
     @Override
     public void onClose(@NotNull InventoryCloseEvent event, @NotNull InventoryState state) {
-        if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH && state.getBlock() != null) {
-            applyChanges(
-                (Player) event.getPlayer(),
-                (handler) -> handler.lockRedstoneForBlock(
-                    event.getPlayer().getUniqueId().toString(),
-                    redstone
-                ),
-                null
-            );
-        }
     }
 
     public Inventory fill(Player player, Material material, BlockNBTHandler handler) {
@@ -110,7 +99,6 @@ public class BlockLockInventory extends BlockProtInventory {
 
         String playerUuid = player.getUniqueId().toString();
         String owner = handler.getOwner();
-        redstone = handler.getRedstone();
 
         if (owner.isEmpty()) {
             setItemStack(
@@ -129,8 +117,8 @@ public class BlockLockInventory extends BlockProtInventory {
         if (owner.equals(playerUuid) && state.menuAccess.ordinal() >= BlockAccessEditMenuEvent.MenuAccess.NORMAL.ordinal()) {
             setItemStack(
                 1,
-                (redstone) ? Material.REDSTONE : Material.GUNPOWDER,
-                (redstone) ? TranslationKey.INVENTORIES__REDSTONE__DISALLOW : TranslationKey.INVENTORIES__REDSTONE__ALLOW
+                Material.REDSTONE,
+                TranslationKey.INVENTORIES__REDSTONE__SETTINGS
             );
             setItemStack(
                 2,

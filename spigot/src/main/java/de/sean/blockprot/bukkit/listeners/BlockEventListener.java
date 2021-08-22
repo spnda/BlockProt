@@ -108,6 +108,9 @@ public class BlockEventListener implements Listener {
             nbtItem.getOrCreateCompound("BlockEntityTag").getOrCreateCompound("PublicBukkitValues").mergeCompound(nbtTile);
 
             event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(), item);
+
+            event.getBlock().setType(Material.AIR);
+            event.setCancelled(true); // So that other plugins don't fiddle with this.
         }
     }
 

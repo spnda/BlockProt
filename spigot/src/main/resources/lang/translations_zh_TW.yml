@@ -12,10 +12,7 @@ inventories:
   lock: "上鎖"
   unlock: "解鎖"
   redstone:
-    allowed: "已允許紅石"
-    disallowed: "已禁止紅石"
-    allow: "允許紅石"
-    disallow: "禁止紅石"
+
   lock_on_place:
     activate: "在放置时自動上鎖"
     deactivate: "不要在放置時上鎖"

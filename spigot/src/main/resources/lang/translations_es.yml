@@ -12,10 +12,9 @@ inventories:
   lock: "Proteger"
   unlock: "Desproteger"
   redstone:
-    allowed: "Se permite le uso de Redstone"
-    disallowed: "No se permite el uso de Redstone"
-    allow: "Permitir redstone"
-    disallow: "Bloquear redstone"
+    settings: "Configuración de Redstone"
+    enable_all: "Habilitar todo"
+    disable_all: "Desactivar todo"
   lock_on_place:
     activate: "Proteger siempre al colocar"
     deactivate: "No proteger al colocar"

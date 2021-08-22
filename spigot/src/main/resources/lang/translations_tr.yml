@@ -12,10 +12,7 @@ inventories:
   lock: "Kilitle"
   unlock: "Kilidi Aç"
   redstone:
-    allowed: "Kızıltaş Kullanılabilir"
-    disallowed: "Kızıltaş Kullanılamaz"
-    allow: "Kızıltaşı Etkinleştir"
-    disallow: "Kızıltaşı Devre Dışı Bırak"
+
   lock_on_place:
     activate: "Her zaman ilk koyulduğunda kilitle"
     deactivate: "Asla ilk koyulduğunda kilitleme"

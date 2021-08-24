@@ -11,10 +11,12 @@ inventories:
   lock: "Sperren"
   unlock: "Entsperren"
   redstone:
-    allowed: "Redstone erlaubt"
-    disallowed: "Redstone nicht erlaubt"
-    allow: "Redstone erlauben"
-    disallow: "Redstone nicht erlauben"
+    settings: "Redstone Einstellungen"
+    redstone_enabled: "Redstone-Schutz aktiviert"
+    pistons_enabled: "Kolben-Schutz aktiviert"
+    hoppers_enabled: "Trichter-Schutz aktiviert"
+    enable_all: "Alles aktivieren"
+    disable_all: "Alles deaktivieren"
   lock_on_place:
     activate: "Immer automatisch sperren"
     deactivate: "Nie automatisch sperren"

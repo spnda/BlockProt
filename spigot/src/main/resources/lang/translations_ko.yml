@@ -12,10 +12,7 @@ inventories:
   lock: "잠금"
   unlock: "잠금 해제"
   redstone:
-    allowed: "레드스톤이 활성화됨"
-    disallowed: "레드스톤이 비활성화됨"
-    allow: "레드스톤 활성화"
-    disallow: "레드스톤 비활성화"
+
   lock_on_place:
     activate: "설치 시 항상 잠굽니다."
     deactivate: "설치 시 잠구지 않습니다."

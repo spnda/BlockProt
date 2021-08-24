@@ -53,7 +53,7 @@ public class PistonEventListener implements Listener {
                 BlockNBTHandler nbtHandler = new BlockNBTHandler(block);
                 // We check if the block is protected, because we only care
                 // about locked blocks that have redstone disabled.
-                if (nbtHandler.isProtected() && !nbtHandler.getRedstone()) {
+                if (nbtHandler.isProtected() && nbtHandler.getRedstoneHandler().getPistonProtection()) {
                     event.setCancelled(true);
                     return;
                 }
@@ -74,7 +74,7 @@ public class PistonEventListener implements Listener {
                 BlockNBTHandler nbtHandler = new BlockNBTHandler(block);
                 // We check if the block is protected, because we only care
                 // about locked blocks that have redstone disabled.
-                if (nbtHandler.isProtected() && !nbtHandler.getRedstone()) {
+                if (nbtHandler.isProtected() && nbtHandler.getRedstoneHandler().getPistonProtection()) {
                     event.setCancelled(true);
                     return;
                 }

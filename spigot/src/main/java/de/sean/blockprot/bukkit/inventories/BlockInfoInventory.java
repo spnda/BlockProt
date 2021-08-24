@@ -23,6 +23,7 @@ import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.FriendHandler;
+import de.sean.blockprot.bukkit.nbt.RedstoneSettingsHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -114,7 +115,6 @@ public class BlockInfoInventory extends BlockProtInventory {
 
         String owner = handler.getOwner();
         List<FriendHandler> friends = handler.getFriends();
-        boolean redstone = handler.getRedstone();
 
         this.inventory.clear();
         state.friendResultCache.clear();
@@ -140,10 +140,25 @@ public class BlockInfoInventory extends BlockProtInventory {
                 TranslationKey.INVENTORIES__NEXT_PAGE
             );
         }
-        setItemStack(
+
+        RedstoneSettingsHandler redstoneSettingsHandler = handler.getRedstoneHandler();
+        setEnchantedItemStack(
             1,
-            redstone ? Material.REDSTONE : Material.GUNPOWDER,
-            redstone ? TranslationKey.INVENTORIES__REDSTONE__ALLOWED : TranslationKey.INVENTORIES__REDSTONE__DISALLOWED
+            Material.REDSTONE,
+            TranslationKey.INVENTORIES__REDSTONE__REDSTONE_ENABLED,
+            redstoneSettingsHandler.getCurrentProtection()
+        );
+        setEnchantedItemStack(
+            2,
+            Material.HOPPER,
+            TranslationKey.INVENTORIES__REDSTONE__HOPPERS_ENABLED,
+            redstoneSettingsHandler.getHopperProtection()
+        );
+        setEnchantedItemStack(
+            3,
+            Material.PISTON,
+            TranslationKey.INVENTORIES__REDSTONE__PISTONS_ENABLED,
+            redstoneSettingsHandler.getPistonProtection()
         );
         setBackButton(InventoryConstants.lineLength - 1);
 

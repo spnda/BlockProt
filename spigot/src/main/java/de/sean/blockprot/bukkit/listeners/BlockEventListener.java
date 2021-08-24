@@ -158,7 +158,7 @@ public class BlockEventListener implements Listener {
                 }
 
                 if (BlockProt.getDefaultConfig().disallowRedstoneOnPlace()) {
-                    handler.setRedstone(false);
+                    handler.getRedstoneHandler().setAll(false);
                 }
             }
         } else if (BlockProt.getDefaultConfig().isLockable(event.getBlock().getType())) {
@@ -181,7 +181,7 @@ public class BlockEventListener implements Listener {
                     }
                 }
                 if (BlockProt.getDefaultConfig().disallowRedstoneOnPlace()) {
-                    handler.setRedstone(false);
+                    handler.getRedstoneHandler().setAll(false);
                 }
 
                 // So that other half's of doors lock properly.

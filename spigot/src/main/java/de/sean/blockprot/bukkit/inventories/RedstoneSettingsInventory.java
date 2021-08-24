@@ -23,14 +23,12 @@ import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.RedstoneSettingsHandler;
 import de.sean.blockprot.nbt.LockReturnValue;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -118,18 +116,6 @@ public class RedstoneSettingsInventory extends BlockProtInventory {
                 inventory.setItem(i, toggleEnchants(stack, value));
             }
         }
-    }
-
-    private void setEnchantedItemStack(int index, Material material, TranslationKey key, boolean value) {
-        ItemStack stack = new ItemStack(material, 1);
-        ItemMeta meta = stack.getItemMeta();
-        if (meta == null) Bukkit.getItemFactory().getItemMeta(material);
-        if (meta != null) {
-            meta.setDisplayName(Translator.get(key));
-            stack.setItemMeta(meta);
-        }
-        toggleEnchants(stack, value);
-        inventory.setItem(index, stack);
     }
 
     public Inventory fill(@NotNull Player player, @NotNull InventoryState state) {

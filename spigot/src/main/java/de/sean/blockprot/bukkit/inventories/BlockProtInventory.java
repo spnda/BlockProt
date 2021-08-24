@@ -366,6 +366,26 @@ public abstract class BlockProtInventory implements InventoryHolder {
     }
 
     /**
+     * Sets an enchanted item stack in this inventory at {@code index}.
+     *
+     * @param index The index of the item in the inventory.
+     * @param material The material of the item.
+     * @param key The translation key for the display name of the item.
+     * @param value Whether the enchantment should be added.
+     */
+    public void setEnchantedItemStack(int index, Material material, TranslationKey key, boolean value) {
+        ItemStack stack = new ItemStack(material, 1);
+        ItemMeta meta = stack.getItemMeta();
+        if (meta == null) Bukkit.getItemFactory().getItemMeta(material);
+        if (meta != null) {
+            meta.setDisplayName(Translator.get(key));
+            stack.setItemMeta(meta);
+        }
+        toggleEnchants(stack, value);
+        inventory.setItem(index, stack);
+    }
+
+    /**
      * Set a player skull to {@code index}.
      *
      * @param index  The index of the skull inside this inventory.

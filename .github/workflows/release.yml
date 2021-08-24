@@ -33,4 +33,6 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: Artifacts
-          path: build/libs/
+          path: |
+            **/build/libs/[a-z0-9]-all.jar
+            !common/**

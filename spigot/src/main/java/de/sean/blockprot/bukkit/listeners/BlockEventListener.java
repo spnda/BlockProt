@@ -94,7 +94,7 @@ public class BlockEventListener implements Listener {
         if (!BlockProt.getDefaultConfig().isLockableShulkerBox(event.getBlock().getType())) return;
 
         BlockNBTHandler handler = new BlockNBTHandler(event.getBlock());
-        if ((handler.isOwner(event.getPlayer().getUniqueId().toString())) || (event.isCancelled() && event.isDropItems() && event.getPlayer().getGameMode() != GameMode.CREATIVE)) {
+        if (handler.isOwner(event.getPlayer().getUniqueId().toString()) && (!event.isCancelled() && event.isDropItems() && event.getPlayer().getGameMode() != GameMode.CREATIVE)) {
             // The player can break the block. We will now check if it's a shulker box,
             // so we can add NBT to the shulker box that it gets locked upon placing again.
             event.setDropItems(false); // Prevent the event from dropping items itself

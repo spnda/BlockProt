@@ -227,6 +227,7 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
      * any legacy redstone settings to the new system.
      *
      * @return The redstone settings handler.
+     * @since 0.4.13
      */
     public @NotNull RedstoneSettingsHandler getRedstoneHandler() {
         RedstoneSettingsHandler redstoneHandler = new RedstoneSettingsHandler(

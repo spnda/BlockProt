@@ -372,6 +372,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @param material The material of the item.
      * @param key The translation key for the display name of the item.
      * @param value Whether the enchantment should be added.
+     * @since 0.4.13
      */
     public void setEnchantedItemStack(int index, Material material, TranslationKey key, boolean value) {
         ItemStack stack = new ItemStack(material, 1);
@@ -479,6 +480,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * Adds an enchantment to {@code stack} and then hides it from
      * the player.
      * @param stack The stack to "enchant".
+     * @since 0.4.13
      */
     protected ItemStack toggleEnchants(@NotNull final ItemStack stack) {
         return toggleEnchants(stack, null);
@@ -490,6 +492,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @param stack The stack to "enchant".
      * @param toggle The value to toggle to. Can be null, to just switch its
      *               current value.
+     * @since 0.4.13
      */
     @NotNull
     protected ItemStack toggleEnchants(@NotNull ItemStack stack, final @Nullable Boolean toggle) {

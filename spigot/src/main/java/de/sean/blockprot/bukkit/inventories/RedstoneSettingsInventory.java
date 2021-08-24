@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * The settings inventory for all redstone relevant settings.
+ * @since 0.4.13
  */
 public class RedstoneSettingsInventory extends BlockProtInventory {
     private boolean currentProtection;

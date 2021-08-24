@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * A NBT handler specific to all redstone settings.
+ * @since 0.4.13
  */
 public class RedstoneSettingsHandler extends NBTHandler<NBTCompound> {
     public static final boolean DEFAULT_PROTECTION_VALUE = true;
@@ -39,6 +40,7 @@ public class RedstoneSettingsHandler extends NBTHandler<NBTCompound> {
 
     /**
      * If the redstone current protection is active or not.
+     * @since 0.4.13
      */
     public boolean getCurrentProtection() {
         if (!container.hasKey(CURRENT_PROTECTION_ATTRIBUTE)) return DEFAULT_PROTECTION_VALUE;
@@ -47,6 +49,7 @@ public class RedstoneSettingsHandler extends NBTHandler<NBTCompound> {
 
     /**
      * Set the redstone current protection to enabled (true) or disabled (false).
+     * @since 0.4.13
      */
     public void setCurrentProtection(final boolean value) {
         container.setBoolean(CURRENT_PROTECTION_ATTRIBUTE, value);
@@ -54,6 +57,7 @@ public class RedstoneSettingsHandler extends NBTHandler<NBTCompound> {
 
     /**
      * If the piston protection is active or not.
+     * @since 0.4.13
      */
     public boolean getPistonProtection() {
         if (!container.hasKey(PISTON_PROTECTION_ATTRIBUTE)) return DEFAULT_PROTECTION_VALUE;
@@ -62,6 +66,7 @@ public class RedstoneSettingsHandler extends NBTHandler<NBTCompound> {
 
     /**
      * Set the piston protection to enabled (true) or disabled (false).
+     * @since 0.4.13
      */
     public void setPistonProtection(final boolean value) {
         container.setBoolean(PISTON_PROTECTION_ATTRIBUTE, value);
@@ -69,6 +74,7 @@ public class RedstoneSettingsHandler extends NBTHandler<NBTCompound> {
 
     /**
      * If the hopper protection is active or not.
+     * @since 0.4.13
      */
     public boolean getHopperProtection() {
         if (!container.hasKey(HOPPER_PROTECTION_ATTRIBUTE)) return DEFAULT_PROTECTION_VALUE;
@@ -77,6 +83,7 @@ public class RedstoneSettingsHandler extends NBTHandler<NBTCompound> {
 
     /**
      * Set the hopper protection to enabled (true) or disabled (false).
+     * @since 0.4.13
      */
     public void setHopperProtection(final boolean value) {
         this.container.setBoolean(HOPPER_PROTECTION_ATTRIBUTE, value);
@@ -84,6 +91,7 @@ public class RedstoneSettingsHandler extends NBTHandler<NBTCompound> {
 
     /**
      * Resets all the protections to their default value.
+     * @since 0.4.13
      */
     public void reset() {
         this.setAll(DEFAULT_PROTECTION_VALUE);
@@ -91,7 +99,9 @@ public class RedstoneSettingsHandler extends NBTHandler<NBTCompound> {
 
     /**
      * Resets all different redstone settings to given value.
+     *
      * @param value The value.
+     * @since 0.4.13
      */
     public void setAll(final boolean value) {
         this.setCurrentProtection(value);

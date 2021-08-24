@@ -37,34 +37,55 @@ public class RedstoneSettingsHandler extends NBTHandler<NBTCompound> {
         this.container = compound;
     }
 
+    /**
+     * If the redstone current protection is active or not.
+     */
     public boolean getCurrentProtection() {
         if (!container.hasKey(CURRENT_PROTECTION_ATTRIBUTE)) return DEFAULT_PROTECTION_VALUE;
         return container.getBoolean(CURRENT_PROTECTION_ATTRIBUTE);
     }
 
+    /**
+     * Set the redstone current protection to enabled (true) or disabled (false).
+     */
     public void setCurrentProtection(final boolean value) {
         container.setBoolean(CURRENT_PROTECTION_ATTRIBUTE, value);
     }
 
+    /**
+     * If the piston protection is active or not.
+     */
     public boolean getPistonProtection() {
         if (!container.hasKey(PISTON_PROTECTION_ATTRIBUTE)) return DEFAULT_PROTECTION_VALUE;
         return container.getBoolean(PISTON_PROTECTION_ATTRIBUTE);
     }
 
+    /**
+     * Set the piston protection to enabled (true) or disabled (false).
+     */
     public void setPistonProtection(final boolean value) {
         container.setBoolean(PISTON_PROTECTION_ATTRIBUTE, value);
     }
 
+    /**
+     * If the hopper protection is active or not.
+     */
     public boolean getHopperProtection() {
         if (!container.hasKey(HOPPER_PROTECTION_ATTRIBUTE)) return DEFAULT_PROTECTION_VALUE;
         return container.getBoolean(HOPPER_PROTECTION_ATTRIBUTE);
     }
 
+    /**
+     * Set the hopper protection to enabled (true) or disabled (false).
+     */
     public void setHopperProtection(final boolean value) {
         this.container.setBoolean(HOPPER_PROTECTION_ATTRIBUTE, value);
     }
 
-    public void setAll() {
+    /**
+     * Resets all the protections to their default value.
+     */
+    public void reset() {
         this.setAll(DEFAULT_PROTECTION_VALUE);
     }
 

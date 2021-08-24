@@ -253,12 +253,6 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
         getRedstoneHandler().setCurrentProtection(redstone);
     }
 
-    public void setRedstoneHandler(RedstoneSettingsHandler redstoneHandler) {
-        container
-            .getOrCreateCompound(REDSTONE_ATTRIBUTE)
-            .mergeCompound(redstoneHandler.container);
-    }
-
     /**
      * Whether or not this block is protected. This is evaluated by checking
      * if an owner exists and if any friends have been added to the block.
@@ -537,7 +531,7 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
     public void clear() {
         this.setOwner("");
         this.setFriends(Collections.emptyList());
-        this.getRedstoneHandler().setAll();
+        this.getRedstoneHandler().reset();
     }
 
     /**

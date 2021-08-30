@@ -21,7 +21,7 @@ package de.sean.blockprot.bukkit.inventories;
 import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
-import de.sean.blockprot.bukkit.events.BlockAccessEditMenuEvent;
+import de.sean.blockprot.bukkit.events.BlockAccessMenuEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -97,24 +97,19 @@ public class BlockLockInventory extends BlockProtInventory {
         final InventoryState state = InventoryState.get(player.getUniqueId());
         if (state == null) return inventory;
 
-        String playerUuid = player.getUniqueId().toString();
         String owner = handler.getOwner();
 
-        if (owner.isEmpty()) {
+        if (state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.LOCK)) {
             setItemStack(
                 0,
                 getProperMaterial(material),
-                TranslationKey.INVENTORIES__LOCK
-            );
-        } else if (owner.equals(playerUuid) || state.menuAccess == BlockAccessEditMenuEvent.MenuAccess.ADMIN) {
-            setItemStack(
-                0,
-                getProperMaterial(material),
-                TranslationKey.INVENTORIES__UNLOCK
+                owner.isEmpty()
+                    ? TranslationKey.INVENTORIES__LOCK
+                    : TranslationKey.INVENTORIES__UNLOCK
             );
         }
 
-        if (owner.equals(playerUuid) && state.menuAccess.ordinal() >= BlockAccessEditMenuEvent.MenuAccess.NORMAL.ordinal()) {
+        if (state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.MANAGER)) {
             setItemStack(
                 1,
                 Material.REDSTONE,
@@ -127,9 +122,7 @@ public class BlockLockInventory extends BlockProtInventory {
             );
         }
 
-        if (!owner.isEmpty() &&
-            state.menuAccess.ordinal() >= BlockAccessEditMenuEvent.MenuAccess.INFO.ordinal()
-        ) {
+        if (!owner.isEmpty() && state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.INFO)) {
             setItemStack(
                 InventoryConstants.lineLength - 2,
                 Material.OAK_SIGN,

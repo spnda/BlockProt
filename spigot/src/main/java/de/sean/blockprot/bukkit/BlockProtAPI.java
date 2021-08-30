@@ -18,7 +18,7 @@
 
 package de.sean.blockprot.bukkit;
 
-import de.sean.blockprot.bukkit.events.BlockAccessEditMenuEvent;
+import de.sean.blockprot.bukkit.events.BlockAccessMenuEvent;
 import de.sean.blockprot.bukkit.integrations.PluginIntegration;
 import de.sean.blockprot.bukkit.inventories.BlockLockInventory;
 import de.sean.blockprot.bukkit.inventories.InventoryState;
@@ -120,7 +120,7 @@ public final class BlockProtAPI {
 
     /**
      * Get the lock inventory for given block and player. This call
-     * triggers the {@link BlockAccessEditMenuEvent} event and checks
+     * triggers the {@link BlockAccessMenuEvent} event and checks
      * if it succeeded and what permissions the player has and bases the
      * inventory on that information.
      *
@@ -132,32 +132,39 @@ public final class BlockProtAPI {
      */
     @Nullable
     public Inventory getLockInventoryForBlock(@NotNull final Block block, @NotNull final Player player) {
-        final BlockAccessEditMenuEvent event = new BlockAccessEditMenuEvent(block, player);
-        Bukkit.getPluginManager().callEvent(event);
-        if (event.isCancelled() || event.getAccess() == BlockAccessEditMenuEvent.MenuAccess.NONE) {
-            return null;
-        }
+        final BlockAccessMenuEvent event = new BlockAccessMenuEvent(block, player);
+        final String playerUuid = player.getUniqueId().toString();
 
         final BlockNBTHandler handler = new BlockNBTHandler(block);
         if (player.hasPermission(BlockNBTHandler.PERMISSION_ADMIN)) {
-            event.setAccess(BlockAccessEditMenuEvent.MenuAccess.ADMIN);
-        } else if (player.hasPermission(BlockNBTHandler.PERMISSION_INFO) || player.isOp()) {
-            event.setAccess(BlockAccessEditMenuEvent.MenuAccess.INFO);
-        } else if (handler.isNotProtected() || handler.isOwner(player.getUniqueId().toString())) {
-            event.setAccess(BlockAccessEditMenuEvent.MenuAccess.NORMAL);
-        } else {
-            event.setAccess(BlockAccessEditMenuEvent.MenuAccess.NONE);
+            event.addPermissions(
+                BlockAccessMenuEvent.MenuPermission.LOCK,
+                BlockAccessMenuEvent.MenuPermission.INFO);
+        } else if (player.hasPermission(BlockNBTHandler.PERMISSION_INFO)) {
+            event.addPermission(BlockAccessMenuEvent.MenuPermission.INFO);
         }
 
-        if (event.getAccess() == BlockAccessEditMenuEvent.MenuAccess.NONE) {
+        if (handler.isOwner(playerUuid)) {
+            event.addPermissions(
+                BlockAccessMenuEvent.MenuPermission.LOCK,
+                BlockAccessMenuEvent.MenuPermission.INFO,
+                BlockAccessMenuEvent.MenuPermission.MANAGER);
+        } else if (handler.isNotProtected()) {
+            event.addPermission(BlockAccessMenuEvent.MenuPermission.LOCK);
+        }
+
+        // Call the event and let the listeners remove/add more permissions.
+        Bukkit.getPluginManager().callEvent(event);
+
+        if (event.isCancelled() || event.getPermissions().isEmpty()) {
             return null;
-        } else {
-            InventoryState state = new InventoryState(block);
-            state.menuAccess = event.getAccess();
-            state.friendSearchState = InventoryState.FriendSearchState.FRIEND_SEARCH;
-            InventoryState.set(player.getUniqueId(), state);
-
-            return new BlockLockInventory().fill(player, block.getType(), handler);
         }
+
+        InventoryState state = new InventoryState(block);
+        state.menuPermissions = event.getPermissions();
+        state.friendSearchState = InventoryState.FriendSearchState.FRIEND_SEARCH;
+        InventoryState.set(player.getUniqueId(), state);
+
+        return new BlockLockInventory().fill(player, block.getType(), handler);
     }
 }

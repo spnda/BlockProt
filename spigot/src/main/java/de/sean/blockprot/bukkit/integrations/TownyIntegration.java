@@ -27,8 +27,8 @@ import com.palmergames.bukkit.towny.event.town.TownUnclaimEvent;
 import com.palmergames.bukkit.towny.object.*;
 import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import de.sean.blockprot.bukkit.BlockProt;
-import de.sean.blockprot.bukkit.events.BlockAccessEditMenuEvent;
 import de.sean.blockprot.bukkit.events.BlockAccessEvent;
+import de.sean.blockprot.bukkit.events.BlockAccessMenuEvent;
 import de.sean.blockprot.bukkit.events.BlockLockOnPlaceEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import org.bukkit.OfflinePlayer;
@@ -234,7 +234,7 @@ public final class TownyIntegration extends PluginIntegration implements Listene
 
     @EventHandler
     public void onAccessEditMenu(
-        @NotNull final BlockAccessEditMenuEvent event) {
+        @NotNull final BlockAccessMenuEvent event) {
         if (towny == null) {
             return;
         }
@@ -262,7 +262,7 @@ public final class TownyIntegration extends PluginIntegration implements Listene
 
         if (residentEqualsPlayer(town.getMayor(), event.getPlayer())
             && shouldAllowMayorToSeeBlockInfo()) {
-            event.setAccess(BlockAccessEditMenuEvent.MenuAccess.INFO);
+            event.addPermission(BlockAccessMenuEvent.MenuPermission.INFO);
         } else if (town.isRuined()) {
             // Cancel the event if we don't want to bypass protections
             // in ruined towns.

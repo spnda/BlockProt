@@ -18,15 +18,13 @@
 
 package de.sean.blockprot.bukkit.inventories;
 
-import de.sean.blockprot.bukkit.events.BlockAccessEditMenuEvent;
+import de.sean.blockprot.bukkit.events.BlockAccessMenuEvent;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Storage for the current state and location of each player's
@@ -82,12 +80,10 @@ public final class InventoryState {
     public OfflinePlayer currentFriend = null;
 
     /**
-     * The current cached menu access for this state.
-     *
-     * @since 0.4.7
+     * The current cached menu permissions for this player.
      */
     @NotNull
-    public BlockAccessEditMenuEvent.MenuAccess menuAccess = BlockAccessEditMenuEvent.MenuAccess.NONE;
+    public Set<BlockAccessMenuEvent.MenuPermission> menuPermissions = new HashSet<>();
 
     public InventoryState(@Nullable Block block) {
         this.block = block;

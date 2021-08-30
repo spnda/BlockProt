@@ -80,9 +80,7 @@ public final class InventoryState {
     public OfflinePlayer currentFriend = null;
 
     /**
-     * The current cached menu access for this state.
-     *
-     * @since 0.4.7
+     * The current cached menu permissions for this player.
      */
     @NotNull
     public Set<BlockAccessMenuEvent.MenuPermission> menuPermissions = new HashSet<>();

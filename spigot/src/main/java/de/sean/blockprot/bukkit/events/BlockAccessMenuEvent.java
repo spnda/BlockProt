@@ -30,8 +30,6 @@ import java.util.Set;
 /**
  * Called when a player is trying to access a blocks lock menu.
  * Can be cancelled to prevent the inventory from opening up.
- *
- * @since 0.4.0
  */
 public final class BlockAccessMenuEvent extends BaseBlockEvent implements Cancellable {
     @NotNull
@@ -46,7 +44,6 @@ public final class BlockAccessMenuEvent extends BaseBlockEvent implements Cancel
      * @param block  The block that was placed.
      * @param player The player that placed the block.
      * @see BlockAccessMenuEvent
-     * @since 0.4.0
      */
     public BlockAccessMenuEvent(@NotNull final Block block,
                                 @NotNull final Player player) {
@@ -58,7 +55,6 @@ public final class BlockAccessMenuEvent extends BaseBlockEvent implements Cancel
      * The player that is trying to access the edit menu.
      *
      * @return The Bukkit player.
-     * @since 0.4.0
      */
     @NotNull
     public Player getPlayer() {

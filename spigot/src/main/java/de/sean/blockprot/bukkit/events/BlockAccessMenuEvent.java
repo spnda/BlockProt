@@ -118,9 +118,10 @@ public final class BlockAccessMenuEvent extends BaseBlockEvent implements Cancel
     }
 
     /**
-     * The permissions of a player towards the menu. Each one
-     * is specific to one field and one does not imply another
-     * unless explicitly stated.
+     * The different permissions a player can have when opening
+     * the menu. Each permission is specific to one element of the
+     * menus and permission does not imply another unless explicitly
+     * stated.
      */
     public enum MenuPermission {
         /* Allows a player to see the information of a block */

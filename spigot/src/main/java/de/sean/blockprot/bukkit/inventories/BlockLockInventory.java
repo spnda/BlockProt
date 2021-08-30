@@ -23,7 +23,6 @@ import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.events.BlockAccessMenuEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -100,7 +99,6 @@ public class BlockLockInventory extends BlockProtInventory {
 
         String owner = handler.getOwner();
 
-        Bukkit.getLogger().info(state.menuPermissions.toString());
         if (state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.LOCK)) {
             setItemStack(
                 0,

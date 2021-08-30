@@ -47,7 +47,7 @@ public enum BlockAccessFlag {
     WRITE(TranslationKey.INVENTORIES__FRIENDS__PERMISSION__WRITE),
 
     /**
-     * The user is allowed to remove friends and manage friends.
+     * The user is allowed to manage redstone settings and manage friends.
      */
     MANAGER(TranslationKey.INVENTORIES__FRIENDS__PERMISSION__MANAGER);
 

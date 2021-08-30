@@ -23,29 +23,33 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Called when a player is trying to access a blocks lock menu.
  * Can be cancelled to prevent the inventory from opening up.
  *
  * @since 0.4.0
  */
-public final class BlockAccessEditMenuEvent extends BaseBlockEvent implements Cancellable {
+public final class BlockAccessMenuEvent extends BaseBlockEvent implements Cancellable {
     @NotNull
     private final Player player;
 
-    private boolean isCancelled = false;
-
     @NotNull
-    private MenuAccess access = MenuAccess.NORMAL;
+    private final Set<MenuPermission> permissions = new HashSet<>();
+
+    private boolean isCancelled = false;
 
     /**
      * @param block  The block that was placed.
      * @param player The player that placed the block.
-     * @see BlockAccessEditMenuEvent
+     * @see BlockAccessMenuEvent
      * @since 0.4.0
      */
-    public BlockAccessEditMenuEvent(@NotNull final Block block,
-                                    @NotNull final Player player) {
+    public BlockAccessMenuEvent(@NotNull final Block block,
+                                @NotNull final Player player) {
         super(block);
         this.player = player;
     }
@@ -62,27 +66,41 @@ public final class BlockAccessEditMenuEvent extends BaseBlockEvent implements Ca
     }
 
     /**
-     * Get the current level of {@link MenuAccess}.
-     *
-     * @return The current access level.
-     * @since 0.4.0
+     * Get the permissions the player has when opening the
+     * menu.
      */
     @NotNull
-    public MenuAccess getAccess() {
-        return access;
+    public Set<MenuPermission> getPermissions() {
+        return permissions;
     }
 
     /**
-     * Sets new permissions. If {@code access} is lower than
-     * the previous permissions, this call will be ignored.
+     * Adds a new permission. See {@link java.util.Collection#add(Object)}
+     * for details on any exceptions and the implementation detail.
      *
-     * @param access The new permissions.
-     * @since 0.4.0
+     * @param permission The new permissions.
      */
-    public void setAccess(@NotNull MenuAccess access) {
-        if (access.ordinal() > this.access.ordinal()) {
-            this.access = access;
-        }
+    public void addPermission(@NotNull MenuPermission permission) {
+        this.permissions.add(permission);
+    }
+
+    /**
+     * Adds multiple permissions to this event.
+     *
+     * @param permissions The permissions do add.
+     */
+    public void addPermissions(@NotNull MenuPermission... permissions) {
+        this.permissions.addAll(Arrays.asList(permissions));
+    }
+
+    /**
+     * Removes a permission. See {@link java.util.Collection#add(Object)}
+     * for details on any exceptions and the implementation detail.
+     *
+     * @param permission The permission to remove.
+     */
+    public void removePermission(@NotNull MenuPermission permission) {
+        this.permissions.remove(permission);
     }
 
     /**
@@ -104,14 +122,16 @@ public final class BlockAccessEditMenuEvent extends BaseBlockEvent implements Ca
     }
 
     /**
-     * The level of access that a player can have.
-     *
-     * @since 0.4.0
+     * The permissions of a player towards the menu. Each one
+     * is specific to one field and one does not imply another
+     * unless explicitly stated.
      */
-    public enum MenuAccess {
-        NONE,
+    public enum MenuPermission {
+        /* Allows a player to see the information of a block */
         INFO,
-        NORMAL,
-        ADMIN
+        /* Allows a player to lock or unlock a block */
+        LOCK,
+        /* Allows a player to manage redstone settings and friends */
+        MANAGER
     }
 }

@@ -151,6 +151,9 @@ public final class BlockProtAPI {
                 BlockAccessMenuEvent.MenuPermission.MANAGER);
         } else if (handler.isNotProtected()) {
             event.addPermission(BlockAccessMenuEvent.MenuPermission.LOCK);
+        } else if (handler.getFriend(playerUuid).isPresent()
+            && handler.getFriend(playerUuid).get().isManager()) {
+            event.addPermission(BlockAccessMenuEvent.MenuPermission.MANAGER);
         }
 
         // Call the event and let the listeners remove/add more permissions.

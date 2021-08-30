@@ -113,8 +113,7 @@ public class BlockLockInventory extends BlockProtInventory {
             );
         }
 
-        if ((state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.MANAGER))
-            || (friend.isPresent() && friend.get().isManager())) {
+        if (state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.MANAGER)) {
             setItemStack(
                 1,
                 Material.REDSTONE,

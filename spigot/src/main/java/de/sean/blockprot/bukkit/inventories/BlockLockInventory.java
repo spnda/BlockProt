@@ -23,6 +23,7 @@ import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.events.BlockAccessMenuEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
+import de.sean.blockprot.bukkit.nbt.FriendHandler;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -31,6 +32,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 public class BlockLockInventory extends BlockProtInventory {
     @Override
@@ -98,6 +101,7 @@ public class BlockLockInventory extends BlockProtInventory {
         if (state == null) return inventory;
 
         String owner = handler.getOwner();
+        Optional<FriendHandler> friend = handler.getFriend(player.getUniqueId().toString());
 
         if (state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.LOCK)) {
             setItemStack(
@@ -109,7 +113,8 @@ public class BlockLockInventory extends BlockProtInventory {
             );
         }
 
-        if (state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.MANAGER)) {
+        if ((state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.MANAGER))
+            || (friend.isPresent() && friend.get().isManager())) {
             setItemStack(
                 1,
                 Material.REDSTONE,

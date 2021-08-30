@@ -38,6 +38,7 @@ inventories:
     permission:
       read: "Read"
       write: "Write"
+      manager: "Manager"
 
 messages:
   permission_granted: "Permission granted."

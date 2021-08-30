@@ -126,6 +126,16 @@ public final class FriendHandler extends NBTHandler<NBTCompound> {
     }
 
     /**
+     * A manager is allowed to edit redstone settings and remove/add
+     * and edit friends of a block they have this permission on.
+     *
+     * @return True, if the player is such a manager.
+     */
+    public boolean isManager() {
+        return getAccessFlags().contains(BlockAccessFlag.MANAGER);
+    }
+
+    /**
      * {@inheritDoc}
      * <p>
      * This only merges values if {@code handler} is an instance of {@link FriendHandler},

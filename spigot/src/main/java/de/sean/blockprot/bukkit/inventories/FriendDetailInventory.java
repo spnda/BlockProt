@@ -45,7 +45,8 @@ public final class FriendDetailInventory extends BlockProtInventory {
     private static final List<EnumSet<BlockAccessFlag>> accessFlagCombinations =
         Arrays.asList(
             EnumSet.of(BlockAccessFlag.READ),
-            EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE));
+            EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE),
+            EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE, BlockAccessFlag.MANAGER));
 
     @Nullable
     private EnumSet<BlockAccessFlag> curFlags = EnumSet.noneOf(BlockAccessFlag.class);

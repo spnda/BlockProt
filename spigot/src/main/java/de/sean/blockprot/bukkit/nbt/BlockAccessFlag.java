@@ -44,7 +44,12 @@ public enum BlockAccessFlag {
      *
      * @since 0.2.3
      */
-    WRITE(TranslationKey.INVENTORIES__FRIENDS__PERMISSION__WRITE);
+    WRITE(TranslationKey.INVENTORIES__FRIENDS__PERMISSION__WRITE),
+
+    /**
+     * The user is allowed to remove friends and manage friends.
+     */
+    MANAGER(TranslationKey.INVENTORIES__FRIENDS__PERMISSION__MANAGER);
 
     /**
      * The translation key used for the description of this flag.

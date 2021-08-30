@@ -212,6 +212,12 @@ public final class DefaultConfig extends BlockProtConfig {
         return this.config.getBoolean("lock_on_place_by_default");
     }
 
+    @Nullable
+    public String getTranslationFallbackString() {
+        if (!this.config.contains("fallback_string")) return "";
+        return this.config.getString("fallback_string");
+    }
+
     /**
      * <p> Whether the given {@code type} is either a lockable block or a lockable tile entity.
      *

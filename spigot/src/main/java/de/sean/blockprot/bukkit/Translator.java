@@ -66,6 +66,8 @@ public final class Translator {
     @NotNull
     private static Locale locale = defaultLocale;
 
+    static String DEFAULT_FALLBACK = "";
+
     /**
      * @since 0.2.3
      */
@@ -157,7 +159,9 @@ public final class Translator {
     @NotNull
     public static String get(@NotNull final TranslationKey key) {
         TranslationValue value = values.get(key);
-        return value == null ? "" : value.getValue();
+        return value == null
+            ? DEFAULT_FALLBACK
+            : value.getValue();
     }
 
     /**

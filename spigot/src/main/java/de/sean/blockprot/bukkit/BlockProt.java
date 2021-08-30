@@ -172,9 +172,11 @@ public final class BlockProt extends JavaPlugin {
      * @param fileName The name of the translations file.
      */
     private void loadTranslations(String fileName) {
+        assert defaultConfig != null;
+        Translator.DEFAULT_FALLBACK = defaultConfig.getTranslationFallbackString();
+
         final String langFolder = "lang/";
 
-        assert defaultConfig != null;
         // Ensure that all translation files have been saved properly.
         // For now, we will simply hard code these values.
         // TODO: Implement a dynamic system for this. Through gradle possibly?

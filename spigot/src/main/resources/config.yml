@@ -13,6 +13,12 @@
 #   - translations_zh_CN.yml: Chinese
 language_file: translations_en.yml
 
+# The fallback string when a translation cannot be found in translations_en
+# and the specified language_file above. This often happens when the plugin
+# is updated and there are new translations or translations were renamed. Best
+# to then delete the lang/ folder and restart the server.
+fallback_string: "Unknown translation"
+
 # If this is true, we will copy and replace the translation files on
 # each startup. This is so that when you should update this plugin, any
 # new or updated translations are automatically copied and applied. If

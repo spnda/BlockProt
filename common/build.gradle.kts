@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    api("org.jetbrains:annotations:21.0.1")
+    api("org.jetbrains:annotations:22.0.0")
 }
 
 tasks.compileJava {

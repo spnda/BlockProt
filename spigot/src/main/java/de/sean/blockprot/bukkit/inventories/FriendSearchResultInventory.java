@@ -18,14 +18,14 @@
 
 package de.sean.blockprot.bukkit.inventories;
 
-import de.sean.blockprot.nbt.FriendModifyAction;
 import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.integrations.PluginIntegration;
-import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
-import de.sean.blockprot.bukkit.nbt.FriendHandler;
+import de.sean.blockprot.bukkit.nbt.FriendSupportingHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
+import de.sean.blockprot.nbt.FriendModifyAction;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -121,25 +121,20 @@ public class FriendSearchResultInventory extends BlockProtInventory {
         List<OfflinePlayer> potentialFriends = Arrays.asList(Bukkit.getOfflinePlayers());
 
         // The already existing friends we want to add to.
-        final List<String> existingFriends;
+        final FriendSupportingHandler<NBTCompound> handler;
         switch (state.friendSearchState) {
             case FRIEND_SEARCH:
                 final Block block = state.getBlock();
                 if (block == null) return null;
-                BlockNBTHandler handler = getNbtHandlerOrNull(block);
-                if (handler == null) return null; // We return null to indicate an issue.
-
-                existingFriends = handler.getFriends()
-                    .stream()
-                    .map(FriendHandler::getName)
-                    .collect(Collectors.toList());
+                handler = getNbtHandlerOrNull(block);
                 break;
             case DEFAULT_FRIEND_SEARCH:
-                existingFriends = (new PlayerSettingsHandler(player)).getDefaultFriends();
+                handler = new PlayerSettingsHandler(player);
                 break;
             default:
-                return inventory;
+                return null;
         }
+        if (handler == null) return null; // return null to indicate a issue.
 
         // We'll filter all doubled friends out of the list and add them to the current InventoryState.
         potentialFriends = potentialFriends.stream().filter((p) -> {
@@ -148,13 +143,13 @@ public class FriendSearchResultInventory extends BlockProtInventory {
             // If they're less than 30% similar, we should still check if it possibly contains the search criteria
             // and still add that user.
             if (p.getName() == null || p.getUniqueId().equals(player.getUniqueId())) return false;
-            else if (existingFriends.contains(p.getUniqueId().toString())) return false;
+            else if (handler.containsFriend(p.getUniqueId().toString())) return false;
             else if (compareStrings(p.getName(), searchQuery) > 0.3) return true;
             else return p.getName().contains(searchQuery);
         }).collect(Collectors.toList());
         if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH && state.getBlock() != null) {
             // Allow integrations to additionally filter friends.
-            potentialFriends = PluginIntegration.filterFriends((ArrayList<OfflinePlayer>) potentialFriends, player, state.getBlock());
+            PluginIntegration.filterFriends((ArrayList<OfflinePlayer>) potentialFriends, player, state.getBlock());
         }
         state.friendResultCache.clear();
         state.friendResultCache.addAll(potentialFriends);

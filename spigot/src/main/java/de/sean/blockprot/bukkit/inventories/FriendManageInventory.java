@@ -39,8 +39,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 public final class FriendManageInventory extends BlockProtInventory {
     private int maxSkulls = getSize() - 5;
@@ -164,18 +162,14 @@ public final class FriendManageInventory extends BlockProtInventory {
                 if (handler == null) return null;
                 // Let the players be filtered by any plugin integration.
                 players = PluginIntegration.filterFriends(
-                    (ArrayList<OfflinePlayer>) mapFriendsToPlayer(handler.getFriendsStream()), player, state.getBlock());
+                    (ArrayList<OfflinePlayer>) handler.getFriendsAsPlayers(), player, state.getBlock());
                 break;
             }
             case DEFAULT_FRIEND_SEARCH: {
                 // We have 1 button less, as that button is only for blocks, which gives us room
                 // for one more friend.
                 maxSkulls += 1;
-                final PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(player);
-                players = settingsHandler.getDefaultFriends()
-                    .stream()
-                    .map((friend) -> Bukkit.getOfflinePlayer(UUID.fromString(friend)))
-                    .collect(Collectors.toList());
+                players = new PlayerSettingsHandler(player).getFriendsAsPlayers();
                 break;
             }
             default: {

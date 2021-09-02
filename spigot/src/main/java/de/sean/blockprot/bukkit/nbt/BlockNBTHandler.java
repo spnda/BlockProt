@@ -37,11 +37,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * A block handler to get values and settings from a single lockable
@@ -49,7 +46,7 @@ import java.util.stream.Stream;
  *
  * @since 0.2.3
  */
-public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
+public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> {
     static final String OWNER_ATTRIBUTE = "splugin_owner";
 
     static final String OLD_LOCK_ATTRIBUTE = "splugin_lock";
@@ -76,7 +73,7 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
      * @since 0.2.3
      */
     public BlockNBTHandler(@NotNull final Block block) throws RuntimeException {
-        super();
+        super(LOCK_ATTRIBUTE);
         this.block = block;
 
         if (BlockProt.getDefaultConfig().isLockableBlock(this.block.getType())) {
@@ -119,97 +116,13 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
      *
      * @since 0.3.0
      */
-    private void remapAccess() {
+    @Override
+    protected void preFriendReadCallback() {
         final List<String> stringList = BlockProtUtil.parseStringList(container.getString(OLD_LOCK_ATTRIBUTE));
         if (stringList.isEmpty()) return;
         container.removeKey(OLD_LOCK_ATTRIBUTE); // Remove the original list.
         container.addCompound(LOCK_ATTRIBUTE); // Create the new compound.
         stringList.forEach(this::addFriend);
-    }
-
-    /**
-     * Gets a {@link Stream} of {@link FriendHandler} for this block.
-     *
-     * @return A stream of friend handlers for all NBT compounds under
-     * the friend key.
-     * @since 0.3.0
-     */
-    @NotNull
-    public Stream<FriendHandler> getFriendsStream() {
-        remapAccess();
-        if (!container.hasKey(LOCK_ATTRIBUTE)) return Stream.empty();
-
-        final NBTCompound compound = container.getOrCreateCompound(LOCK_ATTRIBUTE);
-        return compound
-            .getKeys()
-            .stream()
-            .map((k) -> new FriendHandler(compound.getCompound(k)));
-    }
-
-    /**
-     * Gets a {@link List} of friends for this block.
-     *
-     * @return A list of {@link FriendHandler} to read
-     * additional data for each friend.
-     * @since 0.3.0
-     */
-    @NotNull
-    public List<FriendHandler> getFriends() {
-        return getFriendsStream().collect(Collectors.toList());
-    }
-
-    /**
-     * Set a new list of FriendHandler for the friends list.
-     *
-     * @param access The new list of friends to use.
-     * @since 0.3.0
-     */
-    public void setFriends(@NotNull final List<FriendHandler> access) {
-        container.removeKey(LOCK_ATTRIBUTE);
-        if (!access.isEmpty()) {
-            NBTCompound compound = container.addCompound(LOCK_ATTRIBUTE);
-            for (FriendHandler handler : access) {
-                NBTCompound newCompound = compound.addCompound(handler.getName());
-                newCompound.mergeCompound(handler.container);
-            }
-        }
-    }
-
-    /**
-     * Filters the results of {@link #getFriends()} for any entry which
-     * id qualifies for {@link String#equals(Object)}.
-     *
-     * @param id The String ID to check for. Usually a UUID as a String as {@link UUID#toString()}.
-     * @return The first {@link FriendHandler} found, or none.
-     * @since 0.3.0
-     */
-    @NotNull
-    public Optional<FriendHandler> getFriend(@NotNull final String id) {
-        return getFriendsStream()
-            .filter((f) -> f.getName().equals(id))
-            .findFirst();
-    }
-
-    /**
-     * Adds a new friend to the NBT.
-     *
-     * @param friend The friend to add.
-     * @since 0.3.0
-     */
-    public void addFriend(@NotNull final String friend) {
-        NBTCompound compound = container.getOrCreateCompound(LOCK_ATTRIBUTE);
-        compound.addCompound(friend).setString("id", friend);
-    }
-
-    /**
-     * Removes a friend from the NBT.
-     *
-     * @param friend The friend to remove.
-     * @since 0.3.0
-     */
-    public void removeFriend(@NotNull final String friend) {
-        NBTCompound compound = container.getOrCreateCompound(LOCK_ATTRIBUTE);
-        compound.removeKey(friend);
     }
 
     /**
@@ -382,20 +295,6 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
     }
 
     /**
-     * Checks whether or not {@code friends} contains {@code friend}.
-     *
-     * @param friends A list of all friends we want to filter.
-     * @param friend  The UUID of a player we want to check for.
-     * @return True, if the list does contain that friend.
-     * @since 0.3.0
-     */
-    private boolean containsFriend(@NotNull final List<FriendHandler> friends, @NotNull final String friend) {
-        return friends
-            .stream()
-            .anyMatch((f) -> f.getName().equals(friend));
-    }
-
-    /**
      * @param player      The player requesting this command, should be the owner.
      * @param friend      The friend do to {@code action} with.
      * @param action      The action we should perform with {@code friend} on this block.
@@ -430,10 +329,9 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
             false
         );
 
-        final List<FriendHandler> friends = getFriends();
         switch (action) {
             case ADD_FRIEND: {
-                if (containsFriend(friends, friend)) {
+                if (containsFriend(friend)) {
                     return new LockReturnValue(false);
                 } else {
                     addFriend(friend);
@@ -442,7 +340,7 @@ public final class BlockNBTHandler extends NBTHandler<NBTCompound> {
                 }
             }
             case REMOVE_FRIEND: {
-                if (containsFriend(friends, friend)) {
+                if (containsFriend(friend)) {
                     removeFriend(friend);
                     this.applyToOtherContainer();
                     return new LockReturnValue(true);

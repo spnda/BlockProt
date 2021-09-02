@@ -167,15 +167,12 @@ public abstract class BlockProtInventory implements InventoryHolder {
                 action
             ),
             (handler) -> {
-                List<String> currentFriends = handler.getDefaultFriends();
                 switch (action) {
                     case ADD_FRIEND:
-                        currentFriends.add(friend.getUniqueId().toString());
-                        handler.setDefaultFriends(currentFriends);
+                        handler.addFriend(friend.getUniqueId().toString());
                         break;
                     case REMOVE_FRIEND:
-                        currentFriends.remove(friend.getUniqueId().toString());
-                        handler.setDefaultFriends(currentFriends);
+                        handler.removeFriend(friend.getUniqueId().toString());
                         break;
                 }
                 return null;

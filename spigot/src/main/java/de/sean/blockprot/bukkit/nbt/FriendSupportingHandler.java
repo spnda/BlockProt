@@ -62,10 +62,7 @@ public abstract class FriendSupportingHandler<T extends NBTCompound> extends NBT
     }
 
     /**
-     * Gets a {@link List} of friends for this block.
-     *
-     * @return A list of {@link FriendHandler} to read
-     * additional data for each friend.
+     * Gets a {@link List} of {@link FriendHandler} for this block.
      */
     public List<FriendHandler> getFriends() {
         return this.getFriendsStream().collect(Collectors.toList());
@@ -82,25 +79,17 @@ public abstract class FriendSupportingHandler<T extends NBTCompound> extends NBT
 
     /**
      * Set a new list of FriendHandler for the friends list.
-     *
-     * @param access The new list of friends to use.
      */
-    public void setFriends(@NotNull final List<FriendHandler> access) {
+    public void setFriends(@NotNull final List<FriendHandler> friends) {
         container.removeKey(friendNbtKey);
-        if (!access.isEmpty()) {
-            NBTCompound compound = container.addCompound(friendNbtKey);
-            for (FriendHandler handler : access) {
-                NBTCompound newCompound = compound.addCompound(handler.getName());
-                newCompound.mergeCompound(handler.container);
-            }
-        }
+        friends.forEach(this::addFriend);
     }
 
     /**
-     * Filters the results of {@link #getFriends()} for any entry which
-     * id qualifies for {@link String#equals(Object)}.
+     * Filters the results of {@link #getFriends()} for any entry whose
+     * UUID qualifies for {@link String#equals(Object)} with given {@code id}.
      *
-     * @param id The String ID to check for. Usually a UUID as a String as {@link UUID#toString()}.
+     * @param id The UUID to check for.
      * @return The first {@link FriendHandler} found, or none.
      */
     @NotNull
@@ -112,8 +101,6 @@ public abstract class FriendSupportingHandler<T extends NBTCompound> extends NBT
 
     /**
      * Adds a new friend to the NBT.
-     *
-     * @param friend The friend to add.
      */
     public void addFriend(@NotNull final String friend) {
         NBTCompound compound = container.getOrCreateCompound(friendNbtKey);
@@ -130,8 +117,6 @@ public abstract class FriendSupportingHandler<T extends NBTCompound> extends NBT
 
     /**
      * Removes a friend from the NBT.
-     *
-     * @param friend The friend to remove.
      */
     public void removeFriend(@NotNull final String friend) {
         NBTCompound compound = container.getOrCreateCompound(friendNbtKey);

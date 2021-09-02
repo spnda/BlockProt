@@ -18,12 +18,11 @@
 
 package de.sean.blockprot.bukkit.inventories;
 
+import de.sean.blockprot.bukkit.nbt.*;
 import de.sean.blockprot.nbt.FriendModifyAction;
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
-import de.sean.blockprot.bukkit.nbt.BlockAccessFlag;
-import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
-import de.sean.blockprot.bukkit.nbt.FriendHandler;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -120,6 +119,7 @@ public final class FriendDetailInventory extends BlockProtInventory {
             this.playerHandler.setAccessFlags(curFlags);
     }
 
+    @Nullable
     public Inventory fill(@NotNull Player player) {
         final InventoryState state = InventoryState.get(player.getUniqueId());
         if (state == null) return inventory;
@@ -131,29 +131,28 @@ public final class FriendDetailInventory extends BlockProtInventory {
         setItemStack(
             1, Material.RED_STAINED_GLASS_PANE, TranslationKey.INVENTORIES__FRIENDS__REMOVE);
 
-        if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH) {
-            /* Get the current FriendHandler */
-            BlockNBTHandler handler = getNbtHandlerOrNull(Objects.requireNonNull(state.getBlock()));
-            if (handler == null) return inventory;
-            final Optional<FriendHandler> friendHandler =
-                handler.getFriend(friend.getUniqueId().toString());
+        final @Nullable FriendSupportingHandler<NBTCompound> handler =
+            getFriendSupportingHandler(state.friendSearchState, player, state.getBlock());
+        if (handler == null) return null;
 
-            if (!friendHandler.isPresent()) {
-                Bukkit.getLogger().warning("Tried to open a " + this.getClass().getSimpleName() + " with a unknown player.");
-                return inventory;
-            }
-            playerHandler = friendHandler.get();
+        final Optional<FriendHandler> friendHandler =
+            handler.getFriend(friend.getUniqueId().toString());
 
-            /* Read the current access flags */
-            curFlags = playerHandler.getAccessFlags();
-
-            setItemStack(
-                2,
-                Material.ENDER_EYE,
-                BlockAccessFlag.toBaseString(),
-                BlockAccessFlag.accumulateAccessFlagLore(curFlags)
-            );
+        if (!friendHandler.isPresent()) {
+            Bukkit.getLogger().warning("Tried to open a " + this.getClass().getSimpleName() + " with a unknown player.");
+            return null;
         }
+        playerHandler = friendHandler.get();
+
+        /* Read the current access flags */
+        curFlags = playerHandler.getAccessFlags();
+
+        setItemStack(
+            2,
+            Material.ENDER_EYE,
+            BlockAccessFlag.toBaseString(),
+            BlockAccessFlag.accumulateAccessFlagLore(curFlags)
+        );
 
         setBackButton();
 

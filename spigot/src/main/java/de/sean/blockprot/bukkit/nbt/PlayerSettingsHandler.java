@@ -23,7 +23,7 @@ import de.sean.blockprot.bukkit.inventories.InventoryConstants;
 import de.sean.blockprot.util.BlockProtUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
-import org.bukkit.Bukkit;
+import de.tr7zw.changeme.nbtapi.NBTType;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  *
  * @since 0.2.3
  */
-public final class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
+public final class PlayerSettingsHandler extends FriendSupportingHandler<NBTCompound> {
     static final String LOCK_ON_PLACE_ATTRIBUTE = "splugin_lock_on_place";
 
     static final String DEFAULT_FRIENDS_ATTRIBUTE = "blockprot_default_friends";
@@ -62,7 +62,7 @@ public final class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
      * @since 0.2.3
      */
     public PlayerSettingsHandler(@NotNull final Player player) {
-        super();
+        super(DEFAULT_FRIENDS_ATTRIBUTE);
         this.player = player;
 
         this.container = new NBTEntity(player).getPersistentDataContainer();
@@ -96,19 +96,37 @@ public final class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
     }
 
     /**
+     * We are switching to a similar system that {@link BlockNBTHandler}
+     * uses. To retain compatibility and upgradability with older versions
+     * we will try to remap the previous data to the new data structure.
+     */
+    @Override
+    protected void preFriendReadCallback() {
+        if (container.hasKey(DEFAULT_FRIENDS_ATTRIBUTE)
+            && container.getType(DEFAULT_FRIENDS_ATTRIBUTE) == NBTType.NBTTagString) {
+            final List<String> originalList = BlockProtUtil
+                .parseStringList(container.getString(DEFAULT_FRIENDS_ATTRIBUTE));
+            
+            container.removeKey(DEFAULT_FRIENDS_ATTRIBUTE); // We have to remove the string to then add the compound.
+            container.addCompound(DEFAULT_FRIENDS_ATTRIBUTE);
+            originalList.forEach(this::addFriend);
+        }
+    }
+
+    /**
      * Get the {@link List} of default friends for this player.
      *
      * @return A List of Player {@link UUID}s as {@link String}s
      * representing each friend.
      * @since 0.2.3
+     * @deprecated Use {@link #getFriends()} instead.
      */
+    @Deprecated
     @NotNull
     public List<String> getDefaultFriends() {
-        if (!container.hasKey(DEFAULT_FRIENDS_ATTRIBUTE)) return new ArrayList<>();
-        else {
-            return BlockProtUtil
-                .parseStringList(container.getString(DEFAULT_FRIENDS_ATTRIBUTE));
-        }
+        return getFriendsStream()
+            .map(FriendHandler::getName)
+            .collect(Collectors.toList());
     }
 
     /**
@@ -118,9 +136,12 @@ public final class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
      *
      * @param friends A list of UUIDs representing a list of friends.
      * @since 0.2.3
+     * @deprecated Use {@link #setFriends(List)} instead.
      */
+    @Deprecated
     public void setDefaultFriends(@NotNull final List<String> friends) {
-        container.setString(DEFAULT_FRIENDS_ATTRIBUTE, friends.toString());
+        container.removeKey(DEFAULT_FRIENDS_ATTRIBUTE);
+        friends.forEach(this::addFriend);
     }
 
     /**
@@ -129,14 +150,12 @@ public final class PlayerSettingsHandler extends NBTHandler<NBTCompound> {
      *
      * @return All default friends as a list of {@link OfflinePlayer}.
      * @since 0.2.3
+     * @deprecated Use {@link #getFriendsAsPlayers()} instead.
      */
+    @Deprecated
     @NotNull
     public List<OfflinePlayer> getDefaultFriendsAsPlayers() {
-        ArrayList<String> friends = (ArrayList<String>) getDefaultFriends();
-        return friends
-            .stream()
-            .map(s -> Bukkit.getOfflinePlayer(UUID.fromString(s)))
-            .collect(Collectors.toList());
+        return this.getFriendsAsPlayers();
     }
 
     /**

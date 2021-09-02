@@ -24,7 +24,8 @@ import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.integrations.PluginIntegration;
 import de.sean.blockprot.bukkit.inventories.InventoryState.FriendSearchState;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
-import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
+import de.sean.blockprot.bukkit.nbt.FriendSupportingHandler;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -38,9 +39,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 public final class FriendManageInventory extends BlockProtInventory {
     private int maxSkulls = getSize() - 5;
@@ -156,35 +154,14 @@ public final class FriendManageInventory extends BlockProtInventory {
         final InventoryState state = InventoryState.get(player.getUniqueId());
         if (state == null) return inventory;
 
-        List<OfflinePlayer> players;
-        switch (state.friendSearchState) {
-            case FRIEND_SEARCH: {
-                final BlockNBTHandler handler =
-                    getNbtHandlerOrNull(Objects.requireNonNull(state.getBlock()));
-                if (handler == null) return null;
-                // Let the players be filtered by any plugin integration.
-                players = PluginIntegration.filterFriends(
-                    (ArrayList<OfflinePlayer>) mapFriendsToPlayer(handler.getFriendsStream()), player, state.getBlock());
-                break;
-            }
-            case DEFAULT_FRIEND_SEARCH: {
-                // We have 1 button less, as that button is only for blocks, which gives us room
-                // for one more friend.
-                maxSkulls += 1;
-                final PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(player);
-                players = settingsHandler.getDefaultFriends()
-                    .stream()
-                    .map((friend) -> Bukkit.getOfflinePlayer(UUID.fromString(friend)))
-                    .collect(Collectors.toList());
-                break;
-            }
-            default: {
-                throw new RuntimeException(
-                    "Could not build "
-                        + this.getClass().getName()
-                        + " due to invalid friend search state: "
-                        + state.friendSearchState);
-            }
+        final @Nullable FriendSupportingHandler<NBTCompound> handler =
+            getFriendSupportingHandler(state.friendSearchState, player, state.getBlock());
+        if (handler == null) return null;
+
+        List<OfflinePlayer> players = handler.getFriendsAsPlayers();
+        if (state.friendSearchState == FriendSearchState.FRIEND_SEARCH && state.getBlock() != null) {
+            PluginIntegration.filterFriends(
+                (ArrayList<OfflinePlayer>) players, player, state.getBlock());
         }
 
         // Fill the first page inventory with skeleton skulls.

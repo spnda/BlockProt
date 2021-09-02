@@ -42,7 +42,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.List;
 
 public class BlockEventListener implements Listener {
     private final BlockProt blockProt;
@@ -151,10 +150,9 @@ public class BlockEventListener implements Listener {
                 Bukkit.getPluginManager().callEvent(lockOnPlaceEvent);
                 if (!lockOnPlaceEvent.isCancelled()) {
                     handler.lockBlock(event.getPlayer());
-                    List<String> friends = settingsHandler.getDefaultFriends();
-                    for (String friend : friends) {
-                        handler.addFriend(friend);
-                    }
+                    settingsHandler
+                        .getFriendsStream()
+                        .forEach(handler::addFriend);
                 }
 
                 if (BlockProt.getDefaultConfig().disallowRedstoneOnPlace()) {
@@ -175,10 +173,9 @@ public class BlockEventListener implements Listener {
                     handler.setOwner(
                         settingsHandler.getLockOnPlace() ? playerUuid : ""
                     );
-                    List<String> friends = settingsHandler.getDefaultFriends();
-                    for (String friend : friends) {
-                        handler.addFriend(friend);
-                    }
+                    settingsHandler
+                        .getFriendsStream()
+                        .forEach(handler::addFriend);
                 }
                 if (BlockProt.getDefaultConfig().disallowRedstoneOnPlace()) {
                     handler.getRedstoneHandler().setAll(false);

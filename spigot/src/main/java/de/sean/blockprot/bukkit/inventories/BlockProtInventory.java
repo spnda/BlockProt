@@ -22,9 +22,11 @@ import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.FriendHandler;
+import de.sean.blockprot.bukkit.nbt.FriendSupportingHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.nbt.FriendModifyAction;
 import de.sean.blockprot.nbt.LockReturnValue;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -167,15 +169,12 @@ public abstract class BlockProtInventory implements InventoryHolder {
                 action
             ),
             (handler) -> {
-                List<String> currentFriends = handler.getDefaultFriends();
                 switch (action) {
                     case ADD_FRIEND:
-                        currentFriends.add(friend.getUniqueId().toString());
-                        handler.setDefaultFriends(currentFriends);
+                        handler.addFriend(friend.getUniqueId().toString());
                         break;
                     case REMOVE_FRIEND:
-                        currentFriends.remove(friend.getUniqueId().toString());
-                        handler.setDefaultFriends(currentFriends);
+                        handler.removeFriend(friend.getUniqueId().toString());
                         break;
                 }
                 return null;
@@ -473,6 +472,21 @@ public abstract class BlockProtInventory implements InventoryHolder {
             return new BlockNBTHandler(block);
         } catch (RuntimeException e) {
             return null;
+        }
+    }
+
+    protected @Nullable FriendSupportingHandler<NBTCompound> getFriendSupportingHandler(@NotNull InventoryState.FriendSearchState state,
+                                                                                        @Nullable Player player,
+                                                                                        @Nullable Block block) {
+        switch (state) {
+            case FRIEND_SEARCH:
+                if (block == null) return null;
+                return getNbtHandlerOrNull(block);
+            case DEFAULT_FRIEND_SEARCH:
+                if (player == null) return null;
+                return new PlayerSettingsHandler(player);
+            default:
+                return null;
         }
     }
 

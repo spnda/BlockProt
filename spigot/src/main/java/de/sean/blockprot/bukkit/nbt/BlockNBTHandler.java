@@ -111,10 +111,8 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
     /**
      * As of 0.3.0 we expect a list of compounds, in which we can
      * store the access flags and other future settings.
-     * Therefore we will remap the values here. This will possibly
+     * Therefore, we will remap the values here. This will possibly
      * be removed in a future version.
-     *
-     * @since 0.3.0
      */
     @Override
     protected void preFriendReadCallback() {

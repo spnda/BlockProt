@@ -144,6 +144,21 @@ public final class PlayerSettingsHandler extends FriendSupportingHandler<NBTComp
     }
 
     /**
+     * Set a new list of default friends. These have to be UUID-based,
+     * otherwise other callers using {@link #getDefaultFriends()} will
+     * experience issues. This does not get checked.
+     *
+     * @param friends A list of UUIDs representing a list of friends.
+     * @since 0.2.3
+     * @deprecated Use {@link #setFriends(List)} instead.
+     */
+    @Deprecated
+    public void setDefaultFriends(@NotNull final List<String> friends) {
+        container.removeKey(DEFAULT_FRIENDS_ATTRIBUTE);
+        friends.forEach(this::addFriend);
+    }
+
+    /**
      * Get the current search history for this player.
      * 
      * @return A list of UUIDs for each player this player has

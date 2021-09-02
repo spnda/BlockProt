@@ -162,10 +162,6 @@ public final class FriendManageInventory extends BlockProtInventory {
         if (state.friendSearchState == FriendSearchState.FRIEND_SEARCH && state.getBlock() != null) {
             PluginIntegration.filterFriends(
                 (ArrayList<OfflinePlayer>) players, player, state.getBlock());
-        } else if (state.friendSearchState == FriendSearchState.DEFAULT_FRIEND_SEARCH) {
-            // We have 1 button less, as that button is only for blocks, which gives us room
-            // for one more friend.
-            maxSkulls += 1;
         }
 
         // Fill the first page inventory with skeleton skulls.

@@ -13,9 +13,6 @@ inventories:
   unlock: "解鎖"
   redstone:
 
-  lock_on_place:
-    activate: "在放置時自動上鎖"
-    deactivate: "不要在放置時自動上鎖"
   friends:
     manage: "管理信任者"
     edit: "編輯信任者"

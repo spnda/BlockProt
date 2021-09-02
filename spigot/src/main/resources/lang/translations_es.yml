@@ -15,9 +15,6 @@ inventories:
     settings: "Configuración de Redstone"
     enable_all: "Habilitar todo"
     disable_all: "Desactivar todo"
-  lock_on_place:
-    activate: "Proteger siempre al colocar"
-    deactivate: "No proteger al colocar"
   friends:
     manage: "Administrar permisos"
     edit: "Modificar permisos"

@@ -13,9 +13,6 @@ inventories:
   unlock: "잠금 해제"
   redstone:
 
-  lock_on_place:
-    activate: "설치 시 항상 잠굽니다."
-    deactivate: "설치 시 잠구지 않습니다."
   friends:
     manage: "친구 관리"
     edit: "친구 수정"

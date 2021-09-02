@@ -52,13 +52,7 @@ public class UserSettingsInventory extends BlockProtInventory {
                 PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(player);
                 boolean lockOnPlace = !settingsHandler.getLockOnPlace();
                 settingsHandler.setLockOnPlace(lockOnPlace);
-                this.setItemStack(
-                    0,
-                    Material.BARRIER,
-                    (lockOnPlace)
-                        ? Translator.get(TranslationKey.INVENTORIES__LOCK_ON_PLACE__DEACTIVATE)
-                        : Translator.get(TranslationKey.INVENTORIES__LOCK_ON_PLACE__ACTIVATE)
-                );
+                this.inventory.setItem(0, this.toggleEnchants(item, lockOnPlace));
                 break;
             case PLAYER_HEAD:
                 state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH;
@@ -78,12 +72,11 @@ public class UserSettingsInventory extends BlockProtInventory {
     public Inventory fill(Player player) {
         PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(player);
         boolean lockOnPlace = settingsHandler.getLockOnPlace();
-        setItemStack(
+        setEnchantedItemStack(
             0,
             Material.BARRIER,
-            (lockOnPlace)
-                ? TranslationKey.INVENTORIES__LOCK_ON_PLACE__DEACTIVATE
-                : TranslationKey.INVENTORIES__LOCK_ON_PLACE__ACTIVATE
+            TranslationKey.INVENTORIES__LOCK_ON_PLACE_ENABLED,
+            lockOnPlace
         );
         setItemStack(
             1,

@@ -15,9 +15,6 @@ inventories:
     settings: "红石设置"
     enable_all: "启用所有"
     disable_all: "禁用所有"
-  lock_on_place:
-    activate: "在放置时自动上锁"
-    deactivate: "永远不在放置时上锁"
   friends:
     manage: "管理信任者"
     edit: "编辑信任者"

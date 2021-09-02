@@ -17,6 +17,7 @@ inventories:
   block_info: "Block Info"
   lock: "Lock"
   unlock: "Unlock"
+  lock_on_place_enabled: "Lock automatically"
   redstone:
     settings: "Redstone Settings"
     redstone_enabled: "Redstone protection enabled"
@@ -24,9 +25,6 @@ inventories:
     hoppers_enabled: "Hopper protection enabled"
     enable_all: "Enable all"
     disable_all: "Disable all"
-  lock_on_place:
-    activate: "Always lock on placing"
-    deactivate: "Never lock on placing"
   friends:
     manage: "Manage Friends"
     edit: "Edit Friend"

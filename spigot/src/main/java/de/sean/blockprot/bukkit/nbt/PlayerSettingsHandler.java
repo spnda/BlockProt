@@ -130,20 +130,6 @@ public final class PlayerSettingsHandler extends FriendSupportingHandler<NBTComp
     }
 
     /**
-     * Gets the default friends as a list of {@link OfflinePlayer}. Uses
-     * {@link #getDefaultFriends} as a base.
-     *
-     * @return All default friends as a list of {@link OfflinePlayer}.
-     * @since 0.2.3
-     * @deprecated Use {@link #getFriendsAsPlayers()} instead.
-     */
-    @Deprecated
-    @NotNull
-    public List<OfflinePlayer> getDefaultFriendsAsPlayers() {
-        return this.getFriendsAsPlayers();
-    }
-
-    /**
      * Set a new list of default friends. These have to be UUID-based,
      * otherwise other callers using {@link #getDefaultFriends()} will
      * experience issues. This does not get checked.
@@ -156,6 +142,20 @@ public final class PlayerSettingsHandler extends FriendSupportingHandler<NBTComp
     public void setDefaultFriends(@NotNull final List<String> friends) {
         container.removeKey(DEFAULT_FRIENDS_ATTRIBUTE);
         friends.forEach(this::addFriend);
+    }
+
+    /**
+     * Gets the default friends as a list of {@link OfflinePlayer}. Uses
+     * {@link #getDefaultFriends} as a base.
+     *
+     * @return All default friends as a list of {@link OfflinePlayer}.
+     * @since 0.2.3
+     * @deprecated Use {@link #getFriendsAsPlayers()} instead.
+     */
+    @Deprecated
+    @NotNull
+    public List<OfflinePlayer> getDefaultFriendsAsPlayers() {
+        return this.getFriendsAsPlayers();
     }
 
     /**

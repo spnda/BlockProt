@@ -131,17 +131,8 @@ public final class FriendDetailInventory extends BlockProtInventory {
         setItemStack(
             1, Material.RED_STAINED_GLASS_PANE, TranslationKey.INVENTORIES__FRIENDS__REMOVE);
 
-        @Nullable FriendSupportingHandler<NBTCompound> handler;
-        switch (state.friendSearchState) {
-            case FRIEND_SEARCH:
-                handler = getNbtHandlerOrNull(Objects.requireNonNull(state.getBlock()));
-                break;
-            case DEFAULT_FRIEND_SEARCH:
-                handler = new PlayerSettingsHandler(player);
-                break;
-            default:
-                return null;
-        }
+        final @Nullable FriendSupportingHandler<NBTCompound> handler =
+            getFriendSupportingHandler(state.friendSearchState, player, state.getBlock());
         if (handler == null) return null;
 
         final Optional<FriendHandler> friendHandler =

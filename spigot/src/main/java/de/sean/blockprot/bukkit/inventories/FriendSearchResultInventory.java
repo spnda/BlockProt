@@ -30,7 +30,6 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -121,20 +120,9 @@ public class FriendSearchResultInventory extends BlockProtInventory {
         List<OfflinePlayer> potentialFriends = Arrays.asList(Bukkit.getOfflinePlayers());
 
         // The already existing friends we want to add to.
-        final FriendSupportingHandler<NBTCompound> handler;
-        switch (state.friendSearchState) {
-            case FRIEND_SEARCH:
-                final Block block = state.getBlock();
-                if (block == null) return null;
-                handler = getNbtHandlerOrNull(block);
-                break;
-            case DEFAULT_FRIEND_SEARCH:
-                handler = new PlayerSettingsHandler(player);
-                break;
-            default:
-                return null;
-        }
-        if (handler == null) return null; // return null to indicate a issue.
+        final @Nullable FriendSupportingHandler<NBTCompound> handler =
+            getFriendSupportingHandler(state.friendSearchState, player, state.getBlock());
+        if (handler == null) return null; // return null to indicate an issue.
 
         // We'll filter all doubled friends out of the list and add them to the current InventoryState.
         potentialFriends = potentialFriends.stream().filter((p) -> {

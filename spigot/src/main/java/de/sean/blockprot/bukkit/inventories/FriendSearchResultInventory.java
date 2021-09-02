@@ -137,7 +137,7 @@ public class FriendSearchResultInventory extends BlockProtInventory {
         }).collect(Collectors.toList());
         if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH && state.getBlock() != null) {
             // Allow integrations to additionally filter friends.
-            PluginIntegration.filterFriends((ArrayList<OfflinePlayer>) potentialFriends, player, state.getBlock());
+            potentialFriends = PluginIntegration.filterFriends((ArrayList<OfflinePlayer>) potentialFriends, player, state.getBlock());
         }
         state.friendResultCache.clear();
         state.friendResultCache.addAll(potentialFriends);

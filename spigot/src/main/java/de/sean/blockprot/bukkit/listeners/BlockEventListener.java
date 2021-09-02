@@ -152,7 +152,7 @@ public class BlockEventListener implements Listener {
                     handler.lockBlock(event.getPlayer());
                     settingsHandler
                         .getFriendsStream()
-                        .forEach(fh -> handler.addFriend(fh.getName()));
+                        .forEach(handler::addFriend);
                 }
 
                 if (BlockProt.getDefaultConfig().disallowRedstoneOnPlace()) {
@@ -175,7 +175,7 @@ public class BlockEventListener implements Listener {
                     );
                     settingsHandler
                         .getFriendsStream()
-                        .forEach(fh -> handler.addFriend(fh.getName()));
+                        .forEach(handler::addFriend);
                 }
                 if (BlockProt.getDefaultConfig().disallowRedstoneOnPlace()) {
                     handler.getRedstoneHandler().setAll(false);

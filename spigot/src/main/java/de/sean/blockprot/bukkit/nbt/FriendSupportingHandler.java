@@ -121,6 +121,14 @@ public abstract class FriendSupportingHandler<T extends NBTCompound> extends NBT
     }
 
     /**
+     * Adds a new {@link FriendHandler} to this NBT data.
+     */
+    public void addFriend(@NotNull final FriendHandler friend) {
+        NBTCompound compound = container.getOrCreateCompound(friendNbtKey);
+        compound.addCompound(friend.getName()).mergeCompound(friend.container);
+    }
+
+    /**
      * Removes a friend from the NBT.
      *
      * @param friend The friend to remove.

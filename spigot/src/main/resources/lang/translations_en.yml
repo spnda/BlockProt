@@ -17,7 +17,7 @@ inventories:
   block_info: "Block Info"
   lock: "Lock"
   unlock: "Unlock"
-  lock_on_place_enabled: "Lock automatically"
+  lock_on_place: "Lock automatically"
   redstone:
     settings: "Redstone Settings"
     redstone_enabled: "Redstone protection enabled"

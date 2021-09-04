@@ -11,6 +11,7 @@ inventories:
   block_info: "Información del Bloque"
   lock: "Proteger"
   unlock: "Desproteger"
+  lock_on_place: "Proteger siempre al colocar"
   redstone:
     settings: "Configuración de Redstone"
     enable_all: "Habilitar todo"

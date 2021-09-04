@@ -11,6 +11,7 @@ inventories:
   block_info: "方塊訊息"
   lock: "上鎖"
   unlock: "解鎖"
+  lock_on_place: "在放置時自動上鎖"
   redstone:
 
   friends:

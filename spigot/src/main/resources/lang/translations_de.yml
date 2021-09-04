@@ -10,7 +10,7 @@ inventories:
   block_info: "Informationen"
   lock: "Sperren"
   unlock: "Entsperren"
-  lock_on_place_enabled: "Automatisch sperren"
+  lock_on_place: "Automatisch sperren"
   redstone:
     settings: "Redstone Einstellungen"
     redstone_enabled: "Redstone-Schutz aktiviert"

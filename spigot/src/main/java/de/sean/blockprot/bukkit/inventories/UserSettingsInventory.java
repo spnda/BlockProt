@@ -75,7 +75,7 @@ public class UserSettingsInventory extends BlockProtInventory {
         setEnchantedItemStack(
             0,
             Material.BARRIER,
-            TranslationKey.INVENTORIES__LOCK_ON_PLACE_ENABLED,
+            TranslationKey.INVENTORIES__LOCK_ON_PLACE,
             lockOnPlace
         );
         setItemStack(

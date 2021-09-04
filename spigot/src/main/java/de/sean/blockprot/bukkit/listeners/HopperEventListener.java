@@ -20,6 +20,7 @@ package de.sean.blockprot.bukkit.listeners;
 
 import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
+import org.bukkit.Material;
 import org.bukkit.block.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,7 +34,8 @@ public class HopperEventListener implements Listener {
     public void onItemMove(InventoryMoveItemEvent event) {
         if (event.getSource().getHolder() == null) return;
         if (BlockProt.getDefaultConfig().isWorldExcluded(event.getSource().getHolder())) return;
-        if (event.getDestination().getType() == InventoryType.HOPPER) {
+        if (event.getDestination().getType() == InventoryType.HOPPER
+            && BlockProt.getDefaultConfig().isLockable(Material.HOPPER)) { // Only run if HOPPER is actually in the config.
             // This is a hopper trying to pull from something.
             if (BlockProt.getDefaultConfig().isLockableInventory(event.getSource().getType())) {
                 Block source = getBlock(event.getSource().getHolder());

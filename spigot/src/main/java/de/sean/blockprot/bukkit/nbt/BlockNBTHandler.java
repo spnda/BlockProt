@@ -19,6 +19,7 @@
 package de.sean.blockprot.bukkit.nbt;
 
 import de.sean.blockprot.bukkit.BlockProt;
+import de.sean.blockprot.bukkit.StatisticManager;
 import de.sean.blockprot.bukkit.util.BlockUtil;
 import de.sean.blockprot.nbt.FriendModifyAction;
 import de.sean.blockprot.nbt.LockReturnValue;
@@ -243,8 +244,10 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
             owner = playerUuid;
             setOwner(owner);
             this.applyToOtherContainer();
+            StatisticManager.addContainer(player, block);
             return new LockReturnValue(true);
         } else if (owner.equals(playerUuid) || player.isOp() || player.hasPermission(PERMISSION_ADMIN)) {
+            StatisticManager.removeContainer(owner, block);
             this.clear();
             this.applyToOtherContainer();
             return new LockReturnValue(true);

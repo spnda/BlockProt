@@ -20,6 +20,7 @@ package de.sean.blockprot.bukkit.listeners;
 
 import com.google.common.collect.Iterables;
 import de.sean.blockprot.bukkit.BlockProt;
+import de.sean.blockprot.bukkit.StatisticManager;
 import de.sean.blockprot.bukkit.events.BlockLockOnPlaceEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
@@ -76,6 +77,8 @@ public class BlockEventListener implements Listener {
 
         // If access is not cancelled and the player is allowed to break the block.
         if (!event.isCancelled()) {
+            StatisticManager.removeContainer(handler.getOwner(), event.getBlock());
+
             // For blocks, we want to clear the NBT data, as that lives
             // independently of the actual block state.
             handler.clear();
@@ -138,6 +141,7 @@ public class BlockEventListener implements Listener {
                         } else {
                             // We can't cancel the event 1 tick later, its already executed. We'll just need to destroy the block and drop it.
                             event.getPlayer().getWorld().getBlockAt(block.getLocation()).breakNaturally();
+                            StatisticManager.removeContainer(event.getPlayer(), block);
                         }
                     }
                 },
@@ -153,6 +157,7 @@ public class BlockEventListener implements Listener {
                     settingsHandler
                         .getFriendsStream()
                         .forEach(handler::addFriend);
+                    StatisticManager.addContainer(event.getPlayer(), block);
                 }
 
                 if (BlockProt.getDefaultConfig().disallowRedstoneOnPlace()) {
@@ -176,6 +181,7 @@ public class BlockEventListener implements Listener {
                     settingsHandler
                         .getFriendsStream()
                         .forEach(handler::addFriend);
+                    StatisticManager.addContainer(event.getPlayer(), block);
                 }
                 if (BlockProt.getDefaultConfig().disallowRedstoneOnPlace()) {
                     handler.getRedstoneHandler().setAll(false);

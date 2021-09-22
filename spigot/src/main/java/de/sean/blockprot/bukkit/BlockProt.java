@@ -111,6 +111,7 @@ public final class BlockProt extends JavaPlugin {
     public void onEnable() {
         instance = this;
         new BlockProtAPI(this); // Init the API.
+        new StatisticManager(this);
         this.saveDefaultConfig();
         this.reloadConfigAndTranslations();
 

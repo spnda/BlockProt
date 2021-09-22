@@ -157,7 +157,6 @@ public class BlockEventListener implements Listener {
                     settingsHandler
                         .getFriendsStream()
                         .forEach(handler::addFriend);
-                    StatisticManager.addContainer(event.getPlayer(), block);
                 }
 
                 if (BlockProt.getDefaultConfig().disallowRedstoneOnPlace()) {

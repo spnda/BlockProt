@@ -50,6 +50,10 @@ public final class StatHandler extends NBTHandler<NBTFile> {
         this.container = new NBTFile(this.file);
     }
 
+    public void saveFile() throws IOException {
+        this.container.save();
+    }
+
     public @NotNull Stream<PlayerStatHandler> getPlayerStats() {
         if (!this.container.hasKey(PLAYER_SUB_KEY)) return Stream.empty();
 

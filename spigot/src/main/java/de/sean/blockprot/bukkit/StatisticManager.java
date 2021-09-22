@@ -48,6 +48,15 @@ public final class StatisticManager {
         }
     }
 
+    public static void saveFile() {
+        try {
+            statHandler.saveFile();
+        } catch (IOException e) {
+            Bukkit.getLogger().warning("Failed to save statistic file.");
+            Bukkit.getLogger().warning(e.toString());
+        }
+    }
+
     public static void addContainer(@NotNull final String playerUuid, Block block) {
         statHandler.getServerStats().modifyContainerCount(1);
 

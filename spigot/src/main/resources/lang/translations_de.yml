@@ -10,6 +10,7 @@ inventories:
   block_info: "Informationen"
   lock: "Sperren"
   unlock: "Entsperren"
+  lock_on_place: "Automatisch sperren"
   redstone:
     settings: "Redstone Einstellungen"
     redstone_enabled: "Redstone-Schutz aktiviert"
@@ -17,9 +18,6 @@ inventories:
     hoppers_enabled: "Trichter-Schutz aktiviert"
     enable_all: "Alles aktivieren"
     disable_all: "Alles deaktivieren"
-  lock_on_place:
-    activate: "Immer automatisch sperren"
-    deactivate: "Nie automatisch sperren"
   friends:
     manage: "Freunde verwalten"
     edit: "Freund editieren"

@@ -13,9 +13,6 @@ inventories:
   unlock: "Kilidi Aç"
   redstone:
 
-  lock_on_place:
-    activate: "Her zaman ilk koyulduğunda kilitle"
-    deactivate: "Asla ilk koyulduğunda kilitleme"
   friends:
     manage: "Arkadaşları Yönet"
     edit: "Arkadaşı Düzenle"

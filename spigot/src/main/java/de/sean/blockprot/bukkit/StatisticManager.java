@@ -31,8 +31,6 @@ import java.io.IOException;
 import java.util.Optional;
 
 public final class StatisticManager {
-    private final BlockProt blockProt;
-
     private BukkitTask updateTask;
 
     @Nullable
@@ -41,12 +39,11 @@ public final class StatisticManager {
     static StatHandler statHandler;
 
     StatisticManager(BlockProt blockProt) {
-        this.blockProt = blockProt;
         instance = this;
         try {
             statHandler = new StatHandler();
             updateTask = Bukkit.getScheduler().runTaskTimerAsynchronously(
-                this.blockProt,
+                blockProt,
                 new FileUpdateTask(),
                 0L,
                 5 * 60 * 20 // 5 minutes * 60 seconds * 20 ticks

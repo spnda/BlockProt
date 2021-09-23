@@ -23,6 +23,7 @@ import de.sean.blockprot.bukkit.nbt.stats.StatHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,6 +32,8 @@ import java.util.Optional;
 
 public final class StatisticManager {
     private final BlockProt blockProt;
+
+    private BukkitTask updateTask;
 
     @Nullable
     static StatisticManager instance;
@@ -42,22 +45,30 @@ public final class StatisticManager {
         instance = this;
         try {
             statHandler = new StatHandler();
+            updateTask = Bukkit.getScheduler().runTaskTimerAsynchronously(
+                this.blockProt,
+                new FileUpdateTask(),
+                0L,
+                5 * 60 * 20 // 5 minutes * 60 seconds * 20 ticks
+            );
         } catch (IOException e) {
             Bukkit.getLogger().warning("Failed to create statistic handler.");
             Bukkit.getLogger().warning(e.toString());
         }
     }
 
-    public static void saveFile() {
+    public static void onDisable() {
+        if (instance == null) return;
         try {
             statHandler.saveFile();
+            instance.updateTask.cancel();
         } catch (IOException e) {
             Bukkit.getLogger().warning("Failed to save statistic file.");
             Bukkit.getLogger().warning(e.toString());
         }
     }
 
-    public static void addContainer(@NotNull final String playerUuid, Block block) {
+    public static void addContainer(@NotNull final String playerUuid, @NotNull final Block block) {
         statHandler.getServerStats().modifyContainerCount(1);
 
         Optional<PlayerStatHandler> playerStats = statHandler.getStatsForPlayer(playerUuid);
@@ -68,7 +79,7 @@ public final class StatisticManager {
         }
     }
 
-    public static void addContainer(Player player, Block block) {
+    public static void addContainer(@NotNull final Player player, @NotNull final Block block) {
         addContainer(player.getUniqueId().toString(), block);
     }
 
@@ -81,7 +92,18 @@ public final class StatisticManager {
         }
     }
 
-    public static void removeContainer(Player player, Block block) {
+    public static void removeContainer(@NotNull final Player player, @NotNull final Block block) {
         removeContainer(player.getUniqueId().toString(), block);
+    }
+
+    private static class FileUpdateTask implements Runnable {
+        @Override
+        public void run() {
+            try {
+                statHandler.saveFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

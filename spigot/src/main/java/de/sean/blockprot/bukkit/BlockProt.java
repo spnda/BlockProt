@@ -141,7 +141,7 @@ public final class BlockProt extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        StatisticManager.saveFile();
+        StatisticManager.onDisable();
         Bukkit.getServer().getOnlinePlayers().forEach(HumanEntity::closeInventory);
         super.onDisable();
     }

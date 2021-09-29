@@ -12,13 +12,20 @@ inventories:
   lock: "잠금"
   unlock: "잠금 해제"
   redstone:
-
+    settings: "레드스톤 설정"
+    redstone_enabled: "레드스톤 보호"
+    pistons_enabled: "피스톤 보호"
+    hoppers_enabled: "호퍼 보호"
+    enable_all: "모든 보호 활성화"
+    disable_all: "모든 보호 비활성화"
   friends:
     manage: "친구 관리"
     edit: "친구 수정"
     remove: "친구 삭제"
     search: "친구 검색"
+    search_history: "검색 기록"
     result: "친구 검색 결과"
+    permissions: "권한"
     permission:
       read: "읽기"
       write: "쓰기"

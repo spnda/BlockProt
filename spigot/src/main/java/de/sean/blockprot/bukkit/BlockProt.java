@@ -28,6 +28,7 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -111,11 +112,7 @@ public final class BlockProt extends JavaPlugin {
         instance = this;
         new BlockProtAPI(this); // Init the API.
         this.saveDefaultConfig();
-        defaultConfig = new DefaultConfig(this.getConfig());
-
-        this.loadTranslations(defaultConfig.getLanguageFile() == null
-            ? defaultLanguageFile
-            : defaultConfig.getLanguageFile());
+        this.reloadConfigAndTranslations();
 
         /* Check for updates */
         Bukkit.getScheduler().runTaskAsynchronously(this, new UpdateChecker(this.getDescription()));
@@ -141,6 +138,56 @@ public final class BlockProt extends JavaPlugin {
         super.onEnable();
     }
 
+    @Override
+    public void onDisable() {
+        Bukkit.getServer().getOnlinePlayers().forEach(HumanEntity::closeInventory);
+        super.onDisable();
+    }
+
+    /**
+     * Reloads the config and the translation files (possibly changed through config).
+     */
+    public void reloadConfigAndTranslations() {
+        this.reloadConfig();
+        defaultConfig = new DefaultConfig(this.getConfig());
+
+        Translator.resetTranslations();
+        Translator.DEFAULT_FALLBACK = defaultConfig.getTranslationFallbackString();
+
+        final String langFolder = "lang/";
+
+        // Ensure that all translation files have been saved properly.
+        for (String resource : Translator.DEFAULT_TRANSLATION_FILES) {
+            if ((new File(this.getDataFolder(), langFolder + resource)).exists()) continue;
+            this.saveResource(langFolder + resource, defaultConfig.shouldReplaceTranslations());
+        }
+
+        // Get the default language file. We specifically use the InputStream
+        // if we cannot find the file in the data folder, to avoid having to
+        // interact with edited files.
+        File defLangFile = new File(this.getDataFolder(), langFolder + defaultLanguageFile);
+        YamlConfiguration defaultLanguageConfig;
+        if (!defLangFile.exists()) {
+            InputStream defaultLanguageStream = this.getResource(langFolder + defaultLanguageFile);
+
+            // The JAR has been modified and there are files missing.
+            if (defaultLanguageStream == null) {
+                throw new RuntimeException("Failed to get default language file. Possibly corrupt plugin?");
+            }
+            defaultLanguageConfig = YamlConfiguration.loadConfiguration(new BufferedReader(new InputStreamReader(defaultLanguageStream)));
+        } else {
+            defaultLanguageConfig = YamlConfiguration.loadConfiguration(defLangFile);
+        }
+
+        // Get the wanted language file and load its config.
+        // Load the configurations and initialize the Translator.
+        final String fileName = defaultConfig.getLanguageFile() == null
+            ? defaultLanguageFile
+            : defaultConfig.getLanguageFile();
+        YamlConfiguration wantedConfig = saveAndLoadConfigFile(langFolder, fileName, BlockProt.defaultConfig.shouldReplaceTranslations());
+        Translator.loadFromConfigs(defaultLanguageConfig, wantedConfig);
+    }
+
     private void registerEvent(@NotNull PluginManager pm, Listener listener) {
         pm.registerEvents(listener, this);
     }
@@ -164,48 +211,6 @@ public final class BlockProt extends JavaPlugin {
     @Nullable
     public Plugin getPlugin(String pluginName) {
         return this.getServer().getPluginManager().getPlugin(pluginName);
-    }
-
-    /**
-     * Load the translations from the data folder.
-     *
-     * @param fileName The name of the translations file.
-     */
-    private void loadTranslations(String fileName) {
-        assert defaultConfig != null;
-        Translator.DEFAULT_FALLBACK = defaultConfig.getTranslationFallbackString();
-
-        final String langFolder = "lang/";
-
-        // Ensure that all translation files have been saved properly.
-        // For now, we will simply hard code these values.
-        // TODO: Implement a dynamic system for this. Through gradle possibly?
-        for (String resource : Translator.DEFAULT_TRANSLATION_FILES) {
-            if ((new File(this.getDataFolder(), langFolder + resource)).exists()) continue;
-            this.saveResource(langFolder + resource, defaultConfig.shouldReplaceTranslations());
-        }
-
-        // Get the default language file. We specifically use the InputStream
-        // if we cannot find the file in the data folder, to avoid having to
-        // interact with edited files.
-        File defLangFile = new File(this.getDataFolder(), langFolder + defaultLanguageFile);
-        YamlConfiguration defaultConfig;
-        if (!defLangFile.exists()) {
-            InputStream defaultConfigStream = this.getResource(langFolder + defaultLanguageFile);
-
-            // The JAR has been modified and there are files missing.
-            if (defaultConfigStream == null) {
-                throw new RuntimeException("Failed to get default language file. Possibly corrupt plugin?");
-            }
-            defaultConfig = YamlConfiguration.loadConfiguration(new BufferedReader(new InputStreamReader(defaultConfigStream)));
-        } else {
-            defaultConfig = YamlConfiguration.loadConfiguration(defLangFile);
-        }
-
-        // Get the wanted language file and load its config.
-        // Load the configurations and initialize the Translator.
-        YamlConfiguration wantedConfig = saveAndLoadConfigFile(langFolder, fileName, BlockProt.defaultConfig.shouldReplaceTranslations());
-        Translator.loadFromConfigs(defaultConfig, wantedConfig);
     }
 
     /**

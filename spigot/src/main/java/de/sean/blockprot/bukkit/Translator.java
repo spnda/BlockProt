@@ -176,4 +176,11 @@ public final class Translator {
     public static Locale getLocale() {
         return locale;
     }
+
+    /**
+     * Clears all translations.
+     */
+    public static void resetTranslations() {
+        values.clear();
+    }
 }

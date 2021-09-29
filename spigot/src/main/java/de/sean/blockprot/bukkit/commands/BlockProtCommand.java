@@ -28,7 +28,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,29 +55,33 @@ public final class BlockProtCommand implements TabExecutor {
                 break;
             }
             case "settings": {
-                Player player = Bukkit.getPlayer(sender.getName());
-                if (player != null) {
-                    InventoryState state = new InventoryState(null);
-                    state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH;
-                    InventoryState.set(player.getUniqueId(), state);
-                    player.openInventory(new UserSettingsInventory().fill(player));
+                if (!(sender instanceof Player)) break;
+                Player player = (Player) sender;
+                InventoryState state = new InventoryState(null);
+                state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH;
+                InventoryState.set(player.getUniqueId(), state);
+                player.openInventory(new UserSettingsInventory().fill(player));
+                return true;
+            }
+            case "reload": {
+                if (sender.isOp()) {
+                    BlockProt.getInstance().reloadConfigAndTranslations();
                     return true;
-                } else {
-                    return false;
                 }
+                break;
             }
         }
 
         return false;
     }
 
-    @Nullable
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+    public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (args.length <= 1) {
             List<String> list = new ArrayList<>(Collections.singletonList("settings"));
             if (sender.isOp()) {
                 list.add("update");
+                list.add("reload");
             }
             return list;
         }

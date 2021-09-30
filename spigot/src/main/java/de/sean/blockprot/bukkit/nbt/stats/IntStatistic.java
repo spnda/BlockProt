@@ -18,38 +18,37 @@
 
 package de.sean.blockprot.bukkit.nbt.stats;
 
-import de.sean.blockprot.bukkit.nbt.NBTHandler;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTType;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Server/Global statistics.
- */
-public final class ServerStatHandler extends NBTHandler<NBTCompound> {
-    static final String CONTAINER_COUNT_KEY = "container_count";
-
-    public ServerStatHandler(@NotNull final NBTCompound compound) {
-        super();
-        this.container = compound;
-    }
-
-    public int getContainerCount() {
-        return container.getInteger(CONTAINER_COUNT_KEY);
-    }
-
-    /**
-     * Adds the given integer to the container count.
-     * To decrement the container count, provide a negative
-     * integer.
-     */
-    public void modifyContainerCount(int diff) {
-        container.setInteger(
-            CONTAINER_COUNT_KEY,
-            container.getInteger(CONTAINER_COUNT_KEY) + diff);
+public abstract class IntStatistic extends Statistic<Integer> {
+    @Override
+    public @NotNull NBTType getNbtType() {
+        return NBTType.NBTTagInt;
     }
 
     @Override
-    public void mergeHandler(@NotNull NBTHandler<?> handler) {
+    public @NotNull String toString() {
+        return this.get().toString();
+    }
 
+    @Override
+    public @NotNull Integer get() {
+        return this.container.getInteger(this.getKey());
+    }
+
+    @Override
+    public void set(@NotNull Integer value) {
+        this.container.setInteger(this.getKey(), value);
+    }
+
+    public void increment() {
+        if (this.get() < Integer.MAX_VALUE)
+            this.container.setInteger(this.getKey(), this.get() + 1);
+    }
+
+    public void decrement() {
+        if (this.get() > 0)
+            this.container.setInteger(this.getKey(), this.get() - 1);
     }
 }

@@ -19,7 +19,8 @@
 package de.sean.blockprot.bukkit.nbt;
 
 import de.sean.blockprot.bukkit.BlockProt;
-import de.sean.blockprot.bukkit.StatisticManager;
+import de.sean.blockprot.bukkit.nbt.stats.ContainerCountStatistic;
+import de.sean.blockprot.bukkit.nbt.stats.PlayerContainersStatistic;
 import de.sean.blockprot.bukkit.util.BlockUtil;
 import de.sean.blockprot.nbt.FriendModifyAction;
 import de.sean.blockprot.nbt.LockReturnValue;
@@ -244,10 +245,23 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
             owner = playerUuid;
             setOwner(owner);
             this.applyToOtherContainer();
-            StatisticManager.addContainer(player, block);
+
+            ContainerCountStatistic countStatistic = new ContainerCountStatistic();
+            PlayerContainersStatistic containersStatistic = new PlayerContainersStatistic();
+            StatHandler.getStatistic(countStatistic);
+            StatHandler.getStatistic(containersStatistic, player);
+            countStatistic.increment();
+            containersStatistic.add(this.block.getLocation().toVector());
+
             return new LockReturnValue(true);
         } else if (owner.equals(playerUuid) || player.isOp() || player.hasPermission(PERMISSION_ADMIN)) {
-            StatisticManager.removeContainer(owner, block);
+            ContainerCountStatistic countStatistic = new ContainerCountStatistic();
+            PlayerContainersStatistic containersStatistic = new PlayerContainersStatistic();
+            StatHandler.getStatistic(countStatistic);
+            StatHandler.getStatistic(containersStatistic, player);
+            countStatistic.decrement();
+            containersStatistic.remove(this.block.getLocation().toVector());
+
             this.clear();
             this.applyToOtherContainer();
             return new LockReturnValue(true);

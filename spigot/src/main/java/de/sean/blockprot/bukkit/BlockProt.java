@@ -23,6 +23,7 @@ import de.sean.blockprot.bukkit.config.DefaultConfig;
 import de.sean.blockprot.bukkit.integrations.PluginIntegration;
 import de.sean.blockprot.bukkit.integrations.TownyIntegration;
 import de.sean.blockprot.bukkit.listeners.*;
+import de.sean.blockprot.bukkit.nbt.StatHandler;
 import de.sean.blockprot.bukkit.tasks.UpdateChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -111,7 +112,7 @@ public final class BlockProt extends JavaPlugin {
     public void onEnable() {
         instance = this;
         new BlockProtAPI(this); // Init the API.
-        new StatisticManager(this);
+        StatHandler.init();
         this.saveDefaultConfig();
         this.reloadConfigAndTranslations();
 
@@ -141,7 +142,7 @@ public final class BlockProt extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        StatisticManager.onDisable();
+        StatHandler.disable();
         Bukkit.getServer().getOnlinePlayers().forEach(HumanEntity::closeInventory);
         super.onDisable();
     }

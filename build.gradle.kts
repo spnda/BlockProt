@@ -9,7 +9,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("org.kohsuke:github-api:1.132")
+        classpath("org.kohsuke:github-api:1.133")
         classpath("com.squareup.okhttp3:okhttp:4.9.2")
     }
 }

@@ -20,7 +20,7 @@ package de.sean.blockprot.bukkit.nbt.stats;
 
 import org.jetbrains.annotations.NotNull;
 
-public abstract class StringStatistic extends Statistic<String> {
+public abstract class StringStatistic extends BukkitStatistic<String> {
     @Override
     public @NotNull String toString() {
         return this.get();

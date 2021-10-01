@@ -18,9 +18,11 @@
 
 package de.sean.blockprot.bukkit.nbt.stats;
 
+import de.sean.blockprot.nbt.stats.StatisticType;
+import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-public class PlayerContainersStatistic extends VectorListStatistic {
+public class PlayerContainersStatistic extends LocationListStatistic {
     @Override
     public @NotNull String getKey() {
         return "containers";
@@ -29,5 +31,10 @@ public class PlayerContainersStatistic extends VectorListStatistic {
     @Override
     public @NotNull StatisticType getType() {
         return StatisticType.PLAYER;
+    }
+
+    @Override
+    public @NotNull Material getItemType() {
+        return Material.CHEST;
     }
 }

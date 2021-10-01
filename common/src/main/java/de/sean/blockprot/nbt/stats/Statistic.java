@@ -16,31 +16,32 @@
  * along with BlockProt.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.sean.blockprot.bukkit.nbt;
+package de.sean.blockprot.nbt.stats;
 
-import de.sean.blockprot.nbt.stats.Statistic;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
-import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-public final class PlayerStatHandler extends NBTHandler<NBTCompound> {
-    public PlayerStatHandler(@NotNull final NBTCompound compound) {
-        super();
-        this.container = compound;
+/**
+ *
+ * @param <V> The type of the value.
+ * @param <C> The type of the container.
+ * @param <M> The type of the item type.
+ */
+public interface Statistic<V, C, M> extends Comparable<Statistic<V, C, M>> {
+    @NotNull String getKey();
+    @NotNull StatisticType getType();
+    @NotNull M getItemType();
+    @Override @NotNull String toString();
+    @NotNull V get();
+    void set(@NotNull final V value);
+
+    void updateContainer(C container);
+
+    default @NotNull OnClickAction getClickAction() {
+        return OnClickAction.NONE;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 0.3.0
-     */
-    @NotNull
-    public String getName() {
-        String name = container.getName();
-        return name == null ? "" : name;
-    }
-
-    public void getStatistic(final @NotNull Statistic<?, NBTCompound, Material> statistic) {
-        statistic.updateContainer(this.container);
+    @Override
+    default int compareTo(@NotNull Statistic<V, C, M> o) {
+        return o.getKey().equals(this.getKey()) ? 0 : -1;
     }
 }

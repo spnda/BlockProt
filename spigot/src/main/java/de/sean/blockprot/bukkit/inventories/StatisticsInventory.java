@@ -23,7 +23,10 @@ import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.StatHandler;
 import de.sean.blockprot.bukkit.nbt.stats.ContainerCountStatistic;
 import de.sean.blockprot.bukkit.nbt.stats.PlayerContainersStatistic;
-import de.sean.blockprot.bukkit.nbt.stats.Statistic;
+import de.sean.blockprot.nbt.stats.ListStatistic;
+import de.sean.blockprot.nbt.stats.OnClickAction;
+import de.sean.blockprot.nbt.stats.Statistic;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -35,11 +38,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatisticsInventory extends BlockProtInventory {
-    private final List<Statistic<?>> playerStatistics = new ArrayList<Statistic<?>>() {{
+public final class StatisticsInventory extends BlockProtInventory {
+    private final List<Statistic<?, NBTCompound, Material>> playerStatistics = new ArrayList<Statistic<?, NBTCompound, Material>>() {{
         add(new PlayerContainersStatistic());
     }};
-    private final List<Statistic<?>> serverStatistics = new ArrayList<Statistic<?>>() {{
+    private final List<Statistic<?, NBTCompound, Material>> serverStatistics = new ArrayList<Statistic<?, NBTCompound, Material>>() {{
         add(new ContainerCountStatistic());
     }};
 
@@ -57,10 +60,18 @@ public class StatisticsInventory extends BlockProtInventory {
     public void onClick(@NotNull InventoryClickEvent event, @NotNull InventoryState state) {
         ItemStack item = event.getCurrentItem();
         if (item == null) return;
-        switch (item.getType()) {
-            default:
-                closeAndOpen((Player) event.getWhoClicked(), null);
-                break;
+        if (item.getType() != Material.BLACK_STAINED_GLASS_PANE) {
+            Statistic<?, NBTCompound, Material> stat;
+            if (event.getSlot() < InventoryConstants.singleLine) {
+                // Player stat
+                stat = playerStatistics.get(event.getSlot());
+            } else {
+                // Server stat
+                stat = serverStatistics.get(event.getSlot() - InventoryConstants.singleLine);
+            }
+            openStatInventory(stat, (Player) event.getWhoClicked());
+        } else {
+            closeAndOpen((Player) event.getWhoClicked(), null);
         }
         event.setCancelled(true);
     }
@@ -70,23 +81,31 @@ public class StatisticsInventory extends BlockProtInventory {
 
     }
 
+    public void openStatInventory(@NotNull final Statistic<?, NBTCompound, Material> stat, @NotNull final Player player) {
+        if (stat.getClickAction() == OnClickAction.NONE) return;
+        if (player.getOpenInventory().getTopInventory().getHolder() instanceof StatisticListInventory) return;
+        if (stat.getClickAction() == OnClickAction.LIST_MENU && stat instanceof ListStatistic) {
+            closeAndOpen(player, new StatisticListInventory().fill(player, (ListStatistic) stat));
+        }
+    }
+
     public Inventory fill(@NotNull final Player player) {
         for (int i = 0; i < playerStatistics.size() && i < InventoryConstants.singleLine; i++) {
-            Statistic<?> stat = playerStatistics.get(i);
+            Statistic<?, NBTCompound, Material> stat = playerStatistics.get(i);
             StatHandler.getStatistic(stat, player);
             setItemStack(
                 i,
-                Material.SKELETON_SKULL,
+                stat.getItemType(),
                 stat.toString()
             );
         }
 
         for (int i = 0; i < serverStatistics.size() && i < InventoryConstants.singleLine; i++) {
-            Statistic<?> stat = serverStatistics.get(i);
+            Statistic<?, NBTCompound, Material> stat = serverStatistics.get(i);
             StatHandler.getStatistic(stat);
             setItemStack(
                 InventoryConstants.singleLine + i,
-                Material.SKELETON_SKULL,
+                stat.getItemType(),
                 stat.toString()
             );
         }

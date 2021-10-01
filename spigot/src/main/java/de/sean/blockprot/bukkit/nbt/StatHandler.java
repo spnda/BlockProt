@@ -19,12 +19,17 @@
 package de.sean.blockprot.bukkit.nbt;
 
 import de.sean.blockprot.bukkit.BlockProt;
-import de.sean.blockprot.bukkit.nbt.stats.Statistic;
+import de.sean.blockprot.bukkit.nbt.stats.ContainerCountStatistic;
+import de.sean.blockprot.bukkit.nbt.stats.PlayerContainersStatistic;
 import de.sean.blockprot.bukkit.tasks.StatisticFileSaveTask;
+import de.sean.blockprot.nbt.stats.Statistic;
+import de.sean.blockprot.nbt.stats.StatisticType;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTFile;
 import de.tr7zw.changeme.nbtapi.NBTType;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -75,11 +80,29 @@ public final class StatHandler {
             fileSaveTask.cancel();
     }
 
-    public static void getStatistic(@NotNull Statistic<?> statistic) {
+    public static void addContainer(@NotNull final Player player, @NotNull final Location block) {
+        ContainerCountStatistic countStatistic = new ContainerCountStatistic();
+        PlayerContainersStatistic containersStatistic = new PlayerContainersStatistic();
+        StatHandler.getStatistic(countStatistic);
+        StatHandler.getStatistic(containersStatistic, player);
+        countStatistic.increment();
+        containersStatistic.add(block);
+    }
+
+    public static void removeContainer(@NotNull final Player player, @NotNull final Location block) {
+        ContainerCountStatistic countStatistic = new ContainerCountStatistic();
+        PlayerContainersStatistic containersStatistic = new PlayerContainersStatistic();
+        StatHandler.getStatistic(countStatistic);
+        StatHandler.getStatistic(containersStatistic, player);
+        countStatistic.decrement();
+        containersStatistic.remove(block);
+    }
+
+    public static void getStatistic(@NotNull Statistic<?, NBTCompound, Material> statistic) {
         getStatistic(statistic, null);
     }
 
-    public static void getStatistic(@NotNull Statistic<?> statistic, @Nullable Player player) {
+    public static void getStatistic(@NotNull Statistic<?, NBTCompound, Material> statistic, @Nullable Player player) {
         switch (statistic.getType()) {
             case ALL:
             case PLAYER:
@@ -90,7 +113,7 @@ public final class StatHandler {
                 }
 
                 // Let "ALL" fallthrough.
-                if (statistic.getType() == Statistic.StatisticType.PLAYER) break;
+                if (statistic.getType() == StatisticType.PLAYER) break;
             case GLOBAL:
                 final ServerStatHandler stats = getServerStats();
                 stats.getStatistic(statistic);
@@ -110,9 +133,15 @@ public final class StatHandler {
     }
 
     private static @NotNull Optional<PlayerStatHandler> getStatsForPlayer(@NotNull final String id) {
-        return getPlayerStats()
+        Optional<PlayerStatHandler> ret = getPlayerStats()
             .filter((p) -> p.getName().equals(id))
             .findFirst();
+
+        // Add the stats NBT to be sure that we always return a present optional value.
+        if (!ret.isPresent()) {
+            return Optional.of(StatHandler.addStatsForPlayer(id));
+        }
+        return ret;
     }
 
     private static @NotNull PlayerStatHandler addStatsForPlayer(@NotNull final String id) {

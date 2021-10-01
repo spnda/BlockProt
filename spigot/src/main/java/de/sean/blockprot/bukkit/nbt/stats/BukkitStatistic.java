@@ -18,23 +18,26 @@
 
 package de.sean.blockprot.bukkit.nbt.stats;
 
-import de.tr7zw.changeme.nbtapi.NBTCompoundList;
-import de.tr7zw.changeme.nbtapi.NBTType;
+import de.sean.blockprot.bukkit.nbt.NBTHandler;
+import de.sean.blockprot.nbt.stats.OnClickAction;
+import de.sean.blockprot.nbt.stats.Statistic;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
+import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
-public abstract class ListStatistic<T> extends Statistic<List<T>> {
+public abstract class BukkitStatistic<T> extends NBTHandler<NBTCompound> implements Statistic<T, NBTCompound, Material> {
     @Override
-    public @NotNull NBTType getNbtType() {
-        return NBTType.NBTTagList;
+    public void updateContainer(NBTCompound container) {
+        this.container = container;
     }
 
-    protected @NotNull NBTCompoundList getList() {
-        return container.getCompoundList(this.getKey());
+    @Override
+    public @NotNull Material getItemType() {
+        return Material.DIRT;
     }
 
-    public abstract void add(T object);
-    public abstract void remove(int index);
-    public abstract void remove(T object);
+    @Override
+    public @NotNull OnClickAction getClickAction() {
+        return OnClickAction.NONE;
+    }
 }

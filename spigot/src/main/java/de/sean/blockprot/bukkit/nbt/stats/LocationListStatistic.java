@@ -19,21 +19,28 @@
 package de.sean.blockprot.bukkit.nbt.stats;
 
 import de.tr7zw.changeme.nbtapi.NBTCompound;
-import org.bukkit.util.Vector;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-public abstract class VectorListStatistic extends ListStatistic<Vector> {
-    private @NotNull Vector getVectorFromCompound(@NotNull NBTCompound c) {
-        return new Vector(c.getDouble("x"), c.getDouble("y"), c.getDouble("z"));
+public abstract class LocationListStatistic extends BukkitListStatistic<LocationListEntry, Location> {
+    private @NotNull Location parseLocationFromCompound(@NotNull NBTCompound c) {
+        return new Location(
+            Bukkit.getWorld(c.getString("name")),
+            c.getDouble("x"),
+            c.getDouble("y"),
+            c.getDouble("z"));
     }
 
-    private void writeVectorToCompound(@NotNull NBTCompound compound, @NotNull Vector vector) {
-        compound.setDouble("x", vector.getX());
-        compound.setDouble("y", vector.getY());
-        compound.setDouble("z", vector.getZ());
+    private void writeLocationToCompound(@NotNull NBTCompound compound, @NotNull Location location) {
+        compound.setString("name", Objects.requireNonNull(location.getWorld()).getName());
+        compound.setDouble("x", location.getX());
+        compound.setDouble("y", location.getY());
+        compound.setDouble("z", location.getZ());
     }
 
     @Override
@@ -42,27 +49,28 @@ public abstract class VectorListStatistic extends ListStatistic<Vector> {
     }
 
     @Override
-    public @NotNull List<Vector> get() {
+    public @NotNull List<LocationListEntry> get() {
         return getList()
             .stream()
-            .map(this::getVectorFromCompound)
+            .map(this::parseLocationFromCompound)
+            .map(LocationListEntry::new)
             .collect(Collectors.toList());
     }
 
     @Override
-    public void set(@NotNull List<Vector> value) {
+    public void set(@NotNull List<LocationListEntry> value) {
         container.removeKey(this.getKey());
-        value.forEach(this::add);
+        value.forEach(v -> this.add(v.get()));
     }
 
     @Override
-    public void add(Vector vector) {
-        writeVectorToCompound(getList().addCompound(), vector);
+    public void add(Location vector) {
+        writeLocationToCompound(getList().addCompound(), vector);
     }
 
     @Override
-    public void remove(Vector object) {
-        getList().removeIf(c -> getVectorFromCompound(c).equals(object));
+    public void remove(Location object) {
+        getList().removeIf(c -> parseLocationFromCompound(c).equals(object));
     }
 
     @Override

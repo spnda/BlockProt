@@ -16,31 +16,23 @@
  * along with BlockProt.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.sean.blockprot.bukkit.nbt;
+package de.sean.blockprot.nbt.stats;
 
-import de.sean.blockprot.nbt.stats.Statistic;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
-import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-public final class PlayerStatHandler extends NBTHandler<NBTCompound> {
-    public PlayerStatHandler(@NotNull final NBTCompound compound) {
-        super();
-        this.container = compound;
+public abstract class ListStatisticItem<T, R> {
+    private final @NotNull T value;
+
+    protected ListStatisticItem(@NotNull T value) {
+        this.value = value;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 0.3.0
-     */
-    @NotNull
-    public String getName() {
-        String name = container.getName();
-        return name == null ? "" : name;
+    public @NotNull T get() {
+        return value;
     }
 
-    public void getStatistic(final @NotNull Statistic<?, NBTCompound, Material> statistic) {
-        statistic.updateContainer(this.container);
-    }
+    public abstract @NotNull R getItemType();
+
+    @Override
+    public abstract String toString();
 }

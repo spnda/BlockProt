@@ -72,5 +72,5 @@ public abstract class NBTHandler<T extends NBTCompound> {
      * @param handler The handler to copy values from.
      * @since 0.3.2
      */
-    public abstract void mergeHandler(@NotNull final NBTHandler<?> handler);
+    public void mergeHandler(@NotNull final NBTHandler<?> handler) {}
 }

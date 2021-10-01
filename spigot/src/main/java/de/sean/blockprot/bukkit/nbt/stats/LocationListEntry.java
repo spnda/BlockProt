@@ -18,39 +18,23 @@
 
 package de.sean.blockprot.bukkit.nbt.stats;
 
-import de.sean.blockprot.nbt.stats.Statistic;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.sean.blockprot.nbt.stats.ListStatisticItem;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class IntStatistic extends BukkitStatistic<Integer> {
-    @Override
-    public @NotNull String toString() {
-        return this.get().toString();
+public class LocationListEntry extends ListStatisticItem<Location, Material> {
+    public LocationListEntry(@NotNull Location value) {
+        super(value);
     }
 
     @Override
-    public @NotNull Integer get() {
-        return this.container.getInteger(this.getKey());
+    public @NotNull Material getItemType() {
+        return this.get().getBlock().getType();
     }
 
     @Override
-    public void set(@NotNull Integer value) {
-        this.container.setInteger(this.getKey(), value);
-    }
-
-    @Override
-    public int compareTo(@NotNull Statistic<Integer, NBTCompound, Material> o) {
-        return get().compareTo(o.get());
-    }
-
-    public void increment() {
-        if (this.get() < Integer.MAX_VALUE)
-            this.container.setInteger(this.getKey(), this.get() + 1);
-    }
-
-    public void decrement() {
-        if (this.get() > 0)
-            this.container.setInteger(this.getKey(), this.get() - 1);
+    public String toString() {
+        return null;
     }
 }

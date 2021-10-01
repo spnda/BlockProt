@@ -24,8 +24,6 @@ import de.sean.blockprot.bukkit.events.BlockLockOnPlaceEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.bukkit.nbt.StatHandler;
-import de.sean.blockprot.bukkit.nbt.stats.ContainerCountStatistic;
-import de.sean.blockprot.bukkit.nbt.stats.PlayerContainersStatistic;
 import de.sean.blockprot.bukkit.util.BlockUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
@@ -79,12 +77,7 @@ public class BlockEventListener implements Listener {
 
         // If access is not cancelled and the player is allowed to break the block.
         if (!event.isCancelled()) {
-            ContainerCountStatistic countStatistic = new ContainerCountStatistic();
-            PlayerContainersStatistic containersStatistic = new PlayerContainersStatistic();
-            StatHandler.getStatistic(countStatistic);
-            StatHandler.getStatistic(containersStatistic, event.getPlayer());
-            countStatistic.decrement();
-            containersStatistic.remove(event.getBlock().getLocation().toVector());
+            StatHandler.removeContainer(event.getPlayer(), event.getBlock().getLocation());
 
             // For blocks, we want to clear the NBT data, as that lives
             // independently of the actual block state.
@@ -148,12 +141,7 @@ public class BlockEventListener implements Listener {
                         } else {
                             // We can't cancel the event 1 tick later, its already executed. We'll just need to destroy the block and drop it.
                             event.getPlayer().getWorld().getBlockAt(block.getLocation()).breakNaturally();
-                            ContainerCountStatistic countStatistic = new ContainerCountStatistic();
-                            PlayerContainersStatistic containersStatistic = new PlayerContainersStatistic();
-                            StatHandler.getStatistic(countStatistic);
-                            StatHandler.getStatistic(containersStatistic, event.getPlayer());
-                            countStatistic.increment();
-                            containersStatistic.add(event.getBlock().getLocation().toVector());
+                            StatHandler.removeContainer(event.getPlayer(), block.getLocation());
                         }
                     }
                 },
@@ -192,12 +180,7 @@ public class BlockEventListener implements Listener {
                     settingsHandler
                         .getFriendsStream()
                         .forEach(handler::addFriend);
-                    ContainerCountStatistic countStatistic = new ContainerCountStatistic();
-                    PlayerContainersStatistic containersStatistic = new PlayerContainersStatistic();
-                    StatHandler.getStatistic(countStatistic);
-                    StatHandler.getStatistic(containersStatistic, event.getPlayer());
-                    countStatistic.increment();
-                    containersStatistic.add(event.getBlock().getLocation().toVector());
+                    StatHandler.addContainer(event.getPlayer(), block.getLocation());
                 }
                 if (BlockProt.getDefaultConfig().disallowRedstoneOnPlace()) {
                     handler.getRedstoneHandler().setAll(false);

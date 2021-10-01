@@ -19,40 +19,33 @@
 package de.sean.blockprot.bukkit.nbt.stats;
 
 import de.sean.blockprot.bukkit.nbt.NBTHandler;
+import de.sean.blockprot.nbt.stats.ListStatistic;
+import de.sean.blockprot.nbt.stats.ListStatisticItem;
+import de.sean.blockprot.nbt.stats.OnClickAction;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
-import de.tr7zw.changeme.nbtapi.NBTType;
-import org.apache.commons.lang.NotImplementedException;
+import de.tr7zw.changeme.nbtapi.NBTCompoundList;
+import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class Statistic<T> extends NBTHandler<NBTCompound> implements Comparable<Statistic<T>> {
-    public abstract @NotNull String getKey();
-    public abstract @NotNull StatisticType getType();
-    public abstract @NotNull NBTType getNbtType();
-    public abstract @NotNull T get();
-    public abstract void set(@NotNull T value);
-
-    /**
-     * {@inheritDoc}
-     */
+public abstract class BukkitListStatistic<V extends ListStatisticItem<IV, Material>, IV>
+    extends NBTHandler<NBTCompound>
+    implements ListStatistic<NBTCompound, Material, IV, V> {
     @Override
-    public abstract @NotNull String toString();
-
-    public final void setContainer(NBTCompound compound) {
-        this.container = compound;
+    public void updateContainer(NBTCompound container) {
+        this.container = container;
     }
 
     @Override
-    public int compareTo(@NotNull Statistic<T> o) {
-        return o.getKey().equals(this.getKey()) ? 0 : -1;
+    public @NotNull Material getItemType() {
+        return Material.DIRT;
     }
 
     @Override
-    public void mergeHandler(@NotNull NBTHandler<?> handler) throws NotImplementedException {
-        if (!(handler instanceof Statistic)) return;
-        throw new NotImplementedException();
+    public @NotNull OnClickAction getClickAction() {
+        return OnClickAction.LIST_MENU;
     }
 
-    public enum StatisticType {
-        PLAYER, GLOBAL, ALL
+    protected @NotNull NBTCompoundList getList() {
+        return container.getCompoundList(this.getKey());
     }
 }

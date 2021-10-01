@@ -18,6 +18,8 @@
 
 package de.sean.blockprot.bukkit.nbt.stats;
 
+import de.sean.blockprot.nbt.stats.StatisticType;
+import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
 public class ContainerCountStatistic extends IntStatistic {
@@ -29,5 +31,10 @@ public class ContainerCountStatistic extends IntStatistic {
     @Override
     public @NotNull StatisticType getType() {
         return StatisticType.GLOBAL;
+    }
+
+    @Override
+    public @NotNull Material getItemType() {
+        return Material.CHEST;
     }
 }

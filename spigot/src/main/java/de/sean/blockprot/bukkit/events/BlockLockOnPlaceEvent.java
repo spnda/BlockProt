@@ -21,6 +21,8 @@ package de.sean.blockprot.bukkit.events;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.block.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -29,7 +31,9 @@ import org.jetbrains.annotations.NotNull;
  *
  * @since 0.4.0
  */
-public final class BlockLockOnPlaceEvent extends BaseBlockEvent implements Cancellable {
+public final class BlockLockOnPlaceEvent extends BlockEvent implements Cancellable {
+    private static final HandlerList HANDLERS = new HandlerList();
+
     @NotNull
     private final Player player;
 
@@ -45,6 +49,15 @@ public final class BlockLockOnPlaceEvent extends BaseBlockEvent implements Cance
                                  @NotNull final Player player) {
         super(block);
         this.player = player;
+    }
+
+    public static @NotNull HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
+    @Override
+    public @NotNull HandlerList getHandlers() {
+        return HANDLERS;
     }
 
     /**

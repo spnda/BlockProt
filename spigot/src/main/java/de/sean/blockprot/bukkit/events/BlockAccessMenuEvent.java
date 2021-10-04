@@ -21,6 +21,8 @@ package de.sean.blockprot.bukkit.events;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.block.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -31,7 +33,9 @@ import java.util.Set;
  * Called when a player is trying to access a blocks lock menu.
  * Can be cancelled to prevent the inventory from opening up.
  */
-public final class BlockAccessMenuEvent extends BaseBlockEvent implements Cancellable {
+public final class BlockAccessMenuEvent extends BlockEvent implements Cancellable {
+    private static final HandlerList HANDLERS = new HandlerList();
+
     @NotNull
     private final Player player;
 
@@ -49,6 +53,15 @@ public final class BlockAccessMenuEvent extends BaseBlockEvent implements Cancel
                                 @NotNull final Player player) {
         super(block);
         this.player = player;
+    }
+
+    public static @NotNull HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
+    @Override
+    public @NotNull HandlerList getHandlers() {
+        return HANDLERS;
     }
 
     /**

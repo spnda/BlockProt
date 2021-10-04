@@ -21,7 +21,7 @@ package de.sean.blockprot.nbt.stats;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class ListStatisticItem<T, R> {
-    private final @NotNull T value;
+    protected final @NotNull T value;
 
     protected ListStatisticItem(@NotNull T value) {
         this.value = value;
@@ -33,6 +33,10 @@ public abstract class ListStatisticItem<T, R> {
 
     public abstract @NotNull R getItemType();
 
+    public abstract String getTitle();
+
     @Override
-    public abstract String toString();
+    public String toString() {
+        return this.getClass().getSimpleName();
+    }
 }

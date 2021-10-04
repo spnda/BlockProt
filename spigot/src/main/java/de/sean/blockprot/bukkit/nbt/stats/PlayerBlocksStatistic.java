@@ -18,23 +18,30 @@
 
 package de.sean.blockprot.bukkit.nbt.stats;
 
+import de.sean.blockprot.bukkit.TranslationKey;
+import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.nbt.stats.StatisticType;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-public class ContainerCountStatistic extends IntStatistic {
+public final class PlayerBlocksStatistic extends LocationListStatistic {
     @Override
     public @NotNull String getKey() {
-        return "container_count";
+        return "containers";
     }
 
     @Override
     public @NotNull StatisticType getType() {
-        return StatisticType.GLOBAL;
+        return StatisticType.PLAYER;
     }
 
     @Override
     public @NotNull Material getItemType() {
         return Material.CHEST;
+    }
+
+    @Override
+    public String getTitle() {
+        return Translator.get(TranslationKey.INVENTORIES__STATISTICS__PLAYER_BLOCKS);
     }
 }

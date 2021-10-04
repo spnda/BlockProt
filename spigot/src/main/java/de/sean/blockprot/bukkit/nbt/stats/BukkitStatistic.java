@@ -20,24 +20,41 @@ package de.sean.blockprot.bukkit.nbt.stats;
 
 import de.sean.blockprot.bukkit.nbt.NBTHandler;
 import de.sean.blockprot.nbt.stats.OnClickAction;
-import de.sean.blockprot.nbt.stats.Statistic;
+import de.sean.blockprot.nbt.stats.StatisticType;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class BukkitStatistic<T> extends NBTHandler<NBTCompound> implements Statistic<T, NBTCompound, Material> {
-    @Override
-    public void updateContainer(NBTCompound container) {
+/**
+ * A statistic.
+ * @param <V> The type of the value, e.g. {@link Integer} or {@link String}.
+ */
+public abstract class BukkitStatistic<V> extends NBTHandler<NBTCompound> implements Comparable<BukkitStatistic<V>> {
+    /** The key for getting the NBT for this statistic. */
+    public abstract @NotNull String getKey();
+    /** The type of this statistic. */
+    public abstract @NotNull StatisticType getType();
+    public abstract @NotNull V get();
+    public abstract void set(@NotNull V value);
+
+    /** Update the NBT container from which this statistic shall be read. */
+    public void updateContainer(@NotNull NBTCompound container) {
         this.container = container;
     }
 
-    @Override
     public @NotNull Material getItemType() {
         return Material.DIRT;
     }
 
-    @Override
+    /** Get what should happen when the user clicks on this statistic. */
     public @NotNull OnClickAction getClickAction() {
         return OnClickAction.NONE;
     }
+
+    @Override
+    public int compareTo(@NotNull BukkitStatistic<V> o) {
+        return o.getKey().equals(this.getKey()) ? 0 : -1;
+    }
+
+    public abstract String getTitle();
 }

@@ -18,11 +18,9 @@
 
 package de.sean.blockprot.bukkit.nbt.stats;
 
-import de.sean.blockprot.nbt.stats.Statistic;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
-import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
+/** A base helper class for a statistic backed by a single integer */
 public abstract class IntStatistic extends BukkitStatistic<Integer> {
     @Override
     public @NotNull String toString() {
@@ -40,15 +38,17 @@ public abstract class IntStatistic extends BukkitStatistic<Integer> {
     }
 
     @Override
-    public int compareTo(@NotNull Statistic<Integer, NBTCompound, Material> o) {
+    public int compareTo(@NotNull BukkitStatistic<Integer> o) {
         return get().compareTo(o.get());
     }
 
+    /** Increments the value. */
     public void increment() {
         if (this.get() < Integer.MAX_VALUE)
             this.container.setInteger(this.getKey(), this.get() + 1);
     }
 
+    /** Decrements the value. The result cannot be negative. */
     public void decrement() {
         if (this.get() > 0)
             this.container.setInteger(this.getKey(), this.get() - 1);

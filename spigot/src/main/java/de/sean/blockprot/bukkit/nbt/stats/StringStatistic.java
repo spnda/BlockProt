@@ -20,6 +20,7 @@ package de.sean.blockprot.bukkit.nbt.stats;
 
 import org.jetbrains.annotations.NotNull;
 
+/** A base helper class for a statistic backed by a single String */
 public abstract class StringStatistic extends BukkitStatistic<String> {
     @Override
     public @NotNull String toString() {

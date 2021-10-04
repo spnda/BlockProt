@@ -18,21 +18,20 @@
 
 package de.sean.blockprot.bukkit.nbt;
 
-import de.sean.blockprot.nbt.stats.Statistic;
+import de.sean.blockprot.bukkit.nbt.stats.BukkitStatistic;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
-import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Server/Global statistics.
  */
-public final class ServerStatHandler extends NBTHandler<NBTCompound> {
+final class ServerStatHandler extends NBTHandler<NBTCompound> {
     public ServerStatHandler(@NotNull final NBTCompound compound) {
         super();
         this.container = compound;
     }
 
-    public void getStatistic(final @NotNull Statistic<?, NBTCompound, Material> statistic) {
+    public void getStatistic(final @NotNull BukkitStatistic<?> statistic) {
         statistic.updateContainer(this.container);
     }
 }

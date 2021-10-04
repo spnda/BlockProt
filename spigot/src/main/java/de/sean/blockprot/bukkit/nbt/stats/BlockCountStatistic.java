@@ -16,32 +16,32 @@
  * along with BlockProt.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.sean.blockprot.nbt.stats;
+package de.sean.blockprot.bukkit.nbt.stats;
 
+import de.sean.blockprot.bukkit.TranslationKey;
+import de.sean.blockprot.bukkit.Translator;
+import de.sean.blockprot.nbt.stats.StatisticType;
+import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-/**
- *
- * @param <V> The type of the value.
- * @param <C> The type of the container.
- * @param <M> The type of the item type.
- */
-public interface Statistic<V, C, M> extends Comparable<Statistic<V, C, M>> {
-    @NotNull String getKey();
-    @NotNull StatisticType getType();
-    @NotNull M getItemType();
-    @Override @NotNull String toString();
-    @NotNull V get();
-    void set(@NotNull final V value);
-
-    void updateContainer(C container);
-
-    default @NotNull OnClickAction getClickAction() {
-        return OnClickAction.NONE;
+public final class BlockCountStatistic extends IntStatistic {
+    @Override
+    public @NotNull String getKey() {
+        return "container_count";
     }
 
     @Override
-    default int compareTo(@NotNull Statistic<V, C, M> o) {
-        return o.getKey().equals(this.getKey()) ? 0 : -1;
+    public @NotNull StatisticType getType() {
+        return StatisticType.GLOBAL;
+    }
+
+    @Override
+    public @NotNull Material getItemType() {
+        return Material.CHEST;
+    }
+
+    @Override
+    public String getTitle() {
+        return Translator.get(TranslationKey.INVENTORIES__STATISTICS__CONTAINER_COUNT);
     }
 }

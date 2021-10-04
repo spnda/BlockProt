@@ -64,12 +64,12 @@ public abstract class LocationListStatistic extends BukkitListStatistic<Location
     }
 
     @Override
-    public void add(Location vector) {
+    public void add(@NotNull Location vector) {
         writeLocationToCompound(getList().addCompound(), vector);
     }
 
     @Override
-    public void remove(Location object) {
+    public void remove(@NotNull Location object) {
         getList().removeIf(c -> parseLocationFromCompound(c).equals(object));
     }
 

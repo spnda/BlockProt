@@ -19,17 +19,16 @@
 package de.sean.blockprot.bukkit.nbt;
 
 import de.sean.blockprot.bukkit.BlockProt;
-import de.sean.blockprot.bukkit.nbt.stats.ContainerCountStatistic;
-import de.sean.blockprot.bukkit.nbt.stats.PlayerContainersStatistic;
+import de.sean.blockprot.bukkit.nbt.stats.BukkitStatistic;
+import de.sean.blockprot.bukkit.nbt.stats.BlockCountStatistic;
+import de.sean.blockprot.bukkit.nbt.stats.PlayerBlocksStatistic;
 import de.sean.blockprot.bukkit.tasks.StatisticFileSaveTask;
-import de.sean.blockprot.nbt.stats.Statistic;
 import de.sean.blockprot.nbt.stats.StatisticType;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTFile;
 import de.tr7zw.changeme.nbtapi.NBTType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -52,7 +51,7 @@ public final class StatHandler {
     private static @Nullable BukkitTask fileSaveTask;
     private static @Nullable NBTFile nbtFile;
 
-    public static void init() {
+    public static void enable() {
         if (nbtFile != null) return;
         try {
             // If there's no worlds on this server, that's not our issue.
@@ -81,8 +80,8 @@ public final class StatHandler {
     }
 
     public static void addContainer(@NotNull final Player player, @NotNull final Location block) {
-        ContainerCountStatistic countStatistic = new ContainerCountStatistic();
-        PlayerContainersStatistic containersStatistic = new PlayerContainersStatistic();
+        BlockCountStatistic countStatistic = new BlockCountStatistic();
+        PlayerBlocksStatistic containersStatistic = new PlayerBlocksStatistic();
         StatHandler.getStatistic(countStatistic);
         StatHandler.getStatistic(containersStatistic, player);
         countStatistic.increment();
@@ -90,19 +89,19 @@ public final class StatHandler {
     }
 
     public static void removeContainer(@NotNull final Player player, @NotNull final Location block) {
-        ContainerCountStatistic countStatistic = new ContainerCountStatistic();
-        PlayerContainersStatistic containersStatistic = new PlayerContainersStatistic();
+        BlockCountStatistic countStatistic = new BlockCountStatistic();
+        PlayerBlocksStatistic containersStatistic = new PlayerBlocksStatistic();
         StatHandler.getStatistic(countStatistic);
         StatHandler.getStatistic(containersStatistic, player);
         countStatistic.decrement();
         containersStatistic.remove(block);
     }
 
-    public static void getStatistic(@NotNull Statistic<?, NBTCompound, Material> statistic) {
+    public static void getStatistic(@NotNull BukkitStatistic<?> statistic) {
         getStatistic(statistic, null);
     }
 
-    public static void getStatistic(@NotNull Statistic<?, NBTCompound, Material> statistic, @Nullable Player player) {
+    public static void getStatistic(@NotNull BukkitStatistic<?> statistic, @Nullable Player player) {
         switch (statistic.getType()) {
             case ALL:
             case PLAYER:

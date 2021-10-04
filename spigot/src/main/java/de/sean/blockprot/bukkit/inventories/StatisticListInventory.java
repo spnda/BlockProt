@@ -20,9 +20,8 @@ package de.sean.blockprot.bukkit.inventories;
 
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
-import de.sean.blockprot.nbt.stats.ListStatistic;
+import de.sean.blockprot.bukkit.nbt.stats.BukkitListStatistic;
 import de.sean.blockprot.nbt.stats.ListStatisticItem;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -41,7 +40,7 @@ public final class StatisticListInventory extends BlockProtInventory {
 
     @Override
     @NotNull String getTranslatedInventoryName() {
-        return Translator.get(TranslationKey.INVENTORIES__STATISTICS);
+        return Translator.get(TranslationKey.INVENTORIES__STATISTICS__STATISTICS);
     }
 
     @Override
@@ -59,11 +58,11 @@ public final class StatisticListInventory extends BlockProtInventory {
 
     }
 
-    public Inventory fill(@NotNull final Player player, @NotNull final ListStatistic<NBTCompound, Material, ?, ListStatisticItem<?, Material>> stat) {
+    public Inventory fill(@NotNull final Player player, @NotNull final BukkitListStatistic<ListStatisticItem<?, Material>, ?> stat) {
         List<ListStatisticItem<?, Material>> list = stat.get();
 
         for (int i = 0; i < list.size() && i < (InventoryConstants.tripleLine - 2); ++i) {
-            setItemStack(i, list.get(i).getItemType(), list.get(i).toString());
+            setItemStack(i, list.get(i).getItemType(), list.get(i).getTitle());
         }
 
         setBackButton();

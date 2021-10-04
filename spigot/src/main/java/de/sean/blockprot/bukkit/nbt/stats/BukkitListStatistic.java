@@ -18,29 +18,24 @@
 
 package de.sean.blockprot.bukkit.nbt.stats;
 
-import de.sean.blockprot.bukkit.nbt.NBTHandler;
-import de.sean.blockprot.nbt.stats.ListStatistic;
 import de.sean.blockprot.nbt.stats.ListStatisticItem;
 import de.sean.blockprot.nbt.stats.OnClickAction;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class BukkitListStatistic<V extends ListStatisticItem<IV, Material>, IV>
-    extends NBTHandler<NBTCompound>
-    implements ListStatistic<NBTCompound, Material, IV, V> {
-    @Override
-    public void updateContainer(NBTCompound container) {
-        this.container = container;
-    }
+import java.util.List;
 
-    @Override
+public abstract class BukkitListStatistic<V extends ListStatisticItem<IV, Material>, IV>
+    extends BukkitStatistic<List<V>> {
+    public abstract void add(@NotNull IV object);
+    public abstract void remove(int index);
+    public abstract void remove(@NotNull IV object);
+
     public @NotNull Material getItemType() {
         return Material.DIRT;
     }
 
-    @Override
     public @NotNull OnClickAction getClickAction() {
         return OnClickAction.LIST_MENU;
     }

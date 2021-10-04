@@ -37,6 +37,10 @@ inventories:
       read: "Read"
       write: "Write"
       manager: "Manager"
+  statistics:
+    statistics: "Statistics"
+    container_count: "Block count"
+    player_blocks: "Player's blocks"
 
 messages:
   permission_granted: "Permission granted."

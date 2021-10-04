@@ -21,11 +21,20 @@ package de.sean.blockprot.bukkit.nbt.stats;
 import de.sean.blockprot.nbt.stats.ListStatisticItem;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.StringJoiner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LocationListEntry extends ListStatisticItem<Location, Material> {
     public LocationListEntry(@NotNull Location value) {
         super(value);
+    }
+
+    public @NotNull Block getBlock() {
+        return this.get().getBlock();
     }
 
     @Override
@@ -36,5 +45,27 @@ public class LocationListEntry extends ListStatisticItem<Location, Material> {
     @Override
     public String toString() {
         return null;
+    }
+
+    private @NotNull String capitalizeFirstLetters(@NotNull String str) {
+        String n = (str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase());
+        Matcher m = Pattern.compile("_[a-z]").matcher(n);
+        while (m.find()) {
+            n = n.substring(0, m.end() - 2) // -2 as we also match the underscore.
+                + n.substring(m.start(), m.end()).toUpperCase()
+                + n.substring(m.end());
+        }
+        return n.replaceAll("_", " ");
+    }
+
+    @Override
+    public String getTitle() {
+        String name = capitalizeFirstLetters(getBlock().getType().toString());
+        String coordinates = new StringJoiner(",", "[", "]")
+            .add(String.valueOf(this.value.getBlockX()))
+            .add(String.valueOf(this.value.getBlockY()))
+            .add(String.valueOf(this.value.getBlockZ()))
+            .toString();
+        return name + " " + coordinates;
     }
 }

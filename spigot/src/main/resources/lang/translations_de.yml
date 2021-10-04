@@ -30,6 +30,10 @@ inventories:
       read: "Inhalt einsehen"
       write: "Editieren"
       manager: "Manager"
+  statistics:
+    statistics: "Statistik"
+    container_count: "Anzahl Blöcke"
+    player_blocks: "Blöcke des Spielers"
 
 messages:
   permission_granted: "Erlaubnis erteilt."

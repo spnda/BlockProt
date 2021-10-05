@@ -61,7 +61,7 @@ public class LocationListEntry extends ListStatisticItem<Location, Material> {
     @Override
     public String getTitle() {
         String name = capitalizeFirstLetters(getBlock().getType().toString());
-        String coordinates = new StringJoiner(",", "[", "]")
+        String coordinates = new StringJoiner(", ", "[", "]")
             .add(String.valueOf(this.value.getBlockX()))
             .add(String.valueOf(this.value.getBlockY()))
             .add(String.valueOf(this.value.getBlockZ()))

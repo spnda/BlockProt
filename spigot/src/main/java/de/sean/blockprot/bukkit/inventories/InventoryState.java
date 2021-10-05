@@ -65,11 +65,10 @@ public final class InventoryState {
     public FriendSearchState friendSearchState = FriendSearchState.FRIEND_SEARCH;
 
     /**
-     * The current index of the {@link BlockProtInventory} page.
-     *
-     * @since 0.4.7
+     * The current index of the page, if the inventory
+     * has any multi-page capabilities.
      */
-    public int friendPage = 0;
+    public int currentPageIndex = 0;
 
     /**
      * The friend we currently want to modify with {@link FriendDetailInventory}.

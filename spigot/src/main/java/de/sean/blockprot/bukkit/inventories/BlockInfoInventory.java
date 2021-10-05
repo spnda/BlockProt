@@ -59,7 +59,7 @@ public class BlockInfoInventory extends BlockProtInventory {
         switch (item.getType()) {
             case BLACK_STAINED_GLASS_PANE:
                 if (state.getBlock() != null) {
-                    state.friendPage = 0;
+                    state.currentPageIndex = 0;
                     BlockNBTHandler handler = getNbtHandlerOrNull(state.getBlock());
                     closeAndOpen(
                         player,
@@ -71,8 +71,8 @@ public class BlockInfoInventory extends BlockProtInventory {
                 break;
             case CYAN_STAINED_GLASS_PANE:
                 if (state.getBlock() == null) break;
-                if (state.friendPage >= 1) {
-                    state.friendPage--;
+                if (state.currentPageIndex >= 1) {
+                    state.currentPageIndex--;
 
                     BlockNBTHandler handler = getNbtHandlerOrNull(state.getBlock());
                     closeAndOpen(
@@ -88,7 +88,7 @@ public class BlockInfoInventory extends BlockProtInventory {
                 final ItemStack lastFriendInInventory = inventory.getItem(maxSkulls - 1);
                 if (lastFriendInInventory != null && lastFriendInInventory.getAmount() != 0) {
                     // There's an item in the last slot => The page is fully filled up, meaning we should go to the next page.
-                    state.friendPage++;
+                    state.currentPageIndex++;
 
                     BlockNBTHandler handler = getNbtHandlerOrNull(state.getBlock());
                     closeAndOpen(
@@ -118,7 +118,7 @@ public class BlockInfoInventory extends BlockProtInventory {
 
         this.inventory.clear();
         state.friendResultCache.clear();
-        int pageOffset = maxSkulls * state.friendPage;
+        int pageOffset = maxSkulls * state.currentPageIndex;
         for (int i = 0; i < Math.min(friends.size() - pageOffset, maxSkulls); i++) {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(friends.get(pageOffset + i).getName()));
             this.setItemStack(InventoryConstants.lineLength + i, Material.SKELETON_SKULL, offlinePlayer.getName());

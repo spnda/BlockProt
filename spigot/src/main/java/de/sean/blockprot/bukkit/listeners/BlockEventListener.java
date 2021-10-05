@@ -141,8 +141,10 @@ public class BlockEventListener implements Listener {
                         } else {
                             // We can't cancel the event 1 tick later, its already executed. We'll just need to destroy the block and drop it.
                             event.getPlayer().getWorld().getBlockAt(block.getLocation()).breakNaturally();
-                            StatHandler.removeContainer(event.getPlayer(), block.getLocation());
                         }
+
+                        // Remove the container as we break it, but also remove it when successful to remove duplicates.
+                        StatHandler.removeContainer(event.getPlayer(), block.getLocation());
                     }
                 },
                 1

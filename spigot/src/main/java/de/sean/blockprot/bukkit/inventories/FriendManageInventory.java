@@ -95,13 +95,13 @@ public final class FriendManageInventory extends BlockProtInventory {
         switch (item.getType()) {
             case BLACK_STAINED_GLASS_PANE: {
                 // Exit the friend modify inventory and return to the base lock inventory.
-                state.friendPage = 0;
+                state.currentPageIndex = 0;
                 exitModifyInventory(player, state);
                 break;
             }
             case CYAN_STAINED_GLASS_PANE: {
-                if (state.friendPage >= 1) {
-                    state.friendPage--;
+                if (state.currentPageIndex >= 1) {
+                    state.currentPageIndex--;
 
                     closeAndOpen(player, fill(player));
                 }
@@ -112,7 +112,7 @@ public final class FriendManageInventory extends BlockProtInventory {
                 if (lastFriendInInventory != null && lastFriendInInventory.getAmount() != 0) {
                     // There's an item in the last slot => The page is fully filled up, meaning
                     // we should go to the next page.
-                    state.friendPage++;
+                    state.currentPageIndex++;
 
                     closeAndOpen(player, fill(player));
                 }
@@ -170,7 +170,7 @@ public final class FriendManageInventory extends BlockProtInventory {
         // We call fill() with the page buttons on this same holder. Clear the inventory too.
         this.inventory.clear();
 
-        int pageOffset = maxSkulls * state.friendPage;
+        int pageOffset = maxSkulls * state.currentPageIndex;
         for (int i = 0; i < Math.min(players.size() - pageOffset, maxSkulls); i++) {
             final OfflinePlayer curPlayer = players.get(pageOffset + i);
             if (curPlayer.getUniqueId().equals(player.getUniqueId())) continue;

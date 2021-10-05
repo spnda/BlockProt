@@ -32,6 +32,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -416,7 +417,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      *                  open any new inventory.
      * @since 0.4.2
      */
-    protected void closeAndOpen(@NotNull final Player player, @Nullable final Inventory inventory) {
+    protected void closeAndOpen(@NotNull final HumanEntity player, @Nullable final Inventory inventory) {
         if (inventory != null) {
             player.openInventory(inventory);
         } else {

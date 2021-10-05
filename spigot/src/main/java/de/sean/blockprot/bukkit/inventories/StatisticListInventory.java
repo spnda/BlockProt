@@ -29,10 +29,14 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public final class StatisticListInventory extends BlockProtInventory {
+    /** Stores the statistic for pages to use. */
+    private BukkitListStatistic<ListStatisticItem<?, Material>, ?> statistic;
+
     @Override
     int getSize() {
         return InventoryConstants.tripleLine;
@@ -48,8 +52,26 @@ public final class StatisticListInventory extends BlockProtInventory {
         event.setCancelled(true);
         ItemStack item = event.getCurrentItem();
         if (item == null) return;
-        if (item.getType() == Material.BLACK_STAINED_GLASS_PANE && event.getWhoClicked() instanceof Player) {
-            closeAndOpen((Player) event.getWhoClicked(), new StatisticsInventory().fill((Player) event.getWhoClicked()));
+        switch (item.getType()) {
+            case BLACK_STAINED_GLASS_PANE:
+                closeAndOpen(event.getWhoClicked(), new StatisticsInventory().fill((Player) event.getWhoClicked()));
+                break;
+            case CYAN_STAINED_GLASS_PANE:
+                if (state.currentPageIndex >= 1) {
+                    state.currentPageIndex--;
+                    closeAndOpen(
+                        event.getWhoClicked(),
+                        this.fill((Player) event.getWhoClicked(), null)
+                    );
+                }
+                break;
+            case BLUE_STAINED_GLASS_PANE:
+                state.currentPageIndex++;
+                closeAndOpen(event.getWhoClicked(), fill((Player) event.getWhoClicked(), null));
+                break;
+            default:
+                closeAndOpen(event.getWhoClicked(), null);
+                break;
         }
     }
 
@@ -58,13 +80,41 @@ public final class StatisticListInventory extends BlockProtInventory {
 
     }
 
-    public Inventory fill(@NotNull final Player player, @NotNull final BukkitListStatistic<ListStatisticItem<?, Material>, ?> stat) {
-        List<ListStatisticItem<?, Material>> list = stat.get();
+    /**
+     * @param stat Can be null to indicate that this inventory should use the previously
+     *             cached statistic. Will throw {@link RuntimeException} if there is no
+     *             cached statistic.
+     */
+    public Inventory fill(@NotNull final Player player, @Nullable final BukkitListStatistic<ListStatisticItem<?, Material>, ?> stat)
+        throws RuntimeException {
+        if (stat != null) this.statistic = stat;
+        if (this.statistic == null) throw new RuntimeException("No cached statistic available.");
 
-        for (int i = 0; i < list.size() && i < (InventoryConstants.tripleLine - 2); ++i) {
-            setItemStack(i, list.get(i).getItemType(), list.get(i).getTitle());
+        final List<ListStatisticItem<?, Material>> list = this.statistic.get();
+        final InventoryState state = InventoryState.get(player.getUniqueId());
+        if (state == null) return inventory;
+
+        final int max = this.getSize() - 3;
+        int offset = max * state.currentPageIndex;
+        for (int i = 0; i < Math.min(list.size() - offset, max); ++i) {
+            final ListStatisticItem<?, Material> item = list.get(offset + i);
+            setItemStack(
+                i,
+                item.getItemType(),
+                item.getTitle()
+            );
         }
 
+        if (list.size() - offset > max) {
+            setItemStack(
+                max,
+                Material.CYAN_STAINED_GLASS_PANE,
+                TranslationKey.INVENTORIES__LAST_PAGE);
+            setItemStack(
+                max + 1,
+                Material.BLUE_STAINED_GLASS_PANE,
+                TranslationKey.INVENTORIES__NEXT_PAGE);
+        }
         setBackButton();
         return inventory;
     }

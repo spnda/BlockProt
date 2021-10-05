@@ -41,7 +41,7 @@ public class HopperEventListener implements Listener {
                 Block source = getBlock(event.getSource().getHolder());
                 if (source != null) {
                     BlockNBTHandler nbtHandler = new BlockNBTHandler(source);
-                    if (nbtHandler.getRedstoneHandler().getHopperProtection()) {
+                    if (nbtHandler.isProtected() && nbtHandler.getRedstoneHandler().getHopperProtection()) {
                         event.setCancelled(true);
                     }
                 }

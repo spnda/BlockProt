@@ -39,7 +39,7 @@ public final class StatisticListInventory extends BlockProtInventory {
 
     @Override
     int getSize() {
-        return InventoryConstants.tripleLine;
+        return InventoryConstants.sextupletLine;
     }
 
     @Override
@@ -53,9 +53,6 @@ public final class StatisticListInventory extends BlockProtInventory {
         ItemStack item = event.getCurrentItem();
         if (item == null) return;
         switch (item.getType()) {
-            case BLACK_STAINED_GLASS_PANE:
-                closeAndOpen(event.getWhoClicked(), new StatisticsInventory().fill((Player) event.getWhoClicked()));
-                break;
             case CYAN_STAINED_GLASS_PANE:
                 if (state.currentPageIndex >= 1) {
                     state.currentPageIndex--;
@@ -69,8 +66,11 @@ public final class StatisticListInventory extends BlockProtInventory {
                 state.currentPageIndex++;
                 closeAndOpen(event.getWhoClicked(), fill((Player) event.getWhoClicked(), null));
                 break;
+            case BLACK_STAINED_GLASS_PANE:
+                closeAndOpen(event.getWhoClicked(), new StatisticsInventory().fill((Player) event.getWhoClicked()));
+                break;
             default:
-                closeAndOpen(event.getWhoClicked(), null);
+                // Ignore clicks on statistic items.
                 break;
         }
     }

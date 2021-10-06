@@ -34,6 +34,8 @@ public abstract class BukkitStatistic<V> extends NBTHandler<NBTCompound> impleme
     public abstract @NotNull String getKey();
     /** The type of this statistic. */
     public abstract @NotNull StatisticType getType();
+    /** Get the (translated) name of this statistic. */
+    public abstract String getStatisticName();
     public abstract @NotNull V get();
     public abstract void set(@NotNull V value);
 
@@ -51,10 +53,13 @@ public abstract class BukkitStatistic<V> extends NBTHandler<NBTCompound> impleme
         return OnClickAction.NONE;
     }
 
+    /** Returns the formatted statistic name with the value of this statistic. */
+    public @NotNull String getTitle() {
+        return getStatisticName() + ": " + get().toString();
+    }
+
     @Override
     public int compareTo(@NotNull BukkitStatistic<V> o) {
         return o.getKey().equals(this.getKey()) ? 0 : -1;
     }
-
-    public abstract String getTitle();
 }

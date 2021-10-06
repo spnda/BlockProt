@@ -41,7 +41,7 @@ public final class BlockCountStatistic extends IntStatistic {
     }
 
     @Override
-    public String getTitle() {
+    public String getStatisticName() {
         return Translator.get(TranslationKey.INVENTORIES__STATISTICS__CONTAINER_COUNT);
     }
 }

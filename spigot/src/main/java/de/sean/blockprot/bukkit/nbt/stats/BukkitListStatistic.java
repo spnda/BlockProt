@@ -43,4 +43,9 @@ public abstract class BukkitListStatistic<V extends ListStatisticItem<IV, Materi
     protected @NotNull NBTCompoundList getList() {
         return container.getCompoundList(this.getKey());
     }
+
+    @Override
+    public @NotNull String getTitle() {
+        return getStatisticName();
+    }
 }

@@ -39,8 +39,10 @@ inventories:
       manager: "Manager"
   statistics:
     statistics: "Statistics"
+    player_statistics: "Player statistics"
+    global_statistics: "Server statistics"
     container_count: "Block count"
-    player_blocks: "Player's blocks"
+    your_blocks: "Your blocks"
 
 messages:
   permission_granted: "Permission granted."

@@ -47,7 +47,7 @@ public final class StatisticsInventory extends BlockProtInventory {
 
     @Override
     int getSize() {
-        return InventoryConstants.tripleLine;
+        return InventoryConstants.sextupletLine;
     }
 
     @Override
@@ -59,18 +59,22 @@ public final class StatisticsInventory extends BlockProtInventory {
     public void onClick(@NotNull InventoryClickEvent event, @NotNull InventoryState state) {
         ItemStack item = event.getCurrentItem();
         if (item == null) return;
-        if (item.getType() != Material.BLACK_STAINED_GLASS_PANE) {
-            BukkitStatistic<?> stat;
-            if (event.getSlot() < InventoryConstants.singleLine) {
-                // Player stat
-                stat = playerStatistics.get(event.getSlot());
-            } else {
-                // Server stat
-                stat = serverStatistics.get(event.getSlot() - InventoryConstants.singleLine);
-            }
-            openStatInventory(stat, (Player) event.getWhoClicked());
-        } else {
-            closeAndOpen((Player) event.getWhoClicked(), null);
+        switch (item.getType()) {
+            case BLUE_STAINED_GLASS_PANE:
+                if (event.getWhoClicked() instanceof Player) {
+                    state.currentPageIndex ^= 1L; // Toggles the first bit, switching between 0 and 1.
+                    this.fill((Player) event.getWhoClicked());
+                }
+                break;
+            case BLACK_STAINED_GLASS_PANE:
+                closeAndOpen(event.getWhoClicked(), null);
+                break;
+            default:
+                BukkitStatistic<?> stat = state.currentPageIndex == 0
+                    ? playerStatistics.get(event.getSlot())
+                    : serverStatistics.get(event.getSlot());
+                openStatInventory(stat, (Player) event.getWhoClicked());
+                break;
         }
         event.setCancelled(true);
     }
@@ -89,8 +93,14 @@ public final class StatisticsInventory extends BlockProtInventory {
     }
 
     public Inventory fill(@NotNull final Player player) {
-        for (int i = 0; i < playerStatistics.size() && i < InventoryConstants.singleLine; i++) {
-            BukkitStatistic<?> stat = playerStatistics.get(i);
+        final InventoryState state = InventoryState.get(player.getUniqueId());
+        if (state == null || state.currentPageIndex >= 2) return inventory; // We only have 2 pages.
+
+        final List<BukkitStatistic<?>> statistics = state.currentPageIndex == 0
+            ? playerStatistics
+            : serverStatistics;
+        for (int i = 0; i < statistics.size() && i < getSize() - 1; ++i) {
+            BukkitStatistic<?> stat = statistics.get(i);
             StatHandler.getStatistic(stat, player);
             setItemStack(
                 i,
@@ -99,16 +109,13 @@ public final class StatisticsInventory extends BlockProtInventory {
             );
         }
 
-        for (int i = 0; i < serverStatistics.size() && i < InventoryConstants.singleLine; i++) {
-            BukkitStatistic<?> stat = serverStatistics.get(i);
-            StatHandler.getStatistic(stat);
-            setItemStack(
-                InventoryConstants.singleLine + i,
-                stat.getItemType(),
-                stat.getTitle()
-            );
-        }
-
+        setItemStack(
+            getSize() - 2,
+            Material.BLUE_STAINED_GLASS_PANE,
+            state.currentPageIndex == 0
+                ? TranslationKey.INVENTORIES__STATISTICS__GLOBAL_STATISTICS
+                : TranslationKey.INVENTORIES__STATISTICS__PLAYER_STATISTICS
+        );
         setBackButton();
         return inventory;
     }

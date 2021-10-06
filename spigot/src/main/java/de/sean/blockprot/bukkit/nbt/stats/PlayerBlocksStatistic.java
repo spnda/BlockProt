@@ -41,7 +41,12 @@ public final class PlayerBlocksStatistic extends LocationListStatistic {
     }
 
     @Override
-    public String getTitle() {
-        return Translator.get(TranslationKey.INVENTORIES__STATISTICS__PLAYER_BLOCKS);
+    public String getStatisticName() {
+        return Translator.get(TranslationKey.INVENTORIES__STATISTICS__YOUR_BLOCKS);
+    }
+
+    @Override
+    public @NotNull String getTitle() {
+        return getStatisticName() + ": " + get().size();
     }
 }

@@ -45,7 +45,7 @@ public final class FriendManageInventory extends BlockProtInventory {
 
     @Override
     public int getSize() {
-        return 9 * 6; // 6 Lines of inventory go brr
+        return InventoryConstants.sextupletLine; // 6 Lines of inventory go brr
     }
 
     @NotNull

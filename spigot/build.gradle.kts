@@ -85,7 +85,12 @@ tasks.shadowJar {
     // minimize()
 
     dependencies {
-        this.exclude(dependency("com.github.TownyAdvanced:Towny:$townyVersion"))
+        this.include(project(":common"))
+        this.include(dependency("org.jetbrains:annotations"))
+        this.include(dependency("de.tr7zw:item-nbt-api"))
+        this.include(dependency("net.wesjd:anvilgui"))
+        this.include(dependency("org.bstats:bstats-base"))
+        this.include(dependency("org.bstats:bstats-bukkit"))
     }
 
     archiveClassifier.set(

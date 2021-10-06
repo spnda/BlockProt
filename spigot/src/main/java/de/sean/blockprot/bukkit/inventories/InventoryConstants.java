@@ -55,4 +55,6 @@ public final class InventoryConstants {
      * @since 0.2.0
      */
     public static final int tripleLine = 9 * 3;
+
+    public static final int sextupletLine = 9 * 6;
 }

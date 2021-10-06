@@ -23,6 +23,7 @@ import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.events.BlockLockOnPlaceEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
+import de.sean.blockprot.bukkit.nbt.StatHandler;
 import de.sean.blockprot.bukkit.util.BlockUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
@@ -76,6 +77,8 @@ public class BlockEventListener implements Listener {
 
         // If access is not cancelled and the player is allowed to break the block.
         if (!event.isCancelled()) {
+            StatHandler.removeContainer(event.getPlayer(), event.getBlock().getLocation());
+
             // For blocks, we want to clear the NBT data, as that lives
             // independently of the actual block state.
             handler.clear();
@@ -139,6 +142,9 @@ public class BlockEventListener implements Listener {
                             // We can't cancel the event 1 tick later, its already executed. We'll just need to destroy the block and drop it.
                             event.getPlayer().getWorld().getBlockAt(block.getLocation()).breakNaturally();
                         }
+
+                        // Remove the container as we break it, but also remove it when successful to remove duplicates.
+                        StatHandler.removeContainer(event.getPlayer(), block.getLocation());
                     }
                 },
                 1
@@ -176,6 +182,7 @@ public class BlockEventListener implements Listener {
                     settingsHandler
                         .getFriendsStream()
                         .forEach(handler::addFriend);
+                    StatHandler.addBlock(event.getPlayer(), block.getLocation());
                 }
                 if (BlockProt.getDefaultConfig().disallowRedstoneOnPlace()) {
                     handler.getRedstoneHandler().setAll(false);

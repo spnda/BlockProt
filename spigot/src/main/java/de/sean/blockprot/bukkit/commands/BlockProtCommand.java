@@ -20,6 +20,7 @@ package de.sean.blockprot.bukkit.commands;
 
 import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.inventories.InventoryState;
+import de.sean.blockprot.bukkit.inventories.StatisticsInventory;
 import de.sean.blockprot.bukkit.inventories.UserSettingsInventory;
 import de.sean.blockprot.bukkit.tasks.UpdateChecker;
 import org.bukkit.Bukkit;
@@ -30,6 +31,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -70,6 +72,17 @@ public final class BlockProtCommand implements TabExecutor {
                 }
                 break;
             }
+            case "stats": {
+                if (!(sender instanceof Player)) break;
+                Player player = (Player) sender;
+
+                final InventoryState state = new InventoryState(null);
+                state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH;
+                InventoryState.set(player.getUniqueId(), state);
+
+                player.openInventory(new StatisticsInventory().fill(player));
+                return true;
+            }
         }
 
         return false;
@@ -78,7 +91,7 @@ public final class BlockProtCommand implements TabExecutor {
     @Override
     public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (args.length <= 1) {
-            List<String> list = new ArrayList<>(Collections.singletonList("settings"));
+            List<String> list = new ArrayList<>(Arrays.asList("settings", "stats"));
             if (sender.isOp()) {
                 list.add("update");
                 list.add("reload");

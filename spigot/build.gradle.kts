@@ -29,7 +29,6 @@ dependencies {
     api("org.bstats:bstats-bukkit:2.2.1")
 
     // Dependencies
-    implementation("org.jetbrains:annotations:21.0.1")
     implementation("de.tr7zw:item-nbt-api:2.8.0")
     implementation("net.wesjd:anvilgui:1.5.3-SNAPSHOT") // Allows us to use anvils as inventories without using NMS.
     implementation("com.github.TownyAdvanced:Towny:$townyVersion")

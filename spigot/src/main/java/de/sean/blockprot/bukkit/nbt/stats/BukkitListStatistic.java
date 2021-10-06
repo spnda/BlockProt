@@ -19,7 +19,7 @@
 package de.sean.blockprot.bukkit.nbt.stats;
 
 import de.sean.blockprot.nbt.stats.ListStatisticItem;
-import de.sean.blockprot.nbt.stats.OnClickAction;
+import de.sean.blockprot.nbt.stats.StatisticOnClickAction;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
@@ -36,8 +36,8 @@ public abstract class BukkitListStatistic<V extends ListStatisticItem<IV, Materi
         return Material.DIRT;
     }
 
-    public @NotNull OnClickAction getClickAction() {
-        return OnClickAction.LIST_MENU;
+    public @NotNull StatisticOnClickAction getClickAction() {
+        return StatisticOnClickAction.LIST_MENU;
     }
 
     protected @NotNull NBTCompoundList getList() {

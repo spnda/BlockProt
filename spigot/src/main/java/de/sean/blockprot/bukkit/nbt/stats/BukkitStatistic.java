@@ -19,7 +19,7 @@
 package de.sean.blockprot.bukkit.nbt.stats;
 
 import de.sean.blockprot.bukkit.nbt.NBTHandler;
-import de.sean.blockprot.nbt.stats.OnClickAction;
+import de.sean.blockprot.nbt.stats.StatisticOnClickAction;
 import de.sean.blockprot.nbt.stats.StatisticType;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Material;
@@ -49,8 +49,8 @@ public abstract class BukkitStatistic<V> extends NBTHandler<NBTCompound> impleme
     }
 
     /** Get what should happen when the user clicks on this statistic. */
-    public @NotNull OnClickAction getClickAction() {
-        return OnClickAction.NONE;
+    public @NotNull StatisticOnClickAction getClickAction() {
+        return StatisticOnClickAction.NONE;
     }
 
     /** Returns the formatted statistic name with the value of this statistic. */

@@ -25,7 +25,7 @@ import de.sean.blockprot.bukkit.nbt.stats.BlockCountStatistic;
 import de.sean.blockprot.bukkit.nbt.stats.BukkitListStatistic;
 import de.sean.blockprot.bukkit.nbt.stats.BukkitStatistic;
 import de.sean.blockprot.bukkit.nbt.stats.PlayerBlocksStatistic;
-import de.sean.blockprot.nbt.stats.OnClickAction;
+import de.sean.blockprot.nbt.stats.StatisticOnClickAction;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -85,9 +85,9 @@ public final class StatisticsInventory extends BlockProtInventory {
     }
 
     public void openStatInventory(@NotNull final BukkitStatistic<?> stat, @NotNull final Player player) {
-        if (stat.getClickAction() == OnClickAction.NONE) return;
+        if (stat.getClickAction() == StatisticOnClickAction.NONE) return;
         if (player.getOpenInventory().getTopInventory().getHolder() instanceof StatisticListInventory) return;
-        if (stat.getClickAction() == OnClickAction.LIST_MENU && stat instanceof BukkitListStatistic) {
+        if (stat.getClickAction() == StatisticOnClickAction.LIST_MENU && stat instanceof BukkitListStatistic) {
             closeAndOpen(player, new StatisticListInventory().fill(player, (BukkitListStatistic) stat));
         }
     }
@@ -99,7 +99,7 @@ public final class StatisticsInventory extends BlockProtInventory {
         final List<BukkitStatistic<?>> statistics = state.currentPageIndex == 0
             ? playerStatistics
             : serverStatistics;
-        for (int i = 0; i < statistics.size() && i < getSize() - 1; ++i) {
+        for (int i = 0; i < statistics.size() && i < getSize() - 2; ++i) {
             BukkitStatistic<?> stat = statistics.get(i);
             StatHandler.getStatistic(stat, player);
             setItemStack(

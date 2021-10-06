@@ -20,7 +20,9 @@ package de.sean.blockprot.bukkit.nbt.stats;
 
 import org.jetbrains.annotations.NotNull;
 
-/** A base helper class for a statistic backed by a single integer */
+/**
+ * A base statistic backed by a single integer.
+ */
 public abstract class IntStatistic extends BukkitStatistic<Integer> {
     @Override
     public @NotNull String toString() {
@@ -39,7 +41,7 @@ public abstract class IntStatistic extends BukkitStatistic<Integer> {
 
     @Override
     public int compareTo(@NotNull BukkitStatistic<Integer> o) {
-        return get().compareTo(o.get());
+        return this.get().compareTo(o.get());
     }
 
     /** Increments the value. */

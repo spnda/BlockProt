@@ -16,28 +16,10 @@
  * along with BlockProt.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.sean.blockprot.bukkit.nbt;
+package de.sean.blockprot.nbt.stats;
 
-import de.sean.blockprot.bukkit.nbt.stats.BukkitStatistic;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
-import org.jetbrains.annotations.NotNull;
-
-final class PlayerStatHandler extends NBTHandler<NBTCompound> {
-    public PlayerStatHandler(@NotNull final NBTCompound compound) {
-        super();
-        this.container = compound;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @NotNull
-    public String getName() {
-        String name = container.getName();
-        return name == null ? "" : name;
-    }
-
-    public void getStatistic(final @NotNull BukkitStatistic<?> statistic) {
-        statistic.updateContainer(this.container);
-    }
+public enum StatisticOnClickAction {
+    NONE,
+    /** A statistic that should be displayed through a separate list inventory. */
+    LIST_MENU
 }

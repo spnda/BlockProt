@@ -19,8 +19,8 @@
 package de.sean.blockprot.bukkit.nbt;
 
 import de.sean.blockprot.bukkit.BlockProt;
-import de.sean.blockprot.bukkit.nbt.stats.BukkitStatistic;
 import de.sean.blockprot.bukkit.nbt.stats.BlockCountStatistic;
+import de.sean.blockprot.bukkit.nbt.stats.BukkitStatistic;
 import de.sean.blockprot.bukkit.nbt.stats.PlayerBlocksStatistic;
 import de.sean.blockprot.bukkit.tasks.StatisticFileSaveTask;
 import de.sean.blockprot.nbt.stats.StatisticType;
@@ -43,13 +43,24 @@ import java.util.stream.Stream;
 /**
  * StatHandler for statistic related NBT data.
  */
-public final class StatHandler {
+public final class StatHandler extends NBTHandler<NBTCompound> {
     static final String STAT_FILE_NAME = "blockprot_stats.nbt";
     static final String PLAYER_SUB_KEY = "player_stats";
     static final String SERVER_SUB_KEY = "server_stats";
 
     private static @Nullable BukkitTask fileSaveTask;
     private static @Nullable NBTFile nbtFile;
+
+    /** Internal constructor to copy the NBT compound. */
+    private StatHandler(@NotNull final NBTCompound compound) {
+        super();
+        this.container = compound;
+    }
+
+    /** Update the NBT compound of given statistic. */
+    public void updateStatistic(final @NotNull BukkitStatistic<?> statistic) {
+        statistic.updateContainer(this.container);
+    }
 
     public static void enable() {
         if (nbtFile != null) return;
@@ -79,7 +90,11 @@ public final class StatHandler {
             fileSaveTask.cancel();
     }
 
-    public static void addContainer(@NotNull final Player player, @NotNull final Location block) {
+    /**
+     * Adds given block to given player's block statistic, while also incrementing the
+     * global block count.
+     */
+    public static void addBlock(@NotNull final Player player, @NotNull final Location block) {
         BlockCountStatistic countStatistic = new BlockCountStatistic();
         PlayerBlocksStatistic containersStatistic = new PlayerBlocksStatistic();
         StatHandler.getStatistic(countStatistic);
@@ -88,6 +103,10 @@ public final class StatHandler {
         containersStatistic.add(block);
     }
 
+    /**
+     * Removes given block from the player's statistic, while also decrementing
+     * the global block count.
+     */
     public static void removeContainer(@NotNull final Player player, @NotNull final Location block) {
         BlockCountStatistic countStatistic = new BlockCountStatistic();
         PlayerBlocksStatistic containersStatistic = new PlayerBlocksStatistic();
@@ -97,6 +116,10 @@ public final class StatHandler {
         containersStatistic.remove(block);
     }
 
+    /**
+     * Get a statistic. To query player specific statistics please
+     * use {@link #getStatistic(BukkitStatistic, Player)}.
+     */
     public static void getStatistic(@NotNull BukkitStatistic<?> statistic) {
         getStatistic(statistic, null);
     }
@@ -107,20 +130,20 @@ public final class StatHandler {
             case PLAYER:
                 // Only get the statistic if player is not null.
                 if (player != null) {
-                    final Optional<PlayerStatHandler> stats = getStatsForPlayer(player.getUniqueId().toString());
-                    stats.ifPresent(handler -> handler.getStatistic(statistic));
+                    final Optional<StatHandler> stats = getStatsForPlayer(player.getUniqueId().toString());
+                    stats.ifPresent(handler -> handler.updateStatistic(statistic));
                 }
 
                 // Let "ALL" fallthrough.
                 if (statistic.getType() == StatisticType.PLAYER) break;
             case GLOBAL:
-                final ServerStatHandler stats = getServerStats();
-                stats.getStatistic(statistic);
+                final StatHandler stats = getServerStats();
+                stats.updateStatistic(statistic);
                 break;
         }
     }
 
-    private static @NotNull Stream<PlayerStatHandler> getPlayerStats() {
+    private static @NotNull Stream<StatHandler> getPlayerStats() {
         if (nbtFile == null) throw new RuntimeException("nbtFile was null.");
         if (!nbtFile.hasKey(PLAYER_SUB_KEY)) return Stream.empty();
 
@@ -128,11 +151,11 @@ public final class StatHandler {
         return list
             .getKeys()
             .stream()
-            .map((comp) -> new PlayerStatHandler(list.getCompound(comp)));
+            .map((comp) -> new StatHandler(list.getCompound(comp)));
     }
 
-    private static @NotNull Optional<PlayerStatHandler> getStatsForPlayer(@NotNull final String id) {
-        Optional<PlayerStatHandler> ret = getPlayerStats()
+    private static @NotNull Optional<StatHandler> getStatsForPlayer(@NotNull final String id) {
+        Optional<StatHandler> ret = getPlayerStats()
             .filter((p) -> p.getName().equals(id))
             .findFirst();
 
@@ -143,20 +166,20 @@ public final class StatHandler {
         return ret;
     }
 
-    private static @NotNull PlayerStatHandler addStatsForPlayer(@NotNull final String id) {
+    private static @NotNull StatHandler addStatsForPlayer(@NotNull final String id) {
         if (nbtFile == null) throw new RuntimeException("nbtFile was null.");
         NBTCompound compound = nbtFile.getOrCreateCompound(PLAYER_SUB_KEY);
         compound.addCompound(id).setString("id", id);
-        return new PlayerStatHandler(compound.getCompound(id));
+        return new StatHandler(compound.getCompound(id));
     }
 
-    private static @NotNull ServerStatHandler getServerStats() {
+    private static @NotNull StatHandler getServerStats() {
         if (nbtFile == null) throw new RuntimeException("nbtFile was null.");
         if (nbtFile.hasKey(SERVER_SUB_KEY) &&
             nbtFile.getType(SERVER_SUB_KEY) == NBTType.NBTTagCompound) {
-            return new ServerStatHandler(nbtFile.getCompound(SERVER_SUB_KEY));
+            return new StatHandler(nbtFile.getCompound(SERVER_SUB_KEY));
         } else {
-            return new ServerStatHandler(nbtFile.addCompound(SERVER_SUB_KEY));
+            return new StatHandler(nbtFile.addCompound(SERVER_SUB_KEY));
         }
     }
 }

@@ -9,6 +9,7 @@
 
 [![Servers](https://img.shields.io/bstats/servers/9999?style=flat-square)](https://bstats.org/plugin/bukkit/BlockProt/9999)
 [![Players](https://img.shields.io/bstats/players/9999?style=flat-square)](https://bstats.org/plugin/bukkit/BlockProt/9999)
+[![Discord](https://img.shields.io/discord/860987230453891112?style=flat-square)](https://discord.gg/WVy6DHScFb)
 
 BlockProt is a lightweight Bukkit and Spigot plugin that gives players the ability to protect chests, furnaces and many more blocks.
 The plugin features a modern GUI approach instead of commands, so that any player can easily understand how to use all of its features.

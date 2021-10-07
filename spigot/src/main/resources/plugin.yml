@@ -22,7 +22,7 @@ permissions:
 commands:
   blockprot:
     description: The main blockprot command
-    usage: "§c/blockprot [update|settings|stats|reload]" # Red error message
+    usage: "§c/blockprot [update|settings|stats|reload|about]" # Red error message
     aliases: ["bp"]
 softdepend:
   - Towny

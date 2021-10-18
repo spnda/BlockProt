@@ -19,14 +19,28 @@
 package de.sean.blockprot.bukkit.listeners;
 
 import de.sean.blockprot.bukkit.BlockProt;
-import de.sean.blockprot.bukkit.inventories.*;
+import de.sean.blockprot.bukkit.TranslationKey;
+import de.sean.blockprot.bukkit.Translator;
+import de.sean.blockprot.bukkit.events.BlockAccessEvent;
+import de.sean.blockprot.bukkit.inventories.BlockProtInventory;
+import de.sean.blockprot.bukkit.inventories.InventoryState;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.FriendHandler;
+import de.sean.blockprot.bukkit.nbt.NBTHandler;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
+import org.bukkit.block.Container;
+import org.bukkit.block.DoubleChest;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
@@ -86,5 +100,61 @@ public class InventoryEventListener implements Listener {
         if (holder instanceof BlockProtInventory) {
             ((BlockProtInventory) holder).onClose(event, state);
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onInventoryOpen(@NotNull InventoryOpenEvent event) {
+        // Double-check any inventories and close them if permissions are not valid.
+        String playerUuid = event.getPlayer().getUniqueId().toString();
+        InventoryHolder holder = event.getInventory().getHolder();
+        if (holder instanceof BlockProtInventory) {
+            // We've got one of our inventories, check the inventory state if the player can access
+            // the block. Also fixes issues when the block gets destroyed.
+            InventoryState state = InventoryState.get(playerUuid);
+            if (state == null || state.getBlock() == null) return;
+            try {
+                BlockNBTHandler handler = new BlockNBTHandler(state.getBlock());
+                Optional<FriendHandler> friend = handler.getFriend(playerUuid);
+                if (!(handler.isNotProtected()
+                    || handler.isOwner(playerUuid)
+                    || (friend.isPresent() && friend.get().isManager())
+                    || event.getPlayer().hasPermission(NBTHandler.PERMISSION_INFO))) {
+                    event.setCancelled(true);
+                    sendMessage(event.getPlayer(), Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
+                }
+            } catch (RuntimeException ignored) {
+            }
+        } else if ((holder instanceof Container || holder instanceof DoubleChest)
+            && event.getPlayer() instanceof Player) {
+            Player player = (Player) event.getPlayer();
+            Block block;
+            if (holder instanceof Container) {
+                Container container = (Container) holder;
+                block = container.getBlock();
+            } else {
+                block = ((DoubleChest) holder).getLocation().getBlock();
+            }
+
+            BlockAccessEvent accessEvent = new BlockAccessEvent(block, (Player) event.getPlayer());
+            Bukkit.getPluginManager().callEvent(accessEvent);
+            if (accessEvent.isCancelled()) {
+                event.setCancelled(true);
+                sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
+            } else {
+                BlockNBTHandler handler = new BlockNBTHandler(block);
+                if (!(handler.canAccess(player.getUniqueId().toString()) || player.hasPermission(NBTHandler.PERMISSION_BYPASS))) {
+                    event.setCancelled(true);
+                    sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
+                }
+            }
+        }
+    }
+
+    private void sendMessage(@NotNull HumanEntity player, @NotNull String component) {
+        if (!(player instanceof Player)) return;
+        ((Player) player).spigot().sendMessage(
+            ChatMessageType.ACTION_BAR,
+            TextComponent.fromLegacyText(component)
+        );
     }
 }

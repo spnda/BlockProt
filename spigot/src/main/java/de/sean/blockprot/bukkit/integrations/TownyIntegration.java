@@ -58,13 +58,15 @@ public final class TownyIntegration extends PluginIntegration implements Listene
     @Nullable
     private Towny towny;
 
+    private boolean enabled = false;
+
     public TownyIntegration() {
         super("towny.yml");
     }
 
     @Override
     public boolean isEnabled() {
-        return towny != null;
+        return enabled;
     }
 
     @Override
@@ -77,6 +79,8 @@ public final class TownyIntegration extends PluginIntegration implements Listene
         towny = (Towny) plugin;
 
         this.registerListener(this);
+
+        enabled = true;
     }
 
     /**

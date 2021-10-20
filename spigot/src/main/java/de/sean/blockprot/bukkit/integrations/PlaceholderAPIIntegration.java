@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 
 public class PlaceholderAPIIntegration extends PluginIntegration {
     private BlockProtExpansion expansion;
+    private boolean enabled = false;
 
     public PlaceholderAPIIntegration() {
         super("placeholderapi.yml");
@@ -44,7 +45,7 @@ public class PlaceholderAPIIntegration extends PluginIntegration {
 
     @Override
     public boolean isEnabled() {
-        return expansion.isRegistered();
+        return enabled;
     }
 
     @Override
@@ -54,6 +55,9 @@ public class PlaceholderAPIIntegration extends PluginIntegration {
 
         this.expansion = new BlockProtExpansion();
         this.expansion.register();
+        if (this.expansion.isRegistered()) {
+            enabled = true;
+        }
     }
 
     @Override

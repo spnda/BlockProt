@@ -1,7 +1,7 @@
 name: Bug Report
 description: Create a bug report to help us improve the plugin
 title: '[Bug]: '
-labels: bug-unconfirmed
+labels: bug-triage
 assignees: spnda
 body:
     - type: input

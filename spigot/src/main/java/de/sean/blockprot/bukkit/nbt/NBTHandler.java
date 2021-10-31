@@ -19,6 +19,7 @@
 package de.sean.blockprot.bukkit.nbt;
 
 import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTContainer;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -73,4 +74,15 @@ public abstract class NBTHandler<T extends NBTCompound> {
      * @since 0.3.2
      */
     public void mergeHandler(@NotNull final NBTHandler<?> handler) {}
+
+    @NotNull
+    public NBTContainer getNbtCopy() {
+        NBTContainer copy = new NBTContainer();
+        copy.mergeCompound(this.container);
+        return copy;
+    }
+
+    public void pasteNbt(@NotNull NBTContainer container) {
+        this.container.mergeCompound(container);
+    }
 }

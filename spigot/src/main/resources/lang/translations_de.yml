@@ -11,6 +11,8 @@ inventories:
   lock: "Sperren"
   unlock: "Entsperren"
   lock_on_place: "Automatisch sperren"
+  copy_configuration: "Konfiguration kopieren"
+  paste_configuration: "Konfiguration übertragen"
   redstone:
     settings: "Redstone Einstellungen"
     redstone_enabled: "Redstone-Schutz aktiviert"

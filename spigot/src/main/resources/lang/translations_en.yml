@@ -18,6 +18,8 @@ inventories:
   lock: "Lock"
   unlock: "Unlock"
   lock_on_place: "Lock automatically"
+  copy_configuration: "Copy configuration"
+  paste_configuration: "Paste configuration"
   redstone:
     settings: "Redstone Settings"
     redstone_enabled: "Redstone protection enabled"

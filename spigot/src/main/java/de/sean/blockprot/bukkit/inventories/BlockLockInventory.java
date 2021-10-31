@@ -23,6 +23,8 @@ import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.events.BlockAccessMenuEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
+import de.sean.blockprot.bukkit.nbt.PlayerInventoryClipboard;
+import de.tr7zw.changeme.nbtapi.NBTContainer;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -35,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 public class BlockLockInventory extends BlockProtInventory {
     @Override
     int getSize() {
-        return InventoryConstants.singleLine;
+        return InventoryConstants.doubleLine;
     }
 
     @NotNull
@@ -80,6 +82,20 @@ public class BlockLockInventory extends BlockProtInventory {
                     ? null
                     : new BlockInfoInventory().fill(player, handler)
             );
+        } else if (item.getType() == Material.KNOWLEDGE_BOOK) {
+            // Paste
+            BlockNBTHandler handler = getNbtHandlerOrNull(block);
+            NBTContainer container = PlayerInventoryClipboard.get(player.getUniqueId().toString());
+            if (handler != null && container != null)
+                handler.pasteNbt(container);
+        } else if (item.getType() == Material.PAPER) {
+            // Copy
+            BlockNBTHandler handler = getNbtHandlerOrNull(block);
+            if (handler != null) {
+                PlayerInventoryClipboard.set(player.getUniqueId().toString(), handler.getNbtCopy());
+                // The player probably doesn't want to paste the data onto the same container.
+                closeAndOpen(player, null);
+            }
         } else {
             closeAndOpen(
                 player,
@@ -109,7 +125,7 @@ public class BlockLockInventory extends BlockProtInventory {
             );
         }
 
-        if (state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.MANAGER)) {
+        if (!owner.isEmpty() && state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.MANAGER)) {
             setItemStack(
                 1,
                 Material.REDSTONE,
@@ -120,11 +136,23 @@ public class BlockLockInventory extends BlockProtInventory {
                 Material.PLAYER_HEAD,
                 TranslationKey.INVENTORIES__FRIENDS__MANAGE
             );
+            if (PlayerInventoryClipboard.contains(player.getUniqueId().toString())) {
+                setItemStack(
+                    getSize() - 4,
+                    Material.KNOWLEDGE_BOOK,
+                    TranslationKey.INVENTORIES__PASTE_CONFIGURATION
+                );
+            }
+            setItemStack(
+                getSize() - 3,
+                Material.PAPER,
+                TranslationKey.INVENTORIES__COPY_CONFIGURATION
+            );
         }
 
         if (!owner.isEmpty() && state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.INFO)) {
             setItemStack(
-                InventoryConstants.lineLength - 2,
+                getSize() - 2,
                 Material.OAK_SIGN,
                 TranslationKey.INVENTORIES__BLOCK_INFO
             );

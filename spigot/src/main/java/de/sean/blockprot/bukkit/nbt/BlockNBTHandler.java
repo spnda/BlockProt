@@ -25,6 +25,7 @@ import de.sean.blockprot.nbt.LockReturnValue;
 import de.sean.blockprot.util.BlockProtUtil;
 import de.tr7zw.changeme.nbtapi.NBTBlock;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -445,5 +446,12 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
         this.setOwner(blockNBTHandler.getOwner());
         this.setFriends(blockNBTHandler.getFriends());
         this.getRedstoneHandler().mergeHandler(blockNBTHandler.getRedstoneHandler());
+    }
+
+    @Override
+    public void pasteNbt(@NotNull NBTContainer container) {
+        // We remove the owner key for security reasons.
+        container.removeKey(OWNER_ATTRIBUTE);
+        super.pasteNbt(container);
     }
 }

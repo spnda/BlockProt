@@ -25,7 +25,6 @@ import de.sean.blockprot.bukkit.nbt.StatHandler;
 import de.sean.blockprot.bukkit.nbt.stats.BlockCountStatistic;
 import de.sean.blockprot.bukkit.nbt.stats.PlayerBlocksStatistic;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -94,7 +93,6 @@ public class PlaceholderAPIIntegration extends PluginIntegration {
         public String onRequest(final OfflinePlayer player, @NotNull final String identifier) {
             if (player == null) return "";
 
-            Bukkit.getLogger().info(identifier);
             switch (identifier) {
                 case "global_block_count":
                     BlockCountStatistic blockCountStatistic = new BlockCountStatistic();
@@ -109,7 +107,6 @@ public class PlaceholderAPIIntegration extends PluginIntegration {
         public String onPlaceholderRequest(final Player player, @NotNull final String identifier) {
             if (player == null) return null;
 
-            Bukkit.getLogger().info(identifier);
             switch (identifier) {
                 case "default_friends":
                     List<FriendHandler> players = (new PlayerSettingsHandler(player)).getFriends();

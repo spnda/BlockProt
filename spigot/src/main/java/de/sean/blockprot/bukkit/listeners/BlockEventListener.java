@@ -166,7 +166,6 @@ public class BlockEventListener implements Listener {
                 }
             }
         } else if (BlockProt.getDefaultConfig().isLockable(event.getBlock().getType())) {
-            Bukkit.getLogger().info(event.getBlock().getType().toString());
             BlockNBTHandler handler = new BlockNBTHandler(block);
             // We only try to lock the block if it isn't locked already.
             // Shulker boxes might already be locked, from previous placing.

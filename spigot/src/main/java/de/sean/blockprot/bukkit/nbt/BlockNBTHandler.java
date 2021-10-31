@@ -26,7 +26,6 @@ import de.sean.blockprot.util.BlockProtUtil;
 import de.tr7zw.changeme.nbtapi.NBTBlock;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -403,7 +402,6 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
             if (otherDoor == null) return;
             final BlockNBTHandler otherDoorHandler = new BlockNBTHandler(otherDoor);
             if (condition.test(otherDoorHandler)) {
-                Bukkit.getLogger().info("Applying to other door!");
                 otherDoorHandler.mergeHandler(this);
             } else {
                 orElse.accept(otherDoorHandler);

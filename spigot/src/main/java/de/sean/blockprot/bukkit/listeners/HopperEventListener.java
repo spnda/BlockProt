@@ -40,9 +40,28 @@ public class HopperEventListener implements Listener {
             if (BlockProt.getDefaultConfig().isLockableInventory(event.getSource().getType())) {
                 Block source = getBlock(event.getSource().getHolder());
                 if (source != null) {
-                    BlockNBTHandler nbtHandler = new BlockNBTHandler(source);
-                    if (nbtHandler.isProtected() && nbtHandler.getRedstoneHandler().getHopperProtection()) {
-                        event.setCancelled(true);
+                    BlockNBTHandler sourceHandler = new BlockNBTHandler(source);
+                    if (sourceHandler.isProtected()) {
+                        // The source chest is owned by someone. Check if the hopper block is also owned by
+                        // the same player and if so, allow this event to happen, regardless of the hopper
+                        // protection.
+                        Block destination = getBlock(event.getDestination().getHolder());
+                        if (destination != null) {
+                            BlockNBTHandler destinationHandler = new BlockNBTHandler(destination);
+                            if (destinationHandler.isProtected()
+                                && !destinationHandler.isOwner(sourceHandler.getOwner())
+                                && sourceHandler.getRedstoneHandler().getHopperProtection()) {
+                                // The hopper and chest are NOT owned by the same person and the chest has
+                                // the hopper protection enabled, cancel this event.
+                                event.setCancelled(true);
+                            } else if (destinationHandler.isNotProtected()
+                                && sourceHandler.getRedstoneHandler().getHopperProtection()) {
+                                // The hopper isn't protected, whereas the source block is, and it has the
+                                // hopper protection enabled. Cancel the event because it's trying to access
+                                // a locked container.
+                                event.setCancelled(true);
+                            }
+                        }
                     }
                 }
             }

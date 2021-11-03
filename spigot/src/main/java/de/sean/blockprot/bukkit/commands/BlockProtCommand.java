@@ -75,6 +75,7 @@ public final class BlockProtCommand implements TabExecutor {
             case "reload": {
                 if (sender.isOp()) {
                     BlockProt.getInstance().reloadConfigAndTranslations();
+                    sender.spigot().sendMessage(new TextComponent("Finished reloading BlockProt!"));
                     return true;
                 }
                 break;

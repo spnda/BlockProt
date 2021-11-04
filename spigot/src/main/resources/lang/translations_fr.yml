@@ -1,0 +1,43 @@
+# French translation file by nstar_
+locale: fr
+
+inventories:
+  back: "Retour"
+  last_page: "Dernière Page"
+  next_page: "Page suivante"
+  block_lock: "Vérouillé le bloc"
+  user_settings: "Paramètres utilisateur"
+  block_info: "Informations des blocs"
+  lock: "Fermer"
+  unlock: "Ouvrir"
+  lock_on_place: "Verrouillage automatique"
+  redstone:
+    settings: "Paramètres de Redstone"
+    redstone_enabled: "Protection Redstone activée"
+    pistons_enabled: "Protection des pistons activée"
+    hoppers_enabled: "Protection des hoppers activée"
+    enable_all: "Tout activer"
+    disable_all: "Tout désactiver"
+  friends:
+    manage: "Gérer les amis"
+    edit: "Editer un amis"
+    remove: "Retirer un amis"
+    search: "Chercher un joueur"
+    search_history: "Historique des recherches"
+    result: "Joueurs trouvés"
+    permissions: "Permissions"
+    permission:
+      read: "Lire"
+      write: "Écrivez"
+      manager: "Manager"
+
+messages:
+  permission_granted: "Permission accordée."
+  unlocked: "Débloqué."
+  no_permission: "Aucune autorisation."
+  friend_added: "Ami ajouté."
+  friend_removed: "Ami supprimé."
+  friend_already_added: "Ami déjà ajouté."
+  friend_cant_be_removed: "L'ami ne peut être supprimé."
+  redstone_added: "Protection Redstone ajoutée."
+  redstone_removed: "Protection Redstone supprimée."

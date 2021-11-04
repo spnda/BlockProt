@@ -11,7 +11,7 @@ inventories:
   block_info: "상세 정보"
   lock: "잠금"
   unlock: "잠금 해제"
-  lock_on_place: "자동으로 잠굽니다.
+  lock_on_place: "자동으로 잠굽니다."
   copy_configuration: "구성 복사"
   paste_configuration: "복사한 구성 붙여넣기"
   redstone:

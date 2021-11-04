@@ -1,0 +1,13 @@
+name: Question
+description: Create a issue with a question
+title: '[Question]: '
+labels: [question]
+assignees: spnda
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+      description: Ask your question as good as possible. You can also add screenshots, videos or similar to further elaborate your issue.
+    validations:
+      required: true

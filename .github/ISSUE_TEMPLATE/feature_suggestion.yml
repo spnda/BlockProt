@@ -1,7 +1,7 @@
 name: Feature Suggestion
 description: Write a feature suggestion that you would like to see in a future version of the plugin.
 title: '[Feature]: '
-labels: enhancement
+labels: [enhancement]
 assignees: spnda
 body:
   - type: textarea

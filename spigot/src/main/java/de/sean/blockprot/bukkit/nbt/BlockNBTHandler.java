@@ -22,7 +22,6 @@ import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.util.BlockUtil;
 import de.sean.blockprot.nbt.FriendModifyAction;
 import de.sean.blockprot.nbt.LockReturnValue;
-import de.sean.blockprot.util.BlockProtUtil;
 import de.tr7zw.changeme.nbtapi.NBTBlock;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
@@ -32,10 +31,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -109,31 +106,6 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
     }
 
     /**
-     * As of 0.3.0 we expect a list of compounds, in which we can
-     * store the access flags and other future settings.
-     * Therefore, we will remap the values here. This will possibly
-     * be removed in a future version.
-     */
-    @Override
-    protected void preFriendReadCallback() {
-        final List<String> stringList = BlockProtUtil.parseStringList(container.getString(OLD_LOCK_ATTRIBUTE));
-        if (stringList.isEmpty()) return;
-        container.removeKey(OLD_LOCK_ATTRIBUTE); // Remove the original list.
-        container.addCompound(LOCK_ATTRIBUTE); // Create the new compound.
-        stringList.forEach(this::addFriend);
-    }
-
-    /**
-     * @return The handler's redstone-current protection value.
-     * @since 0.2.3
-     * @deprecated Use {@link #getRedstoneHandler()}.
-     */
-    @Deprecated
-    public boolean getRedstone() {
-        return !getRedstoneHandler().getCurrentProtection();
-    }
-
-    /**
      * Gets the redstone settings handler for this block. Will remap
      * any legacy redstone settings to the new system.
      *
@@ -153,16 +125,6 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
             container.removeKey(OLD_REDSTONE_ATTRIBUTE);
         }
         return redstoneHandler;
-    }
-
-    /**
-     * @param redstone The boolean value to set.
-     * @since 0.2.3
-     * @deprecated Use {@link #getRedstoneHandler()}
-     */
-    @Deprecated
-    public void setRedstone(final boolean redstone) {
-        getRedstoneHandler().setCurrentProtection(redstone);
     }
 
     /**
@@ -211,23 +173,6 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
     /**
      * Locks this block for given {@code player} as the owner.
      *
-     * @param player      The player to set as an owner.
-     * @param doubleChest A double chest we want to also lock. This parameter is optional
-     *                    and can be null.
-     * @return A {@link LockReturnValue} whether or not the block was successfully locked,
-     * else there might have been issues with permissions.
-     * @since 0.2.3
-     * @deprecated Use {@link #lockBlock(Player)} instead.
-     */
-    @Deprecated
-    @NotNull
-    public LockReturnValue lockBlock(@NotNull final Player player, @Nullable final NBTTileEntity doubleChest) {
-        return lockBlock(player);
-    }
-
-    /**
-     * Locks this block for given {@code player} as the owner.
-     *
      * @param player The player to set as an owner.
      * @return A {@link LockReturnValue} whether the block was successfully locked,
      * else there might have been issues with permissions.
@@ -252,64 +197,6 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
             return new LockReturnValue(true);
         }
         return new LockReturnValue(false);
-    }
-
-    /**
-     * Locks redstone for this block.
-     *
-     * @param player      The player requesting this command, should be the owner.
-     * @param doubleChest A double chest we also want to apply this to. This
-     *                    parameter is optional and can be null.
-     * @param value       The value we want to set it to. If null, we just flip
-     *                    the current value.
-     * @return A {@link LockReturnValue} whether or not the redstone was switched
-     * successfully.
-     * @since 0.2.3
-     * @deprecated See {@link #getRedstoneHandler()}.
-     */
-    @Deprecated
-    public @NotNull LockReturnValue lockRedstoneForBlock(@NotNull final String player, @Nullable final NBTTileEntity doubleChest, @Nullable final Boolean value) {
-        return lockRedstoneForBlock(player, value);
-    }
-
-    /**
-     * Locks redstone for this block.
-     *
-     * @param player The player requesting this command, should be the owner.
-     * @param value  The value we want to set it to. If null, we just flip
-     *               the current value.
-     * @return A {@link LockReturnValue} whether or not the redstone was switched
-     * successfully.
-     * @since 0.4.6
-     * @deprecated See {@link #getRedstoneHandler()}.
-     */
-    @Deprecated
-    public @NotNull LockReturnValue lockRedstoneForBlock(@NotNull final String player, @Nullable final Boolean value) {
-        if (isOwner(player)) {
-            boolean redstone = value == null ? !getRedstone() : value;
-            setRedstone(redstone);
-            this.applyToOtherContainer();
-            return new LockReturnValue(true);
-        }
-        return new LockReturnValue(false);
-    }
-
-    /**
-     * @param player      The player requesting this command, should be the owner.
-     * @param friend      The friend do to {@code action} with.
-     * @param action      The action we should perform with {@code friend} on this block.
-     * @param doubleChest A double chest we also want to apply this to. This
-     *                    parameter is optional and can be null. This parameter will be ignored
-     *                    due to deprecation.
-     * @return A {@link LockReturnValue} whether or not the friends were modified
-     * successfully.
-     * @since 0.2.3
-     * @deprecated Use {@link #modifyFriends(String, String, FriendModifyAction)} instead.
-     */
-    @Deprecated
-    @NotNull
-    public LockReturnValue modifyFriends(@NotNull final String player, @NotNull final String friend, @NotNull final FriendModifyAction action, @Nullable final NBTTileEntity doubleChest) {
-        return modifyFriends(player, friend, action);
     }
 
     /**
@@ -351,25 +238,6 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
             default: {
                 return new LockReturnValue(false);
             }
-        }
-    }
-
-    /**
-     * Merges this handler with the handler of the other half of given
-     * {@code block}, if that is a door. Will fail silently if the given
-     * block is not a door.
-     *
-     * @param block The original door block, can be the bottom or top half.
-     * @since 0.2.3
-     * @deprecated Use {@link #applyToOtherContainer()} instead.
-     */
-    @Deprecated
-    public void applyToDoor(@NotNull final Block block) {
-        if (BlockProt.getDefaultConfig().isLockableDoor(block.getType())) {
-            final Block otherDoor = BlockUtil.getOtherDoorHalf(block.getState());
-            if (otherDoor == null) return;
-            final BlockNBTHandler otherDoorHandler = new BlockNBTHandler(otherDoor);
-            otherDoorHandler.mergeHandler(this);
         }
     }
 

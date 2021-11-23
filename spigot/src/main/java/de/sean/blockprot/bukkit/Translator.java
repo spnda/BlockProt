@@ -75,34 +75,6 @@ public final class Translator {
     }
 
     /**
-     * Initialize the translations from given configuration.
-     *
-     * @param config the configuration to load translations from. See
-     *               https://github.com/spnda/BlockProt/blob/master/src/main/resources/translations_en.yml for
-     *               an example.
-     * @since 0.2.3
-     * @deprecated Use {@link #loadFromConfigs(YamlConfiguration, YamlConfiguration)}
-     * instead, as we now expect default translation values.
-     */
-    @Deprecated
-    public static void loadFromConfigs(@NotNull final YamlConfiguration config) {
-        TranslationKey[] translations = TranslationKey.values();
-        for (TranslationKey translation : translations) {
-            String translationKey = translation.toString();
-            if (!config.contains(translationKey, true)) {
-                continue;
-            }
-            Object value = config.get(translationKey);
-            if (value instanceof String) {
-                values.put(translation, new TranslationValue("", (String) value));
-            } else {
-                values.put(translation, new TranslationValue(
-                    TranslationValue.UNKNOWN_TRANSLATION, TranslationValue.UNKNOWN_TRANSLATION));
-            }
-        }
-    }
-
-    /**
      * Initialize the translations from given configuration and sets the
      * internal locale to a locale, which is read from the configs themselves.
      * If the configurations do not provide a locale, we instead use

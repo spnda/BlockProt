@@ -18,8 +18,6 @@
 
 package de.sean.blockprot.nbt;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * A class representing a return value for any of the lock functions,
  * containing a success boolean and a potential error message.
@@ -35,15 +33,6 @@ public final class LockReturnValue {
     public final boolean success;
 
     /**
-     * An error/success message for the player.
-     *
-     * @since 0.2.3
-     */
-    @Deprecated
-    @NotNull
-    public final String message;
-
-    /**
      * Create a new lock return value.
      *
      * @param success Whether the operation completed successfully.
@@ -51,20 +40,5 @@ public final class LockReturnValue {
      */
     public LockReturnValue(final boolean success) {
         this.success = success;
-        this.message = "";
-    }
-
-    /**
-     * Creates a new LockReturnValue with given values.
-     *
-     * @param success Whether the operation completed successfully.
-     * @param message An error/success message for the player.
-     * @since 0.1.10
-     * @deprecated since 0.4.9. Use {@link #LockReturnValue(boolean)} instead.
-     */
-    @Deprecated
-    public LockReturnValue(final boolean success, @NotNull final String message) {
-        this.success = success;
-        this.message = message;
     }
 }

@@ -96,21 +96,6 @@ public enum BlockAccessFlag {
     }
 
     /**
-     * Turns a {@link EnumSet} of {@link BlockAccessFlag} into a user-friendly String.
-     *
-     * @param flags The flags which are then called {@link String#toString()} on and
-     *              concatenated together into a user-friendly list.
-     * @return A String of concatenated flags.
-     * @since 0.3.0
-     * @deprecated Use {@link #toBaseString()} instead.
-     */
-    @Deprecated
-    @NotNull
-    public static String accessFlagToString(@NotNull final EnumSet<BlockAccessFlag> flags) {
-        return toBaseString();
-    }
-
-    /**
      * Gets a user-friendly name of the permissions item title, that should be used together
      * with {@link #accumulateAccessFlagLore(EnumSet)}.
      *

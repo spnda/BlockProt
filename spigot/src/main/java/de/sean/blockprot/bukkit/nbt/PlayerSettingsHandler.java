@@ -30,8 +30,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * A simple handler to get a player's BlockProt settings.
@@ -111,51 +109,6 @@ public final class PlayerSettingsHandler extends FriendSupportingHandler<NBTComp
             container.addCompound(DEFAULT_FRIENDS_ATTRIBUTE);
             originalList.forEach(this::addFriend);
         }
-    }
-
-    /**
-     * Get the {@link List} of default friends for this player.
-     *
-     * @return A List of Player {@link UUID}s as {@link String}s
-     * representing each friend.
-     * @since 0.2.3
-     * @deprecated Use {@link #getFriends()} instead.
-     */
-    @Deprecated
-    @NotNull
-    public List<String> getDefaultFriends() {
-        return getFriendsStream()
-            .map(FriendHandler::getName)
-            .collect(Collectors.toList());
-    }
-
-    /**
-     * Set a new list of default friends. These have to be UUID-based,
-     * otherwise other callers using {@link #getDefaultFriends()} will
-     * experience issues. This does not get checked.
-     *
-     * @param friends A list of UUIDs representing a list of friends.
-     * @since 0.2.3
-     * @deprecated Use {@link #setFriends(List)} instead.
-     */
-    @Deprecated
-    public void setDefaultFriends(@NotNull final List<String> friends) {
-        container.removeKey(DEFAULT_FRIENDS_ATTRIBUTE);
-        friends.forEach(this::addFriend);
-    }
-
-    /**
-     * Gets the default friends as a list of {@link OfflinePlayer}. Uses
-     * {@link #getDefaultFriends} as a base.
-     *
-     * @return All default friends as a list of {@link OfflinePlayer}.
-     * @since 0.2.3
-     * @deprecated Use {@link #getFriendsAsPlayers()} instead.
-     */
-    @Deprecated
-    @NotNull
-    public List<OfflinePlayer> getDefaultFriendsAsPlayers() {
-        return this.getFriendsAsPlayers();
     }
 
     /**

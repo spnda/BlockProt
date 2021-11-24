@@ -1,7 +1,5 @@
-import okhttp3.OkHttpClient
 import org.kohsuke.github.GHReleaseBuilder
-import org.kohsuke.github.GitHubBuilder
-import org.kohsuke.github.extras.okhttp3.OkHttpConnector
+import org.kohsuke.github.GitHub
 
 buildscript {
     repositories {
@@ -9,8 +7,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("org.kohsuke:github-api:1.135")
-        classpath("com.squareup.okhttp3:okhttp:4.9.2")
+        classpath("org.kohsuke:github-api:1.301")
     }
 }
 
@@ -86,13 +83,7 @@ tasks.register("github") {
     }
 
     doLast {
-        val github = GitHubBuilder
-            .fromEnvironment()
-            // We have to use OkHttpClient for reflection reasons in JDK 16
-            // See https://github.com/hub4j/github-api/issues/1202
-            .withConnector(OkHttpConnector(OkHttpClient()))
-            .withOAuthToken(env["GITHUB_TOKEN"] as String)
-            .build()
+        val github = GitHub.connectUsingOAuth(env["GITHUB_TOKEN"] as String)
         val repository = github.getRepository(env["GITHUB_REPOSITORY"])
 
         val releaseBuilder = GHReleaseBuilder(repository, version as String)

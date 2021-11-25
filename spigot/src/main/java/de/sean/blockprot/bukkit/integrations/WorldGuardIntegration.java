@@ -42,6 +42,7 @@ import org.jetbrains.annotations.Nullable;
 
 public final class WorldGuardIntegration extends PluginIntegration implements Listener {
     private static final String FLAG_NAME = "allow-blockprot";
+    private static final String CONFIG_ENABLE_FLAG_FUNCTIONALITY = "enable_flag_functionality";
     private boolean enabled = false;
 
     private @Nullable Object allowFlag;
@@ -83,13 +84,23 @@ public final class WorldGuardIntegration extends PluginIntegration implements Li
         final Plugin wg = getPlugin();
         if (wg == null || !wg.isEnabled()) return;
 
-        this.registerListener(this);
+        if (enableFlagFunctionality())
+            this.registerListener(this);
         enabled = allowFlag != null;
     }
 
     @Override
     public @Nullable Plugin getPlugin() {
         return BlockProt.getInstance().getPlugin("WorldGuard");
+    }
+
+    /**
+     * Whether we should enable functionality regarding the {@link #FLAG_NAME}
+     * flag. Defaults to 'true'.
+     */
+    private boolean enableFlagFunctionality() {
+        return !configuration.contains(CONFIG_ENABLE_FLAG_FUNCTIONALITY)
+            || configuration.getBoolean(CONFIG_ENABLE_FLAG_FUNCTIONALITY);
     }
 
     private boolean checkIfDisallowedAtLocation(@NotNull final org.bukkit.World world, @NotNull final Location location) {

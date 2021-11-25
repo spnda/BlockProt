@@ -4,13 +4,6 @@
 # You can create your own language files and edit existing ones.
 # Translations can be missing from this file and will instead be loaded
 # from "translations_en.yml".
-# Current pre-defined languages include:
-#   - translations_de.yml: German
-#   - translations_en.yml: English
-#   - translations_es.yml: Spanish
-#   - translations_ko.yml: Korean
-#   - translations_tr.yml: Turkish
-#   - translations_zh_CN.yml: Chinese
 language_file: translations_en.yml
 
 # The fallback string when a translation cannot be found in translations_en

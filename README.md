@@ -4,7 +4,8 @@
 [![Spigot Downloads](https://img.shields.io/spiget/downloads/87829?style=flat-square&color=orange&label=spigot%20downloads)](https://www.spigotmc.org/resources/blockprot.87829/)
 [![Spigot Rating](https://img.shields.io/spiget/rating/87829?style=flat-square&color=orange)](https://www.spigotmc.org/resources/blockprot.87829/)
 [![BlockProt CI](https://img.shields.io/github/workflow/status/spnda/BlockProt/CI?style=flat-square&label=CI)](https://github.com/spnda/BlockProt)
-[![](https://jitpack.io/v/spnda/BlockProt.svg)](https://jitpack.io/#spnda/BlockProt)
+[![gitlocalized ](https://gitlocalize.com/repo/6775/whole_project/badge.svg)](https://gitlocalize.com/repo/6775/whole_project?utm_source=badge)
+[![JitPack](https://jitpack.io/v/spnda/BlockProt.svg)](https://jitpack.io/#spnda/BlockProt)
 
 
 [![Servers](https://img.shields.io/bstats/servers/9999?style=flat-square)](https://bstats.org/plugin/bukkit/BlockProt/9999)
@@ -30,6 +31,12 @@ you as soon as new builds get released.
 
 If you want to build the plugin from source yourself, you can simply do so by installing a JDK 8 or newer, cloning this
 repository and running `./gradlew build` in the main directory.
+
+## Translating
+
+If you know a language that isn't supported by this plugin (yet) we'd love if you could translate for us!
+
+You can do so easily by going to [gitlocalize](https://gitlocalize.com/repo/6775/).
 
 ## Contact/Support
 

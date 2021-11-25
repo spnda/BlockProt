@@ -23,6 +23,7 @@ import de.sean.blockprot.bukkit.config.DefaultConfig;
 import de.sean.blockprot.bukkit.integrations.PlaceholderAPIIntegration;
 import de.sean.blockprot.bukkit.integrations.PluginIntegration;
 import de.sean.blockprot.bukkit.integrations.TownyIntegration;
+import de.sean.blockprot.bukkit.integrations.WorldGuardIntegration;
 import de.sean.blockprot.bukkit.listeners.*;
 import de.sean.blockprot.bukkit.nbt.StatHandler;
 import de.sean.blockprot.bukkit.tasks.UpdateChecker;
@@ -110,8 +111,22 @@ public final class BlockProt extends JavaPlugin {
     }
 
     @Override
-    public void onEnable() {
+    public void onLoad() {
         instance = this;
+
+        try { registerIntegration(new WorldGuardIntegration());     } catch (NoClassDefFoundError ignored) {}
+        try { registerIntegration(new TownyIntegration());          } catch (NoClassDefFoundError ignored) {}
+        try { registerIntegration(new PlaceholderAPIIntegration()); } catch (NoClassDefFoundError ignored) {}
+
+        for (PluginIntegration integration : integrations) {
+            try {
+                integration.load();
+            } catch (NoClassDefFoundError ignored) {}
+        }
+    }
+
+    @Override
+    public void onEnable() {
         new BlockProtAPI(this); // Init the API.
         StatHandler.enable();
         this.saveDefaultConfig();
@@ -136,8 +151,12 @@ public final class BlockProt extends JavaPlugin {
 
         registerCommand("blockprot", new BlockProtCommand());
 
-        registerIntegration(new TownyIntegration());
-        registerIntegration(new PlaceholderAPIIntegration());
+        /* Enable all integrations */
+        for (PluginIntegration integration : integrations) {
+            try {
+                integration.enable();
+            } catch (NoClassDefFoundError ignored) {}
+        }
 
         super.onEnable();
     }
@@ -202,7 +221,6 @@ public final class BlockProt extends JavaPlugin {
     }
 
     void registerIntegration(@NotNull PluginIntegration integration) {
-        integration.load();
         this.integrations.add(integration);
     }
 

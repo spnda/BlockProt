@@ -12,6 +12,7 @@ plugins {
 
 val townyVersion: String by project
 val papiVersion: String by project
+val worldGuardVersion: String by project
 
 repositories {
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") {
@@ -19,6 +20,8 @@ repositories {
     }
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+    maven("https://maven.enginehub.org/repo/")
+    mavenCentral()
 }
 
 dependencies {
@@ -38,6 +41,7 @@ dependencies {
     // Integrations
     implementation("com.github.TownyAdvanced:Towny:$townyVersion")
     implementation("me.clip:placeholderapi:$papiVersion")
+    implementation("com.sk89q.worldguard:worldguard-bukkit:$worldGuardVersion")
 }
 
 blossom {

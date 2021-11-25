@@ -35,7 +35,7 @@ import java.util.ArrayList;
  * A plugin integration that can register new event listeners and
  * add functionality to bring compatibility with another Bukkit
  * plugin. Integrations should be always registered and only its
- * listeners and other functionality loaded in the {@link #load()}
+ * listeners and other functionality loaded in the {@link #enable()}
  * function when the dependent plugin is loaded.
  *
  * @since 0.4.0
@@ -101,12 +101,18 @@ public abstract class PluginIntegration {
     public abstract boolean isEnabled();
 
     /**
+     * Load and setup basic values for this plugin integration. No other
+     * plugins (including BlockProt) are enabled at this point.
+     */
+    public void load() {
+
+    }
+
+    /**
      * Load and setup this plugin integration. Should only be called
      * once.
-     *
-     * @since 0.4.0
      */
-    public abstract void load();
+    public abstract void enable();
 
     /**
      * Get the plugin this integration depends on. Can be null,

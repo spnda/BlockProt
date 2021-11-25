@@ -70,7 +70,7 @@ public final class TownyIntegration extends PluginIntegration implements Listene
     }
 
     @Override
-    public void load() {
+    public void enable() {
         final Plugin plugin = getPlugin();
         if (plugin == null || !plugin.isEnabled()) {
             return;

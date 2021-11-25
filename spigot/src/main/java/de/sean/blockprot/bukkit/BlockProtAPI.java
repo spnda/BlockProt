@@ -64,7 +64,7 @@ public final class BlockProtAPI {
     }
 
     /**
-     * Registers a integration. This automatically calls {@link PluginIntegration#load()}
+     * Registers a integration. This automatically calls {@link PluginIntegration#enable()}
      * to load the plugin and also adds them to a internal list (accessible through
      * {@link #getIntegrations()}) which is used for friend handling. This does not ensure
      * that there are no duplicates of a integration, so please beware to only register your

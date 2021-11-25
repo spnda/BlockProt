@@ -142,7 +142,8 @@ public class InventoryEventListener implements Listener {
                 sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
             } else {
                 BlockNBTHandler handler = new BlockNBTHandler(block);
-                if (!(handler.canAccess(player.getUniqueId().toString()) || player.hasPermission(NBTHandler.PERMISSION_BYPASS))) {
+                if (!accessEvent.shouldBypassProtections()
+                    && !(handler.canAccess(player.getUniqueId().toString()) || player.hasPermission(NBTHandler.PERMISSION_BYPASS))) {
                     event.setCancelled(true);
                     sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
                 }

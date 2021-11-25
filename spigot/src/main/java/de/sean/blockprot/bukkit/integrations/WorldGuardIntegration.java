@@ -125,7 +125,7 @@ public final class WorldGuardIntegration extends PluginIntegration implements Li
     @EventHandler
     public void onAccess(@NotNull final BlockAccessEvent event) {
         if (checkIfDisallowedAtLocation(event.getBlock().getWorld(), event.getBlock().getLocation())) {
-            event.setCancelled(true);
+            // If we cancel here now, nobody can access any chests.
         }
     }
 

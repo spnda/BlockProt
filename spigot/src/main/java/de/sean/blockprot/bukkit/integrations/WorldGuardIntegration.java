@@ -45,7 +45,7 @@ public final class WorldGuardIntegration extends PluginIntegration implements Li
     private static final String CONFIG_ENABLE_FLAG_FUNCTIONALITY = "enable_flag_functionality";
     private boolean enabled = false;
 
-    private @Nullable Object allowFlag;
+    private @Nullable StateFlag allowFlag;
 
     public WorldGuardIntegration() {
         super("worldguard.yml");
@@ -60,7 +60,7 @@ public final class WorldGuardIntegration extends PluginIntegration implements Li
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
         try {
             allowFlag = new StateFlag(FLAG_NAME, true);
-            registry.register((StateFlag) allowFlag);
+            registry.register(allowFlag);
         } catch (Exception e) {
             // Another plugin (possibly this plugin has been installed twice?)
             // has already registered our flag. Warn the admin.
@@ -113,7 +113,7 @@ public final class WorldGuardIntegration extends PluginIntegration implements Li
             BlockVector3 vec = BukkitAdapter.asBlockVector(location);
             ApplicableRegionSet applicableRegions = regions.getApplicableRegions(vec);
             for (ProtectedRegion r : applicableRegions) {
-                if (r.getFlag((StateFlag) allowFlag) == StateFlag.State.DENY) {
+                if (r.getFlag(allowFlag) == StateFlag.State.DENY) {
                     return true;
                 }
             }

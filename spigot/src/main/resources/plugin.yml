@@ -27,3 +27,4 @@ commands:
 softdepend:
   - Towny
   - PlaceholderAPI
+  - WorldGuard

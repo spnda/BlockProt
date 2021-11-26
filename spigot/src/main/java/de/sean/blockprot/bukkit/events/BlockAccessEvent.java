@@ -39,6 +39,7 @@ public final class BlockAccessEvent extends BlockEvent implements Cancellable {
     private final Player player;
 
     private boolean isCancelled;
+    private boolean bypassProtections;
 
     /**
      * @param block  The block that was placed.
@@ -86,5 +87,23 @@ public final class BlockAccessEvent extends BlockEvent implements Cancellable {
     @Override
     public void setCancelled(final boolean cancel) {
         this.isCancelled = cancel;
+    }
+
+    /**
+     * Whether the plugin should still check if the requesting player
+     * actually owns this block, or that the player has some privileges
+     * to be able to ignore any protections.
+     */
+    public boolean shouldBypassProtections() {
+        return this.bypassProtections;
+    }
+
+    /**
+     * Set whether the player can bypass protections. Use this with caution,
+     * as some shady plugin might allow specific players to bypass any protections.
+     * @see #shouldBypassProtections()
+     */
+    public void setBypassProtections(final boolean bypass) {
+        this.bypassProtections = bypass;
     }
 }

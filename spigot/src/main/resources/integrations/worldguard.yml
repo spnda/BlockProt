@@ -1,0 +1,6 @@
+# Config file for WorldGuard x BlockProt related settings
+
+# Enables the 'allow-blockprot' flag to work as intended.
+# If set to 'false', using the flag on any region will have
+# no effect.
+enable_flag_functionality: true

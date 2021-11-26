@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PlaceholderAPIIntegration extends PluginIntegration {
+public final class PlaceholderAPIIntegration extends PluginIntegration {
     private BlockProtExpansion expansion;
     private boolean enabled = false;
 
@@ -48,7 +48,7 @@ public class PlaceholderAPIIntegration extends PluginIntegration {
     }
 
     @Override
-    public void load() {
+    public void enable() {
         final Plugin papi = getPlugin();
         if (papi == null || !papi.isEnabled()) return;
 

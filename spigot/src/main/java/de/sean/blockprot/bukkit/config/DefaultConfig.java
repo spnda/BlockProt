@@ -23,6 +23,7 @@ import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.DoubleChest;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.BlockInventoryHolder;
@@ -78,6 +79,7 @@ public final class DefaultConfig extends BlockProtConfig {
     public DefaultConfig(@NotNull final FileConfiguration config) {
         super(config);
         this.excludedWorlds = config.getStringList("excluded_worlds");
+        this.removeBlockDefaults();
         this.loadBlocksFromConfig();
     }
 
@@ -216,6 +218,22 @@ public final class DefaultConfig extends BlockProtConfig {
     public String getTranslationFallbackString() {
         if (!this.config.contains("fallback_string")) return "";
         return this.config.getString("fallback_string");
+    }
+
+    /**
+     * JavaPlugin#reloadConfig sets the default values to the config inside
+     * the JAR, which are never edited by the player. We don't want this
+     * for the lists.
+     */
+    public void removeBlockDefaults() {
+        Configuration defaults = this.config.getDefaults();
+        if (defaults != null) {
+            defaults.set("lockable_tile_entities", null);
+            defaults.set("lockable_shulker_boxes", null);
+            defaults.set("lockable_blocks", null);
+            defaults.set("lockable_doors", null);
+            this.config.setDefaults(defaults);
+        }
     }
 
     /**

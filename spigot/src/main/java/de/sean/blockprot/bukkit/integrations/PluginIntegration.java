@@ -60,15 +60,19 @@ public abstract class PluginIntegration {
     @NotNull
     private final PluginManager pluginManager;
 
+    @NotNull
+    public final String name;
+
     /**
      * Creates a new plugin integration.
      *
-     * @param name The name of the integration and also the name of the config file, excluding the file ending.to integrate.
+     * @param name The name of the integration, as well as the name of the config file.
      * @since 0.4.0
      */
     public PluginIntegration(@NotNull final String name) {
+        this.name = name;
         configuration =
-            BlockProt.getInstance().saveAndLoadConfigFile("integrations/", name, false);
+            BlockProt.getInstance().saveAndLoadConfigFile("integrations/", name + ".yml", false);
         pluginManager = BlockProt.getInstance().getServer().getPluginManager();
     }
 

@@ -39,7 +39,7 @@ public final class PlaceholderAPIIntegration extends PluginIntegration {
     private boolean enabled = false;
 
     public PlaceholderAPIIntegration() {
-        super("placeholderapi.yml");
+        super("placeholderapi");
     }
 
     @Override

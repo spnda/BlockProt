@@ -48,7 +48,7 @@ public final class WorldGuardIntegration extends PluginIntegration implements Li
     private @Nullable StateFlag allowFlag;
 
     public WorldGuardIntegration() {
-        super("worldguard.yml");
+        super("worldguard");
     }
 
     @Override

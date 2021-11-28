@@ -19,6 +19,8 @@
 package de.sean.blockprot.bukkit.commands;
 
 import de.sean.blockprot.bukkit.BlockProt;
+import de.sean.blockprot.bukkit.BlockProtAPI;
+import de.sean.blockprot.bukkit.integrations.PluginIntegration;
 import de.sean.blockprot.bukkit.inventories.InventoryState;
 import de.sean.blockprot.bukkit.inventories.StatisticsInventory;
 import de.sean.blockprot.bukkit.inventories.UserSettingsInventory;
@@ -103,6 +105,22 @@ public final class BlockProtCommand implements TabExecutor {
                 sender.spigot().sendMessage(builder.create());
                 return true;
             }
+            case "integrations": {
+                List<PluginIntegration> integrations =
+                    new ArrayList<>(BlockProtAPI.getInstance().getIntegrations());
+
+                integrations.removeIf(i -> !i.isEnabled());
+
+                final ComponentBuilder builder = new ComponentBuilder();
+                builder.append("§7Enabled integrations (" + integrations.size() + "): ");
+                for (int i = 0; i < integrations.size(); i++) {
+                    builder.append("§6" + integrations.get(i).name);
+                    if (i < integrations.size() - 1)
+                        builder.append("§7, ");
+                }
+                sender.spigot().sendMessage(builder.create());
+                return true;
+            }
         }
 
         return false;
@@ -123,6 +141,7 @@ public final class BlockProtCommand implements TabExecutor {
             if (sender.isOp()) {
                 list.add("update");
                 list.add("reload");
+                list.add("integrations");
             }
             return list;
         }

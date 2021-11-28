@@ -61,7 +61,7 @@ public final class TownyIntegration extends PluginIntegration implements Listene
     private boolean enabled = false;
 
     public TownyIntegration() {
-        super("towny.yml");
+        super("towny");
     }
 
     @Override

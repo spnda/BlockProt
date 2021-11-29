@@ -86,6 +86,9 @@ public final class StatHandler extends NBTHandler<NBTCompound> {
     }
 
     public static void disable() {
+        try {
+            StatHandler.saveFile();
+        } catch (IOException ignored) {}
         if (fileSaveTask != null && !fileSaveTask.isCancelled())
             fileSaveTask.cancel();
     }

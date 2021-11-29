@@ -34,7 +34,7 @@ dependencies {
     api("org.bstats:bstats-bukkit:2.2.1")
 
     // Dependencies
-    implementation("de.tr7zw:item-nbt-api:2.8.0")
+    implementation("de.tr7zw:item-nbt-api:2.9.0-SNAPSHOT")
     implementation("net.wesjd:anvilgui:1.5.3-SNAPSHOT") // Allows us to use anvils as inventories without using NMS.
 
     // Integrations

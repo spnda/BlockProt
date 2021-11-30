@@ -27,6 +27,8 @@ import java.util.HashMap;
 /**
  * Serves as a clipboard database of configurations a player has copied
  * and could paste to some other block.
+ * 
+ * @since 1.0.0
  */
 public final class PlayerInventoryClipboard {
     @NotNull

@@ -34,6 +34,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * BlockProt integration with PlaceholderAPI.
+ * 
+ * @since 1.0.0
+ */
 public final class PlaceholderAPIIntegration extends PluginIntegration {
     private BlockProtExpansion expansion;
     private boolean enabled = false;

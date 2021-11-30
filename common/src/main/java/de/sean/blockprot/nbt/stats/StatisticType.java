@@ -18,6 +18,9 @@
 
 package de.sean.blockprot.nbt.stats;
 
+/**
+ * @since 1.0.0
+ */
 public enum StatisticType {
     PLAYER, GLOBAL, ALL
 }

@@ -41,7 +41,10 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
- * StatHandler for statistic related NBT data.
+ * StatHandler for statistic related NBT data. Keeps track
+ * of every statistic and periodically saves it to disk.
+ * 
+ * @since 1.0.0
  */
 public final class StatHandler extends NBTHandler<NBTCompound> {
     static final String STAT_FILE_NAME = "blockprot_stats.nbt";

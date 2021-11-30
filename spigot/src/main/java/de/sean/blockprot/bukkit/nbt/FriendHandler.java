@@ -130,6 +130,7 @@ public final class FriendHandler extends NBTHandler<NBTCompound> {
      * and edit friends of a block they have this permission on.
      *
      * @return True, if the player is such a manager.
+     * @since 1.0.0
      */
     public boolean isManager() {
         return getAccessFlags().contains(BlockAccessFlag.MANAGER);

@@ -29,6 +29,11 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * The backbone of any handler that supports adding a list of friends/players.
+ * 
+ * @since 1.0.0
+ */
 public abstract class FriendSupportingHandler<T extends NBTCompound> extends NBTHandler<T> {
     private final @NotNull String friendNbtKey;
     

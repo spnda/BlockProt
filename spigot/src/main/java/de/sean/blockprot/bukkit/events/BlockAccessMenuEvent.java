@@ -32,6 +32,8 @@ import java.util.Set;
 /**
  * Called when a player is trying to access a blocks lock menu.
  * Can be cancelled to prevent the inventory from opening up.
+ * 
+ * @since 1.0.0
  */
 public final class BlockAccessMenuEvent extends BlockEvent implements Cancellable {
     private static final HandlerList HANDLERS = new HandlerList();

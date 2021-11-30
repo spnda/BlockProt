@@ -97,6 +97,8 @@ public final class PlayerSettingsHandler extends FriendSupportingHandler<NBTComp
      * We are switching to a similar system that {@link BlockNBTHandler}
      * uses. To retain compatibility and upgradability with older versions
      * we will try to remap the previous data to the new data structure.
+     * 
+     * @since 1.0.0
      */
     @Override
     protected void preFriendReadCallback() {

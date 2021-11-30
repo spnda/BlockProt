@@ -107,6 +107,8 @@ public abstract class PluginIntegration {
     /**
      * Load and setup basic values for this plugin integration. No other
      * plugins (including BlockProt) are enabled at this point.
+     * 
+     * @since 1.0.0
      */
     public void load() {
 
@@ -115,6 +117,8 @@ public abstract class PluginIntegration {
     /**
      * Load and setup this plugin integration. Should only be called
      * once.
+     * 
+     * @since 1.0.0
      */
     public abstract void enable();
 

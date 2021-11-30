@@ -75,6 +75,10 @@ public abstract class NBTHandler<T extends NBTCompound> {
      */
     public void mergeHandler(@NotNull final NBTHandler<?> handler) {}
 
+    /**
+     * Get's a copy of this NBT inside of a {@link NBTContainer}.
+     * @since 1.0.0
+     */
     @NotNull
     public NBTContainer getNbtCopy() {
         NBTContainer copy = new NBTContainer();
@@ -82,6 +86,13 @@ public abstract class NBTHandler<T extends NBTCompound> {
         return copy;
     }
 
+    /**
+     * Pastes given NBT into this container, potentially
+     * overriding everything.
+     * 
+     * @param container The NBT to paste.
+     * @since 1.0.0
+     */
     public void pasteNbt(@NotNull NBTContainer container) {
         this.container.mergeCompound(container);
     }

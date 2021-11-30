@@ -93,6 +93,8 @@ public final class BlockAccessEvent extends BlockEvent implements Cancellable {
      * Whether the plugin should still check if the requesting player
      * actually owns this block, or that the player has some privileges
      * to be able to ignore any protections.
+     * 
+     * @since 1.0.0
      */
     public boolean shouldBypassProtections() {
         return this.bypassProtections;
@@ -101,7 +103,9 @@ public final class BlockAccessEvent extends BlockEvent implements Cancellable {
     /**
      * Set whether the player can bypass protections. Use this with caution,
      * as some shady plugin might allow specific players to bypass any protections.
+     * 
      * @see #shouldBypassProtections()
+     * @since 1.0.0
      */
     public void setBypassProtections(final boolean bypass) {
         this.bypassProtections = bypass;

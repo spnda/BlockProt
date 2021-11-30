@@ -22,6 +22,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * A base statistic backed by a single floating point number.
+ * 
+ * @since 1.0.0
  */
 public abstract class FloatStatistic extends BukkitStatistic<Float> {
     @Override

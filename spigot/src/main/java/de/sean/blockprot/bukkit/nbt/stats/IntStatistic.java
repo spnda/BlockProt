@@ -22,6 +22,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * A base statistic backed by a single integer.
+ * 
+ * @since 1.0.0
  */
 public abstract class IntStatistic extends BukkitStatistic<Integer> {
     @Override

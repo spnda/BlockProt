@@ -170,6 +170,8 @@ public final class BlockProt extends JavaPlugin {
 
     /**
      * Reloads the config and the translation files (possibly changed through config).
+     * 
+     * @since 1.0.0
      */
     public void reloadConfigAndTranslations() {
         this.reloadConfig();

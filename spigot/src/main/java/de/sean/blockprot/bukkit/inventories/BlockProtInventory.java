@@ -476,6 +476,11 @@ public abstract class BlockProtInventory implements InventoryHolder {
         }
     }
 
+    /**
+     * Get's the handler for the block opened/edited by the player.
+     * 
+     * @since 1.0.0
+     */
     protected @Nullable FriendSupportingHandler<NBTCompound> getFriendSupportingHandler(@NotNull InventoryState.FriendSearchState state,
                                                                                         @Nullable Player player,
                                                                                         @Nullable Block block) {

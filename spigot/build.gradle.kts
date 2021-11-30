@@ -27,7 +27,7 @@ dependencies {
     implementation(project(":common"))
 
     // Spigot
-    compileOnly("org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
     compileOnly("org.apache.commons:commons-lang3:3.12.0")
 
     // bStats

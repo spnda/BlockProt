@@ -214,6 +214,10 @@ public final class DefaultConfig extends BlockProtConfig {
         return this.config.getBoolean("lock_on_place_by_default");
     }
 
+    /**
+     * 
+     * @since 1.0.0
+     */
     @Nullable
     public String getTranslationFallbackString() {
         if (!this.config.contains("fallback_string")) return "";
@@ -224,6 +228,8 @@ public final class DefaultConfig extends BlockProtConfig {
      * JavaPlugin#reloadConfig sets the default values to the config inside
      * the JAR, which are never edited by the player. We don't want this
      * for the lists.
+     * 
+     * @since 1.0.0
      */
     public void removeBlockDefaults() {
         Configuration defaults = this.config.getDefaults();

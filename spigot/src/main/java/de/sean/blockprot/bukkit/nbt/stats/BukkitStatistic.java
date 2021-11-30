@@ -27,7 +27,9 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * A statistic.
+ * 
  * @param <V> The type of the value, e.g. {@link Integer} or {@link String}.
+ * @since 1.0.0
  */
 public abstract class BukkitStatistic<V> extends NBTHandler<NBTCompound> implements Comparable<BukkitStatistic<V>> {
     /** The key for getting the NBT for this statistic. */

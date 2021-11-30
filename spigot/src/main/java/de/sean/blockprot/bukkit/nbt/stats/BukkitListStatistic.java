@@ -26,6 +26,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * A statistic that can keep a list of items.
+ * 
+ * @since 1.0.0
+ */
 public abstract class BukkitListStatistic<V extends ListStatisticItem<IV, Material>, IV>
     extends BukkitStatistic<List<V>> {
     public abstract void add(@NotNull IV object);

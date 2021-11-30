@@ -67,6 +67,8 @@ public final class InventoryState {
     /**
      * The current index of the page, if the inventory
      * has any multi-page capabilities.
+     * 
+     * @since 1.0.0
      */
     public int currentPageIndex = 0;
 
@@ -80,6 +82,8 @@ public final class InventoryState {
 
     /**
      * The current cached menu permissions for this player.
+     * 
+     * @since 1.0.0
      */
     @NotNull
     public Set<BlockAccessMenuEvent.MenuPermission> menuPermissions = new HashSet<>();

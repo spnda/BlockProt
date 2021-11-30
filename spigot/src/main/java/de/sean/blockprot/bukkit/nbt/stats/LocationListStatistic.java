@@ -27,6 +27,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * A statistic that keeps track of many {@link Location}s.
+ * 
+ * @since 1.0.0
+ */
 public abstract class LocationListStatistic extends BukkitListStatistic<LocationListEntry, Location> {
     private @NotNull Location parseLocationFromCompound(@NotNull NBTCompound c) {
         return new Location(

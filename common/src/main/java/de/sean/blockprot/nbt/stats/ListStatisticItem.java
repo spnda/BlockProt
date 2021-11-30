@@ -20,6 +20,9 @@ package de.sean.blockprot.nbt.stats;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * @since 1.0.0
+ */
 public abstract class ListStatisticItem<T, R> {
     protected final @NotNull T value;
 

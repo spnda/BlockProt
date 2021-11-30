@@ -48,6 +48,8 @@ public enum BlockAccessFlag {
 
     /**
      * The user is allowed to manage redstone settings and manage friends.
+     * 
+     * @since 1.0.0
      */
     MANAGER(TranslationKey.INVENTORIES__FRIENDS__PERMISSION__MANAGER);
 

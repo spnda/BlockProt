@@ -151,6 +151,8 @@ public final class Translator {
 
     /**
      * Clears all translations.
+     * 
+     * @since 1.0.0
      */
     public static void resetTranslations() {
         values.clear();

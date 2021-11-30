@@ -38,6 +38,8 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
 
     /**
      * The extension describing any pre-release or build metadata.
+     * 
+     * @since 1.0.0
      */
     private final String extension;
 

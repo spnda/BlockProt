@@ -40,6 +40,12 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * BlockProt integration with WorldGuard to provide flags to enable/disable
+ * functionality.
+ * 
+ * @since 1.0.0
+ */
 public final class WorldGuardIntegration extends PluginIntegration implements Listener {
     private static final String FLAG_NAME = "allow-blockprot";
     private static final String CONFIG_ENABLE_FLAG_FUNCTIONALITY = "enable_flag_functionality";

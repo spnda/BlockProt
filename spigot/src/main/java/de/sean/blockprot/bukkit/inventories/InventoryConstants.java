@@ -56,5 +56,11 @@ public final class InventoryConstants {
      */
     public static final int tripleLine = 9 * 3;
 
+    /**
+     * The length of a six line inventory, similar
+     * to a double chest.
+     * 
+     * @since 1.0.0
+     */
     public static final int sextupletLine = 9 * 6;
 }

@@ -1,47 +1,49 @@
-# Chinese translation file
-# Translated by MODcraft
+---
 locale: zh_CN
-
 inventories:
-  back: "返回"
-  last_page: "上一页"
-  next_page: "下一页"
-  block_lock: "方块锁"
-  user_settings: "用户设置"
-  block_info: "方块信息"
-  lock: "上锁"
-  unlock: "解锁"
-  lock_on_place: "在放置时自动上锁"
+  back: 返回
+  last_page: 上一页
+  next_page: 下一页
+  block_lock: 方块锁
+  user_settings: 用户设置
+  block_info: 方块信息
+  lock: 上锁
+  unlock: 解锁
+  lock_on_place: 在放置时自动上锁
+  copy_configuration: 复制配置
+  paste_configuration: 粘贴配置
   redstone:
-    settings: "红石设置"
-    enable_all: "启用所有"
-    disable_all: "禁用所有"
+    settings: 红石设置
+    redstone_enabled: 红石保护已启用
+    pistons_enabled: 活塞保护已启用
+    hoppers_enabled: 漏斗保护已启用
+    enable_all: 启用所有
+    disable_all: 禁用所有
   friends:
-    manage: "管理信任者"
-    edit: "编辑信任者"
-    remove: "移除信任者"
-    search: "搜索玩家"
-    search_history: "搜索历史"
-    result: "已找到玩家"
-    permissions: "权限"
+    manage: 管理信任者
+    edit: 编辑信任者
+    remove: 移除信任者
+    search: 搜索玩家
+    search_history: 搜索历史
+    result: 已找到玩家
+    permissions: 权限
     permission:
-      read: "查看"
-      write: "放入/拿出"
-      manager: "管理者"
+      read: 查看
+      write: 放入/拿出
+      manager: 管理者
   statistics:
-    statistics: "统计数据"
-    player_statistics: "玩家统计数据"
-    global_statistics: "服务器统计数据"
-    container_count: "方块数"
-    your_blocks: "你的方块"
-
+    statistics: 统计数据
+    player_statistics: 玩家统计数据
+    global_statistics: 服务器统计数据
+    container_count: 方块数
+    your_blocks: 你的方块
 messages:
-  permission_granted: "许可已授予."
-  unlocked: "已解锁."
-  no_permission: "无权限."
-  friend_added: "已添加信任者."
-  friend_removed: "已移除信任者."
-  friend_already_added: "该信任玩家已经添加过了."
-  friend_cant_be_removed: "该信任玩家无法被移除."
-  redstone_added: "已添加红石保护."
-  redstone_removed: "已移除红石保护."
+  permission_granted: 许可已授予.
+  unlocked: 已解锁.
+  no_permission: 无权限.
+  friend_added: 已添加信任者.
+  friend_removed: 已移除信任者.
+  friend_already_added: 该信任玩家已经添加过了.
+  friend_cant_be_removed: 该信任玩家无法被移除.
+  redstone_added: 已添加红石保护.
+  redstone_removed: 已移除红石保护.

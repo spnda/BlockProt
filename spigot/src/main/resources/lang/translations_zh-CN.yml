@@ -21,10 +21,19 @@ inventories:
     edit: "编辑信任者"
     remove: "移除信任者"
     search: "搜索玩家"
+    search_history: "搜索历史"
     result: "已找到玩家"
+    permissions: "权限"
     permission:
       read: "查看"
       write: "放入/拿出"
+      manager: "管理者"
+  statistics:
+    statistics: "统计数据"
+    player_statistics: "玩家统计数据"
+    global_statistics: "服务器统计数据"
+    container_count: "方块数"
+    your_blocks: "你的方块"
 
 messages:
   permission_granted: "许可已授予."

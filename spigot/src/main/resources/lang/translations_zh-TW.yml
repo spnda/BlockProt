@@ -1,7 +1,5 @@
 ---
-locale: 'zh_TW
-
-'
+locale: zh_TW
 inventories:
   back: 返回
   last_page: 上一頁

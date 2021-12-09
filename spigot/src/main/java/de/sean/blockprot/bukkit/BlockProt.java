@@ -127,6 +127,13 @@ public final class BlockProt extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        if (Bukkit.getName().equals("CraftBukkit")) {
+            Bukkit.getLogger().severe("This plugin does not support running on CraftBukkit servers! Please use any Spigot server instead!");
+
+            Bukkit.getServer().getPluginManager().registerEvents(new CBJoinEventListener(), this);
+            return;
+        }
+
         new BlockProtAPI(this); // Init the API.
         StatHandler.enable();
         this.saveDefaultConfig();
@@ -163,8 +170,10 @@ public final class BlockProt extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        StatHandler.disable();
-        Bukkit.getServer().getOnlinePlayers().forEach(HumanEntity::closeInventory);
+        if (!Bukkit.getName().equals("CraftBukkit")) {
+            StatHandler.disable();
+            Bukkit.getServer().getOnlinePlayers().forEach(HumanEntity::closeInventory);
+        }
         super.onDisable();
     }
 

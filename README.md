@@ -19,7 +19,7 @@ The plugin features a modern GUI approach instead of commands, so that any playe
 
 To use this plugin, you can simply download it from [CurseForge](https://www.curseforge.com/minecraft/bukkit-plugins/blockprot)
 or [SpigotMC](https://www.spigotmc.org/resources/blockprot.87829/) and place it in your `plugins` directory.
-You do not have to install anything else and any recent version will work with 1.14, 1.15, 1.16 and 1.17. It runs
+You do not have to install anything else and any recent version will work with 1.14, 1.15, 1.16, 1.17 and 1.18. It runs
 on any Spigot and any fork thereof and does **not** run on CraftBukkit.
 
 To get the latest updates the quickest, you can "watch" or "star" this repository or frequently check the

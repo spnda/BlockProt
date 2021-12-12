@@ -127,7 +127,7 @@ public final class BlockProt extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        if (Bukkit.getName().equals("CraftBukkit")) {
+        if (isRunningCraftBukkit()) {
             Bukkit.getLogger().severe("This plugin does not support running on CraftBukkit servers! Please use any Spigot server instead!");
 
             Bukkit.getServer().getPluginManager().registerEvents(new CBJoinEventListener(), this);
@@ -170,7 +170,7 @@ public final class BlockProt extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (!Bukkit.getName().equals("CraftBukkit")) {
+        if (!isRunningCraftBukkit()) {
             StatHandler.disable();
             Bukkit.getServer().getOnlinePlayers().forEach(HumanEntity::closeInventory);
         }
@@ -263,5 +263,14 @@ public final class BlockProt extends JavaPlugin {
         if (!file.exists())
             this.saveResource(path, replace);
         return YamlConfiguration.loadConfiguration(file);
+    }
+
+    private boolean isRunningCraftBukkit() {
+        try {
+            Class<?> clazz = Class.forName("net.md_5.bungee.api.chat.BaseComponent");
+            return false;
+        } catch (ClassNotFoundException e) {
+            return true;
+        }
     }
 }

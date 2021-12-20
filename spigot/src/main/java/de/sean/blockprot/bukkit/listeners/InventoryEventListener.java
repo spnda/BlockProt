@@ -135,17 +135,19 @@ public class InventoryEventListener implements Listener {
                 block = ((DoubleChest) holder).getLocation().getBlock();
             }
 
-            BlockAccessEvent accessEvent = new BlockAccessEvent(block, (Player) event.getPlayer());
-            Bukkit.getPluginManager().callEvent(accessEvent);
-            if (accessEvent.isCancelled()) {
-                event.setCancelled(true);
-                sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
-            } else {
-                BlockNBTHandler handler = new BlockNBTHandler(block);
-                if (!accessEvent.shouldBypassProtections()
-                    && !(handler.canAccess(player.getUniqueId().toString()) || player.hasPermission(NBTHandler.PERMISSION_BYPASS))) {
+            if (BlockProt.getDefaultConfig().isLockable(block.getType())) {
+                BlockAccessEvent accessEvent = new BlockAccessEvent(block, (Player) event.getPlayer());
+                Bukkit.getPluginManager().callEvent(accessEvent);
+                if (accessEvent.isCancelled()) {
                     event.setCancelled(true);
                     sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
+                } else {
+                    BlockNBTHandler handler = new BlockNBTHandler(block);
+                    if (!accessEvent.shouldBypassProtections()
+                            && !(handler.canAccess(player.getUniqueId().toString()) || player.hasPermission(NBTHandler.PERMISSION_BYPASS))) {
+                        event.setCancelled(true);
+                        sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
+                    }
                 }
             }
         }

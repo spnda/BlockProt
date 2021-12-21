@@ -19,6 +19,7 @@
 package de.sean.blockprot.bukkit;
 
 import com.google.common.collect.Sets;
+import de.sean.blockprot.nbt.LockReturnValue;
 import de.sean.blockprot.util.BlockProtUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -134,6 +135,17 @@ public final class Translator {
         return value == null
             ? DEFAULT_FALLBACK
             : value.getValue();
+    }
+
+    @NotNull
+    public static String get(@NotNull final LockReturnValue.Reason reason) {
+        switch (reason) {
+            case NO_PERMISSION:
+                return get(TranslationKey.MESSAGES__NO_PERMISSION);
+            case EXCEEDED_MAX_BLOCK_COUNT:
+                return get(TranslationKey.MESSAGES__EXCEEDED_MAX_BLOCK_COUNT);
+        }
+        return DEFAULT_FALLBACK;
     }
 
     /**

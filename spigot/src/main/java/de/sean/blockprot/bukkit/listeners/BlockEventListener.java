@@ -20,14 +20,18 @@ package de.sean.blockprot.bukkit.listeners;
 
 import com.google.common.collect.Iterables;
 import de.sean.blockprot.bukkit.BlockProt;
+import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.events.BlockLockOnPlaceEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.bukkit.nbt.StatHandler;
 import de.sean.blockprot.bukkit.util.BlockUtil;
+import de.sean.blockprot.nbt.LockReturnValue;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -155,7 +159,16 @@ public class BlockEventListener implements Listener {
                 BlockLockOnPlaceEvent lockOnPlaceEvent = new BlockLockOnPlaceEvent(event.getBlock(), event.getPlayer());
                 Bukkit.getPluginManager().callEvent(lockOnPlaceEvent);
                 if (!lockOnPlaceEvent.isCancelled()) {
-                    handler.lockBlock(event.getPlayer());
+                    LockReturnValue lock = handler.lockBlock(event.getPlayer());
+                    if (!lock.success) {
+                        event.setCancelled(true);
+                        if (lock.reason != null) {
+                            event.getPlayer().spigot().sendMessage(
+                                    ChatMessageType.ACTION_BAR,
+                                    TextComponent.fromLegacyText(Translator.get(lock.reason)));
+                        }
+                        return;
+                    }
                     settingsHandler
                         .getFriendsStream()
                         .forEach(handler::addFriend);
@@ -175,13 +188,19 @@ public class BlockEventListener implements Listener {
                 if (!lockOnPlaceEvent.isCancelled()) {
                     // Assign an empty string for no owner to not have NPEs when reading
                     PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(event.getPlayer());
-                    handler.setOwner(
-                        settingsHandler.getLockOnPlace() ? playerUuid : ""
-                    );
+                    LockReturnValue lock = handler.lockBlock(event.getPlayer());
+                    if (!lock.success) {
+                        event.setCancelled(true);
+                        if (lock.reason != null) {
+                            event.getPlayer().spigot().sendMessage(
+                                    ChatMessageType.ACTION_BAR,
+                                    TextComponent.fromLegacyText(Translator.get(lock.reason)));
+                        }
+                        return;
+                    }
                     settingsHandler
-                        .getFriendsStream()
-                        .forEach(handler::addFriend);
-                    StatHandler.addBlock(event.getPlayer(), block.getLocation());
+                            .getFriendsStream()
+                            .forEach(handler::addFriend);
                 }
                 if (BlockProt.getDefaultConfig().disallowRedstoneOnPlace()) {
                     handler.getRedstoneHandler().setAll(false);

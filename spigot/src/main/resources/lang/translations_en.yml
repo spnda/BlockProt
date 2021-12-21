@@ -56,3 +56,4 @@ messages:
   friend_cant_be_removed: "Friend cannot be removed."
   redstone_added: "Redstone protection added."
   redstone_removed: "Redstone protection removed."
+  exceeded_max_block_count: "You have exceeded the maximum lockable block count."

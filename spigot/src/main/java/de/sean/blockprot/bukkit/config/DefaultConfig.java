@@ -225,6 +225,18 @@ public final class DefaultConfig extends BlockProtConfig {
     }
 
     /**
+     * Gets the maximum amount of blocks a player is allowed to
+     * lock globally.
+     * @return The value or if no limit is set, null.
+     */
+    @Nullable
+    public Integer getMaxLockedBlockCount() {
+        if (!this.config.contains("player_max_locked_block_count"))
+            return null;
+        return this.config.getInt("player_max_locked_block_count");
+    }
+
+    /**
      * JavaPlugin#reloadConfig sets the default values to the config inside
      * the JAR, which are never edited by the player. We don't want this
      * for the lists.

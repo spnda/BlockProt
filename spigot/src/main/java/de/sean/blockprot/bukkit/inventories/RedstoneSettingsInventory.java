@@ -100,7 +100,7 @@ public class RedstoneSettingsInventory extends BlockProtInventory {
                     redstoneHandler.setCurrentProtection(currentProtection);
                     redstoneHandler.setHopperProtection(hopperProtection);
                     redstoneHandler.setPistonProtection(pistonProtection);
-                    return new LockReturnValue(true);
+                    return new LockReturnValue(true, null);
                 },
                 null
             );

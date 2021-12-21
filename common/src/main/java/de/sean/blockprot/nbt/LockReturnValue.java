@@ -18,6 +18,8 @@
 
 package de.sean.blockprot.nbt;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * A class representing a return value for any of the lock functions,
  * containing a success boolean and a potential error message.
@@ -33,12 +35,36 @@ public final class LockReturnValue {
     public final boolean success;
 
     /**
+     * Null can mean no reason given but will usually be
+     * used when the operation succeeded.
+     */
+    @Nullable
+    public final Reason reason;
+
+    /**
      * Create a new lock return value.
      *
      * @param success Whether the operation completed successfully.
      * @since 0.4.9
      */
+    @Deprecated
     public LockReturnValue(final boolean success) {
         this.success = success;
+        this.reason = null;
+    }
+
+    /**
+     * Create a new lock return value with a reason. Usually,
+     * the {@param reason} here will only be used because {@param success}
+     * is "false".
+     */
+    public LockReturnValue(final boolean success, @Nullable final Reason reason) {
+        this.success = success;
+        this.reason = reason;
+    }
+
+    public enum Reason {
+        NO_PERMISSION,
+        EXCEEDED_MAX_BLOCK_COUNT;
     }
 }

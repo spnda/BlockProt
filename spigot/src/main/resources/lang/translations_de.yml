@@ -49,3 +49,4 @@ messages:
   friend_cant_be_removed: "Freund kann nicht entfernt werden."
   redstone_added: "Redstone-Schutz hinzugefügt."
   redstone_removed: "Redstone-Schutz entfernt."
+  exceeded_max_block_count: "Du hast die maximale Anzahl an Blöcken überschritten."

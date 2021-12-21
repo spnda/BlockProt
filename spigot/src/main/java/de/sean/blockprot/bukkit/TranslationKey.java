@@ -68,7 +68,8 @@ public enum TranslationKey {
     MESSAGES__FRIEND_ALREADY_ADDED,
     MESSAGES__FRIEND_CANT_BE_REMOVED,
     MESSAGES__REDSTONE_ADDED,
-    MESSAGES__REDSTONE_REMOVED;
+    MESSAGES__REDSTONE_REMOVED,
+    MESSAGES__EXCEEDED_MAX_BLOCK_COUNT;
 
     /**
      * Get the string representation of this {@link TranslationKey} as

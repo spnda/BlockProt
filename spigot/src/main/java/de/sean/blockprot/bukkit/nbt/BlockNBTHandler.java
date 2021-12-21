@@ -19,6 +19,7 @@
 package de.sean.blockprot.bukkit.nbt;
 
 import de.sean.blockprot.bukkit.BlockProt;
+import de.sean.blockprot.bukkit.nbt.stats.PlayerBlocksStatistic;
 import de.sean.blockprot.bukkit.util.BlockUtil;
 import de.sean.blockprot.nbt.FriendModifyAction;
 import de.sean.blockprot.nbt.LockReturnValue;
@@ -184,19 +185,31 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
         final String playerUuid = player.getUniqueId().toString();
 
         if (owner.isEmpty()) {
+            // Check if the player is not exceeding their max block count.
+            Integer maxBlockCount = BlockProt.getDefaultConfig().getMaxLockedBlockCount();
+            if (maxBlockCount != null) {
+                PlayerBlocksStatistic playerBlocksStatistic = new PlayerBlocksStatistic();
+                StatHandler.getStatistic(playerBlocksStatistic, player);
+                if (playerBlocksStatistic.get().size() + 1 >= maxBlockCount) {
+                    return new LockReturnValue(false,
+                            LockReturnValue.Reason.EXCEEDED_MAX_BLOCK_COUNT);
+                }
+            }
+
             // This block is not owned by anyone, this user can claim this block
             owner = playerUuid;
             setOwner(owner);
             this.applyToOtherContainer();
             StatHandler.addBlock(player, block.getLocation());
-            return new LockReturnValue(true);
+            return new LockReturnValue(true, null);
         } else if (owner.equals(playerUuid) || player.isOp() || player.hasPermission(PERMISSION_ADMIN)) {
             StatHandler.removeContainer(player, block.getLocation());
             this.clear();
             this.applyToOtherContainer();
-            return new LockReturnValue(true);
+            return new LockReturnValue(true, null);
         }
-        return new LockReturnValue(false);
+
+        return new LockReturnValue(false, LockReturnValue.Reason.NO_PERMISSION);
     }
 
     /**
@@ -219,24 +232,24 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
         switch (action) {
             case ADD_FRIEND: {
                 if (containsFriend(friend)) {
-                    return new LockReturnValue(false);
+                    return new LockReturnValue(false, null);
                 } else {
                     addFriend(friend);
                     this.applyToOtherContainer();
-                    return new LockReturnValue(true);
+                    return new LockReturnValue(true, null);
                 }
             }
             case REMOVE_FRIEND: {
                 if (containsFriend(friend)) {
                     removeFriend(friend);
                     this.applyToOtherContainer();
-                    return new LockReturnValue(true);
+                    return new LockReturnValue(true, null);
                 } else {
-                    return new LockReturnValue(false);
+                    return new LockReturnValue(false, null);
                 }
             }
             default: {
-                return new LockReturnValue(false);
+                return new LockReturnValue(false, null);
             }
         }
     }

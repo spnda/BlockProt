@@ -233,7 +233,8 @@ public final class DefaultConfig extends BlockProtConfig {
     public Integer getMaxLockedBlockCount() {
         if (!this.config.contains("player_max_locked_block_count"))
             return null;
-        return this.config.getInt("player_max_locked_block_count");
+        int val = this.config.getInt("player_max_locked_block_count");
+        return val > 0 ? val : null;
     }
 
     /**

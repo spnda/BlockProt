@@ -37,6 +37,8 @@ public final class LockReturnValue {
     /**
      * Null can mean no reason given but will usually be
      * used when the operation succeeded.
+     *
+     * @since 1.0.3
      */
     @Nullable
     public final Reason reason;
@@ -57,12 +59,18 @@ public final class LockReturnValue {
      * Create a new lock return value with a reason. Usually,
      * the {@param reason} here will only be used because {@param success}
      * is "false".
+     * @since 1.0.3
      */
     public LockReturnValue(final boolean success, @Nullable final Reason reason) {
         this.success = success;
         this.reason = reason;
     }
 
+    /**
+     * A reason given to a LockReturnValue to identify why it might have failed.
+     *
+     * @since 1.0.3
+     */
     public enum Reason {
         NO_PERMISSION,
         EXCEEDED_MAX_BLOCK_COUNT;

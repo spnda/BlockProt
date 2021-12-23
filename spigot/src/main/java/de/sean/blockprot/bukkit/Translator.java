@@ -137,6 +137,12 @@ public final class Translator {
             : value.getValue();
     }
 
+    /**
+     * Gets the appropriate translation for given {@link LockReturnValue.Reason}.
+     *
+     * @return The translated string.
+     * @since 1.0.3
+     */
     @NotNull
     public static String get(@NotNull final LockReturnValue.Reason reason) {
         switch (reason) {

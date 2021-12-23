@@ -228,6 +228,7 @@ public final class DefaultConfig extends BlockProtConfig {
      * Gets the maximum amount of blocks a player is allowed to
      * lock globally.
      * @return The value or if no limit is set, null.
+     * @since 1.0.3
      */
     @Nullable
     public Integer getMaxLockedBlockCount() {

@@ -2,18 +2,18 @@
 locale: fr
 inventories:
   back: Retour
-  last_page: Dernière Page
+  last_page: Dernière page
   next_page: Page suivante
-  block_lock: Vérouillé le bloc
+  block_lock: Verrou du bloc
   user_settings: Paramètres utilisateur
-  block_info: Informations des blocs
-  lock: Fermer
-  unlock: Ouvrir
-  lock_on_place: Verrouillage automatique
+  block_info: Informations du bloc
+  lock: Verrouiller
+  unlock: Déverrouiller
+  lock_on_place: Verrouiller automatiquement
   copy_configuration: Copier la configuration
   paste_configuration: Coller la configuration
   redstone:
-    settings: Paramètres de Redstone
+    settings: Paramètres Redstone
     redstone_enabled: Protection Redstone activée
     pistons_enabled: Protection des pistons activée
     hoppers_enabled: Protection des hoppers activée
@@ -21,27 +21,30 @@ inventories:
     disable_all: Tout désactiver
   friends:
     manage: Gérer les amis
-    edit: Editer un amis
-    remove: Retirer un amis
+    edit: Editer un ami
+    remove: Retirer un ami
     search: Chercher un joueur
     search_history: Historique des recherches
     result: Joueurs trouvés
     permissions: Permissions
     permission:
       read: Lire
-      write: Écrivez
-      manager: Manager
+      write: Écrire
+      manager: Gérer
   statistics:
     statistics: Statistiques
     player_statistics: Statistiques des joueurs
     global_statistics: Statistiques du serveur
+    container_count: Nombre de blocs
+    your_blocks: Vos blocs
 messages:
   permission_granted: Permission accordée.
-  unlocked: Débloqué.
+  unlocked: Déverrouillé.
   no_permission: Aucune autorisation.
   friend_added: Ami ajouté.
   friend_removed: Ami supprimé.
   friend_already_added: Ami déjà ajouté.
-  friend_cant_be_removed: L'ami ne peut être supprimé.
+  friend_cant_be_removed: L'ami ne peut pas être supprimé.
   redstone_added: Protection Redstone ajoutée.
   redstone_removed: Protection Redstone supprimée.
+  exceeded_max_block_count: Vous avez dépassé le nombre maximal de blocs verrouillables.

@@ -1,52 +1,50 @@
-# Korean Translation File
-# Thanks to https://www.spigotmc.org/members/hoehoetvhs.1347576/
+---
 locale: ko
-
 inventories:
-  back: "뒤로"
-  last_page: "마지막 페이지"
-  next_page: "다음 페이지"
-  block_lock: "잠금 설정"
-  user_settings: "환경 설정"
-  block_info: "상세 정보"
-  lock: "잠금"
-  unlock: "잠금 해제"
-  lock_on_place: "자동으로 잠굽니다."
-  copy_configuration: "구성 복사"
-  paste_configuration: "복사한 구성 붙여넣기"
+  back: 뒤로
+  last_page: 마지막 페이지
+  next_page: 다음 페이지
+  block_lock: 잠금 설정
+  user_settings: 환경 설정
+  block_info: 상세 정보
+  lock: 잠금
+  unlock: 잠금 해제
+  lock_on_place: 자동으로 잠굽니다.
+  copy_configuration: 구성 복사
+  paste_configuration: 복사한 구성 붙여넣기
   redstone:
-    settings: "레드스톤 설정"
-    redstone_enabled: "레드스톤 보호 활성화"
-    pistons_enabled: "피스톤 보호 활성화"
-    hoppers_enabled: "호퍼 보호 활성화"
-    enable_all: "모두 활성화"
-    disable_all: "모두 비활성화"
+    settings: 레드스톤 설정
+    redstone_enabled: 레드스톤 보호 활성화
+    pistons_enabled: 피스톤 보호 활성화
+    hoppers_enabled: 호퍼 보호 활성화
+    enable_all: 모두 활성화
+    disable_all: 모두 비활성화
   friends:
-    manage: "친구 관리"
-    edit: "친구 편집"
-    remove: "친구 삭제"
-    search: "친구 검색"
-    search_history: "친구 검색 기록"
-    result: "친구 검색 결과"
-    permissions: "권한"
+    manage: 친구 관리
+    edit: 친구 편집
+    remove: 친구 삭제
+    search: 친구 검색
+    search_history: 친구 검색 기록
+    result: 친구 검색 결과
+    permissions: 권한
     permission:
-      read: "읽기"
-      write: "쓰기"
-      manager: "관리자"
+      read: 읽기
+      write: 쓰기
+      manager: 관리자
   statistics:
-    statistics: "통계"
-    player_statistics: "플레이어 통계"
-    global_statistics: "서버 통계"
-    container_count: "개수"
-    your_blocks: "당신의 블록 "
-
+    statistics: 통계
+    player_statistics: 플레이어 통계
+    global_statistics: 서버 통계
+    container_count: 개수
+    your_blocks: '당신의 블록 '
 messages:
-  permission_granted: "권한이 생성되었습니다."
-  unlocked: "잠금이 해제되었습니다."
-  no_permission: "권한이 없습니다."
-  friend_added: "친구가 추가되었습니다."
-  friend_removed: "친구가 삭제되었습니다."
-  friend_already_added: "친구가 이미 추가되어있습니다."
-  friend_cant_be_removed: "친구를 제거할 수 없습니다."
-  redstone_added: "레드스톤 보호가 추가되었습니다."
-  redstone_removed: "레드스톤 보호가 삭제되었습니다."
+  permission_granted: 권한이 생성되었습니다.
+  unlocked: 잠금이 해제되었습니다.
+  no_permission: 권한이 없습니다.
+  friend_added: 친구가 추가되었습니다.
+  friend_removed: 친구가 삭제되었습니다.
+  friend_already_added: 친구가 이미 추가되어있습니다.
+  friend_cant_be_removed: 친구를 제거할 수 없습니다.
+  redstone_added: 레드스톤 보호가 추가되었습니다.
+  redstone_removed: 레드스톤 보호가 삭제되었습니다.
+  exceeded_max_block_count: 잠글 수 있는 최대 블록 수를 초과했습니다.

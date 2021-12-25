@@ -35,6 +35,8 @@ inventories:
     statistics: Statistiques
     player_statistics: Statistiques des joueurs
     global_statistics: Statistiques du serveur
+    container_count: Nombre de blocs
+    your_blocks: Vos blocs
 messages:
   permission_granted: Permission accordée.
   unlocked: Déverrouillé.

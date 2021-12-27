@@ -35,44 +35,42 @@ public class HopperEventListener implements Listener {
     public void onItemMove(InventoryMoveItemEvent event) {
         if (event.getSource().getHolder() == null) return;
         if (BlockProt.getDefaultConfig().isWorldExcluded(event.getSource().getHolder())) return;
-        if (event.getDestination().getType() == InventoryType.HOPPER
+        if ((event.getDestination().getType() == InventoryType.HOPPER || event.getSource().getType() == InventoryType.HOPPER)
             && BlockProt.getDefaultConfig().isLockable(Material.HOPPER)) { // Only run if HOPPER is actually in the config.
             // This is a hopper trying to pull from something.
-            if (BlockProt.getDefaultConfig().isLockableInventory(event.getSource().getType())) {
-                Block source = getBlock(event.getSource().getHolder());
-                if (source != null) {
-                    BlockNBTHandler sourceHandler = new BlockNBTHandler(source);
-                    if (sourceHandler.isProtected()) {
-                        // The source chest is owned by someone. Check if the hopper block is also owned by
-                        // the same player and if so, allow this event to happen, regardless of the hopper
-                        // protection.
-                        InventoryHolder destinationHolder = event.getDestination().getHolder();
-                        if (destinationHolder instanceof Container || destinationHolder instanceof DoubleChest) {
-                            // The destination is a block of some sorts, chest, hopper, ...
+            Block source = getBlock(event.getSource().getHolder());
+            if (source != null && BlockProt.getDefaultConfig().isLockable(source.getType())) {
+                BlockNBTHandler sourceHandler = new BlockNBTHandler(source);
+                if (sourceHandler.isProtected()) {
+                    // The source chest is owned by someone. Check if the hopper block is also owned by
+                    // the same player and if so, allow this event to happen, regardless of the hopper
+                    // protection.
+                    InventoryHolder destinationHolder = event.getDestination().getHolder();
+                    if (destinationHolder instanceof Container || destinationHolder instanceof DoubleChest) {
+                        // The destination is a block of some sorts, chest, hopper, ...
 
-                            Block destination = getBlock(event.getDestination().getHolder());
-                            if (destination != null) {
-                                BlockNBTHandler destinationHandler = new BlockNBTHandler(destination);
-                                if (destinationHandler.isProtected()
-                                        && !destinationHandler.isOwner(sourceHandler.getOwner())
-                                        && sourceHandler.getRedstoneHandler().getHopperProtection()) {
-                                    // The hopper and chest are NOT owned by the same person and the chest has
-                                    // the hopper protection enabled, cancel this event.
-                                    event.setCancelled(true);
-                                } else if (destinationHandler.isNotProtected()
-                                        && sourceHandler.getRedstoneHandler().getHopperProtection()) {
-                                    // The hopper isn't protected, whereas the source block is, and it has the
-                                    // hopper protection enabled. Cancel the event because it's trying to access
-                                    // a locked container.
-                                    event.setCancelled(true);
-                                }
-                            }
-                        } else if (destinationHolder instanceof Minecart) {
-                            // As Minecarts are not lockable (yet?), we will disallow the move
-                            // if hopper protection is enabled.
-                            if (sourceHandler.getRedstoneHandler().getHopperProtection()) {
+                        Block destination = getBlock(event.getDestination().getHolder());
+                        if (destination != null) {
+                            BlockNBTHandler destinationHandler = new BlockNBTHandler(destination);
+                            if (destinationHandler.isProtected()
+                                    && !destinationHandler.isOwner(sourceHandler.getOwner())
+                                    && sourceHandler.getRedstoneHandler().getHopperProtection()) {
+                                // The hopper and chest are NOT owned by the same person and the chest has
+                                // the hopper protection enabled, cancel this event.
+                                event.setCancelled(true);
+                            } else if (destinationHandler.isNotProtected()
+                                    && sourceHandler.getRedstoneHandler().getHopperProtection()) {
+                                // The hopper isn't protected, whereas the source block is, and it has the
+                                // hopper protection enabled. Cancel the event because it's trying to access
+                                // a locked container.
                                 event.setCancelled(true);
                             }
+                        }
+                    } else if (destinationHolder instanceof Minecart) {
+                        // As Minecarts are not lockable (yet?), we will disallow the move
+                        // if hopper protection is enabled.
+                        if (sourceHandler.getRedstoneHandler().getHopperProtection()) {
+                            event.setCancelled(true);
                         }
                     }
                 }

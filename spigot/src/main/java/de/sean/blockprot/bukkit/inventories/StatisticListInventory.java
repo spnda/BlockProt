@@ -18,10 +18,12 @@
 
 package de.sean.blockprot.bukkit.inventories;
 
+import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.stats.BukkitListStatistic;
 import de.sean.blockprot.nbt.stats.ListStatisticItem;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -32,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class StatisticListInventory extends BlockProtInventory {
     /** Stores the statistic for pages to use. */
@@ -90,9 +93,22 @@ public final class StatisticListInventory extends BlockProtInventory {
         if (stat != null) this.statistic = stat;
         if (this.statistic == null) throw new RuntimeException("No cached statistic available.");
 
-        final List<ListStatisticItem<?, Material>> list = this.statistic.get();
+        List<ListStatisticItem<?, Material>> list = this.statistic.get();
         final InventoryState state = InventoryState.get(player.getUniqueId());
         if (state == null) return inventory;
+
+        // Verify that all block locations are valid and remove them if necessary.
+        // We'll log these into the console for users to report so that this doesn't
+        // need to happen.
+        list = list.stream().filter((item) -> {
+            boolean lockable = BlockProt.getDefaultConfig().isLockable(item.getItemType());
+            if (!lockable) {
+                Bukkit.getLogger().warning(
+                        "[BlockProt] Encountered invalid block while opening statistic inventory: "
+                                + item.getItemType());
+            }
+            return lockable;
+        }).collect(Collectors.toList());
 
         final int max = this.getSize() - 3;
         int offset = max * state.currentPageIndex;

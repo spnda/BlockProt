@@ -27,9 +27,11 @@ import de.sean.blockprot.nbt.stats.StatisticType;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTFile;
 import de.tr7zw.changeme.nbtapi.NBTType;
+import de.tr7zw.changeme.nbtapi.NbtApiException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
@@ -48,11 +50,19 @@ import java.util.stream.Stream;
  */
 public final class StatHandler extends NBTHandler<NBTCompound> {
     static final String STAT_FILE_NAME = "blockprot_stats.nbt";
+    static final String STAT_BACKUP_FILE_NAME = "blockprot_stats.nbt_old";
+
     static final String PLAYER_SUB_KEY = "player_stats";
     static final String SERVER_SUB_KEY = "server_stats";
 
     private static @Nullable BukkitTask fileSaveTask;
+
+    private static @Nullable File baseFile;
+    private static @Nullable File backupFile;
+    private static @Nullable File temporarySwapFile;
+
     private static @Nullable NBTFile nbtFile;
+    private static @Nullable NBTFile backupNbtFile;
 
     /** Internal constructor to copy the NBT compound. */
     private StatHandler(@NotNull final NBTCompound compound) {
@@ -70,8 +80,23 @@ public final class StatHandler extends NBTHandler<NBTCompound> {
         try {
             // If there's no worlds on this server, that's not our issue.
             World world = Bukkit.getServer().getWorlds().get(0);
-            final File file = new File(world.getWorldFolder(), STAT_FILE_NAME);
-            nbtFile = new NBTFile(file);
+
+            baseFile          = new File(world.getWorldFolder(), STAT_FILE_NAME);
+            backupFile        = new File(world.getWorldFolder(), STAT_BACKUP_FILE_NAME);
+            temporarySwapFile = new File(world.getWorldFolder(), STAT_FILE_NAME + ".tmp");
+
+            try {
+                new NBTFile(baseFile);
+            } catch (NbtApiException e) {
+                /* The base NBT file has been corrupted. */
+                baseFile.delete();
+            }
+
+            if (!baseFile.exists())
+                saveFile();
+
+            nbtFile = new NBTFile(baseFile);
+            backupNbtFile = new NBTFile(backupFile);
 
             fileSaveTask = Bukkit.getScheduler().runTaskTimerAsynchronously(
                 BlockProt.getInstance(),
@@ -85,15 +110,52 @@ public final class StatHandler extends NBTHandler<NBTCompound> {
     }
 
     public static void saveFile() throws IOException {
-        if (nbtFile != null) nbtFile.save();
+        /* We will always first save to a temporary file and then
+           swap it with the actual file. This ensures that the write
+           process on the actual file does not get interrupted, thus
+           never corrupting it. */
+        if (baseFile != null && backupFile != null && temporarySwapFile != null) {
+            if (backupNbtFile != null)
+                backupNbtFile.save();
+
+            /* Check if the backup file saved correctly */
+            try {
+                if (backupFile.exists())
+                    new NBTFile(backupFile);
+            } catch (NbtApiException e) {
+                BlockProt.getInstance().getLogger().warning("Failed to re-read statistic NBT File!");
+                backupFile.delete();
+                return;
+            }
+
+            if (baseFile.exists()) {
+                if (!backupFile.renameTo(temporarySwapFile)) {
+                    throw new IOException("Failed to rename backup NBT file.");
+                }
+
+                if (!baseFile.renameTo(backupFile)) {
+                    throw new IOException("Failed to rename base file to backup file.");
+                }
+
+                if (!temporarySwapFile.renameTo(baseFile)) {
+                    throw new IOException("Failed to rename temporary file to base file.");
+                }
+            } else {
+                /* The base NBT file doesn't exist, probably got corrupted */
+                if (!backupFile.renameTo(baseFile)) {
+                    throw new IOException("Failed to rename backup NBT file.");
+                }
+            }
+        }
     }
 
     public static void disable() {
+        if (fileSaveTask != null && !fileSaveTask.isCancelled())
+            fileSaveTask.cancel();
+
         try {
             StatHandler.saveFile();
         } catch (IOException ignored) {}
-        if (fileSaveTask != null && !fileSaveTask.isCancelled())
-            fileSaveTask.cancel();
     }
 
     /**

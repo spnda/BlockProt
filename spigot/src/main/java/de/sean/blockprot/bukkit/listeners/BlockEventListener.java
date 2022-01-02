@@ -124,70 +124,21 @@ public class BlockEventListener implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         if (BlockProt.getDefaultConfig().isWorldExcluded(event.getBlock().getWorld())) return;
         if (!event.getPlayer().hasPermission(BlockNBTHandler.PERMISSION_LOCK)) return;
+        if (!BlockProt.getDefaultConfig().isLockable(event.getBlock().getType())) return;
+
         Block block = event.getBlockPlaced();
         String playerUuid = event.getPlayer().getUniqueId().toString();
+        BlockNBTHandler handler = new BlockNBTHandler(block);
 
-        if (block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST) {
-            BlockNBTHandler handler = new BlockNBTHandler(block);
-
-            // After placing, it takes 1 tick for the chests to connect.
-            Bukkit.getScheduler().runTaskLater(
-                this.blockProt,
-                () -> {
-                    // We cannot use BlockNBTHandler#applyToOtherContainer, because we want the
-                    // data to be copied to this new chest, instead of the old chest being effectively
-                    // cleared.
-                    final BlockState doubleChestState = BlockUtil.getDoubleChest(block);
-                    if (doubleChestState != null) {
-                        final BlockNBTHandler doubleChestHandler = new BlockNBTHandler(doubleChestState.getBlock());
-                        if (doubleChestHandler.isNotProtected() || doubleChestHandler.isOwner(playerUuid)) {
-                            handler.mergeHandler(doubleChestHandler);
-                        } else {
-                            // We can't cancel the event 1 tick later, its already executed. We'll just need to destroy the block and drop it.
-                            event.getPlayer().getWorld().getBlockAt(block.getLocation()).breakNaturally();
-                        }
-
-                        // Remove the container as we break it, but also remove it when successful to remove duplicates.
-                        StatHandler.removeContainer(event.getPlayer(), block);
-                    }
-                },
-                1
-            );
-
+        // We only try to lock the block if it isn't locked already.
+        // Shulker boxes might already be locked, from previous placing.
+        if (handler.isNotProtected()) {
             PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(event.getPlayer());
             if (settingsHandler.getLockOnPlace()) {
                 BlockLockOnPlaceEvent lockOnPlaceEvent = new BlockLockOnPlaceEvent(event.getBlock(), event.getPlayer());
                 Bukkit.getPluginManager().callEvent(lockOnPlaceEvent);
                 if (!lockOnPlaceEvent.isCancelled()) {
-                    LockReturnValue lock = handler.lockBlock(event.getPlayer());
-                    if (!lock.success) {
-                        event.setCancelled(true);
-                        if (lock.reason != null) {
-                            event.getPlayer().spigot().sendMessage(
-                                    ChatMessageType.ACTION_BAR,
-                                    TextComponent.fromLegacyText(Translator.get(lock.reason)));
-                        }
-                        return;
-                    }
-                    settingsHandler
-                        .getFriendsStream()
-                        .forEach(handler::addFriend);
-                }
-
-                if (BlockProt.getDefaultConfig().disallowRedstoneOnPlace()) {
-                    handler.getRedstoneHandler().setAll(false);
-                }
-            }
-        } else if (BlockProt.getDefaultConfig().isLockable(event.getBlock().getType())) {
-            BlockNBTHandler handler = new BlockNBTHandler(block);
-            // We only try to lock the block if it isn't locked already.
-            // Shulker boxes might already be locked, from previous placing.
-            if (handler.isNotProtected()) {
-                BlockLockOnPlaceEvent lockOnPlaceEvent = new BlockLockOnPlaceEvent(event.getBlock(), event.getPlayer());
-                Bukkit.getPluginManager().callEvent(lockOnPlaceEvent);
-                if (!lockOnPlaceEvent.isCancelled()) {
                     // Assign an empty string for no owner to not have NPEs when reading
-                    PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(event.getPlayer());
                     LockReturnValue lock = handler.lockBlock(event.getPlayer());
                     if (!lock.success) {
                         event.setCancelled(true);
@@ -206,10 +157,30 @@ public class BlockEventListener implements Listener {
                     handler.getRedstoneHandler().setAll(false);
                 }
 
-                // So that other half's of doors lock properly.
                 Bukkit.getScheduler().runTaskLater(
                     this.blockProt,
-                    handler::applyToOtherContainer,
+                    () -> {
+                        if (block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST) {
+                            // We cannot use BlockNBTHandler#applyToOtherContainer, because we want the
+                            // data to be copied to this new chest, instead of the old chest being effectively
+                            // cleared.
+                            final BlockState doubleChestState = BlockUtil.getDoubleChest(block);
+                            if (doubleChestState != null) {
+                                final BlockNBTHandler doubleChestHandler = new BlockNBTHandler(doubleChestState.getBlock());
+                                if (doubleChestHandler.isNotProtected() || doubleChestHandler.isOwner(playerUuid)) {
+                                    handler.mergeHandler(doubleChestHandler);
+                                } else {
+                                    // We can't cancel the event 1 tick later, its already executed. We'll just need to destroy the block and drop it.
+                                    event.getPlayer().getWorld().getBlockAt(block.getLocation()).breakNaturally();
+                                }
+
+                                // Remove the container as we break it, but also remove it when successful to remove duplicates.
+                                StatHandler.removeContainer(event.getPlayer(), block);
+                            }
+                        } else {
+                            handler.applyToOtherContainer();
+                        }
+                    },
                     1
                 );
             }

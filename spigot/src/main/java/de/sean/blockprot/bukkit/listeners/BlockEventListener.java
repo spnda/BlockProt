@@ -81,7 +81,7 @@ public class BlockEventListener implements Listener {
 
         // If access is not cancelled and the player is allowed to break the block.
         if (!event.isCancelled()) {
-            StatHandler.removeContainer(event.getPlayer(), event.getBlock().getLocation());
+            StatHandler.removeContainer(event.getPlayer(), event.getBlock());
 
             // For blocks, we want to clear the NBT data, as that lives
             // independently of the actual block state.
@@ -148,7 +148,7 @@ public class BlockEventListener implements Listener {
                         }
 
                         // Remove the container as we break it, but also remove it when successful to remove duplicates.
-                        StatHandler.removeContainer(event.getPlayer(), block.getLocation());
+                        StatHandler.removeContainer(event.getPlayer(), block);
                     }
                 },
                 1

@@ -203,7 +203,7 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
             StatHandler.addBlock(player, block.getLocation());
             return new LockReturnValue(true, null);
         } else if (owner.equals(playerUuid) || player.isOp() || player.hasPermission(PERMISSION_ADMIN)) {
-            StatHandler.removeContainer(player, block.getLocation());
+            StatHandler.removeContainer(player, block);
             this.clear();
             this.applyToOtherContainer();
             return new LockReturnValue(true, null);

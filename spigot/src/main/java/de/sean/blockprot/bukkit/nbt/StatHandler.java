@@ -23,6 +23,7 @@ import de.sean.blockprot.bukkit.nbt.stats.BlockCountStatistic;
 import de.sean.blockprot.bukkit.nbt.stats.BukkitStatistic;
 import de.sean.blockprot.bukkit.nbt.stats.PlayerBlocksStatistic;
 import de.sean.blockprot.bukkit.tasks.StatisticFileSaveTask;
+import de.sean.blockprot.bukkit.util.BlockUtil;
 import de.sean.blockprot.nbt.stats.StatisticType;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTFile;
@@ -175,6 +176,7 @@ public final class StatHandler extends NBTHandler<NBTCompound> {
      * Removes given block from the player's statistic, while also decrementing
      * the global block count.
      */
+    @Deprecated
     public static void removeContainer(@NotNull final Player player, @NotNull final Location block) {
         BlockCountStatistic countStatistic = new BlockCountStatistic();
         PlayerBlocksStatistic containersStatistic = new PlayerBlocksStatistic();
@@ -182,6 +184,26 @@ public final class StatHandler extends NBTHandler<NBTCompound> {
         StatHandler.getStatistic(containersStatistic, player);
         countStatistic.decrement();
         containersStatistic.remove(block);
+    }
+
+    /**
+     * Removes given block from the player's statistic, while also decrementing
+     * the global block count. Also takes care of special blocks, like doors.
+     */
+    public static void removeContainer(@NotNull final Player player, @NotNull final Block block) {
+        /* Remove the other half of the door from the statistics as well */
+        if (BlockProt.getDefaultConfig().isLockableDoor(block.getType())) {
+            final Block otherDoor = BlockUtil.getOtherDoorHalf(block.getState());
+            if (otherDoor != null)
+                StatHandler.removeContainer(player, otherDoor.getLocation());
+        }
+
+        BlockCountStatistic countStatistic = new BlockCountStatistic();
+        PlayerBlocksStatistic containersStatistic = new PlayerBlocksStatistic();
+        StatHandler.getStatistic(countStatistic);
+        StatHandler.getStatistic(containersStatistic, player);
+        countStatistic.decrement();
+        containersStatistic.remove(block.getLocation());
     }
 
     /**

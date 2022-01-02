@@ -100,15 +100,9 @@ public final class StatisticListInventory extends BlockProtInventory {
         // Verify that all block locations are valid and remove them if necessary.
         // We'll log these into the console for users to report so that this doesn't
         // need to happen.
-        list = list.stream().filter((item) -> {
-            boolean lockable = BlockProt.getDefaultConfig().isLockable(item.getItemType());
-            if (!lockable) {
-                Bukkit.getLogger().warning(
-                        "[BlockProt] Encountered invalid block while opening statistic inventory: "
-                                + item.getItemType());
-            }
-            return lockable;
-        }).collect(Collectors.toList());
+        list = list.stream()
+                .filter((item) -> BlockProt.getDefaultConfig().isLockable(item.getItemType()))
+                .collect(Collectors.toList());
 
         final int max = this.getSize() - 3;
         int offset = max * state.currentPageIndex;

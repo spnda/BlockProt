@@ -65,7 +65,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
     /**
      * @since 0.2.2
      */
-    protected final Inventory inventory;
+    protected Inventory inventory;
 
     /**
      * Creates a new inventory using {@link BlockProtInventory#createInventory()}.
@@ -148,6 +148,18 @@ public abstract class BlockProtInventory implements InventoryHolder {
     @NotNull
     protected final Inventory createInventory() {
         return Bukkit.createInventory(this, getSize(), getDefaultInventoryName());
+    }
+
+    /**
+     * Creates a new inventory with given {@code title}.
+     *
+     * @param title The title of the inventory. Should be already
+     *              translated.
+     * @return The new Bukkit inventory.
+     */
+    @NotNull
+    protected final Inventory createInventory(@NotNull String title) {
+        return Bukkit.createInventory(this, getSize(), title);
     }
 
     /**
@@ -532,5 +544,18 @@ public abstract class BlockProtInventory implements InventoryHolder {
             stack.setItemMeta(meta);
         }
         return stack;
+    }
+
+    /**
+     * Updates the title of this inventory. As inventory titles cannot
+     * be updated directly, this instead re-creates and re-opens the
+     * inventory.
+     *
+     * @param title The new title of the inventory. Should already
+     *              be translated.
+     */
+    protected void updateTitle(@NotNull Player player, @NotNull String title) {
+        this.inventory = this.createInventory(title);
+        this.closeAndOpen(player, this.inventory);
     }
 }

@@ -52,7 +52,7 @@ public final class StatisticsInventory extends BlockProtInventory {
 
     @Override
     @NotNull String getTranslatedInventoryName() {
-        return Translator.get(TranslationKey.INVENTORIES__STATISTICS__STATISTICS);
+        return Translator.get(TranslationKey.INVENTORIES__STATISTICS__PLAYER_STATISTICS); /* We default to player statistics. */
     }
 
     @Override
@@ -63,6 +63,10 @@ public final class StatisticsInventory extends BlockProtInventory {
             case BLUE_STAINED_GLASS_PANE:
                 if (event.getWhoClicked() instanceof Player) {
                     state.currentPageIndex ^= 1L; // Toggles the first bit, switching between 0 and 1.
+                    this.updateTitle((Player) event.getWhoClicked(),
+                            state.currentPageIndex == 0
+                                    ? Translator.get(TranslationKey.INVENTORIES__STATISTICS__PLAYER_STATISTICS)
+                                    : Translator.get(TranslationKey.INVENTORIES__STATISTICS__GLOBAL_STATISTICS));
                     this.fill((Player) event.getWhoClicked());
                 }
                 break;

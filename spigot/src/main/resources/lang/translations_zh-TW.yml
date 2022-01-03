@@ -47,3 +47,4 @@ messages:
   friend_cant_be_removed: 該信任者無法移除
   redstone_added: 添加了紅石保護
   redstone_removed: 移除了紅石保護
+  exceeded_max_block_count: 您已超過最大可鎖定的方塊數量

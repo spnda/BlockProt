@@ -50,7 +50,7 @@ public class HopperEventListener implements Listener {
                         // The destination is a block of some sorts, chest, hopper, ...
 
                         Block destination = getBlock(event.getDestination().getHolder());
-                        if (destination != null) {
+                        if (destination != null && BlockProt.getDefaultConfig().isLockable(destination.getType())) {
                             BlockNBTHandler destinationHandler = new BlockNBTHandler(destination);
                             if (destinationHandler.isProtected()
                                     && !destinationHandler.isOwner(sourceHandler.getOwner())
@@ -63,6 +63,11 @@ public class HopperEventListener implements Listener {
                                 // The hopper isn't protected, whereas the source block is, and it has the
                                 // hopper protection enabled. Cancel the event because it's trying to access
                                 // a locked container.
+                                event.setCancelled(true);
+                            }
+                        } else {
+                            /* The destination block cannot be locked and is therefore considered public */
+                            if (sourceHandler.getRedstoneHandler().getHopperProtection()) {
                                 event.setCancelled(true);
                             }
                         }

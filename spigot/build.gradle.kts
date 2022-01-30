@@ -10,6 +10,7 @@ plugins {
     id("net.kyori.blossom") version "1.3.0"
 }
 
+val nbtApiVersion: String by project
 val townyVersion: String by project
 val papiVersion: String by project
 val worldGuardVersion: String by project
@@ -34,7 +35,7 @@ dependencies {
     api("org.bstats:bstats-bukkit:2.2.1")
 
     // Dependencies
-    implementation("de.tr7zw:item-nbt-api:2.9.0-SNAPSHOT")
+    implementation("de.tr7zw:item-nbt-api:$nbtApiVersion")
     implementation("net.wesjd:anvilgui:1.5.3-SNAPSHOT") // Allows us to use anvils as inventories without using NMS.
 
     // Integrations

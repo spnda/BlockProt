@@ -18,6 +18,7 @@
 
 package de.sean.blockprot.bukkit.config;
 
+import de.sean.blockprot.bukkit.BlockProt;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -81,7 +82,7 @@ public abstract class BlockProtConfig {
             }
         }
         if (!names.isEmpty()) {
-            Bukkit.getLogger().warning("Failed to map following values to enum: " + names);
+            BlockProt.getInstance().getLogger().warning("Failed to map following values to enum: " + names);
         }
         return ret;
     }

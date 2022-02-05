@@ -20,6 +20,7 @@ package de.sean.blockprot.bukkit.tasks;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.util.SemanticVersion;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -129,9 +130,9 @@ public final class UpdateChecker implements Runnable {
             }
         } else {
             if (isOutdated) {
-                Bukkit.getLogger().warning(message);
+                BlockProt.getInstance().getLogger().warning(message);
             } else {
-                Bukkit.getLogger().info(message);
+                BlockProt.getInstance().getLogger().info(message);
             }
         }
     }

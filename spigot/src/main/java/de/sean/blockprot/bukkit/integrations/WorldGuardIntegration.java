@@ -70,9 +70,10 @@ public final class WorldGuardIntegration extends PluginIntegration implements Li
         } catch (Exception e) {
             // Another plugin (possibly this plugin has been installed twice?)
             // has already registered our flag. Warn the admin.
-            Bukkit.getLogger().warning("Another plugin has already registered the " + FLAG_NAME + " flag.");
-            Bukkit.getLogger().warning("Functionality of this plugin might not be as expected due to flag conflicts.");
-            Bukkit.getLogger().warning("Please check if you accidentally installed BlockProt twice.");
+            BlockProt.getInstance().getLogger().warning(
+                    "Another plugin has already registered the " + FLAG_NAME + " flag.\n"
+                            + "Functionality of this plugin might not be as expected due to flag conflicts.\n"
+                            + "Please check if you accidentally installed BlockProt twice.");
         }
     }
 

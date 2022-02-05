@@ -105,7 +105,7 @@ public final class DefaultConfig extends BlockProtConfig {
         Set<T> newEnumValues = this.loadEnumValuesByName(enumValues, stringList);
         newEnumValues.removeIf((value) -> {
            if (!validateCallback.apply(value)) {
-               Bukkit.getLogger().warning("Caught invalid value passed to " + key + ": " + value.toString());
+               BlockProt.getInstance().getLogger().warning("Caught invalid value passed to " + key + ": " + value.toString());
                return true;
            }
            return false;

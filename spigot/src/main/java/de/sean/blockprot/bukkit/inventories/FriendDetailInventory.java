@@ -18,12 +18,14 @@
 
 package de.sean.blockprot.bukkit.inventories;
 
-import de.sean.blockprot.bukkit.nbt.*;
-import de.sean.blockprot.nbt.FriendModifyAction;
+import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
+import de.sean.blockprot.bukkit.nbt.BlockAccessFlag;
+import de.sean.blockprot.bukkit.nbt.FriendHandler;
+import de.sean.blockprot.bukkit.nbt.FriendSupportingHandler;
+import de.sean.blockprot.nbt.FriendModifyAction;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -34,7 +36,10 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * The detail inventory for managing a single friend and their permission.
@@ -139,7 +144,8 @@ public final class FriendDetailInventory extends BlockProtInventory {
             handler.getFriend(friend.getUniqueId().toString());
 
         if (!friendHandler.isPresent()) {
-            Bukkit.getLogger().warning("Tried to open a " + this.getClass().getSimpleName() + " with a unknown player.");
+            BlockProt.getInstance().getLogger().warning(
+                    "Tried to open a " + this.getClass().getSimpleName() + " with a unknown player.");
             return null;
         }
         playerHandler = friendHandler.get();

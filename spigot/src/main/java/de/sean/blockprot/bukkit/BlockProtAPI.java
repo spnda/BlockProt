@@ -138,21 +138,21 @@ public final class BlockProtAPI {
         final BlockNBTHandler handler = new BlockNBTHandler(block);
         if (player.hasPermission(BlockNBTHandler.PERMISSION_ADMIN)) {
             event.addPermissions(
-                BlockAccessMenuEvent.MenuPermission.LOCK,
-                BlockAccessMenuEvent.MenuPermission.INFO);
+                    BlockAccessMenuEvent.MenuPermission.LOCK,
+                    BlockAccessMenuEvent.MenuPermission.INFO);
         } else if (player.hasPermission(BlockNBTHandler.PERMISSION_INFO)) {
             event.addPermission(BlockAccessMenuEvent.MenuPermission.INFO);
         }
 
         if (handler.isOwner(playerUuid)) {
             event.addPermissions(
-                BlockAccessMenuEvent.MenuPermission.LOCK,
-                BlockAccessMenuEvent.MenuPermission.INFO,
-                BlockAccessMenuEvent.MenuPermission.MANAGER);
+                    BlockAccessMenuEvent.MenuPermission.LOCK,
+                    BlockAccessMenuEvent.MenuPermission.INFO,
+                    BlockAccessMenuEvent.MenuPermission.MANAGER);
         } else if (handler.isNotProtected()) {
             event.addPermission(BlockAccessMenuEvent.MenuPermission.LOCK);
         } else if (handler.getFriend(playerUuid).isPresent()
-            && handler.getFriend(playerUuid).get().isManager()) {
+                && handler.getFriend(playerUuid).get().isManager()) {
             event.addPermission(BlockAccessMenuEvent.MenuPermission.MANAGER);
         }
 

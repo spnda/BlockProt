@@ -106,7 +106,7 @@ public final class StatHandler extends NBTHandler<NBTCompound> {
                 5 * 60 * 20 // 5 minutes * 60 seconds * 20 ticks
             );
         } catch (IOException e) {
-            Bukkit.getLogger().warning("Failed to open BlockProt statistic file.");
+            BlockProt.getInstance().getLogger().warning("Failed to open BlockProt statistic file.");
         }
     }
 

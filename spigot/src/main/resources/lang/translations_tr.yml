@@ -10,7 +10,15 @@ inventories:
   lock: Kilitle
   unlock: Kilidi Aç
   lock_on_place: Otomatik olarak kilitle
-  redstone: {}
+  copy_configuration: Konfigürasyonu kopyala
+  paste_configuration: Konfigürasyonu yapıştır
+  redstone:
+    settings: Kızıltaş ayarları
+    redstone_enabled: Kızıltaş koruması açıldı
+    pistons_enabled: Piston koruması açıldı
+    hoppers_enabled: Huni koruması açıldı
+    enable_all: Hepsini aç
+    disable_all: Hepsini kapat
   friends:
     manage: Arkadaşları Yönet
     edit: Arkadaşı Düzenle
@@ -24,9 +32,11 @@ inventories:
       write: Yaz
       manager: Yönetici
   statistics:
+    statistics: İstatistikler
     player_statistics: Oyuncu istatistikleri
     global_statistics: Sunucu istatistikleri
     container_count: Blok sayısı
+    your_blocks: Sendeki bloklar
 messages:
   permission_granted: İzin verildi.
   unlocked: Kilidi açıldı.
@@ -37,3 +47,4 @@ messages:
   friend_cant_be_removed: Arkadaş silinemez.
   redstone_added: Kızıltaş koruması eklendi.
   redstone_removed: Kızıltaş koruması kaldırıldı.
+  exceeded_max_block_count: Kilitlenebilen maksimum blok sayısına ulaştın.

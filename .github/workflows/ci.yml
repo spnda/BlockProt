@@ -10,6 +10,8 @@ on:
       - '**.gradle.kts'
   pull_request:
     branches: [ master ]
+    paths:
+      - '**.java'
   workflow_dispatch:
 
 jobs:

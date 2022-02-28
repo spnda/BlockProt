@@ -57,3 +57,6 @@ messages:
   redstone_added: "Redstone protection added."
   redstone_removed: "Redstone protection removed."
   exceeded_max_block_count: "You have exceeded the maximum lockable block count."
+  lock_hint: >
+    §6You can protect your blocks by crouching and right-clicking your chests, furnaces, and more!
+    Also, check out /blockprot settings to configure it to your liking.

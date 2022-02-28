@@ -43,6 +43,12 @@ public final class PlayerSettingsHandler extends FriendSupportingHandler<NBTComp
 
     static final String PLAYER_SEARCH_HISTORY = "blockprot_player_search_history";
 
+    /**
+     * Flag saved in NBT to check if the player has ever interacted with a
+     * menu from BlockProt and if any hints should be sent to them.
+     */
+    static final String PLAYER_HAS_INTERACTED_WITH_MENU = "blockprot_player_has_interacted_with_menu";
+
     private static final int MAX_HISTORY_SIZE = InventoryConstants.tripleLine - 2;
 
     /**
@@ -152,6 +158,28 @@ public final class PlayerSettingsHandler extends FriendSupportingHandler<NBTComp
             history.add(playerUuid);
             container.setString(PLAYER_SEARCH_HISTORY, history.toString());
         }
+    }
+
+    /**
+     * Get whether this player has interacted with any of the plugin's
+     * menus before.
+     * @return true if the player has interacted with a menu at least once.
+     */
+    public boolean hasPlayerInteractedWithMenu() {
+        if (!container.hasKey(PLAYER_HAS_INTERACTED_WITH_MENU)) {
+            return false;
+        } else {
+            return container.getBoolean(PLAYER_HAS_INTERACTED_WITH_MENU);
+        }
+    }
+
+    /**
+     * Sets whether this player has interacted with any of the plugin's
+     * menus before. This sets the setting to 'true', as it otherwise is
+     * 'false'.
+     */
+    public void setHasPlayerInteractedWithMenu() {
+        container.setBoolean(PLAYER_HAS_INTERACTED_WITH_MENU, true);
     }
 
     /**

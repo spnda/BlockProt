@@ -50,3 +50,6 @@ messages:
   redstone_added: "Redstone-Schutz hinzugefügt."
   redstone_removed: "Redstone-Schutz entfernt."
   exceeded_max_block_count: "Du hast die maximale Anzahl an Blöcken überschritten."
+  lock_hint: >
+    §6Du kannst deine Truhen, Öfen, und mehr jetzt beschützen! Einfach sneaken und rechts
+    klicken auf deine Blöcke, um auf das Menü zuzugreifen.

@@ -106,14 +106,13 @@ public final class BlockProtCommand implements TabExecutor {
                 return true;
             }
             case "integrations": {
-                List<PluginIntegration> integrations =
-                    new ArrayList<>(BlockProtAPI.getInstance().getIntegrations());
-
-                integrations.removeIf(i -> !i.isEnabled());
+                List<PluginIntegration> integrations = BlockProtAPI.getInstance().getIntegrations();
 
                 final ComponentBuilder builder = new ComponentBuilder();
                 builder.append("§7Enabled integrations (" + integrations.size() + "): ");
                 for (int i = 0; i < integrations.size(); i++) {
+                    if (!integrations.get(i).isEnabled()) continue;
+
                     builder.append("§6" + integrations.get(i).name);
                     if (i < integrations.size() - 1)
                         builder.append("§7, ");

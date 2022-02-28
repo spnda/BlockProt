@@ -255,7 +255,7 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
     }
 
     /**
-     * @see #applyToOtherContainer(Predicate, Consumer).
+     * @see #applyToOtherContainer(Predicate, Consumer)
      * @since 0.4.6
      */
     public void applyToOtherContainer() {

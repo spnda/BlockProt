@@ -25,6 +25,7 @@ import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.events.BlockAccessEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.NBTHandler;
+import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -55,25 +56,36 @@ public class InteractEventListener implements Listener {
                 if (!(handler.canAccess(player.getUniqueId().toString()) || player.hasPermission(NBTHandler.PERMISSION_BYPASS))) {
                     event.setCancelled(true);
                     sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
+                } else {
+                    // If they can access the block we'll notify them that they could
+                    // potentially lock their blocks.
+                    sendMessage(player, Translator.get(TranslationKey.MESSAGES__LOCK_HINT), ChatMessageType.CHAT);
                 }
             }
-        } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK && player.isSneaking() && player.hasPermission(NBTHandler.PERMISSION_LOCK)) {
+        } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK && player.isSneaking()) {
             if (event.hasItem()) return; // Only enter the menu with an empty hand.
+            if (!player.hasPermission(NBTHandler.PERMISSION_LOCK)) {
+                sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
+                event.setCancelled(true);
+                return;
+            }
 
             event.setCancelled(true);
             Inventory inv = BlockProtAPI.getInstance().getLockInventoryForBlock(event.getClickedBlock(), player);
             if (inv == null) {
                 sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
             } else {
+                new PlayerSettingsHandler(player).setHasPlayerInteractedWithMenu();
                 player.openInventory(inv);
             }
         }
     }
 
     private void sendMessage(@NotNull Player player, @NotNull String component) {
-        player.spigot().sendMessage(
-            ChatMessageType.ACTION_BAR,
-            TextComponent.fromLegacyText(component)
-        );
+        sendMessage(player, component, ChatMessageType.ACTION_BAR);
+    }
+
+    private void sendMessage(@NotNull Player player, @NotNull String component, @NotNull ChatMessageType type) {
+        player.spigot().sendMessage(type, TextComponent.fromLegacyText(component));
     }
 }

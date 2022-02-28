@@ -13,12 +13,13 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: spnda/fabric-action-scripts@v1
+      - uses: FabricMC/fabric-action-scripts@v1
         id: changelog
         with:
           context: changelog
           workflow_id: release.yml
-          commit_regex: (Codechange|Refactor)(.*) # We want to exclude these commits in the changelog.
+          # We want to exclude these commits in the changelog.
+          commit_regex: (Bump|Codechange|[a-zA-Z].* \[GH\]:|Build\(deps\))(.*)
       - name: Set up JDK 16
         uses: actions/setup-java@v2
         with:

@@ -5,11 +5,21 @@
 
 version: 2
 updates:
-  - package-ecosystem: "gradle" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "gradle"
+    directory: "/"
     schedule:
-      interval: "monthly" # We will just check for updates every month.
-      day: "monday" # Monday is the default
+      interval: "monthly"
+      day: "monday"
+  - package-ecosystem: "gradle"
+    directory: "/common/"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+  - package-ecosystem: "gradle"
+    directory: "/spigot/"
+    schedule:
+      interval: "monthly"
+      day: "monday"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

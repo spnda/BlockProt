@@ -32,7 +32,7 @@ dependencies {
     compileOnly("org.apache.commons:commons-lang3:3.12.0")
 
     // bStats
-    api("org.bstats:bstats-bukkit:2.2.1")
+    api("org.bstats:bstats-bukkit:3.0.0")
 
     // Dependencies
     implementation("de.tr7zw:item-nbt-api:$nbtApiVersion")

@@ -10,7 +10,7 @@ jobs:
       options: --user root
     steps:
       - run: apt-get update && apt-get install git -y && git --version # Ensure Git is installed for the changelog script.
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - uses: FabricMC/fabric-action-scripts@v1

@@ -48,3 +48,4 @@ messages:
   redstone_added: 添加了紅石保護
   redstone_removed: 移除了紅石保護
   exceeded_max_block_count: 您已超過最大可鎖定的方塊數量
+  lock_hint: "§6您可以通過蹲下並右鍵點擊您的箱子、熔爐等來保護您的方塊！另外，也可以查看 /blockprot settings 根據自己的喜好對其進行設置。"

@@ -56,10 +56,13 @@ public class InteractEventListener implements Listener {
                 if (!(handler.canAccess(player.getUniqueId().toString()) || player.hasPermission(NBTHandler.PERMISSION_BYPASS))) {
                     event.setCancelled(true);
                     sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
-                } else {
+                } else if (!(new PlayerSettingsHandler(player).hasPlayerInteractedWithMenu())) {
                     // If they can access the block we'll notify them that they could
                     // potentially lock their blocks.
-                    sendMessage(player, Translator.get(TranslationKey.MESSAGES__LOCK_HINT), ChatMessageType.CHAT);
+                    String message = Translator.get(TranslationKey.MESSAGES__LOCK_HINT);
+                    if (!message.isEmpty()) {
+                        sendMessage(player, message, ChatMessageType.CHAT);
+                    }
                 }
             }
         } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK && player.isSneaking()) {

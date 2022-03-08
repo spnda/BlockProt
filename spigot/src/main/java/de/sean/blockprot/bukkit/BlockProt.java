@@ -30,6 +30,7 @@ import de.sean.blockprot.bukkit.tasks.UpdateChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.Listener;
@@ -260,8 +261,16 @@ public final class BlockProt extends JavaPlugin {
     public YamlConfiguration saveAndLoadConfigFile(String folder, String name, boolean replace) {
         final String path = folder + (folder.endsWith("/") ? "" : "/") + name;
         File file = new File(this.getDataFolder(), path);
-        if (!file.exists())
-            this.saveResource(path, replace);
+        if (!file.exists()) {
+            try {
+                this.saveResource(path, replace);
+            } catch (IllegalArgumentException e) {
+                // The resource doesn't exist in the JAR. Therefore, the config file doesn't
+                // exist, and we should return an empty config.
+                getLogger().warning("The configured language file does not exist: " + name);
+                return new YamlConfiguration();
+            }
+        }
         return YamlConfiguration.loadConfiguration(file);
     }
 

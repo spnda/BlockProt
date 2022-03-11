@@ -49,6 +49,10 @@ lock_on_place_by_default: true
 # no limit.
 player_max_locked_block_count: -1
 
+# The cooldown between messages hinting players that they can
+# protect their blocks.
+lock_hint_cooldown_in_seconds: 10
+
 # Tile entities that should be locked. Tile entities are blocks
 # that can contain items. You can find a detailed list of all
 # possible values at https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html.

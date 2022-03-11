@@ -38,6 +38,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
+import java.util.HashMap;
+
 public class InteractEventListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void playerInteract(PlayerInteractEvent event) {
@@ -57,23 +60,27 @@ public class InteractEventListener implements Listener {
                     event.setCancelled(true);
                     sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
                 } else if (!(new PlayerSettingsHandler(player).hasPlayerInteractedWithMenu())) {
-                    // If they can access the block we'll notify them that they could
-                    // potentially lock their blocks.
-                    String message = Translator.get(TranslationKey.MESSAGES__LOCK_HINT);
-                    if (!message.isEmpty()) {
-                        sendMessage(player, message, ChatMessageType.CHAT);
+                    Long timestamp = LockHintMessageCooldown.getTimestamp(player);
+                    if (timestamp == null || timestamp < System.currentTimeMillis() - (BlockProt.getDefaultConfig().getLockHintCooldown() * 1000)) { // 10 seconds in milliseconds
+                        // If they can access the block we'll notify them that they could
+                        // potentially lock their blocks.
+                        String message = Translator.get(TranslationKey.MESSAGES__LOCK_HINT);
+                        if (!message.isEmpty()) {
+                            LockHintMessageCooldown.setTimestamp(player);
+                            sendMessage(player, message, ChatMessageType.CHAT);
+                        }
                     }
                 }
             }
         } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK && player.isSneaking()) {
             if (event.hasItem()) return; // Only enter the menu with an empty hand.
+            event.setCancelled(true);
+
             if (!player.hasPermission(NBTHandler.PERMISSION_LOCK)) {
                 sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
-                event.setCancelled(true);
                 return;
             }
 
-            event.setCancelled(true);
             Inventory inv = BlockProtAPI.getInstance().getLockInventoryForBlock(event.getClickedBlock(), player);
             if (inv == null) {
                 sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
@@ -90,5 +97,18 @@ public class InteractEventListener implements Listener {
 
     private void sendMessage(@NotNull Player player, @NotNull String component, @NotNull ChatMessageType type) {
         player.spigot().sendMessage(type, TextComponent.fromLegacyText(component));
+    }
+
+    private static class LockHintMessageCooldown {
+        private static final HashMap<Player, Long> timestamps = new HashMap<>();
+
+        public static void setTimestamp(final @NotNull Player player) {
+            timestamps.put(player, System.currentTimeMillis());
+        }
+
+        @Nullable
+        public static Long getTimestamp(final @NotNull Player player) {
+            return timestamps.get(player);
+        }
     }
 }

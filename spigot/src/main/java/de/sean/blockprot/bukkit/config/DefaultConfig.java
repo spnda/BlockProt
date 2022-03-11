@@ -279,6 +279,13 @@ public final class DefaultConfig extends BlockProtConfig {
         }
     }
 
+    public long getLockHintCooldown() {
+        if (!config.contains("lock_hint_cooldown_in_seconds")) {
+            return 10;
+        }
+        return config.getLong("lock_hint_cooldown_in_seconds");
+    }
+
     /**
      * <p> Whether the given {@code type} is either a lockable block or a lockable tile entity.
      *

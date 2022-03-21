@@ -82,8 +82,12 @@ public final class BlockProtCommand implements TabExecutor {
                 }
                 break;
             }
-            case "stats": {
-                if (!(sender instanceof Player)) break;
+            case "stats":
+            case "statistics": {
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage("This command is only executable as a player!");
+                    return false;
+                }
                 Player player = (Player) sender;
 
                 final InventoryState state = new InventoryState(null);

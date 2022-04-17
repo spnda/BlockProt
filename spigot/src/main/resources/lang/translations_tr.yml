@@ -25,7 +25,7 @@ inventories:
     remove: Arkadaşı Sil
     search: Oyuncuları Ara
     search_history: Arama geçmişi
-    result: Oyuncular Bulundu
+    result: Oyuncular bulundu
     permissions: izinler
     permission:
       read: Oku
@@ -48,3 +48,5 @@ messages:
   redstone_added: Kızıltaş koruması eklendi.
   redstone_removed: Kızıltaş koruması kaldırıldı.
   exceeded_max_block_count: Kilitlenebilen maksimum blok sayısına ulaştın.
+  lock_hint: "§6Sandıklar, fırınlar ve daha birçok bloku eğilip sağ tıklayarak koruyabilirsiniz!
+    Aynı zamanda /blockprot yazarak kendi isteklerinize göre ayarları değiştirebilirsiniz."

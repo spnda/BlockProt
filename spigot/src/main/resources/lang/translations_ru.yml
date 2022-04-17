@@ -1,58 +1,51 @@
-# Reference translation file for English
-# All colour codes can be used, as found here: https://www.spigotmc.org/wiki/textcosmetics-colors-and-formats/
-# We would be very happy if you submit your translations onto the
-# GitHub repository: https://github.com/spnda/BlockProt/pulls
-
-# We use ISO 639-1 or 639-2 codes for internationalization, it
-# is however safer to use the ISO 639-1 codes for backwards compatibility.
-# See this link for a good list of all codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes.
+---
 locale: ru
-
 inventories:
-  back: "Назад"
-  last_page: "Последняя страница"
-  next_page: "Следующая страница"
-  block_lock: "Block Lock"
-  user_settings: "Мои настройки"
-  block_info: "Список хозяев"
-  lock: "Запереть на замок"
-  unlock: "Убрать замок"
-  lock_on_place: "Запирать автоматически"
-  copy_configuration: "Скопировать настройки"
-  paste_configuration: "Вставить настройки"
+  back: Назад
+  last_page: Последняя страница
+  next_page: Следующая страница
+  block_lock: Block Lock
+  user_settings: Мои настройки
+  block_info: Список хозяев
+  lock: Запереть на замок
+  unlock: Убрать замок
+  lock_on_place: Запирать автоматически
+  copy_configuration: Скопировать настройки
+  paste_configuration: Вставить настройки
   redstone:
-    settings: "Редстоун настройки"
-    redstone_enabled: "Редстоун защита"
-    pistons_enabled: "Защита от поршней"
-    hoppers_enabled: "Защита от воронок"
-    enable_all: "Включить всё"
-    disable_all: "Отключить всё"
+    settings: Редстоун настройки
+    redstone_enabled: Редстоун защита
+    pistons_enabled: Защита от поршней
+    hoppers_enabled: Защита от воронок
+    enable_all: Включить всё
+    disable_all: Отключить всё
   friends:
-    manage: "Добавить друга"
-    edit: "Настройки доступа"
-    remove: "Удалить друга"
-    search: "Поиск игроков"
-    search_history: "История поиска"
-    result: "Найденные игроки"
-    permissions: "Разрешения"
+    manage: Добавить друга
+    edit: Настройки доступа
+    remove: Удалить друга
+    search: Поиск игроков
+    search_history: История поиска
+    result: Найденные игроки
+    permissions: Разрешения
     permission:
-      read: "Только смотреть"
-      write: "Брать блоки"
-      manager: "Управлять"
+      read: Только смотреть
+      write: Брать блоки
+      manager: Управлять
   statistics:
-    statistics: "Статистика"
-    player_statistics: "Моя статистика"
-    global_statistics: "Статистика сервера"
-    container_count: "Количество запираемых объектов"
-    your_blocks: "Количество твоих запираемых объектов"
-
+    statistics: Статистика
+    player_statistics: Моя статистика
+    global_statistics: Статистика сервера
+    container_count: Количество запираемых объектов
+    your_blocks: Количество твоих запираемых объектов
 messages:
-  permission_granted: "Доступ разрешён."
-  unlocked: "Разблокировано."
-  no_permission: "Заперто."
-  friend_added: "Друг добавлен."
-  friend_removed: "Друг удалён."
-  friend_already_added: "Этот друг уже добавлен."
-  friend_cant_be_removed: "Этот друг не может быть удалён."
-  redstone_added: "Редстоун защита была добавлена."
-  redstone_removed: "Редстоун защита была убрана."
+  permission_granted: Доступ разрешён.
+  unlocked: Разблокировано.
+  no_permission: Заперто.
+  friend_added: Друг добавлен.
+  friend_removed: Друг удалён.
+  friend_already_added: Этот друг уже добавлен.
+  friend_cant_be_removed: Этот друг не может быть удалён.
+  redstone_added: Редстоун защита была добавлена.
+  redstone_removed: Редстоун защита была убрана.
+  exceeded_max_block_count: Вы превысили максимальное количество блоков, которые можно
+    запереть.

@@ -20,10 +20,7 @@ package de.sean.blockprot.bukkit;
 
 import de.sean.blockprot.bukkit.commands.BlockProtCommand;
 import de.sean.blockprot.bukkit.config.DefaultConfig;
-import de.sean.blockprot.bukkit.integrations.PlaceholderAPIIntegration;
-import de.sean.blockprot.bukkit.integrations.PluginIntegration;
-import de.sean.blockprot.bukkit.integrations.TownyIntegration;
-import de.sean.blockprot.bukkit.integrations.WorldGuardIntegration;
+import de.sean.blockprot.bukkit.integrations.*;
 import de.sean.blockprot.bukkit.listeners.*;
 import de.sean.blockprot.bukkit.nbt.StatHandler;
 import de.sean.blockprot.bukkit.tasks.UpdateChecker;
@@ -118,6 +115,7 @@ public final class BlockProt extends JavaPlugin {
         try { registerIntegration(new WorldGuardIntegration());     } catch (NoClassDefFoundError ignored) {}
         try { registerIntegration(new TownyIntegration());          } catch (NoClassDefFoundError ignored) {}
         try { registerIntegration(new PlaceholderAPIIntegration()); } catch (NoClassDefFoundError ignored) {}
+        try { registerIntegration(new LandsPluginIntegration());    } catch (NoClassDefFoundError ignored) {}
 
         for (PluginIntegration integration : integrations) {
             try {
@@ -234,6 +232,7 @@ public final class BlockProt extends JavaPlugin {
 
     void registerIntegration(@NotNull PluginIntegration integration) {
         this.integrations.add(integration);
+        getLogger().info(String.format("Registered plugin integration for plugin with id '%s'", integration.name));
     }
 
     /**

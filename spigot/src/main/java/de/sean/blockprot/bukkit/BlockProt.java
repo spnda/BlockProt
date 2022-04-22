@@ -161,6 +161,9 @@ public final class BlockProt extends JavaPlugin {
         for (PluginIntegration integration : integrations) {
             try {
                 integration.enable();
+                if (integration.isEnabled()) {
+                    getLogger().info(String.format("Enabled plugin integration for plugin with id '%s'", integration.name));
+                }
             } catch (NoClassDefFoundError ignored) {}
         }
 

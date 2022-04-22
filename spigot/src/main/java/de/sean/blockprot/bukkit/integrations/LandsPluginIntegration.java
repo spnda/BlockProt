@@ -19,25 +19,39 @@
 package de.sean.blockprot.bukkit.integrations;
 
 import de.sean.blockprot.bukkit.BlockProt;
+import de.sean.blockprot.bukkit.TranslationKey;
+import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.events.BlockAccessEvent;
 import de.sean.blockprot.bukkit.events.BlockAccessMenuEvent;
+import de.sean.blockprot.bukkit.events.BlockLockOnPlaceEvent;
+import me.angeschossen.lands.api.exceptions.FlagConflictException;
 import me.angeschossen.lands.api.flags.Flag;
 import me.angeschossen.lands.api.flags.Flags;
+import me.angeschossen.lands.api.flags.types.RoleFlag;
 import me.angeschossen.lands.api.integration.LandsIntegration;
 import me.angeschossen.lands.api.land.Area;
 import me.angeschossen.lands.api.land.Land;
 import me.angeschossen.lands.api.player.TrustedPlayer;
 import me.angeschossen.lands.api.role.Role;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class LandsPluginIntegration extends PluginIntegration implements Listener {
+    @Nullable private Plugin landsPlugin = null;
+
     @Nullable private LandsIntegration integration = null;
+
+    @Nullable private RoleFlag protectContainersFlag = null;
+
+    // Apparently flag IDs can be no longer than 20 chars.
+    private static final String protectContainerFlagID = "bp_lock_containers";
 
     private boolean enabled = false;
 
@@ -51,15 +65,49 @@ public class LandsPluginIntegration extends PluginIntegration implements Listene
     }
 
     @Override
-    public void enable() {
-        final Plugin lands = getPlugin();
-        if (lands == null || !lands.isEnabled())
+    public void load() {
+        super.load();
+        landsPlugin = getPlugin();
+        if (landsPlugin == null)
             return;
 
         this.integration = new LandsIntegration(BlockProt.getInstance());
+
+        // This ctor automatically uses Target.PLAYER.
+        this.protectContainersFlag = new RoleFlag(BlockProt.getInstance(), RoleFlag.Category.ACTION, protectContainerFlagID, true, true);
+        try {
+            this.protectContainersFlag
+                .setIcon(new ItemStack(Material.CHEST))
+                .setDisplay(true)
+                .setDescription(Translator.get(TranslationKey.INTEGRATIONS__LANDS__PROTECT_CONTAINERS_DESC))
+                .setDisplayName(Translator.get(TranslationKey.INTEGRATIONS__LANDS__PROTECT_CONTAINERS_FLAG_NAME));
+
+            this.integration.registerFlag(this.protectContainersFlag);
+        } catch (FlagConflictException | IllegalArgumentException e) {
+            BlockProt.getInstance().getLogger().warning("LandsIntegration: Failed to register flag(s).");
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void enable() {
+        if (landsPlugin == null || !landsPlugin.isEnabled())
+            return;
+
         this.registerListener(this);
 
         enabled = true;
+    }
+
+    @Override
+    public void reload() {
+        super.reload();
+        if (this.protectContainersFlag == null)
+            return;
+
+        this.protectContainersFlag
+            .setDescription(Translator.get(TranslationKey.INTEGRATIONS__LANDS__PROTECT_CONTAINERS_DESC))
+            .setDisplayName(Translator.get(TranslationKey.INTEGRATIONS__LANDS__PROTECT_CONTAINERS_FLAG_NAME));
     }
 
     @Override
@@ -68,9 +116,7 @@ public class LandsPluginIntegration extends PluginIntegration implements Listene
     }
 
     @EventHandler
-    public void onAccess(@NotNull final BlockAccessEvent event) {
-        if (!enabled || this.integration == null) return;
-
+    public void onAccessEditMenu(@NotNull final BlockAccessMenuEvent event) {
         Land land = this.integration.getLand(event.getBlock().getLocation());
         if (land == null) {
             // This is wilderness, we allow any block to be locked here.
@@ -84,29 +130,26 @@ public class LandsPluginIntegration extends PluginIntegration implements Listene
         }
 
         Role role = area.getRole(event.getPlayer().getUniqueId());
-        if (!role.hasFlag(Flags.INTERACT_CONTAINER) || role.isVisitorRole()) {
-            event.setCancelled(true);
+        if (!role.hasFlag(this.protectContainersFlag) || role.isVisitorRole()) {
+            event.removePermission(BlockAccessMenuEvent.MenuPermission.LOCK);
+            event.removePermission(BlockAccessMenuEvent.MenuPermission.MANAGER);
         }
     }
 
     @EventHandler
-    public void onAccessEditMenu(@NotNull final BlockAccessMenuEvent event) {
-        if (!enabled || this.integration == null) return;
-
+    public void onLockOnPlace(@NotNull final BlockLockOnPlaceEvent event) {
         Land land = this.integration.getLand(event.getBlock().getLocation());
         if (land == null) {
-            // This is wilderness, we allow any block to be locked here.
             return;
         }
 
         Area area = this.integration.getAreaByLoc(event.getBlock().getLocation());
         if (area == null) {
-            // ???
             return;
         }
 
         Role role = area.getRole(event.getPlayer().getUniqueId());
-        if (!role.hasFlag(Flags.INTERACT_CONTAINER) || role.isVisitorRole()) {
+        if (!role.hasFlag(this.protectContainersFlag) || role.isVisitorRole()) {
             event.setCancelled(true);
         }
     }

@@ -70,7 +70,9 @@ public enum TranslationKey {
     MESSAGES__REDSTONE_ADDED,
     MESSAGES__REDSTONE_REMOVED,
     MESSAGES__EXCEEDED_MAX_BLOCK_COUNT,
-    MESSAGES__LOCK_HINT;
+    MESSAGES__LOCK_HINT,
+    INTEGRATIONS__LANDS__PROTECT_CONTAINERS_FLAG_NAME,
+    INTEGRATIONS__LANDS__PROTECT_CONTAINERS_DESC;
 
     /**
      * Get the string representation of this {@link TranslationKey} as

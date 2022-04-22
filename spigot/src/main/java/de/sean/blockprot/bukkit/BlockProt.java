@@ -223,6 +223,10 @@ public final class BlockProt extends JavaPlugin {
             : defaultConfig.getLanguageFile();
         YamlConfiguration wantedConfig = saveAndLoadConfigFile(langFolder, fileName, BlockProt.defaultConfig.shouldReplaceTranslations());
         Translator.loadFromConfigs(defaultLanguageConfig, wantedConfig);
+
+        for (PluginIntegration integration : integrations) {
+            integration.reload();
+        }
     }
 
     private void registerEvent(@NotNull PluginManager pm, Listener listener) {

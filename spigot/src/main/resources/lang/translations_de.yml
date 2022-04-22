@@ -53,3 +53,8 @@ messages:
   lock_hint: >
     §6Du kannst deine Truhen, Öfen, und mehr jetzt beschützen! Einfach sneaken und rechts
     klicken auf deine Blöcke, um auf das Menü zuzugreifen.
+
+integrations:
+  lands:
+    protect_containers_flag_name: Kontainer schützen (BlockProt)
+    protect_containers_desc: Erlaubt einem Spieler Truhen, Öfen, ... zu sperren

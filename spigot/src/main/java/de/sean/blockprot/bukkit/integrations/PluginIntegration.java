@@ -123,6 +123,14 @@ public abstract class PluginIntegration {
     public abstract void enable();
 
     /**
+     * Called when the BlockProt plugin reloads configs and translations. Optimally, translations
+     * should be updated and new config values should be updated in this function.
+     */
+    public void reload() {
+
+    }
+
+    /**
      * Get the plugin this integration depends on. Can be null,
      * if the dependency is not loaded.
      *

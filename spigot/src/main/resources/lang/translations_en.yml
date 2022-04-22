@@ -60,3 +60,8 @@ messages:
   lock_hint: >
     §6You can protect your blocks by crouching and right-clicking your chests, furnaces, and more!
     Also, check out /blockprot settings to configure it to your liking.
+
+integrations:
+  lands:
+    protect_containers_flag_name: Protect containers (BlockProt)
+    protect_containers_desc: Allows a player to protect chests, furnaces, ...

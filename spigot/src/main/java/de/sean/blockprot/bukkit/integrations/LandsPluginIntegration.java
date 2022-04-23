@@ -51,7 +51,9 @@ public class LandsPluginIntegration extends PluginIntegration implements Listene
     @Nullable private RoleFlag protectContainersFlag = null;
 
     // Apparently flag IDs can be no longer than 20 chars.
-    private static final String protectContainerFlagID = "bp_lock_containers";
+    private static final String LOCK_CONTAINER_FLAG_ID = "bp_lock_containers";
+
+    private static final String ALLOW_PROTECTING_CONTAINERS_IN_WILDERNESS = "allow_protecting_containers_in_wilderness";
 
     private boolean enabled = false;
 
@@ -74,7 +76,9 @@ public class LandsPluginIntegration extends PluginIntegration implements Listene
         this.integration = new LandsIntegration(BlockProt.getInstance());
 
         // This ctor automatically uses Target.PLAYER.
-        this.protectContainersFlag = new RoleFlag(BlockProt.getInstance(), RoleFlag.Category.ACTION, protectContainerFlagID, true, true);
+        this.protectContainersFlag = new RoleFlag(BlockProt.getInstance(), RoleFlag.Category.ACTION, LOCK_CONTAINER_FLAG_ID, true,
+            allowProtectingContainersInWilderness());
+
         try {
             this.protectContainersFlag
                 .setIcon(new ItemStack(Material.CHEST))
@@ -115,11 +119,19 @@ public class LandsPluginIntegration extends PluginIntegration implements Listene
         return BlockProt.getInstance().getPlugin("Lands");
     }
 
+    private boolean allowProtectingContainersInWilderness() {
+        return configuration.contains(ALLOW_PROTECTING_CONTAINERS_IN_WILDERNESS)
+            && configuration.getBoolean(ALLOW_PROTECTING_CONTAINERS_IN_WILDERNESS);
+    }
+
     @EventHandler
     public void onAccessEditMenu(@NotNull final BlockAccessMenuEvent event) {
         Land land = this.integration.getLand(event.getBlock().getLocation());
         if (land == null) {
-            // This is wilderness, we allow any block to be locked here.
+            if (!allowProtectingContainersInWilderness()) {
+                event.removePermission(BlockAccessMenuEvent.MenuPermission.LOCK);
+                event.removePermission(BlockAccessMenuEvent.MenuPermission.MANAGER);
+            }
             return;
         }
 
@@ -140,6 +152,9 @@ public class LandsPluginIntegration extends PluginIntegration implements Listene
     public void onLockOnPlace(@NotNull final BlockLockOnPlaceEvent event) {
         Land land = this.integration.getLand(event.getBlock().getLocation());
         if (land == null) {
+            if (!allowProtectingContainersInWilderness()) {
+                event.setCancelled(true);
+            }
             return;
         }
 

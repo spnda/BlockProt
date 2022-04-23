@@ -1,1 +1,6 @@
 # Config file for Lands
+
+# By default, protecting containers in the wilderness is always allowed.
+# Note that this option requires a full server restart, and will not be applied during
+# a reload.
+allow_protecting_containers_in_wilderness: true

@@ -41,6 +41,9 @@ public final class TranslationValue {
     public static final String UNKNOWN_TRANSLATION = "Unknown Translation";
 
     @NotNull
+    public static final TranslationValue UNKNOWN_TRANSLATION_VALUE = new TranslationValue(UNKNOWN_TRANSLATION);
+
+    @NotNull
     private final String defaultValue;
 
     @NotNull

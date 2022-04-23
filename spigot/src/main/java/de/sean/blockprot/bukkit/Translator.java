@@ -19,6 +19,7 @@
 package de.sean.blockprot.bukkit;
 
 import com.google.common.collect.Sets;
+import de.sean.blockprot.bukkit.config.DefaultConfig;
 import de.sean.blockprot.nbt.LockReturnValue;
 import de.sean.blockprot.util.BlockProtUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -84,7 +85,7 @@ public final class Translator {
      * @param defaultConfig The default configuration we use to get the default
      *                      translation values.
      * @param config        the configuration to load translations from. See
-     *                      https://github.com/spnda/BlockProt/blob/master/src/main/resources/translations_en.yml for
+     *                      <a href="https://github.com/spnda/BlockProt/blob/master/src/main/resources/translations_en.yml">translations_en.yml</a> for
      *                      an example.
      * @since 0.4.6
      */
@@ -94,30 +95,43 @@ public final class Translator {
             ? Locale.ROOT
             : new Locale(locale);
 
+        long missingValues = 0, totallyMissingValues = 0;
         TranslationKey[] translations = TranslationKey.values();
         for (TranslationKey translation : translations) {
             String translationKey = translation.toString();
-            // Ignore keys that both configs do not contain.
+
+            // Directly set keys to unknown values when both configs don't
             if (!defaultConfig.contains(translationKey, true) &&
                 !config.contains(translationKey, true)) {
+                values.put(translation, TranslationValue.UNKNOWN_TRANSLATION_VALUE);
+                ++totallyMissingValues;
                 continue;
             }
 
             // Get the default config value. Set it to
             // UNKNOWN_TRANSLATION if we don't have it.
             Object defaultValue = defaultConfig.get(translationKey);
-            TranslationValue translationValue = new TranslationValue(
+            TranslationValue translatedValue =
                 (defaultValue instanceof String)
-                    ? (String) defaultValue
-                    : TranslationValue.UNKNOWN_TRANSLATION
-            );
+                    ? new TranslationValue((String) defaultValue)
+                    : TranslationValue.UNKNOWN_TRANSLATION_VALUE;
 
-            Object translatedValue = config.get(translationKey);
-            if (translatedValue instanceof String) {
-                translationValue.setTranslatedValue((String) translatedValue);
+            Object newTranslatedValue = config.get(translationKey);
+            if (newTranslatedValue instanceof String) {
+                translatedValue.setTranslatedValue((String) newTranslatedValue);
+            } else {
+                ++missingValues;
             }
-            values.put(translation, translationValue);
+
+            values.put(translation, translatedValue);
         }
+
+        if (missingValues > 0)
+            BlockProt.getInstance().getLogger().warning("At least " + missingValues
+                + " translations have not been found in config: " + BlockProt.getDefaultConfig().getLanguageFile());
+        if (totallyMissingValues > 0)
+            BlockProt.getInstance().getLogger().warning("At least " + totallyMissingValues
+                + " translations have not been found in any config.");
     }
 
     /**

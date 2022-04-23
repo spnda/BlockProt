@@ -199,22 +199,16 @@ public final class BlockProt extends JavaPlugin {
             this.saveResource(langFolder + resource, defaultConfig.shouldReplaceTranslations());
         }
 
-        // Get the default language file. We specifically use the InputStream
-        // if we cannot find the file in the data folder, to avoid having to
-        // interact with edited files.
-        File defLangFile = new File(this.getDataFolder(), langFolder + defaultLanguageFile);
-        YamlConfiguration defaultLanguageConfig;
-        if (!defLangFile.exists()) {
-            InputStream defaultLanguageStream = this.getResource(langFolder + defaultLanguageFile);
+        // Get the default language file. We do not use the English translation in the plugin's
+        // data folder anymore, in case that has not been updated yet due to a plugin update.
+        // Instead, we always use the resource within the JAR as the default language file.
+        InputStream defaultLanguageStream = this.getResource(langFolder + defaultLanguageFile);
 
-            // The JAR has been modified and there are files missing.
-            if (defaultLanguageStream == null) {
-                throw new RuntimeException("Failed to get default language file. Possibly corrupt plugin?");
-            }
-            defaultLanguageConfig = YamlConfiguration.loadConfiguration(new BufferedReader(new InputStreamReader(defaultLanguageStream)));
-        } else {
-            defaultLanguageConfig = YamlConfiguration.loadConfiguration(defLangFile);
+        if (defaultLanguageStream == null) {
+            // The JAR has been modified or is corrupt and the translation files are missing.
+            throw new RuntimeException("Failed to get default language file. Possibly corrupt plugin?");
         }
+        YamlConfiguration defaultLanguageConfig = YamlConfiguration.loadConfiguration(new BufferedReader(new InputStreamReader(defaultLanguageStream)));
 
         // Get the wanted language file and load its config.
         // Load the configurations and initialize the Translator.

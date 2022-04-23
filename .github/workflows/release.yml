@@ -21,7 +21,7 @@ jobs:
           # We want to exclude these commits in the changelog.
           commit_regex: (Bump|Codechange|[a-zA-Z].* \[GH\]:|Build\(deps\))(.*)
       - name: Set up JDK 16
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: '16'
           distribution: 'adopt'

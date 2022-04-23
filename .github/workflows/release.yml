@@ -6,7 +6,8 @@ jobs:
   release_build:
     runs-on: ubuntu-20.04
     container:
-      image: adoptopenjdk:16-jdk
+      # adoptopenjdk is no longer maintained
+      image: eclipse-temurin:17-jdk
       options: --user root
     steps:
       - run: apt-get update && apt-get install git -y && git --version # Ensure Git is installed for the changelog script.
@@ -20,10 +21,10 @@ jobs:
           workflow_id: release.yml
           # We want to exclude these commits in the changelog.
           commit_regex: (Bump|Codechange|[a-zA-Z].* \[GH\]:|Build\(deps\))(.*)
-      - name: Set up JDK 16
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: '16'
+          java-version: '17'
           distribution: 'adopt'
       - uses: gradle/wrapper-validation-action@v1
       - run: ./gradlew build github --stacktrace

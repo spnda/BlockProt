@@ -19,6 +19,12 @@ permissions:
   blockprot.bypass:
     default: false
     description: Allows a player to bypass any protection, effectively having access to every block.
+  blockprot.lockmax:
+    default: false
+    description: Removes or overrides the restriction from player_max_locked_block_count, only if it is set. To override, use blockprot.locklimit.<number>.
+  blockprot.locklimit.<number>:
+    default: false
+    description: Sets a per-player block lock limit. e.g. blockprot.locklimit.50
 commands:
   blockprot:
     description: The main blockprot command

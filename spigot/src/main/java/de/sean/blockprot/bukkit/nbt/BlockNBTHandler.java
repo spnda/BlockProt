@@ -182,7 +182,8 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
      */
     public boolean isNotNumeric(String string) {
         final char[] chars = string.toCharArray();
-        for (int i = -1; ++i < string.length(); ) {
+        // If the first character is a '-' indicating a negative value, we skip it.
+        for (int i = chars[0] == '-' ? 0 : -1; ++i < string.length(); ) {
             final char c = chars[i];
             if (!Character.isDigit(c) && c != '.' && c != '-') return true;
         }
@@ -211,17 +212,23 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
                 StatHandler.getStatistic(playerBlocksStatistic, player);
                 if (player.hasPermission("blockprot.lockmax")){
                     List<PermissionAttachmentInfo> lists = new ArrayList<>(player.getEffectivePermissions());
+                    Integer highestValueFound = null;
                     for (int i = -1; ++i < lists.size(); ) {
                         PermissionAttachmentInfo permission = lists.get(i);
                         if (permission.getPermission().toLowerCase().startsWith("blockprot.locklimit.") && permission.getValue()) {
                             String foundValue = permission.getPermission().toLowerCase().replace("blockprot.locklimit.", "");
                             if (isNotNumeric(foundValue)) continue;
-                            if (playerBlocksStatistic.get().size() >= Integer.parseInt(foundValue) ){
-                                return new LockReturnValue(false, LockReturnValue.Reason.EXCEEDED_MAX_BLOCK_COUNT);
+
+                            if (Integer.parseInt(foundValue) > (highestValueFound == null ? 0 : highestValueFound)) {
+                                highestValueFound = Integer.parseInt(foundValue);
                             }
                         }
                     }
-                }else if (playerBlocksStatistic.get().size() >= maxBlockCount) {
+
+                    if (highestValueFound != null && playerBlocksStatistic.get().size() >= highestValueFound){
+                        return new LockReturnValue(false, LockReturnValue.Reason.EXCEEDED_MAX_BLOCK_COUNT);
+                    }
+                } else if (playerBlocksStatistic.get().size() >= maxBlockCount) {
                     return new LockReturnValue(false, LockReturnValue.Reason.EXCEEDED_MAX_BLOCK_COUNT);
                 }
             }

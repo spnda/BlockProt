@@ -31,9 +31,12 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -172,6 +175,22 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
     }
 
     /**
+     * See if a string is NOT a numerical value.
+     *
+     * @param string The string to check.
+     * @return Whether it is numerical or not.
+     */
+    public boolean isNotNumeric(String string) {
+        final char[] chars = string.toCharArray();
+        for (int i = -1; ++i < string.length(); ) {
+            final char c = chars[i];
+            if (!Character.isDigit(c) && c != '.' && c != '-') return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Locks this block for given {@code player} as the owner.
      *
      * @param player The player to set as an owner.
@@ -190,9 +209,21 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
             if (maxBlockCount != null) {
                 PlayerBlocksStatistic playerBlocksStatistic = new PlayerBlocksStatistic();
                 StatHandler.getStatistic(playerBlocksStatistic, player);
-                if (playerBlocksStatistic.get().size() + 1 >= maxBlockCount) {
-                    return new LockReturnValue(false,
-                            LockReturnValue.Reason.EXCEEDED_MAX_BLOCK_COUNT);
+                if (player.hasPermission("blockprot.lockmax")){
+                    List<PermissionAttachmentInfo> lists = new ArrayList<>(player.getEffectivePermissions());
+                    for (int i = -1; ++i < lists.size(); ) {
+                        PermissionAttachmentInfo permission = lists.get(i);
+                        if (permission.getPermission().toLowerCase().startsWith("blockprot.locklimit.") && permission.getValue()) {
+                            String foundValue = permission.getPermission().toLowerCase().replace("blockprot.locklimit.", "");
+                            if (isNotNumeric(foundValue)) continue;
+                            if (playerBlocksStatistic.get().size() >= Integer.parseInt(foundValue) ){
+                                return new LockReturnValue(false, LockReturnValue.Reason.NO_PERMISSION);
+                            }
+                        }
+                    }
+                }else
+                if (playerBlocksStatistic.get().size() >= maxBlockCount) {
+                    return new LockReturnValue(false, LockReturnValue.Reason.NO_PERMISSION);
                 }
             }
 

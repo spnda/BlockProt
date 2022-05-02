@@ -217,13 +217,12 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
                             String foundValue = permission.getPermission().toLowerCase().replace("blockprot.locklimit.", "");
                             if (isNotNumeric(foundValue)) continue;
                             if (playerBlocksStatistic.get().size() >= Integer.parseInt(foundValue) ){
-                                return new LockReturnValue(false, LockReturnValue.Reason.NO_PERMISSION);
+                                return new LockReturnValue(false, LockReturnValue.Reason.EXCEEDED_MAX_BLOCK_COUNT);
                             }
                         }
                     }
-                }else
-                if (playerBlocksStatistic.get().size() >= maxBlockCount) {
-                    return new LockReturnValue(false, LockReturnValue.Reason.NO_PERMISSION);
+                }else if (playerBlocksStatistic.get().size() >= maxBlockCount) {
+                    return new LockReturnValue(false, LockReturnValue.Reason.EXCEEDED_MAX_BLOCK_COUNT);
                 }
             }
 

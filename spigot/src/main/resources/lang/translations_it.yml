@@ -1,0 +1,58 @@
+---
+locale: it
+inventories:
+  back: Indietro
+  last_page: Ultima pagina
+  next_page: Prossima pagina
+  block_lock: Blocca blocco
+  user_settings: Impostazioni Utente
+  block_info: Info Blocco
+  lock: Blocca
+  unlock: Sblocca
+  lock_on_place: Blocca automaticamente
+  copy_configuration: Copia configurazione
+  paste_configuration: Incolla configurazione
+  redstone:
+    settings: Impostazioni Redstone
+    redstone_enabled: Protezione redstone abilitata
+    pistons_enabled: Protezione pistoni abilitata
+    hoppers_enabled: Protezione tramoggia abilitata
+    enable_all: Abilita tutto
+    disable_all: Disabilita tutto
+  friends:
+    manage: Gestisci Amici
+    edit: Modifica Amico
+    remove: Rimuovi Amico
+    search: Cerca Giocatori
+    search_history: Cerca cronologia
+    result: Giocatore trovato
+    permissions: Permessi
+    permission:
+      read: Lettura
+      write: Scrittura
+      manager: Gestore
+  statistics:
+    statistics: Statistiche
+    player_statistics: Statistiche del giocatore
+    global_statistics: Statistiche del server
+    container_count: Contatore blocchi
+    your_blocks: I tuoi blocchi
+messages:
+  permission_granted: Permesso concesso.
+  unlocked: Sbloccato.
+  no_permission: Nessun permesso.
+  friend_added: Amico aggiunto.
+  friend_removed: Amico rimosso.
+  friend_already_added: Amico già aggiunto.
+  friend_cant_be_removed: L'amico non può essere rimosso.
+  redstone_added: Protezione Redstone aggiunta.
+  redstone_removed: Protezione Redstone rimossa.
+  exceeded_max_block_count: Hai superato il numero massimo di blocchi bloccabili.
+  lock_hint: "§6Puoi proteggere i tuoi blocchi accovacciandoti e facendo clic-destro
+    del mouse su forzieri, fornaci e altro! Inoltre, controlla le impostazioni /blockprot
+    per configurarlo a tuo piacimento.\n"
+integrations:
+  lands:
+    protect_containers_flag_name: Proteggi i forzieri(BlockProt)
+    protect_containers_desc: Consente a un giocatore di proteggere forzieri, fornaci,
+      ...

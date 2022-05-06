@@ -9,7 +9,7 @@ inventories:
   block_info: 상세 정보
   lock: 잠금
   unlock: 잠금 해제
-  lock_on_place: 자동으로 잠굽니다.
+  lock_on_place: 자동으로 잠급니다.
   copy_configuration: 구성 복사
   paste_configuration: 복사한 구성 붙여넣기
   redstone:
@@ -49,4 +49,8 @@ messages:
   redstone_removed: 레드스톤 보호가 삭제되었습니다.
   exceeded_max_block_count: 잠글 수 있는 최대 블록 수를 초과했습니다.
   lock_hint: "§6몸을 웅크리고 상자, 용광로 등을 마우스 오른쪽 버튼으로 클릭하여 블록을 보호할 수 있습니다! 또한 /blockprot
-    설정을 확인하여 원하는 대로 구성하십시오.\n"
+    settings을 확인하여 원하는 대로 구성하십시오.\n"
+integrations:
+  lands:
+    protect_containers_flag_name: 보호받고 있는 보관함입니다. (BlockProt)
+    protect_containers_desc: 플레이어가 상자, 용광로 등을 보호할 수 있습니다.

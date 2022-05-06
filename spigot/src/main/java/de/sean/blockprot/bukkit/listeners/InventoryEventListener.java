@@ -72,18 +72,23 @@ public class InventoryEventListener implements Listener {
                     //       can use multiple key objects, a Block and Player in this case.
                     BlockNBTHandler handler = new BlockNBTHandler(blockHolder.getBlock());
                     String playerUuid = player.getUniqueId().toString();
-                    if (!handler.canAccess(playerUuid)) {
-                        player.closeInventory();
-                        event.setCancelled(true);
-                        return;
-                    }
+
                     Optional<FriendHandler> friend = handler.getFriend(playerUuid);
-                    if (friend.isPresent() && !friend.get().canWrite()) {
+                    if (friend.isPresent()) {
+                        if (!handler.canAccess(friend.get())) {
+                            event.setCancelled(true);
+                            player.closeInventory();
+                        } else if (!friend.get().canWrite()) {
+                            event.setCancelled(true);
+                        }
+                    } else {
+                        // The player is not a friend; it shouldn't have access anyway.
+                        player.closeInventory();
                         event.setCancelled(true);
                     }
                 }
             } catch (ClassCastException e) {
-                // It's not a block and it's therefore also not lockable.
+                // It's not a block, and it's therefore also not lockable.
                 // This is probably some other custom inventory from another
                 // plugin, or possibly some entity inventory, e.g. villagers.
             }

@@ -163,15 +163,29 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
     }
 
     /**
-     * Checks whether or not given {@code player} can access this block.
+     * Checks whether given {@code player} can access this block. If possible, it's
+     * always recommended to use {@link #canAccess(FriendHandler)}.
      *
+     * @see #canAccess(FriendHandler)
      * @param player The player to check for.
      * @return True, if {@code player} can access this block.
      * @since 0.2.3
      */
     public boolean canAccess(@NotNull final String player) {
         Optional<FriendHandler> friend = getFriend(player);
-        return !isProtected() || (getOwner().equals(player) || (friend.isPresent() && friend.get().canRead()));
+        return isNotProtected() || getOwner().equals(player) || (friend.isPresent() && friend.get().canRead());
+    }
+
+    /**
+     * Checks whether given {@code friend} can access this block. This does not
+     * guarantee that the {@code friend} is also allowed to manage the block
+     * or take items from it.
+     *
+     * @param friend The friend to check for.
+     * @return True, if {@code player} is allowed to access this block.
+     */
+    public boolean canAccess(@NotNull final FriendHandler friend) {
+        return isNotProtected() || friend.canRead();
     }
 
     /**

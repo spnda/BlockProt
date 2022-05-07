@@ -42,6 +42,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -184,6 +185,21 @@ public class BlockEventListener implements Listener {
                     1
                 );
             }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockPhysics(@NotNull final BlockPhysicsEvent event) {
+        // We check for the type directly to immediately discard any other blocks we don't
+        // want to handle here to minimize the slowdown of this event handler. We specifically
+        // don't allow sand, gravel, or concrete powder to be lockable as those might severely
+        // increase the amount of BlockNBTHandler checks we need to perform.
+        if (event.getChangedType().toString().contains("ANVIL") &&
+            BlockProt.getDefaultConfig().isLockableBlock(event.getChangedType())) {
+            BlockNBTHandler handler = new BlockNBTHandler(event.getBlock());
+
+            if (handler.isProtected())
+                event.setCancelled(true);
         }
     }
 }

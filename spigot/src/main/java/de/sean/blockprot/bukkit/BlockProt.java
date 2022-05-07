@@ -147,6 +147,7 @@ public final class BlockProt extends JavaPlugin {
         /* Register Listeners */
         final PluginManager pm = getServer().getPluginManager();
         registerEvent(pm, new BlockEventListener(this));
+        registerEvent(pm, new EntityEventListener());
         registerEvent(pm, new ExplodeEventListener());
         registerEvent(pm, new HopperEventListener());
         registerEvent(pm, new InteractEventListener());

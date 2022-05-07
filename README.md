@@ -4,7 +4,7 @@
 [![Spigot Downloads](https://img.shields.io/spiget/downloads/87829?style=flat-square&color=orange&label=spigot%20downloads)](https://www.spigotmc.org/resources/blockprot.87829/)
 [![Spigot Rating](https://img.shields.io/spiget/rating/87829?style=flat-square&color=orange)](https://www.spigotmc.org/resources/blockprot.87829/)
 [![BlockProt CI](https://img.shields.io/github/workflow/status/spnda/BlockProt/CI?style=flat-square&label=CI)](https://github.com/spnda/BlockProt)
-[![gitlocalized ](https://gitlocalize.com/repo/6775/whole_project/badge.svg)](https://gitlocalize.com/repo/6775/whole_project?utm_source=badge)
+[![gitlocalized ](https://gitlocalize.com/repo/6775/whole_project/badge.svg)](https://gitlocalize.com/repo/6775)
 [![JitPack](https://jitpack.io/v/spnda/BlockProt.svg)](https://jitpack.io/#spnda/BlockProt)
 
 

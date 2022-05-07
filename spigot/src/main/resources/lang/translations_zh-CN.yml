@@ -47,3 +47,9 @@ messages:
   friend_cant_be_removed: 该信任玩家无法被移除.
   redstone_added: 已添加红石保护.
   redstone_removed: 已移除红石保护.
+  exceeded_max_block_count: 你已经达到了最大的可上错方块数.
+  lock_hint: "§6您可以通过 蹲下并右键 您的箱子、熔炉等来保护您的方块！此外，请使用 /blockprot 以根据自己的喜好对其进行配置。\n"
+integrations:
+  lands:
+    protect_containers_flag_name: 保护容器 (BlockProt)
+    protect_containers_desc: 允许玩家保护箱子、熔炉、等方块...

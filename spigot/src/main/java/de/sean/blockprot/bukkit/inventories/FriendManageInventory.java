@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class FriendManageInventory extends BlockProtInventory {
-    private int maxSkulls = getSize() - 5;
+    private final int maxSkulls = getSize() - 5;
 
     @Override
     public int getSize() {
@@ -93,21 +93,19 @@ public final class FriendManageInventory extends BlockProtInventory {
         final ItemStack item = event.getCurrentItem();
         if (item == null) return;
         switch (item.getType()) {
-            case BLACK_STAINED_GLASS_PANE: {
+            case BLACK_STAINED_GLASS_PANE -> {
                 // Exit the friend modify inventory and return to the base lock inventory.
                 state.currentPageIndex = 0;
                 exitModifyInventory(player, state);
-                break;
             }
-            case CYAN_STAINED_GLASS_PANE: {
+            case CYAN_STAINED_GLASS_PANE -> {
                 if (state.currentPageIndex >= 1) {
                     state.currentPageIndex--;
 
                     closeAndOpen(player, fill(player));
                 }
-                break;
             }
-            case BLUE_STAINED_GLASS_PANE: {
+            case BLUE_STAINED_GLASS_PANE -> {
                 ItemStack lastFriendInInventory = event.getInventory().getItem(maxSkulls - 1);
                 if (lastFriendInInventory != null && lastFriendInInventory.getAmount() != 0) {
                     // There's an item in the last slot => The page is fully filled up, meaning
@@ -116,30 +114,18 @@ public final class FriendManageInventory extends BlockProtInventory {
 
                     closeAndOpen(player, fill(player));
                 }
-                break;
             }
-            case SKELETON_SKULL:
-            case PLAYER_HEAD: {
+            case SKELETON_SKULL, PLAYER_HEAD -> {
                 // Get the clicked player head and open the detail inventory.
                 int index = findItemIndex(item);
                 if (index < 0 || index >= state.friendResultCache.size()) break;
                 state.currentFriend = state.friendResultCache.get(index);
                 final Inventory inv = new FriendDetailInventory().fill(player);
                 closeAndOpen(player, inv);
-                break;
             }
-            case MAP: {
-                FriendSearchInventory.openAnvilInventory(player);
-                break;
-            }
-            case BOOK:
-                closeAndOpen(player, new FriendSearchHistoryInventory().fill(player));
-                break;
-            default: {
-                // Unexpected, exit the inventory.
-                closeAndOpen(player, null);
-                break;
-            }
+            case MAP -> FriendSearchInventory.openAnvilInventory(player);
+            case BOOK -> closeAndOpen(player, new FriendSearchHistoryInventory().fill(player));
+            default -> closeAndOpen(player, null); // Unexpected, exit the inventory.
         }
         event.setCancelled(true);
     }

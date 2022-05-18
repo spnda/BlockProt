@@ -76,20 +76,16 @@ public final class FriendDetailInventory extends BlockProtInventory {
         if (item == null) return;
 
         switch (item.getType()) {
-            case BLACK_STAINED_GLASS_PANE: {
-                closeAndOpen(player, new FriendManageInventory().fill(player));
-                break;
-            }
-            case RED_STAINED_GLASS_PANE: {
+            case BLACK_STAINED_GLASS_PANE -> closeAndOpen(player, new FriendManageInventory().fill(player));
+            case RED_STAINED_GLASS_PANE -> {
                 OfflinePlayer friend = state.currentFriend;
                 assert friend != null;
                 modifyFriendsForAction(player, friend, FriendModifyAction.REMOVE_FRIEND);
                 // We remove the friend, so the player does not exist anymore either.
                 this.playerHandler = null;
                 closeAndOpen(player, new FriendManageInventory().fill(player));
-                break;
             }
-            case ENDER_EYE: {
+            case ENDER_EYE -> {
                 if (playerHandler == null || curFlags == null) break;
                 int curIndex = 0;
                 for (; curIndex < accessFlagCombinations.size(); curIndex++) {
@@ -107,13 +103,11 @@ public final class FriendDetailInventory extends BlockProtInventory {
                     BlockAccessFlag.toBaseString(),
                     BlockAccessFlag.accumulateAccessFlagLore(curFlags)
                 );
-                break;
             }
-            case PLAYER_HEAD: {
-                break; // Don't do anything.
+            case PLAYER_HEAD -> {
+                // Don't do anything.
             }
-            default:
-                closeAndOpen(player, null);
+            default -> closeAndOpen(player, null);
         }
         event.setCancelled(true);
     }
@@ -143,7 +137,7 @@ public final class FriendDetailInventory extends BlockProtInventory {
         final Optional<FriendHandler> friendHandler =
             handler.getFriend(friend.getUniqueId().toString());
 
-        if (!friendHandler.isPresent()) {
+        if (friendHandler.isEmpty()) {
             BlockProt.getInstance().getLogger().warning(
                     "Tried to open a " + this.getClass().getSimpleName() + " with a unknown player.");
             return null;

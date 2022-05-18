@@ -50,8 +50,9 @@ allprojects {
     }
 
     tasks.compileJava {
-        java.sourceCompatibility = JavaVersion.VERSION_1_8
-        java.targetCompatibility = JavaVersion.VERSION_1_8
+        options.release.set(16)
+        java.sourceCompatibility = JavaVersion.VERSION_16
+        java.targetCompatibility = JavaVersion.VERSION_16
     }
 
     ext["gitBranchName"] = gitBranchName()

@@ -20,7 +20,6 @@ package de.sean.blockprot.bukkit.config;
 
 import de.sean.blockprot.bukkit.BlockProt;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.DoubleChest;

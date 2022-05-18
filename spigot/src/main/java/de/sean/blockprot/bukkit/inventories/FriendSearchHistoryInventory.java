@@ -60,23 +60,16 @@ public class FriendSearchHistoryInventory extends BlockProtInventory {
         final ItemStack item = event.getCurrentItem();
         if (item == null) return;
         switch (item.getType()) {
-            case BLACK_STAINED_GLASS_PANE: {
-                closeAndOpen(player, new FriendManageInventory().fill(player));
-                break;
-            }
-            case PLAYER_HEAD:
-            case SKELETON_SKULL: {
+            case BLACK_STAINED_GLASS_PANE -> closeAndOpen(player, new FriendManageInventory().fill(player));
+            case PLAYER_HEAD, SKELETON_SKULL -> {
                 int index = findItemIndex(item);
                 if (index >= 0 && index < state.friendResultCache.size()) {
                     OfflinePlayer friend = state.friendResultCache.get(index);
                     modifyFriendsForAction(player, friend, FriendModifyAction.ADD_FRIEND);
                     closeAndOpen(player, new FriendManageInventory().fill(player));
                 }
-                break;
             }
-            default:
-                closeAndOpen(player, null);
-                break;
+            default -> closeAndOpen(player, null);
         }
         event.setCancelled(true);
     }

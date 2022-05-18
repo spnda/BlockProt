@@ -50,7 +50,6 @@ import java.util.function.Predicate;
 public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> {
     static final String OWNER_ATTRIBUTE = "splugin_owner";
 
-    static final String OLD_LOCK_ATTRIBUTE = "splugin_lock";
     static final String LOCK_ATTRIBUTE = "blockprot_friends";
 
     static final String OLD_REDSTONE_ATTRIBUTE = "splugin_lock_redstone";
@@ -277,11 +276,11 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
     public LockReturnValue modifyFriends(@NotNull final String player, @NotNull final String friend, @NotNull final FriendModifyAction action) {
         // This theoretically shouldn't happen, though we will still check for it just to be sure
         if (!isOwner(player)) return new LockReturnValue(
-            false
+            false, null
         );
 
         switch (action) {
-            case ADD_FRIEND: {
+            case ADD_FRIEND -> {
                 if (containsFriend(friend)) {
                     return new LockReturnValue(false, null);
                 } else {
@@ -290,7 +289,7 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
                     return new LockReturnValue(true, null);
                 }
             }
-            case REMOVE_FRIEND: {
+            case REMOVE_FRIEND -> {
                 if (containsFriend(friend)) {
                     removeFriend(friend);
                     this.applyToOtherContainer();
@@ -299,7 +298,7 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
                     return new LockReturnValue(false, null);
                 }
             }
-            default: {
+            default -> {
                 return new LockReturnValue(false, null);
             }
         }
@@ -373,8 +372,7 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
      */
     @Override
     public void mergeHandler(@NotNull NBTHandler<?> handler) {
-        if (!(handler instanceof BlockNBTHandler)) return;
-        final BlockNBTHandler blockNBTHandler = (BlockNBTHandler) handler;
+        if (!(handler instanceof final BlockNBTHandler blockNBTHandler)) return;
         this.setOwner(blockNBTHandler.getOwner());
         this.setFriends(blockNBTHandler.getFriends());
         this.getRedstoneHandler().mergeHandler(blockNBTHandler.getRedstoneHandler());

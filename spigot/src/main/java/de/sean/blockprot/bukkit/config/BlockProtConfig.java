@@ -19,12 +19,13 @@
 package de.sean.blockprot.bukkit.config;
 
 import de.sean.blockprot.bukkit.BlockProt;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Represents a basic YAML configuration file with some

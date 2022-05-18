@@ -41,7 +41,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class FriendSearchResultInventory extends BlockProtInventory {
     @Override
@@ -61,7 +60,7 @@ public class FriendSearchResultInventory extends BlockProtInventory {
         ItemStack item = event.getCurrentItem();
         if (item == null) return;
         switch (item.getType()) {
-            case BLACK_STAINED_GLASS_PANE:
+            case BLACK_STAINED_GLASS_PANE ->
                 // As in the anvil inventory we cannot differentiate between
                 // pressing Escape to go back, or closing it to go to the result
                 // inventory, we won't return to the anvil inventory and instead
@@ -70,9 +69,7 @@ public class FriendSearchResultInventory extends BlockProtInventory {
                     player,
                     new FriendManageInventory().fill(player)
                 );
-                break;
-            case PLAYER_HEAD:
-            case SKELETON_SKULL:
+            case PLAYER_HEAD, SKELETON_SKULL -> {
                 int index = findItemIndex(item);
                 if (index >= 0 && index < state.friendResultCache.size()) {
                     OfflinePlayer friend = state.friendResultCache.get(index);
@@ -83,10 +80,8 @@ public class FriendSearchResultInventory extends BlockProtInventory {
                     PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(player);
                     settingsHandler.addPlayerToSearchHistory(friend);
                 }
-                break;
-            default:
-                closeAndOpen(player, null);
-                break;
+            }
+            default -> closeAndOpen(player, null);
         }
         event.setCancelled(true);
     }
@@ -113,11 +108,11 @@ public class FriendSearchResultInventory extends BlockProtInventory {
     }
 
     @Nullable
-    public Inventory fill(Player player, String searchQuery) {
+    public Inventory fill(@NotNull Player player, String searchQuery) {
         InventoryState state = InventoryState.get(player.getUniqueId());
         if (state == null) return inventory;
 
-        List<OfflinePlayer> potentialFriends = Arrays.asList(Bukkit.getOfflinePlayers());
+        ArrayList<OfflinePlayer> potentialFriends = new ArrayList<>(Arrays.asList(Bukkit.getOfflinePlayers()));
 
         // The already existing friends we want to add to.
         final @Nullable FriendSupportingHandler<NBTCompound> handler =
@@ -125,7 +120,7 @@ public class FriendSearchResultInventory extends BlockProtInventory {
         if (handler == null) return null; // return null to indicate an issue.
 
         // We'll filter all doubled friends out of the list and add them to the current InventoryState.
-        potentialFriends = potentialFriends.stream().filter((p) -> {
+        potentialFriends.removeIf(p -> {
             // Filter all the players by search criteria.
             // If the strings are similar by 30%, the strings are considered similar (imo) and should be added.
             // If they're less than 30% similar, we should still check if it possibly contains the search criteria
@@ -134,10 +129,11 @@ public class FriendSearchResultInventory extends BlockProtInventory {
             else if (handler.containsFriend(p.getUniqueId().toString())) return false;
             else if (compareStrings(p.getName(), searchQuery) > 0.3) return true;
             else return p.getName().contains(searchQuery);
-        }).collect(Collectors.toList());
+        });
         if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH && state.getBlock() != null) {
             // Allow integrations to additionally filter friends.
-            potentialFriends = PluginIntegration.filterFriends((ArrayList<OfflinePlayer>) potentialFriends, player, state.getBlock());
+            // I hope not reassigning to potentialFriends works here and that's it properly referenced.
+            PluginIntegration.filterFriends(potentialFriends, player, state.getBlock());
         }
         state.friendResultCache.clear();
         state.friendResultCache.addAll(potentialFriends);

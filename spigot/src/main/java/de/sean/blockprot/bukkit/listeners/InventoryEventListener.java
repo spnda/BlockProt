@@ -130,11 +130,9 @@ public class InventoryEventListener implements Listener {
             } catch (RuntimeException ignored) {
             }
         } else if ((holder instanceof Container || holder instanceof DoubleChest)
-            && event.getPlayer() instanceof Player) {
-            Player player = (Player) event.getPlayer();
+            && event.getPlayer() instanceof Player player) {
             Block block;
-            if (holder instanceof Container) {
-                Container container = (Container) holder;
+            if (holder instanceof Container container) {
                 block = container.getBlock();
             } else {
                 block = ((DoubleChest) holder).getLocation().getBlock();

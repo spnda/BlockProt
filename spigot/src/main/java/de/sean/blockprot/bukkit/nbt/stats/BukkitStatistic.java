@@ -57,7 +57,7 @@ public abstract class BukkitStatistic<V> extends NBTHandler<NBTCompound> impleme
 
     /** Returns the formatted statistic name with the value of this statistic. */
     public @NotNull String getTitle() {
-        return getStatisticName() + ": " + get().toString();
+        return getStatisticName() + ": " + get();
     }
 
     @Override

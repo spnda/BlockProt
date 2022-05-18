@@ -89,8 +89,7 @@ public class HopperEventListener implements Listener {
     @Nullable
     private Block getBlock(InventoryHolder holder) {
         if (holder instanceof Container) return ((Container) holder).getBlock();
-        else if (holder instanceof DoubleChest) {
-            DoubleChest doubleChest = (DoubleChest) holder;
+        else if (holder instanceof DoubleChest doubleChest) {
             if (doubleChest.getWorld() == null) return null;
             return doubleChest.getWorld().getBlockAt(doubleChest.getLocation());
         } else return null;

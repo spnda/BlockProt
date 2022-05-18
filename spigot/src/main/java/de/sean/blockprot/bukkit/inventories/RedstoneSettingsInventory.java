@@ -58,25 +58,21 @@ public class RedstoneSettingsInventory extends BlockProtInventory {
         Player player = (Player) event.getWhoClicked();
 
         switch (item.getType()) {
-            case REDSTONE:
+            case REDSTONE -> {
                 currentProtection = !currentProtection;
                 inventory.setItem(0, toggleEnchants(item));
-                break;
-            case HOPPER:
+            }
+            case HOPPER -> {
                 hopperProtection = !hopperProtection;
                 inventory.setItem(1, toggleEnchants(item));
-                break;
-            case PISTON:
+            }
+            case PISTON -> {
                 pistonProtection = !pistonProtection;
                 inventory.setItem(2, toggleEnchants(item));
-                break;
-            case RED_STAINED_GLASS_PANE:
-                overrideAllSettings(false);
-                break;
-            case GREEN_STAINED_GLASS_PANE:
-                overrideAllSettings(true);
-                break;
-            default:
+            }
+            case RED_STAINED_GLASS_PANE -> overrideAllSettings(false);
+            case GREEN_STAINED_GLASS_PANE -> overrideAllSettings(true);
+            default -> {
                 BlockNBTHandler handler = getNbtHandlerOrNull(state.getBlock());
                 closeAndOpen(
                     player,
@@ -84,7 +80,7 @@ public class RedstoneSettingsInventory extends BlockProtInventory {
                         ? null
                         : new BlockLockInventory().fill(player, state.getBlock().getType(), handler)
                 );
-                break;
+            }
         }
         event.setCancelled(true);
     }

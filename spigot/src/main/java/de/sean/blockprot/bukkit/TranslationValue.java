@@ -109,7 +109,7 @@ public final class TranslationValue {
      *              if it is invalid.
      * @since 0.4.6
      */
-    protected void setTranslatedValue(@NotNull final String value) {
+    void setTranslatedValue(@NotNull final String value) {
         this.translatedValue = value;
     }
 

@@ -38,10 +38,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class StatisticsInventory extends BlockProtInventory {
-    private final List<BukkitStatistic<?>> playerStatistics = new ArrayList<BukkitStatistic<?>>() {{
+    private final List<BukkitStatistic<?>> playerStatistics = new ArrayList<>() {{
         add(new PlayerBlocksStatistic());
     }};
-    private final List<BukkitStatistic<?>> serverStatistics = new ArrayList<BukkitStatistic<?>>() {{
+    private final List<BukkitStatistic<?>> serverStatistics = new ArrayList<>() {{
         add(new BlockCountStatistic());
     }};
 

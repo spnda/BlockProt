@@ -44,18 +44,6 @@ public final class LockReturnValue {
     public final Reason reason;
 
     /**
-     * Create a new lock return value.
-     *
-     * @param success Whether the operation completed successfully.
-     * @since 0.4.9
-     */
-    @Deprecated
-    public LockReturnValue(final boolean success) {
-        this.success = success;
-        this.reason = null;
-    }
-
-    /**
      * Create a new lock return value with a reason. Usually,
      * the {@param reason} here will only be used because {@param success}
      * is "false".
@@ -73,6 +61,6 @@ public final class LockReturnValue {
      */
     public enum Reason {
         NO_PERMISSION,
-        EXCEEDED_MAX_BLOCK_COUNT;
+        EXCEEDED_MAX_BLOCK_COUNT
     }
 }

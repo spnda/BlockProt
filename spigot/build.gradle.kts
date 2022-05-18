@@ -74,14 +74,9 @@ tasks.processResources {
     }
 }
 
-tasks.compileJava {
-    java.sourceCompatibility = JavaVersion.VERSION_1_8
-    java.targetCompatibility = JavaVersion.VERSION_1_8
-}
-
 tasks.javadoc {
     options {
-        source = "8"
+        source = "16"
         encoding = "UTF-8"
         memberLevel = JavadocMemberLevel.PACKAGE
     }

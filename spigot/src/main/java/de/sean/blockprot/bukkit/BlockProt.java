@@ -27,7 +27,6 @@ import de.sean.blockprot.bukkit.tasks.UpdateChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.Listener;
@@ -69,7 +68,7 @@ public final class BlockProt extends JavaPlugin {
 
     private final ArrayList<PluginIntegration> integrations = new ArrayList<>();
 
-    protected Metrics metrics;
+    private Metrics metrics;
 
     /**
      * Get the current instance of the {@link BlockProt} plugin.

@@ -38,10 +38,10 @@ import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -274,7 +274,7 @@ public final class StatHandler extends NBTHandler<NBTCompound> {
             .findFirst();
 
         // Add the stats NBT to be sure that we always return a present optional value.
-        if (!ret.isPresent()) {
+        if (ret.isEmpty()) {
             return Optional.of(StatHandler.addStatsForPlayer(id));
         }
         return ret;

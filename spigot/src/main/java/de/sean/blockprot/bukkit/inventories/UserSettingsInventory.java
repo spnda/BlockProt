@@ -47,20 +47,18 @@ public class UserSettingsInventory extends BlockProtInventory {
         ItemStack item = event.getCurrentItem();
         if (item == null) return;
         switch (item.getType()) {
-            case BARRIER:
+            case BARRIER -> {
                 // Lock on place button, default value is true
                 PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(player);
                 boolean lockOnPlace = !settingsHandler.getLockOnPlace();
                 settingsHandler.setLockOnPlace(lockOnPlace);
                 this.inventory.setItem(0, this.toggleEnchants(item, lockOnPlace));
-                break;
-            case PLAYER_HEAD:
+            }
+            case PLAYER_HEAD -> {
                 state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH;
                 closeAndOpen(player, new FriendManageInventory().fill(player));
-                break;
-            default:
-                closeAndOpen(player, null); // This also includes Material.BLACK_STAINED_GLASS_PANE
-                break;
+            }
+            default -> closeAndOpen(player, null); // This also includes Material.BLACK_STAINED_GLASS_PANE
         }
         event.setCancelled(true);
     }

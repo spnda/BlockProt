@@ -27,10 +27,10 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -139,20 +139,18 @@ public final class UpdateChecker implements Runnable {
 
     /**
      * Represents a spigot resource from the Spigot API.
-     * See https://github.com/SpigotMC/XenforoResourceManagerAPI#getresource
+     * See <a href="https://github.com/SpigotMC/XenforoResourceManagerAPI#getresource">https://github.com/SpigotMC/XenforoResourceManagerAPI#getresource</a>
      * for the exact documentation on this class.
      */
-    public static class SpigotResource {
-        @SerializedName("current_version")
-        public String currentVersion;
-
+    public record SpigotResource(@SerializedName("current_version") String currentVersion) {
         /**
          * Converts the {@link #currentVersion} to a {@link SemanticVersion},
          * for easily comparing the version.
          *
          * @return The semantic version of this current version.
          */
-        public SemanticVersion asSemantic() {
+        @Contract(" -> new")
+        public @NotNull SemanticVersion asSemantic() {
             return new SemanticVersion(this.currentVersion);
         }
     }

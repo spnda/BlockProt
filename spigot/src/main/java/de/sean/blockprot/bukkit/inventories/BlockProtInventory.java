@@ -27,8 +27,6 @@ import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.nbt.FriendModifyAction;
 import de.sean.blockprot.nbt.LockReturnValue;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -185,12 +183,8 @@ public abstract class BlockProtInventory implements InventoryHolder {
             ),
             (handler) -> {
                 switch (action) {
-                    case ADD_FRIEND:
-                        handler.addFriend(friend.getUniqueId().toString());
-                        break;
-                    case REMOVE_FRIEND:
-                        handler.removeFriend(friend.getUniqueId().toString());
-                        break;
+                    case ADD_FRIEND -> handler.addFriend(friend.getUniqueId().toString());
+                    case REMOVE_FRIEND -> handler.removeFriend(friend.getUniqueId().toString());
                 }
                 return null;
             }
@@ -214,7 +208,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
         @Nullable final Function<PlayerSettingsHandler, Void> onSettingsChanges) {
         InventoryState state = InventoryState.get(player.getUniqueId());
         switch (state.friendSearchState) {
-            case FRIEND_SEARCH:
+            case FRIEND_SEARCH -> {
                 if (onBlockChanges == null) return;
                 assert state.getBlock() != null;
                 BlockNBTHandler nbtHandler = getNbtHandlerOrNull(state.getBlock());
@@ -222,12 +216,12 @@ public abstract class BlockProtInventory implements InventoryHolder {
                 LockReturnValue ret = onBlockChanges.apply(nbtHandler);
                 if (ret.success)
                     nbtHandler.applyToOtherContainer();
-                break;
-            case DEFAULT_FRIEND_SEARCH:
+            }
+            case DEFAULT_FRIEND_SEARCH -> {
                 if (onSettingsChanges == null) return;
                 PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(player);
                 onSettingsChanges.apply(settingsHandler);
-                break;
+            }
         }
     }
 
@@ -450,26 +444,17 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @since 0.4.2
      */
     protected Material getProperMaterial(Material material) {
-        switch (material) {
-            case ACACIA_WALL_SIGN:
-                return Material.ACACIA_SIGN;
-            case BIRCH_WALL_SIGN:
-                return Material.BIRCH_SIGN;
-            case CRIMSON_WALL_SIGN:
-                return Material.CRIMSON_SIGN;
-            case DARK_OAK_WALL_SIGN:
-                return Material.DARK_OAK_SIGN;
-            case JUNGLE_WALL_SIGN:
-                return Material.JUNGLE_SIGN;
-            case SPRUCE_WALL_SIGN:
-                return Material.SPRUCE_SIGN;
-            case OAK_WALL_SIGN:
-                return Material.OAK_SIGN;
-            case WARPED_WALL_SIGN:
-                return Material.WARPED_SIGN;
-            default:
-                return material;
-        }
+        return switch (material) {
+            case ACACIA_WALL_SIGN -> Material.ACACIA_SIGN;
+            case BIRCH_WALL_SIGN -> Material.BIRCH_SIGN;
+            case CRIMSON_WALL_SIGN -> Material.CRIMSON_SIGN;
+            case DARK_OAK_WALL_SIGN -> Material.DARK_OAK_SIGN;
+            case JUNGLE_WALL_SIGN -> Material.JUNGLE_SIGN;
+            case SPRUCE_WALL_SIGN -> Material.SPRUCE_SIGN;
+            case OAK_WALL_SIGN -> Material.OAK_SIGN;
+            case WARPED_WALL_SIGN -> Material.WARPED_SIGN;
+            default -> material;
+        };
     }
 
     /**

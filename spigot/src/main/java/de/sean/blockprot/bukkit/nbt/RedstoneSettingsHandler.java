@@ -111,8 +111,7 @@ public class RedstoneSettingsHandler extends NBTHandler<NBTCompound> {
 
     @Override
     public void mergeHandler(@NotNull NBTHandler<?> handler) {
-        if (!(handler instanceof RedstoneSettingsHandler)) return;
-        final RedstoneSettingsHandler redstoneHandler = (RedstoneSettingsHandler) handler;
+        if (!(handler instanceof final RedstoneSettingsHandler redstoneHandler)) return;
         this.setCurrentProtection(redstoneHandler.getCurrentProtection());
         this.setPistonProtection(redstoneHandler.getPistonProtection());
         this.setHopperProtection(redstoneHandler.getHopperProtection());

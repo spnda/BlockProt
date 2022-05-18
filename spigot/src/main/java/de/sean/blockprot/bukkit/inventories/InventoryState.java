@@ -164,7 +164,7 @@ public final class InventoryState {
      * @since 0.2.2
      */
     @Nullable
-    public final Block getBlock() {
+    public Block getBlock() {
         return this.block;
     }
 

@@ -52,7 +52,7 @@ public final class BlockProtCommand implements TabExecutor {
         }
 
         switch (args[0]) {
-            case "update": {
+            case "update" -> {
                 if (sender.isOp()) {
                     Bukkit.getScheduler().runTaskAsynchronously(
                         BlockProt.getInstance(),
@@ -63,32 +63,27 @@ public final class BlockProtCommand implements TabExecutor {
                     );
                     return true;
                 }
-                break;
             }
-            case "settings": {
-                if (!(sender instanceof Player)) break;
-                Player player = (Player) sender;
+            case "settings" -> {
+                if (!(sender instanceof Player player)) break;
                 InventoryState state = new InventoryState(null);
                 state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH;
                 InventoryState.set(player.getUniqueId(), state);
                 player.openInventory(new UserSettingsInventory().fill(player));
                 return true;
             }
-            case "reload": {
+            case "reload" -> {
                 if (sender.isOp()) {
                     BlockProt.getInstance().reloadConfigAndTranslations();
                     sender.spigot().sendMessage(new TextComponent("Finished reloading BlockProt!"));
                     return true;
                 }
-                break;
             }
-            case "stats":
-            case "statistics": {
-                if (!(sender instanceof Player)) {
+            case "stats", "statistics" -> {
+                if (!(sender instanceof Player player)) {
                     sender.sendMessage("This command is only executable as a player!");
                     return false;
                 }
-                Player player = (Player) sender;
 
                 final InventoryState state = new InventoryState(null);
                 state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH;
@@ -97,7 +92,7 @@ public final class BlockProtCommand implements TabExecutor {
                 player.openInventory(new StatisticsInventory().fill(player));
                 return true;
             }
-            case "about": {
+            case "about" -> {
                 final ComponentBuilder builder = new ComponentBuilder();
                 final PluginDescriptionFile description = BlockProt.getInstance().getDescription();
                 builder.append("§x§a§3§c§6§e§bBlockProt v" + description.getVersion() + " - Spigot Plugin\n");
@@ -109,7 +104,7 @@ public final class BlockProtCommand implements TabExecutor {
                 sender.spigot().sendMessage(builder.create());
                 return true;
             }
-            case "integrations": {
+            case "integrations" -> {
                 List<PluginIntegration> integrations = BlockProtAPI.getInstance().getIntegrations();
 
                 final ComponentBuilder builder = new ComponentBuilder();

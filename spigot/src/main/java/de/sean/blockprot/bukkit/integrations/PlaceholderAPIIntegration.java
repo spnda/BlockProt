@@ -32,7 +32,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * BlockProt integration with PlaceholderAPI.
@@ -117,8 +116,7 @@ public final class PlaceholderAPIIntegration extends PluginIntegration {
                     List<FriendHandler> players = (new PlayerSettingsHandler(player)).getFriends();
                     return players
                         .stream()
-                        .map(FriendHandler::getName)
-                        .collect(Collectors.toList())
+                        .map(FriendHandler::getName).toList()
                         .toString();
                 case "own_block_count":
                     PlayerBlocksStatistic playerBlocksStatistic = new PlayerBlocksStatistic();

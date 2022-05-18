@@ -125,10 +125,10 @@ public class FriendSearchResultInventory extends BlockProtInventory {
             // If the strings are similar by 30%, the strings are considered similar (imo) and should be added.
             // If they're less than 30% similar, we should still check if it possibly contains the search criteria
             // and still add that user.
-            if (p.getName() == null || p.getUniqueId().equals(player.getUniqueId())) return false;
-            else if (handler.containsFriend(p.getUniqueId().toString())) return false;
-            else if (compareStrings(p.getName(), searchQuery) > 0.3) return true;
-            else return p.getName().contains(searchQuery);
+            if (p.getName() == null || p.getUniqueId().equals(player.getUniqueId())) return true;
+            else if (handler.containsFriend(p.getUniqueId().toString())) return true;
+            else if (p.getName().contains(searchQuery)) return false;
+            else return compareStrings(p.getName(), searchQuery) < 0.3;
         });
         if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH && state.getBlock() != null) {
             // Allow integrations to additionally filter friends.

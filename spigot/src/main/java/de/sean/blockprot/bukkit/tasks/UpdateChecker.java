@@ -142,7 +142,9 @@ public final class UpdateChecker implements Runnable {
      * See <a href="https://github.com/SpigotMC/XenforoResourceManagerAPI#getresource">https://github.com/SpigotMC/XenforoResourceManagerAPI#getresource</a>
      * for the exact documentation on this class.
      */
-    public record SpigotResource(@SerializedName("current_version") String currentVersion) {
+    public final static class SpigotResource {
+        @SerializedName("current_version") String currentVersion;
+
         /**
          * Converts the {@link #currentVersion} to a {@link SemanticVersion},
          * for easily comparing the version.

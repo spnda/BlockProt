@@ -174,6 +174,7 @@ public final class BlockProt extends JavaPlugin {
     @Override
     public void onDisable() {
         if (!isRunningCraftBukkit()) {
+            getLogger().info("Saving statistic file...");
             StatHandler.disable();
             getServer().getOnlinePlayers().forEach(HumanEntity::closeInventory);
         }

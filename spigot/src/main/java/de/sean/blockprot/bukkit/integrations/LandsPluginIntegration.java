@@ -24,18 +24,25 @@ import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.events.BlockAccessMenuEvent;
 import de.sean.blockprot.bukkit.events.BlockLockOnPlaceEvent;
 import me.angeschossen.lands.api.exceptions.FlagConflictException;
+import me.angeschossen.lands.api.flags.types.LandFlag;
 import me.angeschossen.lands.api.flags.types.RoleFlag;
 import me.angeschossen.lands.api.integration.LandsIntegration;
 import me.angeschossen.lands.api.land.Area;
 import me.angeschossen.lands.api.land.Land;
 import me.angeschossen.lands.api.role.Role;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class LandsPluginIntegration extends PluginIntegration implements Listener {
     @Nullable private Plugin landsPlugin = null;
@@ -44,8 +51,12 @@ public class LandsPluginIntegration extends PluginIntegration implements Listene
 
     @Nullable private RoleFlag protectContainersFlag = null;
 
+    @Nullable private LandFlag requireProtectForFriendFlag = null;
+
     // Apparently flag IDs can be no longer than 20 chars.
     private static final String LOCK_CONTAINER_FLAG_ID = "bp_lock_containers";
+
+    private static final String REQUIRE_PROTECT_FOR_FRIEND_FLAG = "bp_friend_req_prot";
 
     private static final String ALLOW_PROTECTING_CONTAINERS_IN_WILDERNESS = "allow_protecting_containers_in_wilderness";
 
@@ -70,8 +81,11 @@ public class LandsPluginIntegration extends PluginIntegration implements Listene
         this.integration = new LandsIntegration(BlockProt.getInstance());
 
         // This ctor automatically uses Target.PLAYER.
-        this.protectContainersFlag = new RoleFlag(BlockProt.getInstance(), RoleFlag.Category.ACTION, LOCK_CONTAINER_FLAG_ID, true,
-            allowProtectingContainersInWilderness());
+        this.protectContainersFlag = new RoleFlag(BlockProt.getInstance(), RoleFlag.Category.ACTION,
+            LOCK_CONTAINER_FLAG_ID, true, allowProtectingContainersInWilderness());
+
+        this.requireProtectForFriendFlag = new LandFlag(BlockProt.getInstance(),
+            REQUIRE_PROTECT_FOR_FRIEND_FLAG);
 
         try {
             this.protectContainersFlag
@@ -79,6 +93,12 @@ public class LandsPluginIntegration extends PluginIntegration implements Listene
                 .setDisplay(true)
                 .setDescription(Translator.get(TranslationKey.INTEGRATIONS__LANDS__PROTECT_CONTAINERS_DESC))
                 .setDisplayName(Translator.get(TranslationKey.INTEGRATIONS__LANDS__PROTECT_CONTAINERS_FLAG_NAME));
+
+            this.requireProtectForFriendFlag
+                .setIcon(new ItemStack(Material.ENDER_PEARL))
+                .setDisplay(true)
+                .setDescription(Translator.get(TranslationKey.INTEGRATIONS__LANDS__REQUIRE_PROTECT_FOR_FRIENDS_DESC))
+                .setDisplayName(Translator.get(TranslationKey.INTEGRATIONS__LANDS__REQUIRE_PROTECT_FOR_FRIENDS_FLAG_NAME));
 
             this.integration.registerFlag(this.protectContainersFlag);
         } catch (FlagConflictException | IllegalArgumentException e) {
@@ -100,12 +120,16 @@ public class LandsPluginIntegration extends PluginIntegration implements Listene
     @Override
     public void reload() {
         super.reload();
-        if (this.protectContainersFlag == null)
+        if (this.protectContainersFlag == null || this.requireProtectForFriendFlag == null)
             return;
 
         this.protectContainersFlag
             .setDescription(Translator.get(TranslationKey.INTEGRATIONS__LANDS__PROTECT_CONTAINERS_DESC))
             .setDisplayName(Translator.get(TranslationKey.INTEGRATIONS__LANDS__PROTECT_CONTAINERS_FLAG_NAME));
+
+        this.requireProtectForFriendFlag
+            .setDescription(Translator.get(TranslationKey.INTEGRATIONS__LANDS__REQUIRE_PROTECT_FOR_FRIENDS_DESC))
+            .setDisplayName(Translator.get(TranslationKey.INTEGRATIONS__LANDS__REQUIRE_PROTECT_FOR_FRIENDS_FLAG_NAME));
     }
 
     @Override
@@ -128,7 +152,10 @@ public class LandsPluginIntegration extends PluginIntegration implements Listene
         if (area == null)
             return;
 
-        friends.removeIf(p -> area.getRole(p.getUniqueId()).isVisitorRole());
+        friends.removeIf(p -> {
+            var role = area.getRole(p.getUniqueId());
+            return role.isVisitorRole() || (area.hasFlag(requireProtectForFriendFlag) && role.hasFlag(protectContainersFlag));
+        });
     }
 
     @Override
@@ -145,7 +172,14 @@ public class LandsPluginIntegration extends PluginIntegration implements Listene
         if (area == null)
             return true;
 
-        return !area.getRole(player.getUniqueId()).isVisitorRole();
+        // TODO: This if-else abomination needs to be simplified
+        var role = area.getRole(player.getUniqueId());
+        if (role.isVisitorRole())
+            return false;
+        else if (area.hasFlag(requireProtectForFriendFlag))
+            return role.hasFlag(protectContainersFlag);
+        else
+            return true;
     }
 
     private boolean allowProtectingContainersInWilderness() {

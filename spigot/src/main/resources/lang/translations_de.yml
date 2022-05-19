@@ -58,3 +58,5 @@ integrations:
   lands:
     protect_containers_flag_name: Kontainer schützen (BlockProt)
     protect_containers_desc: Erlaubt einem Spieler Truhen, Öfen, ... zu sperren
+    require_protect_for_friends_flag_name: "Kontainer schützen" für Freund erfordern (BlockProt)
+    require_protect_for_friends_desc: Nur Spieler, die die Flagge "Kontainer schützen" haben, können als Freund hinzugefügt werden.

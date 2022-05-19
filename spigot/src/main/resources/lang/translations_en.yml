@@ -65,3 +65,5 @@ integrations:
   lands:
     protect_containers_flag_name: Protect containers (BlockProt)
     protect_containers_desc: Allows a player to protect chests, furnaces, ...
+    require_protect_for_friends_flag_name: Require "Protect containers" for friends (BlockProt)
+    require_protect_for_friends_desc: Only players that have the "Protect containers" flag are eligible to be added as a friend.

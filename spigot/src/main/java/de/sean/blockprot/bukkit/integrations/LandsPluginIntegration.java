@@ -113,6 +113,41 @@ public class LandsPluginIntegration extends PluginIntegration implements Listene
         return BlockProt.getInstance().getPlugin("Lands");
     }
 
+    @SuppressWarnings("deprecation")
+    @Override
+    protected void filterFriendsInternal(@NotNull ArrayList<OfflinePlayer> friends, @NotNull Player player, @NotNull Block block) {
+        if (landsPlugin == null || requireProtectForFriendFlag == null)
+            return;
+
+        var land = this.integration.getLand(block.getLocation());
+        if (land == null)
+            // Anyone can lock in the wilderness.
+            return;
+
+        var area = this.integration.getAreaByLoc(block.getLocation());
+        if (area == null)
+            return;
+
+        friends.removeIf(p -> area.getRole(p.getUniqueId()).isVisitorRole());
+    }
+
+    @Override
+    protected boolean filterFriendByUuid(@NotNull UUID friend, @NotNull Player player, @NotNull Block block) {
+        if (landsPlugin == null || requireProtectForFriendFlag == null)
+            return true;
+
+        var land = this.integration.getLand(block.getLocation());
+        if (land == null)
+            // Anyone can lock in the wilderness.
+            return true;
+
+        var area = this.integration.getAreaByLoc(block.getLocation());
+        if (area == null)
+            return true;
+
+        return !area.getRole(player.getUniqueId()).isVisitorRole();
+    }
+
     private boolean allowProtectingContainersInWilderness() {
         return configuration.contains(ALLOW_PROTECTING_CONTAINERS_IN_WILDERNESS)
             && configuration.getBoolean(ALLOW_PROTECTING_CONTAINERS_IN_WILDERNESS);

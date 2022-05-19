@@ -130,13 +130,17 @@ public class FriendSearchResultInventory extends BlockProtInventory {
             else if (p.getName().contains(searchQuery)) return false;
             else return compareStrings(p.getName(), searchQuery) < 0.3;
         });
+
+        state.friendResultCache.clear();
         if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH && state.getBlock() != null) {
             // Allow integrations to additionally filter friends.
-            // I hope not reassigning to potentialFriends works here and that's it properly referenced.
-            PluginIntegration.filterFriends(potentialFriends, player, state.getBlock());
+            var filtered = potentialFriends.stream()
+                .filter(f -> PluginIntegration.filterFriendByUuidForAll(f.getUniqueId(), player, state.getBlock()))
+                .toList();
+            state.friendResultCache.addAll(filtered);
+        } else {
+            state.friendResultCache.addAll(potentialFriends);
         }
-        state.friendResultCache.clear();
-        state.friendResultCache.addAll(potentialFriends);
 
 
         // Finally, construct the inventory with all the potential friends.

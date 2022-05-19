@@ -30,6 +30,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.UUID;
+import java.util.function.Predicate;
 
 /**
  * A plugin integration that can register new event listeners and
@@ -77,23 +79,77 @@ public abstract class PluginIntegration {
     }
 
     /**
-     * This lets all registered plugin integrations filter out friends that
-     * they don't want players to add to {@code block}.
+     * This lets all registered plugin integrations filter out friends that they don't want
+     * players to add to {@code block}.This method will check {@link PluginIntegration#filterFriendByUuid(UUID, Player, Block)}
+     * and {@link PluginIntegration#filterFriendsInternal(ArrayList, Player, Block)} for backwards
+     * compatibility. Note that we also use reflection to determine which of these functions to
+     * call and therefore {@link PluginIntegration#filterFriendByUuidForAll(UUID, Player, Block)}
+     * might be a more performant option.
      *
-     * @param friends The initial (default) list of friends that can be added.
-     * @param player  The player that is trying to add these friends.
-     * @param block   The block these friends are being added to.
+     * @param friendsInput The initial (default) list of friends that can be added. This ArrayList
+     *                     is not modified within this function.
+     * @param player       The player that is trying to add these friends.
+     * @param block        The block these friends are being added to.
+     * @see #filterFriendByUuidForAll(UUID, Player, Block)
      * @return The new filtered list.
      * @since 0.4.0
+     * @deprecated
      */
-    public static ArrayList<OfflinePlayer> filterFriends(@NotNull final ArrayList<OfflinePlayer> friends,
-                                                         @NotNull final Player player,
-                                                         @NotNull final Block block) {
-        for (PluginIntegration integration : BlockProt.getInstance().getIntegrations()) {
-            if (integration.isEnabled())
-                integration.filterFriendsInternal(friends, player, block);
+    @Deprecated
+    public static @NotNull ArrayList<OfflinePlayer> filterFriends(@NotNull final ArrayList<OfflinePlayer> friendsInput,
+                                                                  @NotNull final Player player,
+                                                                  @NotNull final Block block) {
+        var friends = new ArrayList<>(friendsInput); // Copy
+
+        for (var integration : BlockProt.getInstance().getIntegrations()) {
+            if (!integration.isEnabled())
+                continue;
+
+            try {
+                var clazz = integration.getClass();
+
+                if (clazz.equals(clazz.getMethod("filterFriendsByUUID", ArrayList.class, Player.class, Block.class).getDeclaringClass())) {
+                    // The integration overrides filterFriendsByUUID. We prefer using that over
+                    // filterFriendsInternal now that it is deprecated.
+                    friends = new ArrayList<>(friends.stream()
+                            .filter(p -> integration.filterFriendByUuid(p.getUniqueId(), player, block))
+                            .toList());
+                } else {
+                    // filterFriendsByUUID was not overriden.
+                    integration.filterFriendsInternal(friends, player, block);
+                }
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            }
         }
         return friends;
+    }
+
+    /**
+     * This lets all registered plugin integrations filter out friends that
+     * they don't want players to add to {@code block}. This method will exclusively
+     * check {@link PluginIntegration#filterFriendByUuid(UUID, Player, Block)}.
+     *
+     * @param friend The initial (default) list of friends that can be added. This ArrayList
+     *                     is not modified within this function.
+     * @param player       The player that is trying to add these friends.
+     * @param block        The block these friends are being added to.
+     * @return The new filtered list.
+     */
+    public static boolean filterFriendByUuidForAll(@NotNull final UUID friend,
+                                                   @NotNull final Player player,
+                                                   @NotNull final Block block) {
+        for (var integration : BlockProt.getInstance().getIntegrations()) {
+            if (!integration.isEnabled())
+                continue;
+
+            // If any integration returns false, meaning that friend should be filtered out,
+            // we return false instantly.
+            if (!integration.filterFriendByUuid(friend, player, block))
+                return false;
+        }
+
+        return true;
     }
 
     /**
@@ -141,7 +197,7 @@ public abstract class PluginIntegration {
     public abstract Plugin getPlugin();
 
     /**
-     * A integration can freely override this function to change the friends
+     * An integration can freely override this function to change the friends
      * that can be added for a {@code block} by {@code player}.
      *
      * @param friends The initial (default) list of friends that can be added.
@@ -149,9 +205,28 @@ public abstract class PluginIntegration {
      * @param block   The block these friends are being added to.
      * @since 0.4.0
      */
+    @Deprecated
     protected void filterFriendsInternal(@NotNull final ArrayList<OfflinePlayer> friends,
                                          @NotNull final Player player,
                                          @NotNull final Block block) {
+    }
+
+    /**
+     * An integration can freely override this function to filter which friends can be added to a
+     * {@code block} by {@code player}. In general, this function should be used together with
+     * {@link java.util.stream.Stream#filter(Predicate)}.
+     *
+     * @param friend The UUID of the player to be checked for as a friend.
+     * @param player The player that is trying to add these friends.
+     * @param block  The block these friends are being added to.
+     * @return True if the friend is allowed to be added, false if it should be filtered out of
+     * the list.
+     */
+    protected boolean filterFriendByUuid(@NotNull final UUID friend,
+                                         @NotNull final Player player,
+                                         @NotNull final Block block) {
+        // By default, we allow all friends.
+        return true;
     }
 
     /**

@@ -22,6 +22,7 @@ import com.google.common.collect.Iterables;
 import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.events.BlockLockOnPlaceEvent;
+import de.sean.blockprot.bukkit.integrations.PluginIntegration;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.bukkit.nbt.StatHandler;
@@ -35,6 +36,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
@@ -47,7 +49,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 
 public class BlockEventListener implements Listener {
     private final BlockProt blockProt;
@@ -150,9 +154,10 @@ public class BlockEventListener implements Listener {
                         }
                         return;
                     }
-                    settingsHandler
-                            .getFriendsStream()
-                            .forEach(handler::addFriend);
+
+                    settingsHandler.getFriendsStream()
+                        .filter(fh -> PluginIntegration.filterFriendByUuidForAll(UUID.fromString(fh.getName()), event.getPlayer(), block))
+                        .forEach(handler::addFriend);
                 }
                 if (BlockProt.getDefaultConfig().disallowRedstoneOnPlace()) {
                     handler.getRedstoneHandler().setAll(false);

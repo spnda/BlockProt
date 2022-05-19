@@ -37,7 +37,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public final class FriendManageInventory extends BlockProtInventory {
@@ -146,8 +145,9 @@ public final class FriendManageInventory extends BlockProtInventory {
 
         List<OfflinePlayer> players = handler.getFriendsAsPlayers();
         if (state.friendSearchState == FriendSearchState.FRIEND_SEARCH && state.getBlock() != null) {
-            PluginIntegration.filterFriends(
-                (ArrayList<OfflinePlayer>) players, player, state.getBlock());
+            players = players.stream()
+                .filter(p -> PluginIntegration.filterFriendByUuidForAll(p.getUniqueId(), player, state.getBlock()))
+                .toList();
         }
 
         // Fill the first page inventory with skeleton skulls.

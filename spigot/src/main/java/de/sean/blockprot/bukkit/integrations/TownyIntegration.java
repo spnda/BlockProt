@@ -42,6 +42,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public final class TownyIntegration extends PluginIntegration implements Listener {
     private static final String CLEANUP_PLOTS_AFTER_UNCLAIM = "cleanup_plots_after_unclaim";
@@ -93,6 +94,7 @@ public final class TownyIntegration extends PluginIntegration implements Listene
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("deprecation")
     @Override
     protected void filterFriendsInternal(@NotNull final ArrayList<OfflinePlayer> friends,
                                          @NotNull final Player player,
@@ -114,6 +116,32 @@ public final class TownyIntegration extends PluginIntegration implements Listene
             Resident resident = TownyAPI.getInstance().getResident(friend.getUniqueId());
             return resident == null || !town.hasResident(resident);
         });
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean filterFriendByUuid(@NotNull final UUID friend,
+                                         @NotNull final Player player,
+                                         @NotNull final Block block) {
+        if (towny == null
+            || TownyAPI.getInstance().isWilderness(block)
+            || !shouldRestrictAccessToResidents()) {
+            return true;
+        }
+
+        var town = TownyAPI.getInstance().getTown(block.getLocation());
+        if (town == null) {
+            // Shouldn't happen, as we already previously check
+            // for the wilderness.
+            return true;
+        }
+
+        // We return true for all residents of this town.
+        var resident = TownyAPI.getInstance().getResident(friend);
+        return resident != null && town.hasResident(resident);
     }
 
     /**

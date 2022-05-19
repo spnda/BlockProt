@@ -105,17 +105,19 @@ public final class BlockProtCommand implements TabExecutor {
                 return true;
             }
             case "integrations" -> {
-                List<PluginIntegration> integrations = BlockProtAPI.getInstance().getIntegrations();
+                var enabledIntegrations = BlockProtAPI.getInstance().getIntegrations().stream()
+                    .filter(PluginIntegration::isEnabled)
+                    .toList();
 
-                final ComponentBuilder builder = new ComponentBuilder();
-                builder.append("§7Enabled integrations (" + integrations.size() + "): ");
-                for (int i = 0; i < integrations.size(); i++) {
-                    if (!integrations.get(i).isEnabled()) continue;
+                var builder = new ComponentBuilder();
+                builder.append("§7Enabled integrations (" + enabledIntegrations.size() + "): ");
 
-                    builder.append("§6" + integrations.get(i).name);
-                    if (i < integrations.size() - 1)
+                for (int i = 0; i < enabledIntegrations.size(); ++i) {
+                    builder.append("§6" + enabledIntegrations.get(i).name);
+                    if (i < enabledIntegrations.size() - 1)
                         builder.append("§7, ");
                 }
+
                 sender.spigot().sendMessage(builder.create());
                 return true;
             }

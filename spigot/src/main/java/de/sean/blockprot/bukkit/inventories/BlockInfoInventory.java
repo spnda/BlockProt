@@ -23,6 +23,7 @@ import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.FriendHandler;
+import de.sean.blockprot.bukkit.nbt.FriendSupportingHandler;
 import de.sean.blockprot.bukkit.nbt.RedstoneSettingsHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -34,6 +35,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,7 +44,7 @@ public class BlockInfoInventory extends BlockProtInventory {
 
     @Override
     int getSize() {
-        return 9 * 6;
+        return InventoryConstants.sextupletLine;
     }
 
     @NotNull
@@ -114,15 +116,22 @@ public class BlockInfoInventory extends BlockProtInventory {
         if (state == null) return inventory;
 
         String owner = handler.getOwner();
-        List<FriendHandler> friends = handler.getFriends();
+        var friends = handler.getFriends();
 
-        this.inventory.clear();
         state.friendResultCache.clear();
-        int pageOffset = maxSkulls * state.currentPageIndex;
+        this.inventory.clear();
+
+        var pageOffset = maxSkulls * state.currentPageIndex;
         for (int i = 0; i < Math.min(friends.size() - pageOffset, maxSkulls); i++) {
-            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(friends.get(pageOffset + i).getName()));
-            this.setItemStack(InventoryConstants.lineLength + i, Material.SKELETON_SKULL, offlinePlayer.getName());
-            state.friendResultCache.add(offlinePlayer);
+            var curPlayer = Bukkit.getOfflinePlayer(
+                UUID.fromString(friends.get(pageOffset + i).getName()));
+
+            if (friends.get(pageOffset + i).doesRepresentPublic()) {
+                this.setItemStack(InventoryConstants.lineLength + i, Material.PLAYER_HEAD, TranslationKey.INVENTORIES__FRIENDS__THE_PUBLIC);
+            } else {
+                this.setItemStack(InventoryConstants.lineLength + i, Material.SKELETON_SKULL, curPlayer.getName());
+            }
+            state.friendResultCache.add(curPlayer);
         }
 
         if (!owner.isEmpty()) {
@@ -167,7 +176,8 @@ public class BlockInfoInventory extends BlockProtInventory {
             () -> {
                 int i = 0;
                 while (i < maxSkulls && i < state.friendResultCache.size()) {
-                    setPlayerSkull(InventoryConstants.lineLength + i, state.friendResultCache.get(i));
+                    if (!state.friendResultCache.get(i).getUniqueId().toString().equals(FriendSupportingHandler.zeroedUuid))
+                        setPlayerSkull(i, state.friendResultCache.get(i));
                     i++;
                 }
             }

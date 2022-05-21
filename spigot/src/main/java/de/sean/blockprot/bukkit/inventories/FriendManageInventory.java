@@ -25,6 +25,7 @@ import de.sean.blockprot.bukkit.integrations.PluginIntegration;
 import de.sean.blockprot.bukkit.inventories.InventoryState.FriendSearchState;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.FriendSupportingHandler;
+import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -37,10 +38,14 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.stream.Stream;
 
 public final class FriendManageInventory extends BlockProtInventory {
-    private final int maxSkulls = getSize() - 5;
+    private final int maxSkulls = getSize() - 6;
 
     @Override
     public int getSize() {
@@ -63,7 +68,7 @@ public final class FriendManageInventory extends BlockProtInventory {
     public void exitModifyInventory(@NotNull final Player player, @NotNull final InventoryState state) {
         Inventory newInventory;
         switch (state.friendSearchState) {
-            case FRIEND_SEARCH: {
+            case FRIEND_SEARCH -> {
                 if (state.getBlock() == null) return;
                 BlockNBTHandler handler = getNbtHandlerOrNull(state.getBlock());
                 if (handler == null) {
@@ -75,13 +80,11 @@ public final class FriendManageInventory extends BlockProtInventory {
                                 state.getBlock().getState().getType(),
                                 handler);
                 }
-                break;
             }
-            case DEFAULT_FRIEND_SEARCH:
-                newInventory = new UserSettingsInventory().fill(player);
-                break;
-            default:
+            case DEFAULT_FRIEND_SEARCH -> newInventory = new UserSettingsInventory().fill(player);
+            default -> {
                 return;
+            }
         }
         closeAndOpen(player, newInventory);
     }
@@ -116,14 +119,23 @@ public final class FriendManageInventory extends BlockProtInventory {
             }
             case SKELETON_SKULL, PLAYER_HEAD -> {
                 // Get the clicked player head and open the detail inventory.
-                int index = findItemIndex(item);
-                if (index < 0 || index >= state.friendResultCache.size()) break;
-                state.currentFriend = state.friendResultCache.get(index);
-                final Inventory inv = new FriendDetailInventory().fill(player);
-                closeAndOpen(player, inv);
+                var index = findItemIndex(item);
+                if (index >= 0 && index < state.friendResultCache.size()) {
+                    state.currentFriend = state.friendResultCache.get(index);
+                    var inv = new FriendDetailInventory().fill(player);
+                    closeAndOpen(player, inv);
+                }
             }
             case MAP -> FriendSearchInventory.openAnvilInventory(player);
             case BOOK -> closeAndOpen(player, new FriendSearchHistoryInventory().fill(player));
+            case WITHER_SKELETON_SKULL -> {
+                // We will add everyone as a friend.
+                switch (state.friendSearchState) {
+                    case FRIEND_SEARCH -> Objects.requireNonNull(getNbtHandlerOrNull(state.getBlock())).addEveryoneAsFriend();
+                    case DEFAULT_FRIEND_SEARCH -> new PlayerSettingsHandler(player).addEveryoneAsFriend();
+                }
+                fill(player); // Essentially rebuilds the inventory.
+            }
             default -> closeAndOpen(player, null); // Unexpected, exit the inventory.
         }
         event.setCancelled(true);
@@ -143,29 +155,34 @@ public final class FriendManageInventory extends BlockProtInventory {
             getFriendSupportingHandler(state.friendSearchState, player, state.getBlock());
         if (handler == null) return null;
 
-        List<OfflinePlayer> players = handler.getFriendsAsPlayers();
-        if (state.friendSearchState == FriendSearchState.FRIEND_SEARCH && state.getBlock() != null) {
-            players = players.stream()
-                .filter(p -> PluginIntegration.filterFriendByUuidForAll(p.getUniqueId(), player, state.getBlock()))
-                .toList();
-        }
+        var friends = handler.getFriends();
 
         // Fill the first page inventory with skeleton skulls.
-        state.friendResultCache.clear();
-
         // We call fill() with the page buttons on this same holder. Clear the inventory too.
+        state.friendResultCache.clear();
         this.inventory.clear();
 
-        int pageOffset = maxSkulls * state.currentPageIndex;
-        for (int i = 0; i < Math.min(players.size() - pageOffset, maxSkulls); i++) {
-            final OfflinePlayer curPlayer = players.get(pageOffset + i);
-            if (curPlayer.getUniqueId().equals(player.getUniqueId())) continue;
-            this.setItemStack(i, Material.SKELETON_SKULL, curPlayer.getName());
+        var has_added_public = false;
+        var pageOffset = maxSkulls * state.currentPageIndex;
+        for (int i = 0; i < Math.min(friends.size() - pageOffset, maxSkulls); i++) {
+            // As far as I can tell Bukkit.getOfflinePlayer will return even if the player
+            // cannot be found. This allows us to use the zeroed UUID for representing the public.
+            var curPlayer = Bukkit.getOfflinePlayer(
+                UUID.fromString(friends.get(pageOffset + i).getName()));
+
+            if (friends.get(pageOffset + i).doesRepresentPublic()) {
+                this.setItemStack(i, Material.PLAYER_HEAD,
+                    TranslationKey.INVENTORIES__FRIENDS__THE_PUBLIC,
+                    List.of(Translator.get(TranslationKey.INVENTORIES__FRIENDS__THE_PUBLIC_DESC)));
+                has_added_public = true;
+            } else {
+                this.setItemStack(i, Material.SKELETON_SKULL, curPlayer.getName());
+            }
             state.friendResultCache.add(curPlayer);
         }
 
         // Only show the page buttons if there's more than 1 page.
-        if (players.size() >= maxSkulls) {
+        if (friends.size() >= maxSkulls) {
             setItemStack(
                 maxSkulls,
                 Material.CYAN_STAINED_GLASS_PANE,
@@ -176,11 +193,16 @@ public final class FriendManageInventory extends BlockProtInventory {
                 TranslationKey.INVENTORIES__NEXT_PAGE);
         }
 
+        if (!has_added_public) {
+            setItemStack(
+                getSize() - 4,
+                Material.WITHER_SKELETON_SKULL,
+                TranslationKey.INVENTORIES__FRIENDS__MAKE_PUBLIC);
+        }
         setItemStack(
             getSize() - 3,
             Material.BOOK,
-            TranslationKey.INVENTORIES__FRIENDS__SEARCH_HISTORY
-        );
+            TranslationKey.INVENTORIES__FRIENDS__SEARCH_HISTORY);
         setItemStack(
             getSize() - 2,
             Material.MAP,
@@ -192,7 +214,8 @@ public final class FriendManageInventory extends BlockProtInventory {
             () -> {
                 int i = 0;
                 while (i < maxSkulls && i < state.friendResultCache.size()) {
-                    this.setPlayerSkull(i, state.friendResultCache.get(i));
+                    if (!state.friendResultCache.get(i).getUniqueId().toString().equals(FriendSupportingHandler.zeroedUuid))
+                        setPlayerSkull(i, state.friendResultCache.get(i));
                     i++;
                 }
             });

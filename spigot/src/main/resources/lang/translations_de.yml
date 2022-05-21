@@ -27,6 +27,9 @@ inventories:
     search: "Spieler suchen"
     search_history: "Suchverlauf"
     result: "Spieler gefunden"
+    the_public: "Die Öffentlichkeit"
+    the_public_desc: "Repräsentiert jeden Spieler auf dem Server."
+    make_public: "Öffentlich machen"
     permissions: "Berechtigungen"
     permission:
       read: "Inhalt einsehen"

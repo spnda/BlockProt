@@ -34,6 +34,9 @@ inventories:
     search: "Search Players"
     search_history: "Search history"
     result: "Players found"
+    the_public: "The public"
+    the_public_desc: "Represents every player on this server."
+    make_public: "Make public"
     permissions: "Permissions"
     permission:
       read: "Read"

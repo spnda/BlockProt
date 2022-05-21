@@ -22,6 +22,7 @@ import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
+import java.util.UUID;
 
 /**
  * The friend handler used by {@link BlockNBTHandler} to handle
@@ -52,6 +53,16 @@ public final class FriendHandler extends NBTHandler<NBTCompound> {
     public String getName() {
         String name = container.getName();
         return name == null ? "" : name;
+    }
+
+    /**
+     * A single friend handler can represent the whole player-base, giving access
+     * to anyone on the server with specific access flags. We represent everyone by
+     * using a zeroed UUID. Nobody seems to have this UUID:
+     * <a href="https://namemc.com/profile/00000000-0000-0000-0000-000000000000?q=00000000-0000-0000-0000-000000000000">https://namemc.com/profile/00000000-0000-0000-0000-000000000000?q=00000000-0000-0000-0000-000000000000</a>
+     */
+    public boolean doesRepresentPublic() {
+        return getName().equals(FriendSupportingHandler.zeroedUuid);
     }
 
     /**
@@ -98,7 +109,7 @@ public final class FriendHandler extends NBTHandler<NBTCompound> {
      * @since 0.3.0
      */
     public void setAccessFlags(@NotNull final EnumSet<BlockAccessFlag> flags) {
-        container.setInteger(ACCESS_FLAGS_ATTRIBUTE, flags.stream().mapToInt(BlockAccessFlag::getFlag).sum());
+        setAccessFlagsBitset(flags.stream().mapToInt(BlockAccessFlag::getFlag).sum());
     }
 
     /**

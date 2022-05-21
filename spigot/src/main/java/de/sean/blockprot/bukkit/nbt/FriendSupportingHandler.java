@@ -23,6 +23,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,9 +37,15 @@ import java.util.stream.Stream;
  */
 public abstract class FriendSupportingHandler<T extends NBTCompound> extends NBTHandler<T> {
     private final @NotNull String friendNbtKey;
+
+    public static final String zeroedUuid = new UUID(0, 0).toString();
     
     public FriendSupportingHandler(@NotNull String friendNbtKey) {
         this.friendNbtKey = friendNbtKey;
+    }
+
+    private NBTCompound compound() {
+        return container.getOrCreateCompound(friendNbtKey);
     }
 
     /**
@@ -74,11 +81,28 @@ public abstract class FriendSupportingHandler<T extends NBTCompound> extends NBT
     }
 
     /**
-     * Gets friends as a list of {@link OfflinePlayer}.
+     * Gets friends as a list of {@link OfflinePlayer}. Note that this call
+     * could be expensive and block the current thread due to web-based API calls.
+     *
+     * Note that this will return every player on the server if everyone was added
+     * to the block.
      */
     public List<OfflinePlayer> getFriendsAsPlayers() {
         return this.getFriendsStream()
-            .map(f -> Bukkit.getOfflinePlayer(UUID.fromString(f.getName())))
+            .flatMap(f -> {
+                if (f.getName().equals(zeroedUuid)) {
+                    return Arrays.stream(Bukkit.getOfflinePlayers());
+                } else {
+                    return Stream.of(f);
+                }
+            })
+            .map(f -> {
+                if (f instanceof FriendHandler fh) {
+                    return Bukkit.getOfflinePlayer(UUID.fromString(fh.getName()));
+                } else {
+                    return (OfflinePlayer) f;
+                }
+            })
             .collect(Collectors.toList());
     }
 
@@ -94,38 +118,47 @@ public abstract class FriendSupportingHandler<T extends NBTCompound> extends NBT
      * Filters the results of {@link #getFriends()} for any entry whose
      * UUID qualifies for {@link String#equals(Object)} with given {@code id}.
      *
+     * If the given {@code id} is not a friend of this block, this might return
+     * the {@link FriendHandler} which represents all players.
+     *
      * @param id The UUID to check for.
      * @return The first {@link FriendHandler} found, or none.
      */
     @NotNull
     public Optional<FriendHandler> getFriend(@NotNull final String id) {
         return getFriendsStream()
-            .filter((f) -> f.getName().equals(id))
-            .findFirst();
+            .filter(f -> f.getName().equals(id) || f.getName().equals(zeroedUuid))
+            // This is a weird Comparator, but it essentially just guarantees that the entry where
+            // getName().equals(zeroedUuid) is at the end of the stream.
+            .min((a, b) -> a.getName().equals(zeroedUuid) ? 1 : -1);
     }
 
     /**
      * Adds a new friend to the NBT.
      */
     public void addFriend(@NotNull final String friend) {
-        NBTCompound compound = container.getOrCreateCompound(friendNbtKey);
-        compound.addCompound(friend).setString("id", friend);
+        compound().addCompound(friend).setString("id", friend);
     }
 
     /**
      * Adds a new {@link FriendHandler} to this NBT data.
      */
     public void addFriend(@NotNull final FriendHandler friend) {
-        NBTCompound compound = container.getOrCreateCompound(friendNbtKey);
-        compound.addCompound(friend.getName()).mergeCompound(friend.container);
+        compound().addCompound(friend.getName()).mergeCompound(friend.container);
+    }
+
+    /**
+     * Add "everyone" as a friend to this handler.
+     */
+    public void addEveryoneAsFriend() {
+        compound().addCompound(zeroedUuid).setString("id", zeroedUuid);
     }
 
     /**
      * Removes a friend from the NBT.
      */
     public void removeFriend(@NotNull final String friend) {
-        NBTCompound compound = container.getOrCreateCompound(friendNbtKey);
-        compound.removeKey(friend);
+        compound().removeKey(friend);
     }
 
     /**

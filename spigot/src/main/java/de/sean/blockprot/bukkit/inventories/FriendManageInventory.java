@@ -45,7 +45,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 public final class FriendManageInventory extends BlockProtInventory {
-    private final int maxSkulls = getSize() - 6;
+    private final int maxSkulls = getSize() - InventoryConstants.singleLine;
 
     @Override
     public int getSize() {
@@ -181,17 +181,14 @@ public final class FriendManageInventory extends BlockProtInventory {
             state.friendResultCache.add(curPlayer);
         }
 
-        // Only show the page buttons if there's more than 1 page.
-        if (friends.size() >= maxSkulls) {
-            setItemStack(
-                maxSkulls,
-                Material.CYAN_STAINED_GLASS_PANE,
-                TranslationKey.INVENTORIES__LAST_PAGE);
-            setItemStack(
-                maxSkulls + 1,
-                Material.BLUE_STAINED_GLASS_PANE,
-                TranslationKey.INVENTORIES__NEXT_PAGE);
-        }
+        setItemStack(
+            maxSkulls,
+            Material.CYAN_STAINED_GLASS_PANE,
+            TranslationKey.INVENTORIES__LAST_PAGE);
+        setItemStack(
+            maxSkulls + 1,
+            Material.BLUE_STAINED_GLASS_PANE,
+            TranslationKey.INVENTORIES__NEXT_PAGE);
 
         if (!has_added_public) {
             setItemStack(

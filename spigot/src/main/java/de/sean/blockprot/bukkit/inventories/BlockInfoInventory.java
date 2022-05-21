@@ -137,18 +137,17 @@ public class BlockInfoInventory extends BlockProtInventory {
         if (!owner.isEmpty()) {
             setPlayerSkull(0, Bukkit.getOfflinePlayer(UUID.fromString(owner)));
         }
-        if (friends.size() >= maxSkulls) {
-            setItemStack(
-                InventoryConstants.lineLength - 3,
-                Material.CYAN_STAINED_GLASS_PANE,
-                TranslationKey.INVENTORIES__LAST_PAGE
-            );
-            setItemStack(
-                InventoryConstants.lineLength - 2,
-                Material.BLUE_STAINED_GLASS_PANE,
-                TranslationKey.INVENTORIES__NEXT_PAGE
-            );
-        }
+
+        setItemStack(
+            InventoryConstants.lineLength - 3,
+            Material.CYAN_STAINED_GLASS_PANE,
+            TranslationKey.INVENTORIES__LAST_PAGE
+        );
+        setItemStack(
+            InventoryConstants.lineLength - 2,
+            Material.BLUE_STAINED_GLASS_PANE,
+            TranslationKey.INVENTORIES__NEXT_PAGE
+        );
 
         RedstoneSettingsHandler redstoneSettingsHandler = handler.getRedstoneHandler();
         setEnchantedItemStack(

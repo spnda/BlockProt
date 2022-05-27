@@ -29,6 +29,7 @@ import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.CheckReturnValue;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -95,6 +96,7 @@ public abstract class PluginIntegration {
      * @since 0.4.0
      * @deprecated
      */
+    @CheckReturnValue
     @Deprecated
     public static @NotNull ArrayList<OfflinePlayer> filterFriends(@NotNull final ArrayList<OfflinePlayer> friendsInput,
                                                                   @NotNull final Player player,

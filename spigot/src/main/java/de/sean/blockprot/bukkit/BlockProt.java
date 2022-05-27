@@ -22,6 +22,7 @@ import de.sean.blockprot.bukkit.commands.BlockProtCommand;
 import de.sean.blockprot.bukkit.config.DefaultConfig;
 import de.sean.blockprot.bukkit.integrations.*;
 import de.sean.blockprot.bukkit.listeners.*;
+import de.sean.blockprot.bukkit.metrics.IntegrationBarChart;
 import de.sean.blockprot.bukkit.nbt.StatHandler;
 import de.sean.blockprot.bukkit.tasks.UpdateChecker;
 import org.bstats.bukkit.Metrics;
@@ -142,6 +143,7 @@ public final class BlockProt extends JavaPlugin {
 
         /* bStats Metrics */
         metrics = new Metrics(this, pluginId);
+        metrics.addCustomChart(new IntegrationBarChart());
 
         /* Register Listeners */
         final PluginManager pm = getServer().getPluginManager();

@@ -26,6 +26,9 @@ inventories:
     search: 친구 검색
     search_history: 친구 검색 기록
     result: 친구 검색 결과
+    the_public: 공개
+    the_public_desc: 이 서버의 모든 플레이어를 나타냅니다.
+    make_public: 공개로 전환합니다.
     permissions: 권한
     permission:
       read: 읽기
@@ -54,3 +57,5 @@ integrations:
   lands:
     protect_containers_flag_name: 보호받고 있는 보관함입니다. (BlockProt)
     protect_containers_desc: 플레이어가 상자, 용광로 등을 보호할 수 있습니다.
+    require_protect_for_friends_flag_name: 친구를 위해 "보관함 보호"가 필요합니다. (BlockProt)
+    require_protect_for_friends_desc: '"보관함 보호" 권한이 있는 플레이어만 친구로 추가할 수 있습니다.'

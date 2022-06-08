@@ -1,38 +1,52 @@
-# Spanish translation file
-# Thanks to @C4BR3R4 on GitHub
+---
 locale: es
-
 inventories:
-  back: "Volver"
-  last_page: "Última página"
-  next_page: "Siguiente página"
-  block_lock: "Proteger"
-  user_settings: "Configuración de Usuario"
-  block_info: "Información del Bloque"
-  lock: "Proteger"
-  unlock: "Desproteger"
-  lock_on_place: "Proteger siempre al colocar"
+  back: Atrás
+  last_page: Última página
+  next_page: Siguiente página
+  block_lock: Proteger
+  user_settings: Configuración de Usuario
+  block_info: Información del Bloque
+  lock: Proteger
+  unlock: Desproteger
+  lock_on_place: Proteger siempre al colocar
   redstone:
-    settings: "Configuración de Redstone"
-    enable_all: "Habilitar todo"
-    disable_all: "Desactivar todo"
+    settings: Configuración de Redstone
+    enable_all: Habilitar todo
+    disable_all: Desactivar todo
   friends:
-    manage: "Administrar permisos"
-    edit: "Modificar permisos"
-    remove: "Eliminar permisos"
-    search: "Buscar Jugadores"
-    result: "Jugadores encontrados"
+    manage: Administrar permisos
+    edit: Modificar permisos
+    remove: Eliminar permisos
+    search: Buscar Jugadores
+    result: Jugadores encontrados
+    the_public: Público
+    the_public_desc: Representa todos los jugadores en este servidor.
+    make_public: Hacer público
     permission:
-      read: "Leer"
-      write: "Escribir"
-
+      read: Leer
+      write: Escribir
+  statistics:
+    container_count: Número de bloques
 messages:
-  permission_granted: "Protegido."
-  unlocked: "Desprotegido."
-  no_permission: "No tienes permiso."
-  friend_added: "Permiso añadido."
-  friend_removed: "Permiso eliminado."
-  friend_already_added: "Ya tiene permiso."
-  friend_cant_be_removed: "No se puede retirar el permiso."
-  redstone_added: "Se ha añadido protección contra Redstone."
-  redstone_removed: "Se ha eliminado la protección contra Redstone."
+  permission_granted: Protegido.
+  unlocked: Desprotegido.
+  no_permission: No tienes permiso.
+  friend_added: Permiso añadido.
+  friend_removed: Permiso eliminado.
+  friend_already_added: Ya tiene permiso.
+  friend_cant_be_removed: No se puede retirar el permiso.
+  redstone_added: Se ha añadido protección contra Redstone.
+  redstone_removed: Se ha eliminado la protección contra Redstone.
+  exceeded_max_block_count: Has excedido el número máximo de bloques bloqueables.
+  lock_hint: "§6Puedes proteger tus bloques agachandote y haciendo click derecho en
+    tus cofres, hornos y más! También, revisa /blockprot settings para configurarlo
+    a tu manera."
+integrations:
+  lands:
+    protect_containers_flag_name: Proteger contenedores (BlockProt)
+    protect_containers_desc: Permitir a los jugadores a proteger cofres, hornos, ...
+    require_protect_for_friends_flag_name: Requiere "Proteger contenedores" para amigos
+      (BlockProt)
+    require_protect_for_friends_desc: Solo los jugadores que tienen el "Proteger contenedores"
+      son elegibles para ser agregados a amigos.

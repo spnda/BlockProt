@@ -10,8 +10,13 @@ inventories:
   lock: Proteger
   unlock: Desproteger
   lock_on_place: Proteger siempre al colocar
+  copy_configuration: Copiar configuración
+  paste_configuration: Pegar configuración
   redstone:
     settings: Configuración de Redstone
+    redstone_enabled: Protección Redstone habilitada
+    pistons_enabled: Protección de pistón habilitada
+    hoppers_enabled: Protección de tolva habilitada
     enable_all: Habilitar todo
     disable_all: Desactivar todo
   friends:
@@ -19,15 +24,22 @@ inventories:
     edit: Modificar permisos
     remove: Eliminar permisos
     search: Buscar Jugadores
+    search_history: Buscar Historia
     result: Jugadores encontrados
     the_public: Público
     the_public_desc: Representa todos los jugadores en este servidor.
     make_public: Hacer público
+    permissions: Permisos
     permission:
       read: Leer
       write: Escribir
+      manager: Manager
   statistics:
+    statistics: Estadísticas
+    player_statistics: Estadísticas del jugador
+    global_statistics: Estadísticas del servidor
     container_count: Número de bloques
+    your_blocks: Tus bloques
 messages:
   permission_granted: Protegido.
   unlocked: Desprotegido.

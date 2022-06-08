@@ -13,6 +13,7 @@ inventories:
   lock_on_place: "Automatisch sperren"
   copy_configuration: "Konfiguration kopieren"
   paste_configuration: "Konfiguration übertragen"
+  set_block_name: "Namen ändern"
   redstone:
     settings: "Redstone Einstellungen"
     redstone_enabled: "Redstone-Schutz aktiviert"

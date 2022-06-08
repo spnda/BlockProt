@@ -20,6 +20,7 @@ inventories:
   lock_on_place: "Lock automatically"
   copy_configuration: "Copy configuration"
   paste_configuration: "Paste configuration"
+  set_block_name: "Set block name"
   redstone:
     settings: "Redstone Settings"
     redstone_enabled: "Redstone protection enabled"

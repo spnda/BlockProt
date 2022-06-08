@@ -22,12 +22,10 @@ import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
-import de.sean.blockprot.bukkit.nbt.FriendHandler;
 import de.sean.blockprot.bukkit.nbt.FriendSupportingHandler;
 import de.sean.blockprot.bukkit.nbt.RedstoneSettingsHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -35,8 +33,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 public class BlockInfoInventory extends BlockProtInventory {
@@ -137,6 +133,11 @@ public class BlockInfoInventory extends BlockProtInventory {
         if (!owner.isEmpty()) {
             setPlayerSkull(0, Bukkit.getOfflinePlayer(UUID.fromString(owner)));
         }
+        setItemStack(
+            1,
+            Material.OAK_SIGN,
+            handler.getName()
+        );
 
         setItemStack(
             InventoryConstants.lineLength - 3,
@@ -151,19 +152,19 @@ public class BlockInfoInventory extends BlockProtInventory {
 
         RedstoneSettingsHandler redstoneSettingsHandler = handler.getRedstoneHandler();
         setEnchantedItemStack(
-            1,
+            2,
             Material.REDSTONE,
             TranslationKey.INVENTORIES__REDSTONE__REDSTONE_ENABLED,
             redstoneSettingsHandler.getCurrentProtection()
         );
         setEnchantedItemStack(
-            2,
+            3,
             Material.HOPPER,
             TranslationKey.INVENTORIES__REDSTONE__HOPPERS_ENABLED,
             redstoneSettingsHandler.getHopperProtection()
         );
         setEnchantedItemStack(
-            3,
+            4,
             Material.PISTON,
             TranslationKey.INVENTORIES__REDSTONE__PISTONS_ENABLED,
             redstoneSettingsHandler.getPistonProtection()

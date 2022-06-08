@@ -55,6 +55,8 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
     static final String OLD_REDSTONE_ATTRIBUTE = "splugin_lock_redstone";
     static final String REDSTONE_ATTRIBUTE = "blockprot_redstone";
 
+    static final String NAME_ATTRIBUTE = "blockprot_name";
+
     /**
      * The backing block this handler handles.
      *
@@ -159,6 +161,16 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
      */
     public boolean isOwner(@NotNull final String player) {
         return getOwner().equals(player);
+    }
+
+    public @NotNull String getName() {
+        if (!container.hasKey(NAME_ATTRIBUTE))
+            return block.getType().toString();
+        return container.getString(NAME_ATTRIBUTE);
+    }
+
+    public void setName(@NotNull String name) {
+        container.setString(NAME_ATTRIBUTE, name);
     }
 
     /**

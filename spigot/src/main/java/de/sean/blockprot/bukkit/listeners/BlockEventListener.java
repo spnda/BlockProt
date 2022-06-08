@@ -36,7 +36,6 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
@@ -49,7 +48,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -185,6 +183,7 @@ public class BlockEventListener implements Listener {
                             }
                         } else {
                             handler.applyToOtherContainer();
+                            handler.setName(BlockUtil.getHumanReadableBlockName(block.getType()));
                         }
                     },
                     1

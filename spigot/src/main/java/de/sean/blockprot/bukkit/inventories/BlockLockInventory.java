@@ -24,7 +24,7 @@ import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.events.BlockAccessMenuEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerInventoryClipboard;
-import de.tr7zw.changeme.nbtapi.NBTContainer;
+import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -69,35 +69,55 @@ public class BlockLockInventory extends BlockProtInventory {
                     ? null
                     : new RedstoneSettingsInventory().fill(player, state)
             );
-        } else if (item.getType() == Material.PLAYER_HEAD) {
-            closeAndOpen(
+        }
+        switch (item.getType()) {
+            case PLAYER_HEAD -> closeAndOpen(
                 player,
                 new FriendManageInventory().fill(player)
             );
-        } else if (item.getType() == Material.OAK_SIGN) {
-            BlockNBTHandler handler = getNbtHandlerOrNull(block);
-            closeAndOpen(
-                player,
-                handler == null
-                    ? null
-                    : new BlockInfoInventory().fill(player, handler)
-            );
-        } else if (item.getType() == Material.KNOWLEDGE_BOOK) {
-            // Paste
-            BlockNBTHandler handler = getNbtHandlerOrNull(block);
-            NBTContainer container = PlayerInventoryClipboard.get(player.getUniqueId().toString());
-            if (handler != null && container != null)
-                handler.pasteNbt(container);
-        } else if (item.getType() == Material.PAPER) {
-            // Copy
-            BlockNBTHandler handler = getNbtHandlerOrNull(block);
-            if (handler != null) {
-                PlayerInventoryClipboard.set(player.getUniqueId().toString(), handler.getNbtCopy());
-                // The player probably doesn't want to paste the data onto the same container.
-                closeAndOpen(player, null);
+            case OAK_SIGN -> {
+                var handler = getNbtHandlerOrNull(block);
+                closeAndOpen(
+                    player,
+                    handler == null
+                        ? null
+                        : new BlockInfoInventory().fill(player, handler)
+                );
             }
-        } else {
-            closeAndOpen(
+            case KNOWLEDGE_BOOK -> {
+                // Paste
+                var handler = getNbtHandlerOrNull(block);
+                var container = PlayerInventoryClipboard.get(player.getUniqueId().toString());
+                if (handler != null && container != null)
+                    handler.pasteNbt(container);
+            }
+            case PAPER -> {
+                // Copy
+                var handler = getNbtHandlerOrNull(block);
+                if (handler != null) {
+                    PlayerInventoryClipboard.set(player.getUniqueId().toString(), handler.getNbtCopy());
+                    // The player probably doesn't want to paste the data onto the same container.
+                    closeAndOpen(player, null);
+                }
+            }
+            case NAME_TAG -> {
+                player.closeInventory();
+                new AnvilGUI.Builder()
+                    .text("Block name")
+                    .title(Translator.get(TranslationKey.INVENTORIES__SET_BLOCK_NAME))
+                    .plugin(BlockProt.getInstance())
+                    .onComplete((Player kPlayer, String name) -> {
+                        var invState = InventoryState.get(kPlayer.getUniqueId());
+                        assert(invState.getBlock() != null);
+
+                        new BlockNBTHandler(invState.getBlock()).setName(name);
+                        Inventory inventory = new BlockLockInventory().fill(player, block.getType(), new BlockNBTHandler(block));
+                        if (inventory == null) return AnvilGUI.Response.close();
+                        return AnvilGUI.Response.openInventory(inventory);
+                    })
+                    .open(player);
+            }
+            default -> closeAndOpen(
                 player,
                 null
             );
@@ -135,6 +155,11 @@ public class BlockLockInventory extends BlockProtInventory {
                 2,
                 Material.PLAYER_HEAD,
                 TranslationKey.INVENTORIES__FRIENDS__MANAGE
+            );
+            setItemStack(
+                3,
+                Material.NAME_TAG,
+                TranslationKey.INVENTORIES__SET_BLOCK_NAME
             );
             if (PlayerInventoryClipboard.contains(player.getUniqueId().toString())) {
                 setItemStack(

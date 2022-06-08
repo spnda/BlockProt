@@ -27,14 +27,11 @@ import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 public class FriendSearchInventory {
-    @NotNull
-    private static final String inventoryName = Translator.get(TranslationKey.INVENTORIES__FRIENDS__SEARCH);
-
     public static void openAnvilInventory(@NotNull final Player requestingPlayer) {
         (new AnvilGUI.Builder())
             .onComplete(FriendSearchInventory::onCompleteCallback)
             .text("Name")
-            .title(inventoryName)
+            .title(Translator.get(TranslationKey.INVENTORIES__FRIENDS__SEARCH))
             .plugin(BlockProt.getInstance())
             // .preventClose() // Allow the user to close
             .open(requestingPlayer);

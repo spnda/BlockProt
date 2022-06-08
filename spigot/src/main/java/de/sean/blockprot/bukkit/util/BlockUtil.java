@@ -19,6 +19,7 @@
 package de.sean.blockprot.bukkit.util;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
@@ -29,6 +30,9 @@ import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Various utilities for manipulating and getting block
@@ -93,5 +97,20 @@ public final class BlockUtil {
         } catch (ClassCastException e) {
             return null;
         }
+    }
+
+    public static @NotNull String capitalizeFirstLetters(@NotNull String str) {
+        String n = (str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase());
+        Matcher m = Pattern.compile("_[a-z]").matcher(n);
+        while (m.find()) {
+            n = n.substring(0, m.end() - 2) // -2 as we also match the underscore.
+                + n.substring(m.start(), m.end()).toUpperCase()
+                + n.substring(m.end());
+        }
+        return n.replaceAll("_", " ");
+    }
+
+    public static @NotNull String getHumanReadableBlockName(@NotNull Material material) {
+        return capitalizeFirstLetters(material.name());
     }
 }

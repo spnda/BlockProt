@@ -89,7 +89,6 @@ public class BlockEventListener implements Listener {
             // For blocks, we want to clear the NBT data, as that lives
             // independently of the actual block state.
             handler.clear();
-            handler.applyToOtherContainer();
         }
     }
 

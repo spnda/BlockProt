@@ -182,8 +182,8 @@ public class BlockEventListener implements Listener {
                                 StatHandler.removeContainer(event.getPlayer(), block);
                             }
                         } else {
-                            handler.applyToOtherContainer();
                             handler.setName(BlockUtil.getHumanReadableBlockName(block.getType()));
+                            handler.applyToOtherContainer();
                         }
                     },
                     1

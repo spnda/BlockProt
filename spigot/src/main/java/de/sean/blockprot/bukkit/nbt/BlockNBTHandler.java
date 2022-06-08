@@ -388,6 +388,7 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
         this.setOwner(blockNBTHandler.getOwner());
         this.setFriends(blockNBTHandler.getFriends());
         this.getRedstoneHandler().mergeHandler(blockNBTHandler.getRedstoneHandler());
+        this.setName(handler.getName());
     }
 
     @Override

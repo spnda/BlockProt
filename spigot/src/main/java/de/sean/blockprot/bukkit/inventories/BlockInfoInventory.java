@@ -177,7 +177,8 @@ public class BlockInfoInventory extends BlockProtInventory {
                 int i = 0;
                 while (i < maxSkulls && i < state.friendResultCache.size()) {
                     if (!state.friendResultCache.get(i).getUniqueId().toString().equals(FriendSupportingHandler.zeroedUuid))
-                        setPlayerSkull(i, state.friendResultCache.get(i));
+                        setPlayerSkull(InventoryConstants.singleLine + i,
+                            state.friendResultCache.get(i));
                     i++;
                 }
             }

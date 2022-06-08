@@ -40,9 +40,6 @@ allprojects {
 
     repositories {
         mavenLocal()
-        maven("https://repo.codemc.org/repository/maven-public/") {
-            name = "CodeMC"
-        }
         maven("https://jitpack.io") {
             name = "JitPack"
         }

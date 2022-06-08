@@ -11,6 +11,7 @@ plugins {
 }
 
 val nbtApiVersion: String by project
+val anvilGuiVersion: String by project
 val townyVersion: String by project
 val papiVersion: String by project
 val worldGuardVersion: String by project
@@ -22,6 +23,13 @@ repositories {
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://maven.enginehub.org/repo/")
+    maven("https://repo.codemc.org/repository/maven-public/") {
+        name = "CodeMC"
+        content {
+            includeGroup("de.tr7zw")
+            includeGroup("net.wesjd")
+        }
+    }
 }
 
 dependencies {
@@ -29,14 +37,13 @@ dependencies {
 
     // Spigot
     compileOnly("org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT")
-    compileOnly("org.apache.commons:commons-lang3:3.12.0")
 
     // bStats
     api("org.bstats:bstats-bukkit:3.0.0")
 
     // Dependencies
     implementation("de.tr7zw:item-nbt-api:$nbtApiVersion")
-    implementation("net.wesjd:anvilgui:1.5.3-SNAPSHOT") // Allows us to use anvils as inventories without using NMS.
+    implementation("net.wesjd:anvilgui:$anvilGuiVersion") // Allows us to use anvils as inventories without using NMS.
 
     // Integrations
     implementation("com.github.TownyAdvanced:Towny:$townyVersion")

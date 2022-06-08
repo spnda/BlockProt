@@ -26,7 +26,6 @@ import de.sean.blockprot.bukkit.nbt.FriendSupportingHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.nbt.FriendModifyAction;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -52,6 +51,43 @@ public class FriendSearchResultInventory extends BlockProtInventory {
     @Override
     String getTranslatedInventoryName() {
         return Translator.get(TranslationKey.INVENTORIES__FRIENDS__RESULT);
+    }
+
+    private int min(int a, int b, int c) {
+        return Math.min(Math.min(a, b), c);
+    }
+
+    // Optimized version of the Levenshtein Distance from here:
+    // https://stackoverflow.com/a/13564498/9156308
+    private int levenshteinDistance(@NotNull CharSequence a, @NotNull CharSequence b) {
+        if (a.isEmpty())
+            return b.length();
+
+        if (b.isEmpty())
+            return a.length();
+
+        int[] mem = new int[b.length()];
+
+        for (int i = 0; i < b.length(); ++i)
+            mem[i] = i;
+
+        for (int i = 1; i < a.length(); ++i) {
+            int[] cur = new int[b.length()];
+            cur[0] = i;
+
+            for (int j = 1; j < b.length(); ++j) {
+                int d1 = mem[j] + 1;
+                int d2 = cur[j - 1] + 1;
+                int d3 = mem[j - 1];
+                if (a.charAt(i - 1) != b.charAt(j - 1))
+                    d3 += 1;
+                cur[j] = min(d1, d2, d3);
+            }
+
+            mem = cur;
+        }
+
+        return mem[b.length() - 1];
     }
 
     @Override
@@ -104,7 +140,7 @@ public class FriendSearchResultInventory extends BlockProtInventory {
         }
         final int longerLength = longer.length();
         if (longerLength == 0) return 1.0; // They match 100% if both Strings are empty
-        else return (longerLength - StringUtils.getLevenshteinDistance(longer, shorter)) / (double) longerLength;
+        else return (longerLength - levenshteinDistance(longer, shorter)) / (double) longerLength;
     }
 
     @Nullable

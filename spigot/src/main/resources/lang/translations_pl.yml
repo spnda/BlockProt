@@ -1,0 +1,65 @@
+---
+locale: pl
+inventories:
+  back: Wróć
+  last_page: Ostatnia strona
+  next_page: Następna strona
+  block_lock: Block Lock
+  user_settings: Ustawienia użytkownika
+  block_info: Info o bloku
+  lock: Zablokuj
+  unlock: Odblokuj
+  lock_on_place: Zablokuj automatycznie
+  copy_configuration: Kopiuj konfigurację
+  paste_configuration: Wklej konfigurację
+  set_block_name: Ustaw nazwę bloku
+  redstone:
+    settings: Ustawienia Redstone
+    redstone_enabled: Ochrona Redstone włączona
+    pistons_enabled: Ochrona tłoku włączona
+    hoppers_enabled: Ochrona leja włączona
+    enable_all: Włącz wszystkie
+    disable_all: Wyłącz wszystkie
+  friends:
+    manage: Zarządzaj przyjaciółmi
+    edit: Edytuj przyjaciela
+    remove: Usuń przyjaciela
+    search: Wyszukaj graczy
+    search_history: Historia wyszukiwania
+    result: Znaleziono graczy
+    the_public: Publiczny
+    the_public_desc: Reprezentuje każdego gracza na tym serwerze.
+    make_public: Upublicznij
+    permissions: Uprawnienia
+    permission:
+      read: Read
+      write: Write
+      manager: Manager
+  statistics:
+    statistics: Statystyki
+    player_statistics: Statystyki gracza
+    global_statistics: Statystyki serwera
+    container_count: Liczba bloków
+    your_blocks: Twoje bloki
+messages:
+  permission_granted: Przyznano uprawnienie.
+  unlocked: Odblokowany.
+  no_permission: Brak uprawnień.
+  friend_added: Dodano przyjaciela.
+  friend_removed: Usunięto przyjaciela.
+  friend_already_added: Przyjaciel został już dodany.
+  friend_cant_be_removed: Przyjaciel nie może zostać usunięty.
+  redstone_added: Dodano ochronę Redstone.
+  redstone_removed: Usunięto ochronę Redstone.
+  exceeded_max_block_count: Przekroczyłeś maksymalną liczbę bloków do zablokowania.
+  lock_hint: "§6Możesz chronić swoje bloki, kucając i klikając prawym przyciskiem
+    myszy na skrzynie, piece i wiele więcej! Sprawdź także ustawienia /blockprot,
+    aby skonfigurować je według własnych upodobań.\n"
+integrations:
+  lands:
+    protect_containers_flag_name: Protect containers (BlockProt)
+    protect_containers_desc: Pozwala graczowi chronić skrzynie, piece, ...
+    require_protect_for_friends_flag_name: Wymaga "Protect containers" dla przyjaciół
+      (BlockProt)
+    require_protect_for_friends_desc: Tylko gracze z flagą „Protect containers” mogą
+      zostać dodani jako przyjaciele.

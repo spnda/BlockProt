@@ -73,18 +73,21 @@ public class InventoryEventListener implements Listener {
                     BlockNBTHandler handler = new BlockNBTHandler(blockHolder.getBlock());
                     String playerUuid = player.getUniqueId().toString();
 
-                    Optional<FriendHandler> friend = handler.getFriend(playerUuid);
-                    if (friend.isPresent()) {
-                        if (!handler.canAccess(friend.get())) {
-                            event.setCancelled(true);
+                    if (!handler.isOwner(playerUuid)) {
+                        final var friend = handler.getFriend(playerUuid);
+                        if (friend.isPresent()) {
+                            if (!friend.get().canRead()) {
+                                event.setCancelled(true);
+                                player.closeInventory();
+                            } else if (!friend.get().canWrite()) {
+                                event.setCancelled(true);
+                            }
+                        } else {
+                            // The player is not a friend and not the owner; they shouldn't have
+                            // access anyway.
                             player.closeInventory();
-                        } else if (!friend.get().canWrite()) {
                             event.setCancelled(true);
                         }
-                    } else {
-                        // The player is not a friend; it shouldn't have access anyway.
-                        player.closeInventory();
-                        event.setCancelled(true);
                     }
                 }
             } catch (ClassCastException e) {

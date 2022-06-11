@@ -73,7 +73,7 @@ public class InventoryEventListener implements Listener {
                     BlockNBTHandler handler = new BlockNBTHandler(blockHolder.getBlock());
                     String playerUuid = player.getUniqueId().toString();
 
-                    if (!handler.isOwner(playerUuid)) {
+                    if (handler.isProtected() && !handler.isOwner(playerUuid)) {
                         final var friend = handler.getFriend(playerUuid);
                         if (friend.isPresent()) {
                             if (!friend.get().canRead()) {

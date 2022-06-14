@@ -62,7 +62,7 @@ public class BlockLockInventory extends BlockProtInventory {
                 null
             );
             closeAndOpen(player, null);
-        } else if (item.getType() == Material.REDSTONE || item.getType() == Material.GUNPOWDER) {
+        } else if (item.getType() == Material.REDSTONE) {
             BlockNBTHandler handler = getNbtHandlerOrNull(block);
             closeAndOpen(
                 player,
@@ -70,58 +70,59 @@ public class BlockLockInventory extends BlockProtInventory {
                     ? null
                     : new RedstoneSettingsInventory().fill(player, state)
             );
-        }
-        switch (item.getType()) {
-            case PLAYER_HEAD -> closeAndOpen(
-                player,
-                new FriendManageInventory().fill(player)
-            );
-            case OAK_SIGN -> {
-                var handler = getNbtHandlerOrNull(block);
-                closeAndOpen(
+        } else {
+            switch (item.getType()) {
+                case PLAYER_HEAD -> closeAndOpen(
                     player,
-                    handler == null
-                        ? null
-                        : new BlockInfoInventory().fill(player, handler)
+                    new FriendManageInventory().fill(player)
+                );
+                case OAK_SIGN -> {
+                    var handler = getNbtHandlerOrNull(block);
+                    closeAndOpen(
+                        player,
+                        handler == null
+                            ? null
+                            : new BlockInfoInventory().fill(player, handler)
+                    );
+                }
+                case KNOWLEDGE_BOOK -> {
+                    // Paste
+                    var handler = getNbtHandlerOrNull(block);
+                    var container = PlayerInventoryClipboard.get(player.getUniqueId().toString());
+                    if (handler != null && container != null)
+                        handler.pasteNbt(container);
+                }
+                case PAPER -> {
+                    // Copy
+                    var handler = getNbtHandlerOrNull(block);
+                    if (handler != null) {
+                        PlayerInventoryClipboard.set(player.getUniqueId().toString(), handler.getNbtCopy());
+                        // The player probably doesn't want to paste the data onto the same container.
+                        closeAndOpen(player, null);
+                    }
+                }
+                case NAME_TAG -> {
+                    player.closeInventory();
+                    new AnvilGUI.Builder()
+                        .text("Block name")
+                        .title(Translator.get(TranslationKey.INVENTORIES__SET_BLOCK_NAME))
+                        .plugin(BlockProt.getInstance())
+                        .onComplete((Player kPlayer, String name) -> {
+                            var invState = InventoryState.get(kPlayer.getUniqueId());
+                            assert(invState.getBlock() != null);
+
+                            new BlockNBTHandler(invState.getBlock()).setName(name);
+                            Inventory inventory = new BlockLockInventory().fill(player, block.getType(), new BlockNBTHandler(block));
+                            if (inventory == null) return AnvilGUI.Response.close();
+                            return AnvilGUI.Response.openInventory(inventory);
+                        })
+                        .open(player);
+                }
+                default -> closeAndOpen(
+                    player,
+                    null
                 );
             }
-            case KNOWLEDGE_BOOK -> {
-                // Paste
-                var handler = getNbtHandlerOrNull(block);
-                var container = PlayerInventoryClipboard.get(player.getUniqueId().toString());
-                if (handler != null && container != null)
-                    handler.pasteNbt(container);
-            }
-            case PAPER -> {
-                // Copy
-                var handler = getNbtHandlerOrNull(block);
-                if (handler != null) {
-                    PlayerInventoryClipboard.set(player.getUniqueId().toString(), handler.getNbtCopy());
-                    // The player probably doesn't want to paste the data onto the same container.
-                    closeAndOpen(player, null);
-                }
-            }
-            case NAME_TAG -> {
-                player.closeInventory();
-                new AnvilGUI.Builder()
-                    .text("Block name")
-                    .title(Translator.get(TranslationKey.INVENTORIES__SET_BLOCK_NAME))
-                    .plugin(BlockProt.getInstance())
-                    .onComplete((Player kPlayer, String name) -> {
-                        var invState = InventoryState.get(kPlayer.getUniqueId());
-                        assert(invState.getBlock() != null);
-
-                        new BlockNBTHandler(invState.getBlock()).setName(name);
-                        Inventory inventory = new BlockLockInventory().fill(player, block.getType(), new BlockNBTHandler(block));
-                        if (inventory == null) return AnvilGUI.Response.close();
-                        return AnvilGUI.Response.openInventory(inventory);
-                    })
-                    .open(player);
-            }
-            default -> closeAndOpen(
-                player,
-                null
-            );
         }
         event.setCancelled(true);
     }

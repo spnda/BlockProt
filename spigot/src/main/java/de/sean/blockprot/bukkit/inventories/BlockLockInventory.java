@@ -25,6 +25,7 @@ import de.sean.blockprot.bukkit.events.BlockAccessMenuEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerInventoryClipboard;
 import net.wesjd.anvilgui.AnvilGUI;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -133,19 +134,24 @@ public class BlockLockInventory extends BlockProtInventory {
         final InventoryState state = InventoryState.get(player.getUniqueId());
         if (state == null) return inventory;
 
-        String owner = handler.getOwner();
+        var isNotProtected = handler.isNotProtected();
+        // This means the user only has INFO permissions but the block is not locked and can
+        // therefore not provide any information.
+        if (isNotProtected && state.menuPermissions.size() == 1
+            && state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.INFO))
+            return null;
 
         if (state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.LOCK)) {
             setItemStack(
                 0,
                 getProperMaterial(material),
-                owner.isEmpty()
+                isNotProtected
                     ? TranslationKey.INVENTORIES__LOCK
                     : TranslationKey.INVENTORIES__UNLOCK
             );
         }
 
-        if (!owner.isEmpty() && state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.MANAGER)) {
+        if (!isNotProtected && state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.MANAGER)) {
             setItemStack(
                 1,
                 Material.REDSTONE,
@@ -175,7 +181,7 @@ public class BlockLockInventory extends BlockProtInventory {
             );
         }
 
-        if (!owner.isEmpty() && state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.INFO)) {
+        if (!isNotProtected && state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.INFO)) {
             setItemStack(
                 getSize() - 2,
                 Material.OAK_SIGN,

@@ -154,6 +154,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @param title The title of the inventory. Should be already
      *              translated.
      * @return The new Bukkit inventory.
+     * @since 1.0.4
      */
     @NotNull
     protected final Inventory createInventory(@NotNull String title) {
@@ -538,6 +539,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      *
      * @param title The new title of the inventory. Should already
      *              be translated.
+     * @since 1.0.4
      */
     protected void updateTitle(@NotNull Player player, @NotNull String title) {
         this.inventory = this.createInventory(title);

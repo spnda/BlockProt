@@ -137,6 +137,7 @@ public abstract class PluginIntegration {
      * @param player       The player that is trying to add these friends.
      * @param block        The block these friends are being added to.
      * @return The new filtered list.
+     * @since 1.1.0
      */
     public static boolean filterFriendByUuidForAll(@NotNull final UUID friend,
                                                    @NotNull final Player player,
@@ -183,6 +184,7 @@ public abstract class PluginIntegration {
     /**
      * Called when the BlockProt plugin reloads configs and translations. Optimally, translations
      * should be updated and new config values should be updated in this function.
+     * @since 1.0.7
      */
     public void reload() {
 
@@ -223,6 +225,7 @@ public abstract class PluginIntegration {
      * @param block  The block these friends are being added to.
      * @return True if the friend is allowed to be added, false if it should be filtered out of
      * the list.
+     * @since 1.1.0
      */
     protected boolean filterFriendByUuid(@NotNull final UUID friend,
                                          @NotNull final Player player,

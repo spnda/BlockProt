@@ -149,6 +149,7 @@ public abstract class FriendSupportingHandler<T extends NBTCompound> extends NBT
 
     /**
      * Add "everyone" as a friend to this handler.
+     * @since 1.1.0
      */
     public void addEveryoneAsFriend() {
         compound().addCompound(zeroedUuid).setString("id", zeroedUuid);

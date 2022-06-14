@@ -210,6 +210,7 @@ public final class StatHandler extends NBTHandler<NBTCompound> {
     /**
      * Removes given block from the player's statistic, while also decrementing
      * the global block count. Also takes care of special blocks, like doors.
+     * @since 1.0.3
      */
     public static void removeContainer(@NotNull final Player player, @NotNull final Block block) {
         /* Remove the other half of the door from the statistics as well */

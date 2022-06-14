@@ -110,6 +110,12 @@ public final class BlockUtil {
         return n.replaceAll("_", " ");
     }
 
+    /**
+     * Gets the human-readable name of the given {@code material}. Note that this is not
+     * translated and is merely based of the material enum name.
+     * @return A human-readable name.
+     * @since 1.1.0
+     */
     public static @NotNull String getHumanReadableBlockName(@NotNull Material material) {
         return capitalizeFirstLetters(material.name());
     }

@@ -52,7 +52,7 @@ public abstract class PluginIntegration {
      * @since 0.4.0
      */
     @NotNull
-    protected final YamlConfiguration configuration;
+    protected YamlConfiguration configuration;
 
     /**
      * {@link BlockProt}'s plugin manager to use to get the
@@ -187,7 +187,8 @@ public abstract class PluginIntegration {
      * @since 1.0.7
      */
     public void reload() {
-
+        configuration =
+            BlockProt.getInstance().saveAndLoadConfigFile("integrations/", name + ".yml", false);
     }
 
     /**

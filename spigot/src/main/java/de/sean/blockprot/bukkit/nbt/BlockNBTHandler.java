@@ -52,7 +52,6 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
 
     static final String LOCK_ATTRIBUTE = "blockprot_friends";
 
-    static final String OLD_REDSTONE_ATTRIBUTE = "splugin_lock_redstone";
     static final String REDSTONE_ATTRIBUTE = "blockprot_redstone";
 
     static final String NAME_ATTRIBUTE = "blockprot_name";
@@ -118,18 +117,8 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
      * @since 0.4.13
      */
     public @NotNull RedstoneSettingsHandler getRedstoneHandler() {
-        RedstoneSettingsHandler redstoneHandler = new RedstoneSettingsHandler(
+        return new RedstoneSettingsHandler(
             container.getOrCreateCompound(REDSTONE_ATTRIBUTE));
-
-        // Used to port the old values from previous versions to the new
-        // handler based redstone system.
-        if (container.hasKey(OLD_REDSTONE_ATTRIBUTE)) {
-            // We flip the value because its meaning has changed.
-            boolean oldValue = !container.getBoolean(OLD_REDSTONE_ATTRIBUTE);
-            redstoneHandler.setAll(oldValue);
-            container.removeKey(OLD_REDSTONE_ATTRIBUTE);
-        }
-        return redstoneHandler;
     }
 
     /**

@@ -23,6 +23,7 @@ import de.sean.blockprot.bukkit.integrations.PluginIntegration;
 import de.sean.blockprot.bukkit.inventories.BlockLockInventory;
 import de.sean.blockprot.bukkit.inventories.InventoryState;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
+import de.sean.blockprot.bukkit.nbt.FriendHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -32,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * BlockProt's class for external API methods.
@@ -136,7 +138,7 @@ public final class BlockProtAPI {
         final String playerUuid = player.getUniqueId().toString();
 
         final BlockNBTHandler handler = new BlockNBTHandler(block);
-        if (player.hasPermission(BlockNBTHandler.PERMISSION_ADMIN)) {
+        if (player.isOp() || player.hasPermission(BlockNBTHandler.PERMISSION_ADMIN)) {
             event.addPermissions(
                     BlockAccessMenuEvent.MenuPermission.LOCK,
                     BlockAccessMenuEvent.MenuPermission.INFO);
@@ -144,6 +146,7 @@ public final class BlockProtAPI {
             event.addPermission(BlockAccessMenuEvent.MenuPermission.INFO);
         }
 
+        Optional<FriendHandler> friend;
         if (handler.isOwner(playerUuid)) {
             event.addPermissions(
                     BlockAccessMenuEvent.MenuPermission.LOCK,
@@ -151,8 +154,7 @@ public final class BlockProtAPI {
                     BlockAccessMenuEvent.MenuPermission.MANAGER);
         } else if (handler.isNotProtected()) {
             event.addPermission(BlockAccessMenuEvent.MenuPermission.LOCK);
-        } else if (handler.getFriend(playerUuid).isPresent()
-                && handler.getFriend(playerUuid).get().isManager()) {
+        } else if ((friend = handler.getFriend(playerUuid)).isPresent() && friend.get().isManager()) {
             event.addPermission(BlockAccessMenuEvent.MenuPermission.MANAGER);
         }
 

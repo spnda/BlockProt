@@ -18,132 +18,57 @@
 
 package de.sean.blockprot.bukkit.commands;
 
-import de.sean.blockprot.bukkit.BlockProt;
-import de.sean.blockprot.bukkit.BlockProtAPI;
-import de.sean.blockprot.bukkit.integrations.PluginIntegration;
-import de.sean.blockprot.bukkit.inventories.InventoryState;
-import de.sean.blockprot.bukkit.inventories.StatisticsInventory;
-import de.sean.blockprot.bukkit.inventories.UserSettingsInventory;
-import de.sean.blockprot.bukkit.tasks.UpdateChecker;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.regex.Pattern;
+import java.util.*;
 
 public final class BlockProtCommand implements TabExecutor {
+    static Map<String, CommandExecutor> tabExecutors = new HashMap<>();
+
+    static {
+        var statsCommand = new StatisticsCommand();
+        tabExecutors.put("stats", statsCommand);
+        tabExecutors.put("statistics", statsCommand);
+        tabExecutors.put("settings", new SettingsCommand());
+        tabExecutors.put("about", new AboutCommand());
+        tabExecutors.put("update", new UpdateCommand());
+        tabExecutors.put("reload", new ReloadCommand());
+        tabExecutors.put("integrations", new IntegrationsCommand());
+    }
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length == 0) {
             return false;
         }
 
-        switch (args[0]) {
-            case "update" -> {
-                if (sender.isOp()) {
-                    Bukkit.getScheduler().runTaskAsynchronously(
-                        BlockProt.getInstance(),
-                        new UpdateChecker(
-                            BlockProt.getInstance().getDescription(),
-                            new ArrayList<>(Bukkit.getOnlinePlayers())
-                        )
-                    );
-                    return true;
-                }
-            }
-            case "settings" -> {
-                if (!(sender instanceof Player player)) break;
-                InventoryState state = new InventoryState(null);
-                state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH;
-                InventoryState.set(player.getUniqueId(), state);
-                player.openInventory(new UserSettingsInventory().fill(player));
-                return true;
-            }
-            case "reload" -> {
-                if (sender.isOp()) {
-                    BlockProt.getInstance().reloadConfigAndTranslations();
-                    sender.spigot().sendMessage(new TextComponent("Finished reloading BlockProt!"));
-                    return true;
-                }
-            }
-            case "stats", "statistics" -> {
-                if (!(sender instanceof Player player)) {
-                    sender.sendMessage("This command is only executable as a player!");
-                    return false;
-                }
-
-                final InventoryState state = new InventoryState(null);
-                state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH;
-                InventoryState.set(player.getUniqueId(), state);
-
-                player.openInventory(new StatisticsInventory().fill(player));
-                return true;
-            }
-            case "about" -> {
-                final ComponentBuilder builder = new ComponentBuilder();
-                final PluginDescriptionFile description = BlockProt.getInstance().getDescription();
-                builder.append("§x§a§3§c§6§e§bBlockProt v" + description.getVersion() + " - Spigot Plugin\n");
-                builder.append("Author: " +
-                    Pattern.compile("[\\[\\]]")
-                        .matcher(description.getAuthors().toString()).replaceAll("") + "\n"
-                );
-                builder.append(createUrlComponent("§x§c§3§e§e§a§7Click here to report issues or for suggestions\n", "https://github.com/spnda/BlockProt/issues", "You can report issues to me here!"));
-                sender.spigot().sendMessage(builder.create());
-                return true;
-            }
-            case "integrations" -> {
-                var enabledIntegrations = BlockProtAPI.getInstance().getIntegrations().stream()
-                    .filter(PluginIntegration::isEnabled)
-                    .toList();
-
-                var builder = new ComponentBuilder();
-                builder.append("§7Enabled integrations (" + enabledIntegrations.size() + "): ");
-
-                for (int i = 0; i < enabledIntegrations.size(); ++i) {
-                    builder.append("§6" + enabledIntegrations.get(i).name);
-                    if (i < enabledIntegrations.size() - 1)
-                        builder.append("§7, ");
-                }
-
-                sender.spigot().sendMessage(builder.create());
-                return true;
-            }
+        var executor = tabExecutors.get(args[0]);
+        if (executor != null) {
+            return executor.onCommand(sender, command, label, args);
         }
-
         return false;
-    }
-
-    private TextComponent createUrlComponent(@NotNull String text, @NotNull String url, String hoverText) {
-        final TextComponent component = new TextComponent(text);
-        component.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
-        if (hoverText != null)
-            component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(hoverText)));
-        return component;
     }
 
     @Override
     public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (args.length <= 1) {
-            List<String> list = new ArrayList<>(Arrays.asList("settings", "stats", "about"));
-            if (sender.isOp()) {
-                list.add("update");
-                list.add("reload");
-                list.add("integrations");
+            final var list = new ArrayList<String>();
+            for (var entry : tabExecutors.entrySet()) {
+                if (entry.getValue().canUseCommand(sender))
+                    list.add(entry.getKey());
             }
             return list;
+        } else {
+            var executor = tabExecutors.get(args[0]);
+            if (executor != null) {
+                final var completions = executor.onTabComplete(sender, command, alias, args);
+                if (completions != null) {
+                    return completions;
+                }
+            }
         }
 
         return Collections.emptyList();

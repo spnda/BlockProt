@@ -20,7 +20,6 @@ package de.sean.blockprot.bukkit.metrics;
 
 import de.sean.blockprot.bukkit.BlockProt;
 import org.bstats.charts.SimpleBarChart;
-import org.bukkit.Bukkit;
 
 import java.util.HashMap;
 import java.util.Map;

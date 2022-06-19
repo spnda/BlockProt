@@ -22,7 +22,6 @@ import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
-import java.util.UUID;
 
 /**
  * The friend handler used by {@link BlockNBTHandler} to handle

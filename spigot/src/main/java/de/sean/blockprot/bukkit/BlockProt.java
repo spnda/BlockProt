@@ -27,7 +27,6 @@ import de.sean.blockprot.bukkit.nbt.StatHandler;
 import de.sean.blockprot.bukkit.tasks.UpdateChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.command.TabExecutor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.Listener;
@@ -157,7 +156,8 @@ public final class BlockProt extends JavaPlugin {
         registerEvent(pm, new PistonEventListener());
         registerEvent(pm, new RedstoneEventListener());
 
-        registerCommand("blockprot", new BlockProtCommand());
+        Objects.requireNonNull(this.getCommand("blockprot"))
+            .setExecutor(new BlockProtCommand());
 
         /* Enable all integrations */
         for (PluginIntegration integration : integrations) {
@@ -228,10 +228,6 @@ public final class BlockProt extends JavaPlugin {
 
     private void registerEvent(@NotNull PluginManager pm, Listener listener) {
         pm.registerEvents(listener, this);
-    }
-
-    private void registerCommand(String name, TabExecutor executor) {
-        Objects.requireNonNull(this.getCommand(name)).setExecutor(executor);
     }
 
     void registerIntegration(@NotNull PluginIntegration integration) {

@@ -25,6 +25,9 @@ permissions:
   blockprot.locklimit.<number>:
     default: false
     description: Sets a per-player block lock limit. e.g. blockprot.locklimit.50
+  blockprot.debug:
+    default: false
+    description: Allows a player to execute debug commands. This is usually only used by the developer but can help assist in fixing issues.
 commands:
   blockprot:
     description: The main blockprot command

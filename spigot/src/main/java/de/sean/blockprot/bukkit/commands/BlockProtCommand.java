@@ -37,6 +37,7 @@ public final class BlockProtCommand implements TabExecutor {
         tabExecutors.put("update", new UpdateCommand());
         tabExecutors.put("reload", new ReloadCommand());
         tabExecutors.put("integrations", new IntegrationsCommand());
+        tabExecutors.put("debug", new DebugCommand());
     }
 
     @Override

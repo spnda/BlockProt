@@ -1,0 +1,8 @@
+daysUntilStale: 90
+daysUntilClose: 7
+exemptLabels:
+  - pinned
+  - enhancement
+staleLabel: stale
+markComment:
+closeComment: false

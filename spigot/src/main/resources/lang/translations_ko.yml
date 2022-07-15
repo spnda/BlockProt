@@ -12,6 +12,7 @@ inventories:
   lock_on_place: 자동으로 잠급니다.
   copy_configuration: 구성 복사
   paste_configuration: 복사한 구성 붙여넣기
+  set_block_name: 블록 이름 설정
   redstone:
     settings: 레드스톤 설정
     redstone_enabled: 레드스톤 보호 활성화

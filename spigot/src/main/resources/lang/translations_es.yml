@@ -12,6 +12,9 @@ inventories:
   lock_on_place: Proteger siempre al colocar
   copy_configuration: Copiar configuración
   paste_configuration: Pegar configuración
+  set_block_name: 'Establecer el nombre del bloque
+
+'
   redstone:
     settings: Configuración de Redstone
     redstone_enabled: Protección Redstone habilitada

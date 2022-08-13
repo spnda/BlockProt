@@ -12,6 +12,7 @@ inventories:
   lock_on_place: Запирать автоматически
   copy_configuration: Скопировать настройки
   paste_configuration: Вставить настройки
+  set_block_name: Установить имя блока
   redstone:
     settings: Редстоун настройки
     redstone_enabled: Редстоун защита
@@ -26,6 +27,9 @@ inventories:
     search: Поиск игроков
     search_history: История поиска
     result: Найденные игроки
+    the_public: Публичный
+    the_public_desc: Представляет каждого игрока на этом сервере.
+    make_public: Сделать публичным
     permissions: Разрешения
     permission:
       read: Только смотреть
@@ -49,6 +53,14 @@ messages:
   redstone_removed: Редстоун защита была убрана.
   exceeded_max_block_count: Вы превысили максимальное количество блоков, которые можно
     запереть.
-  lock_hint: Вы можете запереть свои блоки, приседая  и нажимая одновременно правую
+  lock_hint: "&6Вы можете запереть свои блоки, приседая  и нажимая одновременно правую
     кнопку мыши по сундукам, печкам и другим предметам! Кроме того, проверьте настройки
-    /blockprot, чтобы настроить их по своему вкусу.
+    /blockprot, чтобы настроить их по своему вкусу."
+integrations:
+  lands:
+    protect_containers_flag_name: Запереть хранилища (BlockProt)
+    protect_containers_desc: Позволяет игроку запереть сундуки, печи, ...
+    require_protect_for_friends_flag_name: Требовать активировать настройку «Защитить
+      контейнеры» от друзей (BlockProt)
+    require_protect_for_friends_desc: Только игроки, у которых есть установлена настройка
+      «Защитить контейнеры», могут быть добавлены в друзья.

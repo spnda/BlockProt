@@ -12,6 +12,7 @@ inventories:
   lock_on_place: 在放置時自動上鎖
   copy_configuration: 複製配置
   paste_configuration: 貼上配置
+  set_block_name: 設置方塊名稱
   redstone:
     settings: 紅石設置
     redstone_enabled: 啟用紅石保護

@@ -156,6 +156,7 @@ public class FriendSearchResultInventory extends BlockProtInventory {
         if (handler == null) return null; // return null to indicate an issue.
 
         // We'll filter all doubled friends out of the list and add them to the current InventoryState.
+        double minimumSimilarity = BlockProt.getDefaultConfig().getFriendSearchSimilarityPercentage();
         potentialFriends.removeIf(p -> {
             // Filter all the players by search criteria.
             // If the strings are similar by 30%, the strings are considered similar (imo) and should be added.
@@ -164,7 +165,7 @@ public class FriendSearchResultInventory extends BlockProtInventory {
             if (p.getName() == null || p.getUniqueId().equals(player.getUniqueId())) return true;
             else if (handler.containsFriend(p.getUniqueId().toString())) return true;
             else if (p.getName().contains(searchQuery)) return false;
-            else return compareStrings(p.getName(), searchQuery) < 0.3;
+            else return compareStrings(p.getName(), searchQuery) < minimumSimilarity;
         });
 
         state.friendResultCache.clear();

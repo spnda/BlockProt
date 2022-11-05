@@ -285,6 +285,13 @@ public final class DefaultConfig extends BlockProtConfig {
         return config.getLong("lock_hint_cooldown_in_seconds");
     }
 
+    public double getFriendSearchSimilarityPercentage() {
+        if (!config.contains("friend_search_similarity")) {
+            return 0.3;
+        }
+        return config.getDouble("friend_search_similarity");
+    }
+
     /**
      * <p> Whether the given {@code type} is either a lockable block or a lockable tile entity.
      *

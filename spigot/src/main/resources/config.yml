@@ -52,6 +52,13 @@ player_max_locked_block_count: -1
 # protect their blocks.
 lock_hint_cooldown_in_seconds: 10
 
+# This defines the minimum similarity percentage that a player name
+# can have to the friend search query at which it still shows up. By
+# default, this is 0.3, meaning only names that are less than 30% similar
+# are shown in the friend search. To determine similarity, the levenshtein
+# algorithm is used.
+friend_search_similarity: 0.3
+
 # Tile entities that should be locked. Tile entities are blocks
 # that can contain items. You can find a detailed list of all
 # possible values at https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html.

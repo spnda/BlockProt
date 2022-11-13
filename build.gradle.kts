@@ -7,7 +7,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("org.kohsuke:github-api:1.308")
+        classpath("org.kohsuke:github-api:1.313")
     }
 }
 

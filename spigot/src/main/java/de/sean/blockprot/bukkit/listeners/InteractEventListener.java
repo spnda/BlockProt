@@ -18,10 +18,7 @@
 
 package de.sean.blockprot.bukkit.listeners;
 
-import de.sean.blockprot.bukkit.BlockProt;
-import de.sean.blockprot.bukkit.BlockProtAPI;
-import de.sean.blockprot.bukkit.TranslationKey;
-import de.sean.blockprot.bukkit.Translator;
+import de.sean.blockprot.bukkit.*;
 import de.sean.blockprot.bukkit.events.BlockAccessEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.NBTHandler;
@@ -56,7 +53,7 @@ public class InteractEventListener implements Listener {
                 sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
             } else {
                 BlockNBTHandler handler = new BlockNBTHandler(event.getClickedBlock());
-                if (!(handler.canAccess(player.getUniqueId().toString()) || player.hasPermission(NBTHandler.PERMISSION_BYPASS))) {
+                if (!(handler.canAccess(player.getUniqueId().toString()) || player.hasPermission(Permissions.BYPASS.key()))) {
                     event.setCancelled(true);
                     sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
                 } else if (!(new PlayerSettingsHandler(player).hasPlayerInteractedWithMenu())) {
@@ -76,7 +73,7 @@ public class InteractEventListener implements Listener {
             if (event.hasItem()) return; // Only enter the menu with an empty hand.
             event.setCancelled(true);
 
-            if (!player.hasPermission(NBTHandler.PERMISSION_LOCK)) {
+            if (!player.hasPermission(Permissions.LOCK.key())) {
                 sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
                 return;
             }

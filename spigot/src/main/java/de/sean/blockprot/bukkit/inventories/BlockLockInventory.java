@@ -19,11 +19,13 @@
 package de.sean.blockprot.bukkit.inventories;
 
 import de.sean.blockprot.bukkit.BlockProt;
+import de.sean.blockprot.bukkit.Permissions;
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.events.BlockAccessMenuEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerInventoryClipboard;
+import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -61,20 +63,21 @@ public class BlockLockInventory extends BlockProtInventory {
                 null
             );
             closeAndOpen(player, null);
-        } else if (item.getType() == Material.REDSTONE) {
-            BlockNBTHandler handler = getNbtHandlerOrNull(block);
-            closeAndOpen(
-                player,
-                handler == null
-                    ? null
-                    : new RedstoneSettingsInventory().fill(player, state)
-            );
         } else {
             switch (item.getType()) {
                 case PLAYER_HEAD -> closeAndOpen(
                     player,
                     new FriendManageInventory().fill(player)
                 );
+                case REDSTONE -> {
+                    var handler = getNbtHandlerOrNull(block);
+                    closeAndOpen(
+                        player,
+                        handler == null
+                            ? null
+                            : new RedstoneSettingsInventory().fill(player, state)
+                    );
+                }
                 case OAK_SIGN -> {
                     var handler = getNbtHandlerOrNull(block);
                     closeAndOpen(
@@ -117,6 +120,7 @@ public class BlockLockInventory extends BlockProtInventory {
                         })
                         .open(player);
                 }
+                case SPYGLASS -> closeAndOpen(player, new BlockInspectContentsInventory(player).fill());
                 default -> closeAndOpen(
                     player,
                     null
@@ -130,7 +134,7 @@ public class BlockLockInventory extends BlockProtInventory {
     public void onClose(@NotNull InventoryCloseEvent event, @NotNull InventoryState state) {
     }
 
-    public Inventory fill(Player player, Material material, BlockNBTHandler handler) {
+    public Inventory fill(@NotNull Player player, Material material, BlockNBTHandler handler) {
         final InventoryState state = InventoryState.get(player.getUniqueId());
         if (state == null) return inventory;
 
@@ -148,6 +152,16 @@ public class BlockLockInventory extends BlockProtInventory {
                 isNotProtected
                     ? TranslationKey.INVENTORIES__LOCK
                     : TranslationKey.INVENTORIES__UNLOCK
+            );
+        }
+
+        // We insert a 'inspect contents' button if the player does not own the block and has admin permissions.
+        var rightItemOffset = !isNotProtected && !handler.isOwner(player.getUniqueId()) && player.hasPermission(Permissions.ADMIN.key()) ? 1 : 0;
+        if (rightItemOffset == 1) {
+            setItemStack(
+                getSize() - 2,
+                Material.SPYGLASS,
+                TranslationKey.INVENTORIES__INSPECT_CONTENTS
             );
         }
 
@@ -169,13 +183,13 @@ public class BlockLockInventory extends BlockProtInventory {
             );
             if (PlayerInventoryClipboard.contains(player.getUniqueId().toString())) {
                 setItemStack(
-                    getSize() - 4,
+                    getSize() - 4 - rightItemOffset,
                     Material.KNOWLEDGE_BOOK,
                     TranslationKey.INVENTORIES__PASTE_CONFIGURATION
                 );
             }
             setItemStack(
-                getSize() - 3,
+                getSize() - 3 - rightItemOffset,
                 Material.PAPER,
                 TranslationKey.INVENTORIES__COPY_CONFIGURATION
             );
@@ -183,7 +197,7 @@ public class BlockLockInventory extends BlockProtInventory {
 
         if (!isNotProtected && state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.INFO)) {
             setItemStack(
-                getSize() - 2,
+                getSize() - 2 - rightItemOffset,
                 Material.OAK_SIGN,
                 TranslationKey.INVENTORIES__BLOCK_INFO
             );

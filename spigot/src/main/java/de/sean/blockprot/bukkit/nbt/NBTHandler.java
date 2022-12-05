@@ -32,12 +32,16 @@ import org.jetbrains.annotations.NotNull;
  * @since 0.3.0
  */
 public abstract class NBTHandler<T extends NBTCompound> {
+    @Deprecated
     public static final String PERMISSION_LOCK = "blockprot.lock";
 
+    @Deprecated
     public static final String PERMISSION_INFO = "blockprot.info";
 
+    @Deprecated
     public static final String PERMISSION_ADMIN = "blockprot.admin";
 
+    @Deprecated
     public static final String PERMISSION_BYPASS = "blockprot.bypass";
 
     /**

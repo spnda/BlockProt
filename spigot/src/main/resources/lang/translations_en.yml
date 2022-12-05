@@ -21,6 +21,7 @@ inventories:
   copy_configuration: "Copy configuration"
   paste_configuration: "Paste configuration"
   set_block_name: "Set block name"
+  inspect_contents: "Inspect contents"
   redstone:
     settings: "Redstone Settings"
     redstone_enabled: "Redstone protection enabled"

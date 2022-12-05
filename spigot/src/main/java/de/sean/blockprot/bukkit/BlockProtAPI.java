@@ -138,11 +138,11 @@ public final class BlockProtAPI {
         final String playerUuid = player.getUniqueId().toString();
 
         final BlockNBTHandler handler = new BlockNBTHandler(block);
-        if (player.isOp() || player.hasPermission(BlockNBTHandler.PERMISSION_ADMIN)) {
+        if (player.isOp() || player.hasPermission(Permissions.ADMIN.key())) {
             event.addPermissions(
                     BlockAccessMenuEvent.MenuPermission.LOCK,
                     BlockAccessMenuEvent.MenuPermission.INFO);
-        } else if (player.hasPermission(BlockNBTHandler.PERMISSION_INFO)) {
+        } else if (player.hasPermission(Permissions.INFO.key())) {
             event.addPermission(BlockAccessMenuEvent.MenuPermission.INFO);
         }
 

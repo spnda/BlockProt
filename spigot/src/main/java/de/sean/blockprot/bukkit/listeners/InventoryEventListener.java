@@ -19,6 +19,7 @@
 package de.sean.blockprot.bukkit.listeners;
 
 import de.sean.blockprot.bukkit.BlockProt;
+import de.sean.blockprot.bukkit.Permissions;
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.events.BlockAccessEvent;
@@ -126,8 +127,8 @@ public class InventoryEventListener implements Listener {
                 if (!(handler.isNotProtected()
                     || handler.isOwner(playerUuid)
                     || (friend.isPresent() && friend.get().isManager())
-                    || event.getPlayer().hasPermission(NBTHandler.PERMISSION_ADMIN)
-                    || event.getPlayer().hasPermission(NBTHandler.PERMISSION_INFO))) {
+                    || event.getPlayer().hasPermission(Permissions.ADMIN.key())
+                    || event.getPlayer().hasPermission(Permissions.INFO.key()))) {
                     event.setCancelled(true);
                     sendMessage(event.getPlayer(), Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
                 }
@@ -151,7 +152,7 @@ public class InventoryEventListener implements Listener {
                 } else {
                     BlockNBTHandler handler = new BlockNBTHandler(block);
                     if (!accessEvent.shouldBypassProtections()
-                            && !(handler.canAccess(player.getUniqueId().toString()) || player.hasPermission(NBTHandler.PERMISSION_BYPASS))) {
+                            && !(handler.canAccess(player.getUniqueId().toString()) || player.hasPermission(Permissions.BYPASS.key()))) {
                         event.setCancelled(true);
                         sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
                     }

@@ -19,6 +19,7 @@
 package de.sean.blockprot.bukkit.nbt;
 
 import de.sean.blockprot.bukkit.BlockProt;
+import de.sean.blockprot.bukkit.Permissions;
 import de.sean.blockprot.bukkit.nbt.stats.PlayerBlocksStatistic;
 import de.sean.blockprot.bukkit.util.BlockUtil;
 import de.sean.blockprot.nbt.FriendModifyAction;
@@ -34,10 +35,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -142,14 +140,22 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
     }
 
     /**
-     * Checks whether or not given {@code player} is the owner of this block.
+     * Checks whether given {@code player} is the owner of this block.
      *
      * @param player A String representing a players UUID.
-     * @return Whether or not {@code player} is the owner of this block.
+     * @return Whether {@code player} is the owner of this block.
      * @since 0.2.3
      */
     public boolean isOwner(@NotNull final String player) {
         return getOwner().equals(player);
+    }
+
+    /**
+     * Checks whether given {@code player} is the owner of this block.
+     * @param player The player's UUID.
+     */
+    public boolean isOwner(@NotNull final UUID player) {
+        return getOwner().equals(player.toString());
     }
 
     public @NotNull String getName() {
@@ -253,7 +259,7 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
             this.applyToOtherContainer();
             StatHandler.addBlock(player, block.getLocation());
             return new LockReturnValue(true, null);
-        } else if (owner.equals(playerUuid) || player.isOp() || player.hasPermission(PERMISSION_ADMIN)) {
+        } else if (owner.equals(playerUuid) || player.isOp() || player.hasPermission(Permissions.ADMIN.key())) {
             StatHandler.removeContainer(player, block);
             this.clear();
             this.applyToOtherContainer();

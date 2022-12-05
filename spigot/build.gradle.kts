@@ -86,6 +86,7 @@ tasks.javadoc {
         source = "16"
         encoding = "UTF-8"
         memberLevel = JavadocMemberLevel.PACKAGE
+        (this as CoreJavadocOptions).addStringOption("Xdoclint:none", "-quiet")
     }
 
     this.isFailOnError = false

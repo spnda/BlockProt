@@ -20,6 +20,7 @@ package de.sean.blockprot.bukkit.listeners;
 
 import com.google.common.collect.Iterables;
 import de.sean.blockprot.bukkit.BlockProt;
+import de.sean.blockprot.bukkit.Permissions;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.events.BlockLockOnPlaceEvent;
 import de.sean.blockprot.bukkit.integrations.PluginIntegration;
@@ -125,7 +126,7 @@ public class BlockEventListener implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         if (BlockProt.getDefaultConfig().isWorldExcluded(event.getBlock().getWorld())) return;
-        if (!event.getPlayer().hasPermission(BlockNBTHandler.PERMISSION_LOCK)) return;
+        if (!event.getPlayer().hasPermission(Permissions.LOCK.key())) return;
         if (!BlockProt.getDefaultConfig().isLockable(event.getBlock().getType())) return;
 
         Block block = event.getBlockPlaced();

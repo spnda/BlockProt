@@ -67,15 +67,27 @@ public abstract class BlockProtInventory implements InventoryHolder {
 
     /**
      * Creates a new inventory using {@link BlockProtInventory#createInventory()}.
+     * To avoid having the inventory created unconditionally, use {@link BlockProtInventory#BlockProtInventory(boolean)}.
      *
      * @since 0.2.2
      */
+    @Deprecated
     public BlockProtInventory() {
         inventory = createInventory();
     }
 
     /**
-     * Get's this holder's inventory. Does not create a new one.
+     * Creates a new BlockProtInventory object, that optionally also has its inventory initialized directly.
+     *
+     * @param createInventory Whether the inventory should be instantly created.
+     */
+    public BlockProtInventory(boolean createInventory) {
+        if (createInventory)
+            inventory = createInventory();
+    }
+
+    /**
+     * Gets this holder's inventory. Does not create a new one.
      *
      * @return The inventory for this holder.
      * @since 0.2.2
@@ -102,7 +114,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @return The translated inventory name, or an empty String.
      * @since 0.2.2
      */
-    @NotNull
+    @Nullable
     abstract String getTranslatedInventoryName();
 
     /**
@@ -112,9 +124,11 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * found.
      * @since 0.2.2
      */
-    @NotNull
+    @Nullable
     public final String getDefaultInventoryName() {
-        final String inventoryName = getTranslatedInventoryName();
+        final var inventoryName = getTranslatedInventoryName();
+        if (inventoryName == null)
+            return null;
         return inventoryName.isEmpty() ? this.getClass().getSimpleName() : inventoryName;
     }
 
@@ -138,14 +152,20 @@ public abstract class BlockProtInventory implements InventoryHolder {
 
     /**
      * Create this current inventory. If {@link BlockProtInventory#getTranslatedInventoryName()}
-     * returns an empty String, this class's simple name will be used.
+     * returns an empty String, this class's simple name will be used. If it returns null, this uses
+     * the default 'Chest' title.
      *
      * @return The Bukkit Inventory.
      * @since 0.2.2
      */
     @NotNull
     protected final Inventory createInventory() {
-        return Bukkit.createInventory(this, getSize(), getDefaultInventoryName());
+        var name = getDefaultInventoryName();
+        if (name != null) {
+            return Bukkit.createInventory(this, getSize(), name);
+        } else {
+            return Bukkit.createInventory(this, getSize());
+        }
     }
 
     /**
@@ -468,7 +488,9 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @return The nbt handler, or null, if none.
      */
     @Nullable
-    protected BlockNBTHandler getNbtHandlerOrNull(Block block) {
+    protected BlockNBTHandler getNbtHandlerOrNull(@Nullable Block block) {
+        if (block == null) return null;
+
         try {
             return new BlockNBTHandler(block);
         } catch (RuntimeException e) {
@@ -477,23 +499,17 @@ public abstract class BlockProtInventory implements InventoryHolder {
     }
 
     /**
-     * Get's the handler for the block opened/edited by the player.
+     * Gets the handler for the block opened/edited by the player.
      * 
      * @since 1.0.0
      */
     protected @Nullable FriendSupportingHandler<NBTCompound> getFriendSupportingHandler(@NotNull InventoryState.FriendSearchState state,
                                                                                         @Nullable Player player,
                                                                                         @Nullable Block block) {
-        switch (state) {
-            case FRIEND_SEARCH:
-                if (block == null) return null;
-                return getNbtHandlerOrNull(block);
-            case DEFAULT_FRIEND_SEARCH:
-                if (player == null) return null;
-                return new PlayerSettingsHandler(player);
-            default:
-                return null;
-        }
+        return switch (state) {
+            case FRIEND_SEARCH -> block == null ? null : getNbtHandlerOrNull(block);
+            case DEFAULT_FRIEND_SEARCH -> player == null ? null : new PlayerSettingsHandler(player);
+        };
     }
 
     /**

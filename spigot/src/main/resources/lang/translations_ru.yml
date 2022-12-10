@@ -13,6 +13,7 @@ inventories:
   copy_configuration: Скопировать настройки
   paste_configuration: Вставить настройки
   set_block_name: Установить имя блока
+  inspect_contents: Осмотрить содержимое
   redstone:
     settings: Редстоун настройки
     redstone_enabled: Редстоун защита

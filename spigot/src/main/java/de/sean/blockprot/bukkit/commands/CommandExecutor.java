@@ -22,6 +22,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Simple interface for all blockprot commands for use with {@link BlockProtCommand},
+ * which can automatically add commands to tab completion and adds a helper for execution,
+ * based on some functions in this interface.
+ * @since 1.1.2
+ */
 public interface CommandExecutor extends TabExecutor {
-    boolean canUseCommand(@NotNull CommandSender sender);
+    default boolean canUseCommand(@NotNull CommandSender sender) {
+        return true;
+    }
 }

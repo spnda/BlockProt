@@ -153,6 +153,7 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
     /**
      * Checks whether given {@code player} is the owner of this block.
      * @param player The player's UUID.
+     * @since 1.1.7
      */
     public boolean isOwner(@NotNull final UUID player) {
         return getOwner().equals(player.toString());

@@ -80,6 +80,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * Creates a new BlockProtInventory object, that optionally also has its inventory initialized directly.
      *
      * @param createInventory Whether the inventory should be instantly created.
+     * @since 1.1.7
      */
     public BlockProtInventory(boolean createInventory) {
         if (createInventory)

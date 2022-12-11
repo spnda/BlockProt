@@ -29,6 +29,11 @@ import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Inventory to mirror the contents of another inventory. Works for any inventory type, including
+ * furnaces, hoppers, etc.
+ * @since 1.1.7
+ */
 public class BlockInspectContentsInventory extends BlockProtInventory {
     private final InventoryHolder sourceInventory;
 

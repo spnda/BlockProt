@@ -20,6 +20,7 @@ package de.sean.blockprot.bukkit;
 
 /**
  * Represents the permission keys for BlockProt, handled by the Spigot server.
+ * @since 1.1.7
  */
 public enum Permissions {
     LOCK("blockprot.lock"),

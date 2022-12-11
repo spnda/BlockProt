@@ -285,6 +285,10 @@ public final class DefaultConfig extends BlockProtConfig {
         return config.getLong("lock_hint_cooldown_in_seconds");
     }
 
+    /**
+     * Gets the minimum percentage friend names have to match by the levenshtein distance.
+     * @since 1.1.6
+     */
     public double getFriendSearchSimilarityPercentage() {
         if (!config.contains("friend_search_similarity")) {
             return 0.3;

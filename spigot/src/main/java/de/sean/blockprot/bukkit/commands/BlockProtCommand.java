@@ -25,6 +25,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+/**
+ * Wrapper around all commands for BlockProt. It implements the tap completion and command
+ * functions for ease of use, based on a public map of command executors.
+ *
+ * @since 1.1.2
+ */
 public final class BlockProtCommand implements TabExecutor {
     static Map<String, CommandExecutor> tabExecutors = new HashMap<>();
 

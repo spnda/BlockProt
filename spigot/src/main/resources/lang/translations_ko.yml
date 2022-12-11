@@ -15,9 +15,6 @@ inventories:
   set_block_name: 블록 이름 설정
   redstone:
     settings: 레드스톤 설정
-    redstone_enabled: 레드스톤 보호 활성화
-    pistons_enabled: 피스톤 보호 활성화
-    hoppers_enabled: 호퍼 보호 활성화
     enable_all: 모두 활성화
     disable_all: 모두 비활성화
   friends:

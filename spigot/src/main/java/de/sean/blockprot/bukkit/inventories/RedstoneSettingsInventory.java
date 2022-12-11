@@ -60,15 +60,15 @@ public class RedstoneSettingsInventory extends BlockProtInventory {
         switch (item.getType()) {
             case REDSTONE -> {
                 currentProtection = !currentProtection;
-                inventory.setItem(0, toggleEnchants(item));
+                inventory.setItem(0, toggleOption(item, null));
             }
             case HOPPER -> {
                 hopperProtection = !hopperProtection;
-                inventory.setItem(1, toggleEnchants(item));
+                inventory.setItem(1, toggleOption(item, null));
             }
             case PISTON -> {
                 pistonProtection = !pistonProtection;
-                inventory.setItem(2, toggleEnchants(item));
+                inventory.setItem(2, toggleOption(item, null));
             }
             case RED_STAINED_GLASS_PANE -> overrideAllSettings(false);
             case GREEN_STAINED_GLASS_PANE -> overrideAllSettings(true);
@@ -127,24 +127,23 @@ public class RedstoneSettingsInventory extends BlockProtInventory {
         currentProtection = redstoneHandler.getCurrentProtection();
         pistonProtection = redstoneHandler.getPistonProtection();
         hopperProtection = redstoneHandler.getHopperProtection();
-
-        setEnchantedItemStack(
+        setEnchantedOptionItemStack(
             0,
             Material.REDSTONE,
-            TranslationKey.INVENTORIES__REDSTONE__REDSTONE_ENABLED,
+            TranslationKey.INVENTORIES__REDSTONE__REDSTONE_PROTECTION,
             currentProtection
         );
-        setEnchantedItemStack(
+        setEnchantedOptionItemStack(
             1,
             Material.HOPPER,
-            TranslationKey.INVENTORIES__REDSTONE__HOPPERS_ENABLED,
-            hopperProtection
+            TranslationKey.INVENTORIES__REDSTONE__HOPPER_PROTECTION,
+            pistonProtection
         );
-        setEnchantedItemStack(
+        setEnchantedOptionItemStack(
             2,
             Material.PISTON,
-            TranslationKey.INVENTORIES__REDSTONE__PISTONS_ENABLED,
-            pistonProtection
+            TranslationKey.INVENTORIES__REDSTONE__PISTON_PROTECTION,
+            hopperProtection
         );
 
         setItemStack(

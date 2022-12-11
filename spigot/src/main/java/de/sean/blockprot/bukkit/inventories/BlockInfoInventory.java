@@ -151,22 +151,22 @@ public class BlockInfoInventory extends BlockProtInventory {
         );
 
         RedstoneSettingsHandler redstoneSettingsHandler = handler.getRedstoneHandler();
-        setEnchantedItemStack(
+        setEnchantedOptionItemStack(
             2,
             Material.REDSTONE,
-            TranslationKey.INVENTORIES__REDSTONE__REDSTONE_ENABLED,
+            TranslationKey.INVENTORIES__REDSTONE__REDSTONE_PROTECTION,
             redstoneSettingsHandler.getCurrentProtection()
         );
-        setEnchantedItemStack(
+        setEnchantedOptionItemStack(
             3,
             Material.HOPPER,
-            TranslationKey.INVENTORIES__REDSTONE__HOPPERS_ENABLED,
+            TranslationKey.INVENTORIES__REDSTONE__HOPPER_PROTECTION,
             redstoneSettingsHandler.getHopperProtection()
         );
-        setEnchantedItemStack(
+        setEnchantedOptionItemStack(
             4,
             Material.PISTON,
-            TranslationKey.INVENTORIES__REDSTONE__PISTONS_ENABLED,
+            TranslationKey.INVENTORIES__REDSTONE__PISTON_PROTECTION,
             redstoneSettingsHandler.getPistonProtection()
         );
         setBackButton(InventoryConstants.lineLength - 1);

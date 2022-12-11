@@ -14,9 +14,6 @@ inventories:
   paste_configuration: Coller la configuration
   redstone:
     settings: Paramètres Redstone
-    redstone_enabled: Protection Redstone activée
-    pistons_enabled: Protection des pistons activée
-    hoppers_enabled: Protection des hoppers activée
     enable_all: Tout activer
     disable_all: Tout désactiver
   friends:

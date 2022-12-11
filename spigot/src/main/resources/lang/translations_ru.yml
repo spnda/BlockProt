@@ -16,9 +16,6 @@ inventories:
   inspect_contents: Осмотрить содержимое
   redstone:
     settings: Редстоун настройки
-    redstone_enabled: Редстоун защита
-    pistons_enabled: Защита от поршней
-    hoppers_enabled: Защита от воронок
     enable_all: Включить всё
     disable_all: Отключить всё
   friends:

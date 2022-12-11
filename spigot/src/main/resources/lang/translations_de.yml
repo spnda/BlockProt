@@ -1,6 +1,8 @@
 # German translation file
 locale: de
 
+enabled: Aktiviert
+disabled: Deaktiviert
 inventories:
   back: "Zurück"
   last_page: "Vorherige Seite"
@@ -17,9 +19,9 @@ inventories:
   inspect_contents: "Inhalte einsehen"
   redstone:
     settings: "Redstone Einstellungen"
-    redstone_enabled: "Redstone-Schutz aktiviert"
-    pistons_enabled: "Kolben-Schutz aktiviert"
-    hoppers_enabled: "Trichter-Schutz aktiviert"
+    redstone_protection: "Redstone-Schutz"
+    piston_protection: "Kolben-Schutz"
+    hopper_protection: "Trichter-Schutz"
     enable_all: "Alles aktivieren"
     disable_all: "Alles deaktivieren"
   friends:

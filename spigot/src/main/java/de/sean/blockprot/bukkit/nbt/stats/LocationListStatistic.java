@@ -18,6 +18,7 @@
 
 package de.sean.blockprot.bukkit.nbt.stats;
 
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
  * @since 1.0.0
  */
 public abstract class LocationListStatistic extends BukkitListStatistic<LocationListEntry, Location> {
-    private @NotNull Location parseLocationFromCompound(@NotNull NBTCompound c) {
+    private @NotNull Location parseLocationFromCompound(@NotNull ReadWriteNBT c) {
         return new Location(
             Bukkit.getWorld(c.getString("name")),
             c.getDouble("x"),

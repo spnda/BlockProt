@@ -14,9 +14,6 @@ inventories:
   paste_configuration: 粘贴配置
   redstone:
     settings: 红石设置
-    redstone_enabled: 红石保护已启用
-    pistons_enabled: 活塞保护已启用
-    hoppers_enabled: 漏斗保护已启用
     enable_all: 启用所有
     disable_all: 禁用所有
   friends:

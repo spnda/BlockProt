@@ -8,6 +8,8 @@
 # See this link for a good list of all codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes.
 locale: en
 
+enabled: Enabled
+disabled: Disabled
 inventories:
   back: "Back"
   last_page: "Last page"
@@ -24,9 +26,9 @@ inventories:
   inspect_contents: "Inspect contents"
   redstone:
     settings: "Redstone Settings"
-    redstone_enabled: "Redstone protection enabled"
-    pistons_enabled: "Piston protection enabled"
-    hoppers_enabled: "Hopper protection enabled"
+    redstone_protection: "Redstone protection"
+    piston_protection: "Piston protection"
+    hopper_protection: "Hopper protection"
     enable_all: "Enable all"
     disable_all: "Disable all"
   friends:

@@ -402,6 +402,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @param key The translation key for the display name of the item.
      * @param value Whether the enchantment should be added.
      * @since 0.4.13
+     * @see #setEnchantedOptionItemStack(int, Material, TranslationKey, boolean)
      */
     public void setEnchantedItemStack(int index, Material material, TranslationKey key, boolean value) {
         ItemStack stack = new ItemStack(material, 1);
@@ -560,5 +561,62 @@ public abstract class BlockProtInventory implements InventoryHolder {
     protected void updateTitle(@NotNull Player player, @NotNull String title) {
         this.inventory = this.createInventory(title);
         this.closeAndOpen(player, this.inventory);
+    }
+
+    /**
+     * Sets an enchanted version of the material into the index. Based on the value of {@code value},
+     * the string returned for the translation key will be suffixed with an ": Enabled", or
+     * ": Disabled", as per the respective translation key for each.
+     *
+     * @param index The index of the item in the inventory.
+     * @param material The material of the item.
+     * @param key The translation key for the display name of the item.
+     * @param value Whether the option is enabled. Controls the suffix and if the item is enchanted.
+     */
+    public void setEnchantedOptionItemStack(int index, Material material, TranslationKey key, boolean value) {
+        ItemStack stack = new ItemStack(material, 1);
+        ItemMeta meta = stack.getItemMeta();
+        if (meta == null) Bukkit.getItemFactory().getItemMeta(material);
+        if (meta != null) {
+            meta.setDisplayName(Translator.get(key) + ": " +
+                (value ? Translator.get(TranslationKey.ENABLED) : Translator.get(TranslationKey.DISABLED)));
+            stack.setItemMeta(meta);
+        }
+        toggleEnchants(stack, value);
+        inventory.setItem(index, stack);
+    }
+
+    /**
+     * Toggles the option name, if it's found at the end of the display name, and the enchantment
+     * status of the given itemstack.
+     *
+     * @param stack The stack to "enchant" and change the name of.
+     * @param toggle The value to toggle to. Can be null, to just switch its
+     *               current value.
+     */
+    @NotNull
+    protected ItemStack toggleOption(@NotNull ItemStack stack, final @Nullable Boolean toggle) {
+        var meta = stack.getItemMeta();
+        if (meta == null) {
+            meta = Bukkit.getItemFactory().getItemMeta(stack.getType());
+        }
+        if (meta != null) {
+            var name = meta.getDisplayName();
+            final var pos = name.lastIndexOf(':');
+            if (pos != -1) {
+                name = name.substring(0, pos);
+            }
+
+            if (meta.hasEnchants() && (toggle == null || !toggle)) {
+                meta.removeEnchant(Enchantment.ARROW_INFINITE);
+                meta.setDisplayName(name + ": " + Translator.get(TranslationKey.DISABLED));
+            } else if (!meta.hasEnchants() && (toggle == null || toggle)) {
+                meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
+                meta.setDisplayName(name + ": " + Translator.get(TranslationKey.ENABLED));
+            }
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            stack.setItemMeta(meta);
+        }
+        return stack;
     }
 }

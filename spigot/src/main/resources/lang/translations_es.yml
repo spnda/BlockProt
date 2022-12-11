@@ -15,9 +15,6 @@ inventories:
   set_block_name: Establecer el nombre del bloque
   redstone:
     settings: Configuración de Redstone
-    redstone_enabled: Protección Redstone habilitada
-    pistons_enabled: Protección de pistón habilitada
-    hoppers_enabled: Protección de tolva habilitada
     enable_all: Habilitar todo
     disable_all: Desactivar todo
   friends:

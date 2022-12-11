@@ -14,9 +14,6 @@ inventories:
   paste_configuration: Konfigürasyonu yapıştır
   redstone:
     settings: Kızıltaş ayarları
-    redstone_enabled: Kızıltaş koruması açıldı
-    pistons_enabled: Piston koruması açıldı
-    hoppers_enabled: Huni koruması açıldı
     enable_all: Hepsini aç
     disable_all: Hepsini kapat
   friends:

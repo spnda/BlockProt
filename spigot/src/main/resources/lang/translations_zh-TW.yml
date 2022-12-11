@@ -15,9 +15,6 @@ inventories:
   set_block_name: 設置方塊名稱
   redstone:
     settings: 紅石設置
-    redstone_enabled: 啟用紅石保護
-    pistons_enabled: 啟用活塞保護
-    hoppers_enabled: 啟用漏斗保護
     enable_all: 全部啟用
     disable_all: 全部禁用
   friends:

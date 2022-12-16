@@ -1,5 +1,7 @@
 ---
 locale: ko
+enabled: 활성화
+disabled: 비활성화
 inventories:
   back: 뒤로
   last_page: 마지막 페이지
@@ -13,8 +15,12 @@ inventories:
   copy_configuration: 구성 복사
   paste_configuration: 복사한 구성 붙여넣기
   set_block_name: 블록 이름 설정
+  inspect_contents: 내용물 검사
   redstone:
     settings: 레드스톤 설정
+    redstone_protection: 레드스톤 보호
+    piston_protection: 피스톤 보호
+    hopper_protection: 깔때기 보호
     enable_all: 모두 활성화
     disable_all: 모두 비활성화
   friends:

@@ -1,5 +1,7 @@
 ---
 locale: zh_TW
+enabled: 啟用
+disabled: 禁用
 inventories:
   back: 返回
   last_page: 上一頁
@@ -13,8 +15,12 @@ inventories:
   copy_configuration: 複製配置
   paste_configuration: 貼上配置
   set_block_name: 設置方塊名稱
+  inspect_contents: 檢查內容
   redstone:
     settings: 紅石設置
+    redstone_protection: 紅石保護
+    piston_protection: 活塞保護
+    hopper_protection: 漏斗保護
     enable_all: 全部啟用
     disable_all: 全部禁用
   friends:

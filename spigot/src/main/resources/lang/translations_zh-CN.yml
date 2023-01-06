@@ -1,5 +1,7 @@
 ---
 locale: zh_CN
+enabled: 啟用
+disabled: 禁用
 inventories:
   back: 返回
   last_page: 上一页
@@ -12,8 +14,13 @@ inventories:
   lock_on_place: 在放置时自动上锁
   copy_configuration: 复制配置
   paste_configuration: 粘贴配置
+  set_block_name: 設置方塊名稱
+  inspect_contents: 檢查內容
   redstone:
     settings: 红石设置
+    redstone_protection: 紅石保護
+    piston_protection: 活塞保護
+    hopper_protection: 漏斗保護
     enable_all: 启用所有
     disable_all: 禁用所有
   friends:
@@ -23,6 +30,9 @@ inventories:
     search: 搜索玩家
     search_history: 搜索历史
     result: 已找到玩家
+    the_public: 公共
+    the_public_desc: 代表此伺服器上的每個玩家
+    make_public: 公开
     permissions: 权限
     permission:
       read: 查看
@@ -50,3 +60,5 @@ integrations:
   lands:
     protect_containers_flag_name: 保护容器 (BlockProt)
     protect_containers_desc: 允许玩家保护箱子、熔炉、等方块...
+    require_protect_for_friends_flag_name: 要求信任者"保護方塊"(BlockProt)
+    require_protect_for_friends_desc: 只有擁有"保護方塊"標誌的玩家才有資格被添加信任者

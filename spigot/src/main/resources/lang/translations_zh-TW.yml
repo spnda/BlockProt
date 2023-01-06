@@ -31,7 +31,7 @@ inventories:
     search_history: 搜索歷史
     result: 找到的玩家
     the_public: 公開的
-    the_public_desc: 代表此服務器上的每個玩家
+    the_public_desc: 代表此伺服器上的每個玩家
     make_public: 公開
     permissions: 權限
     permission:
@@ -54,11 +54,11 @@ messages:
   friend_cant_be_removed: 該信任者無法移除
   redstone_added: 添加了紅石保護
   redstone_removed: 移除了紅石保護
-  exceeded_max_block_count: 您已超過最大可鎖定的方塊數量
+  exceeded_max_block_count: 您已超過最大可上鎖的方塊數
   lock_hint: "§6您可以通過蹲下並右鍵點擊您的箱子、熔爐等來保護您的方塊！另外，也可以查看 /blockprot settings 根據自己的喜好對其進行設置。"
 integrations:
   lands:
     protect_containers_flag_name: 保護方塊(BlockProt)
     protect_containers_desc: 允許玩家保護箱子、熔爐、......
-    require_protect_for_friends_flag_name: 要求朋友"保護方塊"(BlockProt)
-    require_protect_for_friends_desc: 只有擁有"保護方塊"標誌的玩家才有資格被添加為好友。
+    require_protect_for_friends_flag_name: 要求信任者"保護方塊"(BlockProt)
+    require_protect_for_friends_desc: 只有擁有"保護方塊"標誌的玩家才有資格被添加信任者

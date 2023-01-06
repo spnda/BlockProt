@@ -30,7 +30,9 @@ inventories:
     search: 搜索玩家
     search_history: 搜索历史
     result: 已找到玩家
+    the_public: 公共
     the_public_desc: 代表此伺服器上的每個玩家
+    make_public: 公开
     permissions: 权限
     permission:
       read: 查看

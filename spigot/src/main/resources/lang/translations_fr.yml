@@ -1,5 +1,7 @@
 ---
 locale: fr
+enabled: Activé
+disabled: Désactivé
 inventories:
   back: Retour
   last_page: Dernière page
@@ -12,8 +14,13 @@ inventories:
   lock_on_place: Verrouiller automatiquement
   copy_configuration: Copier la configuration
   paste_configuration: Coller la configuration
+  set_block_name: Mettre un nom de bloc
+  inspect_contents: Inspecter le contenu
   redstone:
     settings: Paramètres Redstone
+    redstone_protection: Protection de redstone
+    piston_protection: Protection des pistons
+    hopper_protection: Protection des entonnoirs
     enable_all: Tout activer
     disable_all: Tout désactiver
   friends:
@@ -23,6 +30,9 @@ inventories:
     search: Chercher un joueur
     search_history: Historique des recherches
     result: Joueurs trouvés
+    the_public: Le publique
+    the_public_desc: Représente chaque joueur sur ce serveur.
+    make_public: Mettre en publique
     permissions: Permissions
     permission:
       read: Lire
@@ -45,3 +55,14 @@ messages:
   redstone_added: Protection Redstone ajoutée.
   redstone_removed: Protection Redstone supprimée.
   exceeded_max_block_count: Vous avez dépassé le nombre maximal de blocs verrouillables.
+  lock_hint: "§6Vous pouvez protéger vos blocs en vous accroupissant et en cliquant
+    avec le bouton droit de la souris sur vos coffres, vos fours et bien plus encore
+    ! Consultez également les paramètres /blockprot pour le configurer à votre guise.\n"
+integrations:
+  lands:
+    protect_containers_flag_name: Protéger les conteneurs (BlockProt)
+    protect_containers_desc: Autorise un joueur de protéger des coffres, des fours...
+    require_protect_for_friends_flag_name: Exige "Protéger les conteneurs" pour les
+      amis (BlockProt)
+    require_protect_for_friends_desc: Seuls les joueurs qui ont l'autorisation "Protéger
+      les conteneurs" peuvent être ajoutés en tant qu'amis.

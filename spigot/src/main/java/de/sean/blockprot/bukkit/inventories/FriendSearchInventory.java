@@ -25,6 +25,10 @@ import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class FriendSearchInventory {
     public static void openAnvilInventory(@NotNull final Player requestingPlayer) {
@@ -37,9 +41,9 @@ public class FriendSearchInventory {
             .open(requestingPlayer);
     }
 
-    private static AnvilGUI.Response onCompleteCallback(@NotNull final Player player, @NotNull final String searchQuery) {
-        Inventory inventory = new FriendSearchResultInventory().fill(player, searchQuery);
-        if (inventory == null) return AnvilGUI.Response.close();
-        return AnvilGUI.Response.openInventory(inventory);
+    private static @NotNull @Unmodifiable List<AnvilGUI.ResponseAction> onCompleteCallback(@NotNull final AnvilGUI.Completion completion) {
+        Inventory inventory = new FriendSearchResultInventory().fill(completion.getPlayer(), completion.getText());
+        if (inventory == null) return List.of(AnvilGUI.ResponseAction.close());
+        return List.of(AnvilGUI.ResponseAction.openInventory(inventory));
     }
 }

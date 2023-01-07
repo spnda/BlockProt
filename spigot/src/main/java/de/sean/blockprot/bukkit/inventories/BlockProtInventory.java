@@ -573,6 +573,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @param material The material of the item.
      * @param key The translation key for the display name of the item.
      * @param value Whether the option is enabled. Controls the suffix and if the item is enchanted.
+     * @since 1.1.8
      */
     public void setEnchantedOptionItemStack(int index, Material material, TranslationKey key, boolean value) {
         ItemStack stack = new ItemStack(material, 1);
@@ -594,6 +595,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @param stack The stack to "enchant" and change the name of.
      * @param toggle The value to toggle to. Can be null, to just switch its
      *               current value.
+     * @since 1.1.8
      */
     @NotNull
     protected ItemStack toggleOption(@NotNull ItemStack stack, final @Nullable Boolean toggle) {

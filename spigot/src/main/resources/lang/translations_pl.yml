@@ -1,5 +1,7 @@
 ---
 locale: pl
+enabled: Włączony
+disabled: Wyłączony
 inventories:
   back: Wróć
   last_page: Ostatnia strona
@@ -13,8 +15,12 @@ inventories:
   copy_configuration: Kopiuj konfigurację
   paste_configuration: Wklej konfigurację
   set_block_name: Ustaw nazwę bloku
+  inspect_contents: Sprawdź zawartość
   redstone:
     settings: Ustawienia Redstone
+    redstone_protection: Ochrona przed redstonem
+    piston_protection: Ochrona przed tłokiem
+    hopper_protection: Ochrona przed lejem
     enable_all: Włącz wszystkie
     disable_all: Wyłącz wszystkie
   friends:

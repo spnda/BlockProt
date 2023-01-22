@@ -41,11 +41,18 @@ import java.util.HashMap;
 public class InteractEventListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void playerInteract(PlayerInteractEvent event) {
+        // The InsaneShops plugin uses this weird FakeEvent event that inherits from PlayerInteractEvent.
+        // We don't want to trigger on that interact event, so here's this check.
+        if (event.getClass().getName().equals("Lme.TechsCode.InsaneShops.utilities.FakeEvent;"))
+            return;
+
         if (event.getClickedBlock() == null) return;
         if (BlockProt.getDefaultConfig().isWorldExcluded(event.getClickedBlock().getWorld())) return;
         if (!BlockProt.getDefaultConfig().isLockable(event.getClickedBlock().getState().getType())) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+
         Player player = event.getPlayer();
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && !player.isSneaking()) {
+        if (!player.isSneaking()) {
             BlockAccessEvent accessEvent = new BlockAccessEvent(event.getClickedBlock(), player);
             Bukkit.getPluginManager().callEvent(accessEvent);
             if (accessEvent.isCancelled()) {
@@ -69,7 +76,7 @@ public class InteractEventListener implements Listener {
                     }
                 }
             }
-        } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK && player.isSneaking()) {
+        } else {
             if (event.hasItem()) return; // Only enter the menu with an empty hand.
             event.setCancelled(true);
 

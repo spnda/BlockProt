@@ -18,9 +18,8 @@
 
 package de.sean.blockprot.bukkit.commands;
 
-import de.sean.blockprot.bukkit.inventories.InventoryState;
-import de.sean.blockprot.bukkit.inventories.UserSettingsInventory;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -29,16 +28,18 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SettingsCommand implements CommandExecutor {
+public class HintsCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) return false;
-
-        InventoryState state = new InventoryState(null);
-        state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH;
-        InventoryState.set(player.getUniqueId(), state);
-        player.openInventory(new UserSettingsInventory().fill(player));
-        new PlayerSettingsHandler(player).setHasPlayerInteractedWithMenu(true);
+        PlayerSettingsHandler settings = new PlayerSettingsHandler(player);
+        if (settings.hasPlayerInteractedWithMenu()) {
+            settings.setHasPlayerInteractedWithMenu(false);
+            sender.sendMessage(ChatColor.GOLD + "Toggled hints on!");
+            return true;
+        }
+        settings.setHasPlayerInteractedWithMenu(true);
+        sender.sendMessage(ChatColor.GOLD + "Toggled hints off!");
         return true;
     }
 
@@ -46,5 +47,10 @@ public class SettingsCommand implements CommandExecutor {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         return null;
+    }
+
+    @Override
+    public boolean canUseCommand(@NotNull CommandSender sender) {
+        return true;
     }
 }

@@ -67,6 +67,7 @@ messages:
   lock_hint: >
     §6You can protect your blocks by crouching and right-clicking your chests, furnaces, and more!
     Also, check out /blockprot settings to configure it to your liking.
+    (Click this message to disable!)
 
 integrations:
   lands:

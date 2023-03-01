@@ -21,9 +21,9 @@ package de.sean.blockprot.bukkit.listeners;
 import de.sean.blockprot.bukkit.*;
 import de.sean.blockprot.bukkit.events.BlockAccessEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
-import de.sean.blockprot.bukkit.nbt.NBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -71,7 +71,7 @@ public class InteractEventListener implements Listener {
                         String message = Translator.get(TranslationKey.MESSAGES__LOCK_HINT);
                         if (!message.isEmpty()) {
                             LockHintMessageCooldown.setTimestamp(player);
-                            sendMessage(player, message, ChatMessageType.CHAT);
+                            sendClickableMessage(player, message, "/blockprot togglehints", ChatMessageType.CHAT);
                         }
                     }
                 }
@@ -89,7 +89,7 @@ public class InteractEventListener implements Listener {
             if (inv == null) {
                 sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
             } else {
-                new PlayerSettingsHandler(player).setHasPlayerInteractedWithMenu();
+                new PlayerSettingsHandler(player).setHasPlayerInteractedWithMenu(true);
                 player.openInventory(inv);
             }
         }
@@ -101,6 +101,12 @@ public class InteractEventListener implements Listener {
 
     private void sendMessage(@NotNull Player player, @NotNull String component, @NotNull ChatMessageType type) {
         player.spigot().sendMessage(type, TextComponent.fromLegacyText(component));
+    }
+
+    private void sendClickableMessage(@NotNull Player player, @NotNull String component, @NotNull String command, @NotNull ChatMessageType type) {
+        TextComponent message = new TextComponent(component);
+        message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
+        player.spigot().sendMessage(type, message);
     }
 
     private static class LockHintMessageCooldown {

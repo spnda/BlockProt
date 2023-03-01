@@ -39,7 +39,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT")
 
     // bStats
-    api("org.bstats:bstats-bukkit:3.0.0")
+    api("org.bstats:bstats-bukkit:3.0.1")
 
     // Dependencies
     implementation("de.tr7zw:item-nbt-api:$nbtApiVersion")

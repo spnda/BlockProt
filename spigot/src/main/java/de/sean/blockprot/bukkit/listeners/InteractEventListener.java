@@ -24,7 +24,9 @@ import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -71,7 +73,8 @@ public class InteractEventListener implements Listener {
                         String message = Translator.get(TranslationKey.MESSAGES__LOCK_HINT);
                         if (!message.isEmpty()) {
                             LockHintMessageCooldown.setTimestamp(player);
-                            sendClickableMessage(player, message, "/blockprot togglehints", ChatMessageType.CHAT);
+                            String tooltip = Translator.get(TranslationKey.MESSAGES__HINT_HOVER_TEXT);
+                            sendEventsMessage(player, message, ChatMessageType.CHAT, "/blockprot disablehints", tooltip.isEmpty() ? null : tooltip);
                         }
                     }
                 }
@@ -103,9 +106,10 @@ public class InteractEventListener implements Listener {
         player.spigot().sendMessage(type, TextComponent.fromLegacyText(component));
     }
 
-    private void sendClickableMessage(@NotNull Player player, @NotNull String component, @NotNull String command, @NotNull ChatMessageType type) {
+    private void sendEventsMessage(@NotNull Player player, @NotNull String component, @NotNull ChatMessageType type, @Nullable String command, @Nullable String tooltip) {
         TextComponent message = new TextComponent(component);
-        message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
+        if (command != null) {message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));}
+        if (tooltip != null) {message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(tooltip)));}
         player.spigot().sendMessage(type, message);
     }
 

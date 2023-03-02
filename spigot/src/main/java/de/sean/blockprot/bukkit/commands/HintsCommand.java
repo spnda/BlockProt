@@ -33,13 +33,10 @@ public class HintsCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) return false;
         PlayerSettingsHandler settings = new PlayerSettingsHandler(player);
-        if (settings.hasPlayerInteractedWithMenu()) {
-            settings.setHasPlayerInteractedWithMenu(false);
-            sender.sendMessage(ChatColor.GOLD + "Toggled hints on!");
-            return true;
+        if (!settings.hasPlayerInteractedWithMenu()) {
+            settings.setHasPlayerInteractedWithMenu(true);
+            sender.sendMessage(ChatColor.GOLD + "Toggled hints off!");
         }
-        settings.setHasPlayerInteractedWithMenu(true);
-        sender.sendMessage(ChatColor.GOLD + "Toggled hints off!");
         return true;
     }
 
@@ -49,8 +46,4 @@ public class HintsCommand implements CommandExecutor {
         return null;
     }
 
-    @Override
-    public boolean canUseCommand(@NotNull CommandSender sender) {
-        return true;
-    }
 }

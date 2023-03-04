@@ -21,10 +21,12 @@ package de.sean.blockprot.bukkit.listeners;
 import de.sean.blockprot.bukkit.*;
 import de.sean.blockprot.bukkit.events.BlockAccessEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
-import de.sean.blockprot.bukkit.nbt.NBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -71,7 +73,9 @@ public class InteractEventListener implements Listener {
                         String message = Translator.get(TranslationKey.MESSAGES__LOCK_HINT);
                         if (!message.isEmpty()) {
                             LockHintMessageCooldown.setTimestamp(player);
-                            sendMessage(player, message, ChatMessageType.CHAT);
+                            var tooltip = Translator.get(TranslationKey.MESSAGES__HINT_HOVER_TEXT);
+                            sendEventsMessage(player, message, ChatMessageType.CHAT,
+                                "/blockprot disablehints", tooltip.isEmpty() ? null : tooltip);
                         }
                     }
                 }
@@ -89,7 +93,7 @@ public class InteractEventListener implements Listener {
             if (inv == null) {
                 sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
             } else {
-                new PlayerSettingsHandler(player).setHasPlayerInteractedWithMenu();
+                new PlayerSettingsHandler(player).setHasPlayerInteractedWithMenu(true);
                 player.openInventory(inv);
             }
         }
@@ -101,6 +105,13 @@ public class InteractEventListener implements Listener {
 
     private void sendMessage(@NotNull Player player, @NotNull String component, @NotNull ChatMessageType type) {
         player.spigot().sendMessage(type, TextComponent.fromLegacyText(component));
+    }
+
+    private void sendEventsMessage(@NotNull Player player, @NotNull String component, @NotNull ChatMessageType type, @Nullable String command, @Nullable String tooltip) {
+        final var message = new TextComponent(component);
+        if (command != null) message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
+        if (tooltip != null) message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(tooltip)));
+        player.spigot().sendMessage(type, message);
     }
 
     private static class LockHintMessageCooldown {

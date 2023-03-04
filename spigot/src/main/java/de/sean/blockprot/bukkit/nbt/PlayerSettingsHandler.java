@@ -175,11 +175,10 @@ public final class PlayerSettingsHandler extends FriendSupportingHandler<NBTComp
 
     /**
      * Sets whether this player has interacted with any of the plugin's
-     * menus before. This sets the setting to 'true', as it otherwise is
-     * 'false'.
+     * menus before. Toggleable in order to allow re-enabling of hints.
      */
-    public void setHasPlayerInteractedWithMenu() {
-        container.setBoolean(PLAYER_HAS_INTERACTED_WITH_MENU, true);
+    public void setHasPlayerInteractedWithMenu(boolean bool) {
+        container.setBoolean(PLAYER_HAS_INTERACTED_WITH_MENU, bool);
     }
 
     /**

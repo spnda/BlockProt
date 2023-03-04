@@ -18,8 +18,8 @@
 
 package de.sean.blockprot.bukkit.commands;
 
-import de.sean.blockprot.bukkit.inventories.InventoryState;
-import de.sean.blockprot.bukkit.inventories.UserSettingsInventory;
+import de.sean.blockprot.bukkit.TranslationKey;
+import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -29,16 +29,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SettingsCommand implements CommandExecutor {
+public class HintsCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) return false;
-
-        InventoryState state = new InventoryState(null);
-        state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH;
-        InventoryState.set(player.getUniqueId(), state);
-        player.openInventory(new UserSettingsInventory().fill(player));
-        new PlayerSettingsHandler(player).setHasPlayerInteractedWithMenu(true);
+        var settings = new PlayerSettingsHandler(player);
+        if (!settings.hasPlayerInteractedWithMenu()) {
+            settings.setHasPlayerInteractedWithMenu(true);
+            sender.sendMessage(
+                Translator.get(TranslationKey.MESSAGES__DISABLED_HINTS));
+        }
         return true;
     }
 

@@ -67,8 +67,9 @@ messages:
   lock_hint: >
     §6You can protect your blocks by crouching and right-clicking your chests, furnaces, and more!
     Also, check out /blockprot settings to configure it to your liking.
-    (Click this message to disable these hints.)
-  hint_hover_text: "Click to disable hints."
+    (Click here to disable these hints.)
+  hint_hover_text: "Open a menu from BlockProt or click here disable hints."
+  disabled_hints: "§6Disabled hints!"
 
 integrations:
   lands:

@@ -18,8 +18,9 @@
 
 package de.sean.blockprot.bukkit.commands;
 
+import de.sean.blockprot.bukkit.TranslationKey;
+import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -32,10 +33,11 @@ public class HintsCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) return false;
-        PlayerSettingsHandler settings = new PlayerSettingsHandler(player);
+        var settings = new PlayerSettingsHandler(player);
         if (!settings.hasPlayerInteractedWithMenu()) {
             settings.setHasPlayerInteractedWithMenu(true);
-            sender.sendMessage(ChatColor.GOLD + "Toggled hints off!");
+            sender.sendMessage(
+                Translator.get(TranslationKey.MESSAGES__DISABLED_HINTS));
         }
         return true;
     }
@@ -45,5 +47,4 @@ public class HintsCommand implements CommandExecutor {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         return null;
     }
-
 }

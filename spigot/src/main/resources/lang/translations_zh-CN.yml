@@ -1,6 +1,6 @@
 ---
 locale: zh_CN
-enabled: 啟用
+enabled: 启用
 disabled: 禁用
 inventories:
   back: 返回
@@ -14,13 +14,13 @@ inventories:
   lock_on_place: 在放置时自动上锁
   copy_configuration: 复制配置
   paste_configuration: 粘贴配置
-  set_block_name: 設置方塊名稱
-  inspect_contents: 檢查內容
+  set_block_name: 设置方块名称
+  inspect_contents: 检查內容
   redstone:
     settings: 红石设置
-    redstone_protection: 紅石保護
-    piston_protection: 活塞保護
-    hopper_protection: 漏斗保護
+    redstone_protection: 红石保护
+    piston_protection: 活塞保护
+    hopper_protection: 漏斗保护
     enable_all: 启用所有
     disable_all: 禁用所有
   friends:
@@ -31,7 +31,7 @@ inventories:
     search_history: 搜索历史
     result: 已找到玩家
     the_public: 公共
-    the_public_desc: 代表此伺服器上的每個玩家
+    the_public_desc: 代表此服务器上的每个玩家
     make_public: 公开
     permissions: 权限
     permission:
@@ -54,7 +54,7 @@ messages:
   friend_cant_be_removed: 该信任玩家无法被移除.
   redstone_added: 已添加红石保护.
   redstone_removed: 已移除红石保护.
-  exceeded_max_block_count: 你已经达到了最大的可上错方块数.
+  exceeded_max_block_count: 你已经达到了最大的可上锁方块数.
   lock_hint: "§6您可以通过 蹲下并右键 您的箱子、熔炉等来保护您的方块！此外，请使用 /blockprot 以根据自己的喜好对其进行配置。\n"
 integrations:
   lands:

@@ -50,6 +50,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -208,7 +209,6 @@ public abstract class BlockProtInventory implements InventoryHolder {
                     case ADD_FRIEND -> handler.addFriend(friend.getUniqueId().toString());
                     case REMOVE_FRIEND -> handler.removeFriend(friend.getUniqueId().toString());
                 }
-                return null;
             }
         );
     }
@@ -227,7 +227,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
     protected void applyChanges(
         @NotNull final Player player,
         @Nullable final Function<BlockNBTHandler, LockReturnValue> onBlockChanges,
-        @Nullable final Function<PlayerSettingsHandler, Void> onSettingsChanges) {
+        @Nullable final Consumer<PlayerSettingsHandler> onSettingsChanges) {
         InventoryState state = InventoryState.get(player.getUniqueId());
         switch (state.friendSearchState) {
             case FRIEND_SEARCH -> {
@@ -242,7 +242,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
             case DEFAULT_FRIEND_SEARCH -> {
                 if (onSettingsChanges == null) return;
                 PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(player);
-                onSettingsChanges.apply(settingsHandler);
+                onSettingsChanges.accept(settingsHandler);
             }
         }
     }

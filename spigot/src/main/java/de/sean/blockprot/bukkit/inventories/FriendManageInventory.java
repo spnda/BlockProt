@@ -25,6 +25,7 @@ import de.sean.blockprot.bukkit.inventories.InventoryState.FriendSearchState;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.FriendSupportingHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
+import de.sean.blockprot.nbt.LockReturnValue;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -125,11 +126,14 @@ public final class FriendManageInventory extends BlockProtInventory {
             case MAP -> FriendSearchInventory.openAnvilInventory(player);
             case BOOK -> closeAndOpen(player, new FriendSearchHistoryInventory().fill(player));
             case WITHER_SKELETON_SKULL -> {
-                // We will add everyone as a friend.
-                switch (state.friendSearchState) {
-                    case FRIEND_SEARCH -> Objects.requireNonNull(getNbtHandlerOrNull(state.getBlock())).addEveryoneAsFriend();
-                    case DEFAULT_FRIEND_SEARCH -> new PlayerSettingsHandler(player).addEveryoneAsFriend();
-                }
+                applyChanges(
+                    player,
+                    (handler) -> {
+                        handler.addEveryoneAsFriend();
+                        return new LockReturnValue(true, null);
+                    },
+                    FriendSupportingHandler::addEveryoneAsFriend
+                );
                 fill(player); // Essentially rebuilds the inventory.
             }
             default -> closeAndOpen(player, null); // Unexpected, exit the inventory.

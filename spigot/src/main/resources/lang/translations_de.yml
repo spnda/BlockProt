@@ -60,6 +60,8 @@ messages:
   lock_hint: >
     §6Du kannst deine Truhen, Öfen, und mehr jetzt beschützen! Einfach sneaken und rechts
     klicken auf deine Blöcke, um auf das Menü zuzugreifen.
+  hint_hover_text: "Öffne ein Menü von BlockProt oder klick hier um Hinweise zu deaktivieren."
+  disabled_hints: "§6Hinweise deaktiviert!"
 
 integrations:
   lands:

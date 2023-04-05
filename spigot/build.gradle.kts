@@ -49,7 +49,7 @@ dependencies {
     implementation("com.github.TownyAdvanced:Towny:$townyVersion")
     implementation("me.clip:placeholderapi:$papiVersion")
     implementation("com.sk89q.worldguard:worldguard-bukkit:$worldGuardVersion")
-    implementation("com.github.angeschossen:LandsAPI:6.0.2")
+    implementation("com.github.angeschossen:LandsAPI:6.28.11")
 }
 
 blossom {

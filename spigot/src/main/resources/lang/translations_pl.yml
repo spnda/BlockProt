@@ -56,8 +56,11 @@ messages:
   redstone_removed: Usunięto ochronę Redstone.
   exceeded_max_block_count: Przekroczyłeś maksymalną liczbę bloków do zablokowania.
   lock_hint: "§6Możesz chronić swoje bloki, kucając i klikając prawym przyciskiem
-    myszy na skrzynie, piece i wiele więcej! Sprawdź także ustawienia /blockprot,
-    aby skonfigurować je według własnych upodobań.\n"
+    myszy swoje skrzynie, piece i nie tylko! Sprawdź także ustawienia /blockprot,
+    aby skonfigurować je według własnych upodobań. (Kliknij tutaj aby wyłączyć te
+    podpowiedzi.)\n"
+  hint_hover_text: Otwórz menu BlockProt lub kliknij tutaj, aby wyłączyć podpowiedzi.
+  disabled_hints: "§6Podpowiedzi wyłączone!"
 integrations:
   lands:
     protect_containers_flag_name: Protect containers (BlockProt)

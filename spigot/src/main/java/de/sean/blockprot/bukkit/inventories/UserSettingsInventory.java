@@ -50,9 +50,8 @@ public class UserSettingsInventory extends BlockProtInventory {
             case BARRIER -> {
                 // Lock on place button, default value is true
                 PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(player);
-                boolean lockOnPlace = !settingsHandler.getLockOnPlace();
-                settingsHandler.setLockOnPlace(lockOnPlace);
-                this.inventory.setItem(0, this.toggleEnchants(item, lockOnPlace));
+                settingsHandler.setLockOnPlace(!settingsHandler.getLockOnPlace());
+                inventory.setItem(0, toggleOption(item, null));
             }
             case PLAYER_HEAD -> {
                 state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH;
@@ -70,7 +69,7 @@ public class UserSettingsInventory extends BlockProtInventory {
     public Inventory fill(Player player) {
         PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(player);
         boolean lockOnPlace = settingsHandler.getLockOnPlace();
-        setEnchantedItemStack(
+        setEnchantedOptionItemStack(
             0,
             Material.BARRIER,
             TranslationKey.INVENTORIES__LOCK_ON_PLACE,

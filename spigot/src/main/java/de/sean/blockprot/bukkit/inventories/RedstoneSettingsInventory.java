@@ -110,7 +110,7 @@ public class RedstoneSettingsInventory extends BlockProtInventory {
         for (int i = 0; i < SETTINGS_COUNT; i++) {
             ItemStack stack = inventory.getItem(i);
             if (stack != null) {
-                inventory.setItem(i, toggleEnchants(stack, value));
+                inventory.setItem(i, toggleOption(stack, value));
             }
         }
     }

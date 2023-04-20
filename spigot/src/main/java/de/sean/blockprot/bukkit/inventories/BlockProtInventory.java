@@ -405,6 +405,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @since 0.4.13
      * @see #setEnchantedOptionItemStack(int, Material, TranslationKey, boolean)
      */
+    @Deprecated
     public void setEnchantedItemStack(int index, Material material, TranslationKey key, boolean value) {
         ItemStack stack = new ItemStack(material, 1);
         ItemMeta meta = stack.getItemMeta();
@@ -520,6 +521,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @param stack The stack to "enchant".
      * @since 0.4.13
      */
+    @Deprecated
     protected ItemStack toggleEnchants(@NotNull final ItemStack stack) {
         return toggleEnchants(stack, null);
     }
@@ -533,6 +535,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @since 0.4.13
      */
     @NotNull
+    @Deprecated
     protected ItemStack toggleEnchants(@NotNull ItemStack stack, final @Nullable Boolean toggle) {
         ItemMeta meta = stack.getItemMeta();
         if (meta == null) {
@@ -584,7 +587,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
                 (value ? Translator.get(TranslationKey.ENABLED) : Translator.get(TranslationKey.DISABLED)));
             stack.setItemMeta(meta);
         }
-        toggleEnchants(stack, value);
+        toggleOption(stack, value);
         inventory.setItem(index, stack);
     }
 

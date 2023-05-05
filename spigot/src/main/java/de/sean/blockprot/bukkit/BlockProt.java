@@ -26,6 +26,7 @@ import de.sean.blockprot.bukkit.metrics.IntegrationBarChart;
 import de.sean.blockprot.bukkit.nbt.StatHandler;
 import de.sean.blockprot.bukkit.tasks.UpdateChecker;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
+import net.wesjd.anvilgui.version.VersionMatcher;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -128,8 +129,20 @@ public final class BlockProt extends JavaPlugin {
     public void onEnable() {
         if (isRunningCraftBukkit()) {
             getLogger().severe("This plugin does not support running on CraftBukkit servers! Please use any Spigot server instead!");
+            getServer().getPluginManager().registerEvents(new ErrorEventListener(), this);
+            return;
+        }
 
-            getServer().getPluginManager().registerEvents(new CBJoinEventListener(), this);
+        /* Check for updates */
+        Bukkit.getScheduler().runTaskAsynchronously(this, new UpdateChecker(this.getDescription()));
+
+        // We'll try and get the AnvilGUI API to select the version wrapper. Should it fail, we display an error that
+        // we do not support the current Minecraft version.
+        try {
+            new VersionMatcher().match();
+        } catch (IllegalStateException e) {
+            getLogger().severe("This plugin does not support the current Minecraft version! Please check if there is a new update available.");
+            getServer().getPluginManager().registerEvents(new ErrorEventListener(), this);
             return;
         }
 
@@ -139,9 +152,6 @@ public final class BlockProt extends JavaPlugin {
         StatHandler.enable();
         this.saveDefaultConfig();
         this.reloadConfigAndTranslations();
-
-        /* Check for updates */
-        Bukkit.getScheduler().runTaskAsynchronously(this, new UpdateChecker(this.getDescription()));
 
         /* bStats Metrics */
         metrics = new Metrics(this, pluginId);

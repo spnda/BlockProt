@@ -14,13 +14,13 @@ inventories:
   lock_on_place: 在放置时自动上锁
   copy_configuration: 复制配置
   paste_configuration: 粘贴配置
-  set_block_name: 設置方塊名稱
-  inspect_contents: 檢查內容
+  set_block_name: 设置方块名称
+  inspect_contents: 查看内容
   redstone:
     settings: 红石设置
-    redstone_protection: 紅石保護
-    piston_protection: 活塞保護
-    hopper_protection: 漏斗保護
+    redstone_protection: 红石保护
+    piston_protection: 活塞保护
+    hopper_protection: 漏斗保护
     enable_all: 启用所有
     disable_all: 禁用所有
   friends:
@@ -31,12 +31,12 @@ inventories:
     search_history: 搜索历史
     result: 已找到玩家
     the_public: 公共
-    the_public_desc: 代表此伺服器上的每個玩家
+    the_public_desc: 代表此服务器上的每个玩家.
     make_public: 公开
     permissions: 权限
     permission:
       read: 查看
-      write: 放入/拿出
+      write: 放入或拿出
       manager: 管理者
   statistics:
     statistics: 统计数据
@@ -55,10 +55,15 @@ messages:
   redstone_added: 已添加红石保护.
   redstone_removed: 已移除红石保护.
   exceeded_max_block_count: 你已经达到了最大的可上错方块数.
-  lock_hint: "§6您可以通过 蹲下并右键 您的箱子、熔炉等来保护您的方块！此外，请使用 /blockprot 以根据自己的喜好对其进行配置。\n"
+  lock_hint: |-
+    §6你可以通过潜行并右键来保护你的箱子、熔炉等方块！
+    并且，试试/blockprot settings来设置成你想要的样子。
+    （点击此处关闭这些提示。）
+  hint_hover_text: 打开一个BlockProt的菜单或者点击此处关闭提示。
+  disabled_hints: "§6已关闭提示！"
 integrations:
   lands:
     protect_containers_flag_name: 保护容器 (BlockProt)
-    protect_containers_desc: 允许玩家保护箱子、熔炉、等方块...
+    protect_containers_desc: 允许玩家保护箱子、熔炉等方块...
     require_protect_for_friends_flag_name: 要求信任者"保護方塊"(BlockProt)
     require_protect_for_friends_desc: 只有擁有"保護方塊"標誌的玩家才有資格被添加信任者

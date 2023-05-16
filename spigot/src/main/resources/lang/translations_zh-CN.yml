@@ -1,6 +1,6 @@
 ---
 locale: zh_CN
-enabled: 启用
+enabled: 啟用
 disabled: 禁用
 inventories:
   back: 返回

@@ -14,6 +14,7 @@ inventories:
   lock_on_place: 在放置时自动上锁
   copy_configuration: 复制配置
   paste_configuration: 粘贴配置
+  set_block_name: 设置方块名称
   inspect_contents: 查看内容
   redstone:
     settings: 红石设置

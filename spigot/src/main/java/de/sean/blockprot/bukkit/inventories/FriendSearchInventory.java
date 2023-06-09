@@ -28,12 +28,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class FriendSearchInventory {
     public static void openAnvilInventory(@NotNull final Player requestingPlayer) {
         (new AnvilGUI.Builder())
-            .onComplete(FriendSearchInventory::onCompleteCallback)
+            .onClick(FriendSearchInventory::onCompleteCallback)
             .text("Name")
             .title(Translator.get(TranslationKey.INVENTORIES__FRIENDS__SEARCH))
             .plugin(BlockProt.getInstance())
@@ -41,8 +42,12 @@ public class FriendSearchInventory {
             .open(requestingPlayer);
     }
 
-    private static @NotNull @Unmodifiable List<AnvilGUI.ResponseAction> onCompleteCallback(@NotNull final AnvilGUI.Completion completion) {
-        Inventory inventory = new FriendSearchResultInventory().fill(completion.getPlayer(), completion.getText());
+    private static @NotNull @Unmodifiable List<AnvilGUI.ResponseAction> onCompleteCallback(@NotNull final Integer slot, @NotNull AnvilGUI.StateSnapshot snapshot) {
+        if (slot != AnvilGUI.Slot.OUTPUT) {
+            return Collections.emptyList();
+        }
+
+        Inventory inventory = new FriendSearchResultInventory().fill(snapshot.getPlayer(), snapshot.getText());
         if (inventory == null) return List.of(AnvilGUI.ResponseAction.close());
         return List.of(AnvilGUI.ResponseAction.openInventory(inventory));
     }

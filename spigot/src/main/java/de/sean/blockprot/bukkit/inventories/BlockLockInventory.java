@@ -36,6 +36,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
+import java.util.List;
+
 public class BlockLockInventory extends BlockProtInventory {
     @Override
     int getSize() {
@@ -109,14 +112,18 @@ public class BlockLockInventory extends BlockProtInventory {
                         .text("Block name")
                         .title(Translator.get(TranslationKey.INVENTORIES__SET_BLOCK_NAME))
                         .plugin(BlockProt.getInstance())
-                        .onComplete((Player kPlayer, String name) -> {
-                            var invState = InventoryState.get(kPlayer.getUniqueId());
+                        .onClick((Integer slot, AnvilGUI.StateSnapshot snapshot) -> {
+                            if (slot != AnvilGUI.Slot.OUTPUT) {
+                                return Collections.emptyList();
+                            }
+
+                            var invState = InventoryState.get(snapshot.getPlayer().getUniqueId());
                             assert(invState.getBlock() != null);
 
-                            new BlockNBTHandler(invState.getBlock()).setName(name);
+                            new BlockNBTHandler(invState.getBlock()).setName(snapshot.getText());
                             Inventory inventory = new BlockLockInventory().fill(player, block.getType(), new BlockNBTHandler(block));
-                            if (inventory == null) return AnvilGUI.Response.close();
-                            return AnvilGUI.Response.openInventory(inventory);
+                            if (inventory == null) return List.of(AnvilGUI.ResponseAction.close());
+                            return List.of(AnvilGUI.ResponseAction.openInventory(inventory));
                         })
                         .open(player);
                 }

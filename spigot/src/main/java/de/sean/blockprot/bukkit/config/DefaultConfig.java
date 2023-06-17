@@ -74,7 +74,7 @@ public final class DefaultConfig extends BlockProtConfig {
     private final HashSet<Material> knownGoodTileEntities = new HashSet<>(Arrays.asList(
             Material.CHEST, Material.TRAPPED_CHEST, Material.FURNACE, Material.SMOKER, Material.BLAST_FURNACE,
             Material.HOPPER, Material.BARREL, Material.BREWING_STAND, Material.DISPENSER, Material.DROPPER,
-            Material.LECTERN,
+            Material.LECTERN, Material.BEEHIVE, Material.BEE_NEST,
             Material.OAK_SIGN, Material.SPRUCE_SIGN, Material.BIRCH_SIGN, Material.JUNGLE_SIGN, Material.ACACIA_SIGN,
             Material.DARK_OAK_SIGN, Material.CRIMSON_SIGN, Material.WARPED_SIGN
     ));

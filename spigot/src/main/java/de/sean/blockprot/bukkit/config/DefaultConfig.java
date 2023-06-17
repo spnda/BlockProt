@@ -74,7 +74,9 @@ public final class DefaultConfig extends BlockProtConfig {
     private final HashSet<Material> knownGoodTileEntities = new HashSet<>(Arrays.asList(
             Material.CHEST, Material.TRAPPED_CHEST, Material.FURNACE, Material.SMOKER, Material.BLAST_FURNACE,
             Material.HOPPER, Material.BARREL, Material.BREWING_STAND, Material.DISPENSER, Material.DROPPER,
-            Material.LECTERN
+            Material.LECTERN,
+            Material.OAK_SIGN, Material.SPRUCE_SIGN, Material.BIRCH_SIGN, Material.JUNGLE_SIGN, Material.ACACIA_SIGN,
+            Material.DARK_OAK_SIGN, Material.CRIMSON_SIGN, Material.WARPED_SIGN
     ));
 
     private final List<String> excludedWorlds;
@@ -119,6 +121,15 @@ public final class DefaultConfig extends BlockProtConfig {
      * @since 0.3.3
      */
     private void loadBlocksFromConfig() {
+        // Add some materials which are not valid in some versions
+        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_19_R1)) {
+            this.knownGoodTileEntities.add(Material.MANGROVE_SIGN);
+        }
+        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R1)) {
+            this.knownGoodTileEntities.add(Material.CHERRY_SIGN);
+            this.knownGoodTileEntities.add(Material.BAMBOO_SIGN);
+        }
+
         loadBlockListFromConfig("lockable_tile_entities", this.lockableTileEntities, Material.values(),
                 knownGoodTileEntities::contains);
         loadBlockListFromConfig("lockable_shulker_boxes", this.shulkerBoxes, Material.values(),

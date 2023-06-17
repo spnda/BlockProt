@@ -42,10 +42,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockBurnEvent;
-import org.bukkit.event.block.BlockPhysicsEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -206,6 +203,15 @@ public class BlockEventListener implements Listener {
             BlockNBTHandler handler = new BlockNBTHandler(event.getBlock());
 
             if (handler.isProtected())
+                event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onSignChanged(@NotNull final SignChangeEvent event) {
+        if (BlockProt.getDefaultConfig().isLockableBlock(event.getBlock().getType())) {
+            final var handler = new BlockNBTHandler(event.getBlock());
+            if (handler.isProtected() && !handler.isOwner(event.getPlayer().getUniqueId()))
                 event.setCancelled(true);
         }
     }

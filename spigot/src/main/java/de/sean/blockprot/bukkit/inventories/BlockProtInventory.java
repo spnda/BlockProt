@@ -469,14 +469,29 @@ public abstract class BlockProtInventory implements InventoryHolder {
      */
     protected Material getProperMaterial(Material material) {
         return switch (material) {
-            case ACACIA_WALL_SIGN, ACACIA_HANGING_SIGN -> Material.ACACIA_SIGN;
-            case BIRCH_WALL_SIGN, BIRCH_HANGING_SIGN -> Material.BIRCH_SIGN;
-            case CRIMSON_WALL_SIGN, CRIMSON_HANGING_SIGN -> Material.CRIMSON_SIGN;
-            case DARK_OAK_WALL_SIGN, DARK_OAK_HANGING_SIGN -> Material.DARK_OAK_SIGN;
-            case JUNGLE_WALL_SIGN, JUNGLE_HANGING_SIGN -> Material.JUNGLE_SIGN;
-            case SPRUCE_WALL_SIGN, SPRUCE_HANGING_SIGN -> Material.SPRUCE_SIGN;
-            case OAK_WALL_SIGN, OAK_HANGING_SIGN -> Material.OAK_SIGN;
-            case WARPED_WALL_SIGN, WARPED_HANGING_SIGN -> Material.WARPED_SIGN;
+            case ACACIA_WALL_SIGN -> Material.ACACIA_SIGN;
+            case BAMBOO_WALL_SIGN -> Material.BAMBOO_SIGN;
+            case BIRCH_WALL_SIGN -> Material.BIRCH_SIGN;
+            case CHERRY_WALL_SIGN -> Material.CHERRY_SIGN;
+            case CRIMSON_WALL_SIGN -> Material.CRIMSON_SIGN;
+            case DARK_OAK_WALL_SIGN -> Material.DARK_OAK_SIGN;
+            case JUNGLE_WALL_SIGN -> Material.JUNGLE_SIGN;
+            case MANGROVE_WALL_SIGN -> Material.MANGROVE_SIGN;
+            case OAK_WALL_SIGN -> Material.OAK_SIGN;
+            case SPRUCE_WALL_SIGN -> Material.SPRUCE_SIGN;
+            case WARPED_WALL_SIGN -> Material.WARPED_SIGN;
+
+            case ACACIA_WALL_HANGING_SIGN -> Material.ACACIA_HANGING_SIGN;
+            case BAMBOO_WALL_HANGING_SIGN -> Material.BAMBOO_HANGING_SIGN;
+            case BIRCH_WALL_HANGING_SIGN -> Material.BIRCH_HANGING_SIGN;
+            case CHERRY_WALL_HANGING_SIGN -> Material.CHERRY_HANGING_SIGN;
+            case CRIMSON_WALL_HANGING_SIGN-> Material.CRIMSON_HANGING_SIGN;
+            case DARK_OAK_WALL_HANGING_SIGN -> Material.DARK_OAK_HANGING_SIGN;
+            case JUNGLE_WALL_HANGING_SIGN -> Material.JUNGLE_HANGING_SIGN;
+            case MANGROVE_WALL_HANGING_SIGN -> Material.MANGROVE_HANGING_SIGN;
+            case OAK_WALL_HANGING_SIGN -> Material.OAK_HANGING_SIGN;
+            case SPRUCE_WALL_HANGING_SIGN -> Material.SPRUCE_HANGING_SIGN;
+            case WARPED_WALL_HANGING_SIGN -> Material.WARPED_HANGING_SIGN;
             default -> material;
         };
     }

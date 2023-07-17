@@ -469,14 +469,14 @@ public abstract class BlockProtInventory implements InventoryHolder {
      */
     protected Material getProperMaterial(Material material) {
         return switch (material) {
-            case ACACIA_WALL_SIGN -> Material.ACACIA_SIGN;
-            case BIRCH_WALL_SIGN -> Material.BIRCH_SIGN;
-            case CRIMSON_WALL_SIGN -> Material.CRIMSON_SIGN;
-            case DARK_OAK_WALL_SIGN -> Material.DARK_OAK_SIGN;
-            case JUNGLE_WALL_SIGN -> Material.JUNGLE_SIGN;
-            case SPRUCE_WALL_SIGN -> Material.SPRUCE_SIGN;
-            case OAK_WALL_SIGN -> Material.OAK_SIGN;
-            case WARPED_WALL_SIGN -> Material.WARPED_SIGN;
+            case ACACIA_WALL_SIGN, ACACIA_HANGING_SIGN -> Material.ACACIA_SIGN;
+            case BIRCH_WALL_SIGN, BIRCH_HANGING_SIGN -> Material.BIRCH_SIGN;
+            case CRIMSON_WALL_SIGN, CRIMSON_HANGING_SIGN -> Material.CRIMSON_SIGN;
+            case DARK_OAK_WALL_SIGN, DARK_OAK_HANGING_SIGN -> Material.DARK_OAK_SIGN;
+            case JUNGLE_WALL_SIGN, JUNGLE_HANGING_SIGN -> Material.JUNGLE_SIGN;
+            case SPRUCE_WALL_SIGN, SPRUCE_HANGING_SIGN -> Material.SPRUCE_SIGN;
+            case OAK_WALL_SIGN, OAK_HANGING_SIGN -> Material.OAK_SIGN;
+            case WARPED_WALL_SIGN, WARPED_HANGING_SIGN -> Material.WARPED_SIGN;
             default -> material;
         };
     }

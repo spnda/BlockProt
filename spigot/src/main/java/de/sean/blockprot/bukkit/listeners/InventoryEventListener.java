@@ -42,6 +42,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerTakeLecternBookEvent;
 import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
@@ -95,6 +96,30 @@ public class InventoryEventListener implements Listener {
                 // It's not a block, and it's therefore also not lockable.
                 // This is probably some other custom inventory from another
                 // plugin, or possibly some entity inventory, e.g. villagers.
+            }
+        }
+    }
+
+    @EventHandler
+    public void onLecternClick(@NotNull PlayerTakeLecternBookEvent event) {
+        final var handler = new BlockNBTHandler(event.getLectern().getBlock());
+        final var uuid = event.getPlayer().getUniqueId();
+
+        if (handler.isProtected() && !handler.isOwner(uuid)) {
+            // The player taking the book is not the owner.
+            final var friend = handler.getFriend(uuid.toString());
+            if (friend.isPresent()) {
+                if (!friend.get().canWrite()) {
+                    event.setCancelled(true);
+                } else if (!friend.get().canRead()) {
+                    // Not a friend who should be able to access the inventory
+                    event.setCancelled(true);
+                    event.getPlayer().closeInventory();
+                }
+            } else {
+                // Not a friend; close the inventory
+                event.setCancelled(true);
+                event.getPlayer().closeInventory();
             }
         }
     }

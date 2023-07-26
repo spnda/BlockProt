@@ -57,6 +57,7 @@ messages:
   exceeded_max_block_count: 您已超過最大可上鎖的方塊數
   lock_hint: "§6您可以通過蹲下並右鍵點擊您的箱子、熔爐等來保護您的方塊!另外，請檢查 /blockprot settings 以根據您的喜好進行配置。(點擊此處禁用這些提示)\n"
   hint_hover_text: 從 BlockProt 打開選單或點擊此處禁用提示
+  disabled_hints: "§6已關閉提示!"
 integrations:
   lands:
     protect_containers_flag_name: 保護方塊(BlockProt)

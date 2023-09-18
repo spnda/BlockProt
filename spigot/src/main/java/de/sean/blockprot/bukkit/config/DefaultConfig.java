@@ -131,7 +131,7 @@ public final class DefaultConfig extends BlockProtConfig {
     private void loadBlocksFromConfig() {
         // Add some materials which are not valid in some versions
         if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_19_R1)) {
-            this.knownGoodTileEntities.addAll(List.of(Material.MANGROVE_SIGN, Material.MANGROVE_WALL_SIGN, Material.MANGROVE_HANGING_SIGN, Material.MANGROVE_WALL_HANGING_SIGN));
+            this.knownGoodTileEntities.addAll(List.of(Material.MANGROVE_SIGN, Material.MANGROVE_WALL_SIGN));
         }
         if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R1)) {
             this.knownGoodTileEntities.add(Material.CHISELED_BOOKSHELF);
@@ -143,6 +143,7 @@ public final class DefaultConfig extends BlockProtConfig {
             this.knownGoodTileEntities.addAll(List.of(Material.DARK_OAK_WALL_HANGING_SIGN, Material.DARK_OAK_HANGING_SIGN));
             this.knownGoodTileEntities.addAll(List.of(Material.CRIMSON_WALL_HANGING_SIGN, Material.CRIMSON_HANGING_SIGN));
             this.knownGoodTileEntities.addAll(List.of(Material.WARPED_WALL_HANGING_SIGN, Material.WARPED_HANGING_SIGN));
+            this.knownGoodTileEntities.addAll(List.of(Material.MANGROVE_HANGING_SIGN, Material.MANGROVE_WALL_HANGING_SIGN));
             this.knownGoodTileEntities.addAll(List.of(Material.CHERRY_SIGN, Material.CHERRY_WALL_SIGN, Material.CHERRY_HANGING_SIGN, Material.CHERRY_WALL_HANGING_SIGN));
             this.knownGoodTileEntities.addAll(List.of(Material.BAMBOO_SIGN, Material.BAMBOO_WALL_SIGN, Material.BAMBOO_HANGING_SIGN, Material.BAMBOO_WALL_HANGING_SIGN));
         }

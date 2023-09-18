@@ -76,14 +76,14 @@ public final class DefaultConfig extends BlockProtConfig {
             Material.HOPPER, Material.BARREL, Material.BREWING_STAND, Material.DISPENSER, Material.DROPPER,
             Material.LECTERN, Material.BEEHIVE, Material.BEE_NEST,
 
-            Material.OAK_SIGN, Material.OAK_HANGING_SIGN, Material.OAK_WALL_HANGING_SIGN, Material.OAK_WALL_SIGN,
-            Material.SPRUCE_SIGN, Material.SPRUCE_HANGING_SIGN, Material.SPRUCE_WALL_HANGING_SIGN, Material.SPRUCE_WALL_SIGN,
-            Material.BIRCH_SIGN, Material.BIRCH_HANGING_SIGN, Material.BIRCH_WALL_HANGING_SIGN, Material.BIRCH_WALL_SIGN,
-            Material.JUNGLE_SIGN, Material.JUNGLE_HANGING_SIGN, Material.JUNGLE_WALL_HANGING_SIGN, Material.JUNGLE_WALL_SIGN,
-            Material.ACACIA_SIGN, Material.ACACIA_HANGING_SIGN, Material.ACACIA_WALL_HANGING_SIGN, Material.ACACIA_WALL_SIGN,
-            Material.DARK_OAK_SIGN, Material.DARK_OAK_HANGING_SIGN, Material.DARK_OAK_WALL_HANGING_SIGN, Material.DARK_OAK_WALL_SIGN,
-            Material.CRIMSON_SIGN, Material.CRIMSON_HANGING_SIGN, Material.CRIMSON_WALL_HANGING_SIGN, Material.CRIMSON_WALL_SIGN,
-            Material.WARPED_SIGN, Material.WARPED_HANGING_SIGN, Material.WARPED_WALL_HANGING_SIGN, Material.WARPED_WALL_SIGN
+            Material.OAK_SIGN, Material.OAK_WALL_SIGN,
+            Material.SPRUCE_SIGN, Material.SPRUCE_WALL_SIGN,
+            Material.BIRCH_SIGN, Material.BIRCH_WALL_SIGN,
+            Material.JUNGLE_SIGN, Material.JUNGLE_WALL_SIGN,
+            Material.ACACIA_SIGN, Material.ACACIA_WALL_SIGN,
+            Material.DARK_OAK_SIGN, Material.DARK_OAK_WALL_SIGN,
+            Material.CRIMSON_SIGN, Material.CRIMSON_WALL_SIGN,
+            Material.WARPED_SIGN, Material.WARPED_WALL_SIGN
     ));
 
     private final List<String> excludedWorlds;
@@ -135,6 +135,14 @@ public final class DefaultConfig extends BlockProtConfig {
         }
         if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R1)) {
             this.knownGoodTileEntities.add(Material.CHISELED_BOOKSHELF);
+            this.knownGoodTileEntities.addAll(List.of(Material.OAK_WALL_HANGING_SIGN, Material.OAK_HANGING_SIGN));
+            this.knownGoodTileEntities.addAll(List.of(Material.SPRUCE_WALL_HANGING_SIGN, Material.SPRUCE_HANGING_SIGN));
+            this.knownGoodTileEntities.addAll(List.of(Material.BIRCH_WALL_HANGING_SIGN, Material.BIRCH_HANGING_SIGN));
+            this.knownGoodTileEntities.addAll(List.of(Material.JUNGLE_WALL_HANGING_SIGN, Material.JUNGLE_HANGING_SIGN));
+            this.knownGoodTileEntities.addAll(List.of(Material.ACACIA_WALL_HANGING_SIGN, Material.ACACIA_HANGING_SIGN));
+            this.knownGoodTileEntities.addAll(List.of(Material.DARK_OAK_WALL_HANGING_SIGN, Material.DARK_OAK_HANGING_SIGN));
+            this.knownGoodTileEntities.addAll(List.of(Material.CRIMSON_WALL_HANGING_SIGN, Material.CRIMSON_HANGING_SIGN));
+            this.knownGoodTileEntities.addAll(List.of(Material.WARPED_WALL_HANGING_SIGN, Material.WARPED_HANGING_SIGN));
             this.knownGoodTileEntities.addAll(List.of(Material.CHERRY_SIGN, Material.CHERRY_WALL_SIGN, Material.CHERRY_HANGING_SIGN, Material.CHERRY_WALL_HANGING_SIGN));
             this.knownGoodTileEntities.addAll(List.of(Material.BAMBOO_SIGN, Material.BAMBOO_WALL_SIGN, Material.BAMBOO_HANGING_SIGN, Material.BAMBOO_WALL_HANGING_SIGN));
         }

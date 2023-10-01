@@ -24,10 +24,7 @@ import de.sean.blockprot.bukkit.nbt.stats.PlayerBlocksStatistic;
 import de.sean.blockprot.bukkit.util.BlockUtil;
 import de.sean.blockprot.nbt.FriendModifyAction;
 import de.sean.blockprot.nbt.LockReturnValue;
-import de.tr7zw.changeme.nbtapi.NBTBlock;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
-import de.tr7zw.changeme.nbtapi.NBTContainer;
-import de.tr7zw.changeme.nbtapi.NBTTileEntity;
+import de.tr7zw.changeme.nbtapi.*;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -92,7 +89,7 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
      */
     @NotNull
     public String getOwner() {
-        if (!container.hasKey(OWNER_ATTRIBUTE)) return "";
+        if (!container.hasTag(OWNER_ATTRIBUTE)) return "";
         else return container.getString(OWNER_ATTRIBUTE);
     }
 
@@ -160,7 +157,7 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
     }
 
     public @NotNull String getName() {
-        if (!container.hasKey(NAME_ATTRIBUTE))
+        if (!container.hasTag(NAME_ATTRIBUTE))
             return block.getType().toString();
         return container.getString(NAME_ATTRIBUTE);
     }

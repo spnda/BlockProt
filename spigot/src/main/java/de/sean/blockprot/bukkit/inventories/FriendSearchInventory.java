@@ -38,7 +38,6 @@ public class FriendSearchInventory {
             .text("Name")
             .title(Translator.get(TranslationKey.INVENTORIES__FRIENDS__SEARCH))
             .plugin(BlockProt.getInstance())
-            .onClose(FriendSearchInventory::onCloseCallback)
             .open(requestingPlayer);
     }
 
@@ -50,9 +49,5 @@ public class FriendSearchInventory {
         Inventory inventory = new FriendSearchResultInventory().fill(snapshot.getPlayer(), snapshot.getText());
         if (inventory == null) return List.of(AnvilGUI.ResponseAction.close());
         return List.of(AnvilGUI.ResponseAction.openInventory(inventory));
-    }
-
-    private static void onCloseCallback(@NotNull AnvilGUI.StateSnapshot snapshot) {
-        InventoryState.remove(snapshot.getPlayer().getUniqueId());
     }
 }

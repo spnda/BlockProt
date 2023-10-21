@@ -137,13 +137,13 @@ public class RedstoneSettingsInventory extends BlockProtInventory {
             1,
             Material.HOPPER,
             TranslationKey.INVENTORIES__REDSTONE__HOPPER_PROTECTION,
-            pistonProtection
+            hopperProtection
         );
         setEnchantedOptionItemStack(
             2,
             Material.PISTON,
             TranslationKey.INVENTORIES__REDSTONE__PISTON_PROTECTION,
-            hopperProtection
+            pistonProtection
         );
 
         setItemStack(

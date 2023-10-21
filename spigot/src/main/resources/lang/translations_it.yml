@@ -1,5 +1,7 @@
 ---
 locale: it
+enabled: Attivo
+disabled: Inattivo
 inventories:
   back: Indietro
   last_page: Ultima pagina
@@ -19,17 +21,22 @@ inventories:
     redstone_protection: Protezione redstone
     piston_protection: Protezione pistoni
     hopper_protection: Protezione tramogge
+    enable_all: Attiva tutto
+    disable_all: Disattiva tutto
   friends:
     manage: Gestisci Amici
     edit: Modifica Amico
     remove: Rimuovi Amico
     search: Cerca Giocatori
     search_history: Cerca cronologia
+    result: Giocatori trovati
     the_public: Il pubblico
     the_public_desc: Rappresenta ogni giocatore nel server.
     make_public: Rendi pubblico
     permissions: Permessi
     permission:
+      read: Leggi
+      write: Scrivi
       manager: Gestore
   statistics:
     statistics: Statistiche
@@ -38,6 +45,7 @@ inventories:
     container_count: Contatore blocchi
     your_blocks: I tuoi blocchi
 messages:
+  permission_granted: Permesso garantito.
   unlocked: Sbloccato.
   no_permission: Nessun permesso.
   friend_added: Amico aggiunto.
@@ -47,9 +55,17 @@ messages:
   redstone_added: Protezione redstone aggiunta.
   redstone_removed: Protezione redstone rimossa.
   exceeded_max_block_count: Hai superato il numero massimo di blocchi bloccabili.
+  lock_hint: |-
+    §6 Puoi proteggere i tuoi blocchi accovacciandoti e cliccando col pulsante destro del mouse i tuoi bauli, le tue fornaci, e tutto il resto.
+    Inoltre, dai un'occhiata alle impostazioni /blockprot per configurarle come più desideri. (Premi qui per disattivare questi suggerimenti)
   hint_hover_text: Apri un menù di BlockProt o clicca qui per disattivare i suggerimenti.
   disabled_hints: "§6Suggerimenti disattivati!"
 integrations:
   lands:
+    protect_containers_flag_name: Proteggi contenitori (BlockProt)
     protect_containers_desc: Consente a un giocatore di proteggere forzieri, fornaci,
       ...
+    require_protect_for_friends_flag_name: Richiede "Proteggi contenitori" per gli
+      amici (BlockProt)
+    require_protect_for_friends_desc: Soltanto i giocatori che hanno la flag "Proteggi
+      contenitori" possono essere aggiunti come amici.

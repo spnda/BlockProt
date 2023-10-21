@@ -37,8 +37,7 @@ public class HopperEventListener implements Listener {
     public void onItemMove(InventoryMoveItemEvent event) {
         if (event.getSource().getHolder() == null) return;
         if (BlockProt.getDefaultConfig().isWorldExcluded(event.getSource().getHolder())) return;
-        if ((event.getDestination().getType() == InventoryType.HOPPER || event.getSource().getType() == InventoryType.HOPPER)
-            && BlockProt.getDefaultConfig().isLockable(Material.HOPPER)) { // Only run if HOPPER is actually in the config.
+        if ((event.getDestination().getType() == InventoryType.HOPPER || event.getSource().getType() == InventoryType.HOPPER)) {
             // This is a hopper trying to pull from something.
             Block source = getBlock(event.getSource().getHolder());
             if (source != null && BlockProt.getDefaultConfig().isLockable(source.getType())) {

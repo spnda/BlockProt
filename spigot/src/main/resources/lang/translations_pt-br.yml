@@ -1,0 +1,71 @@
+---
+locale: pt-BR
+enabled: Habilitado
+disabled: Desabilitado
+inventories:
+  back: Voltar
+  last_page: Última página
+  next_page: Próxima página
+  block_lock: Bloco Trancado
+  user_settings: Configurações do Usuário
+  block_info: Bloquear informações
+  lock: Trancar
+  unlock: Destrancar
+  lock_on_place: Trancar automaticamente
+  copy_configuration: Copiar configuração
+  paste_configuration: Colar configuração
+  set_block_name: Definir nome do bloco
+  inspect_contents: Inspecione o conteúdo
+  redstone:
+    settings: Configurações de Redstone
+    redstone_protection: Proteção de redstone
+    piston_protection: Proteção do pistão
+    hopper_protection: Proteção do funil
+    enable_all: Habilitar todos
+    disable_all: Desativar tudo
+  friends:
+    manage: Gerenciar amigos
+    edit: Editar amigos
+    remove: Remover amigos
+    search: Pesquisar jogadores
+    search_history: Histórico de busca
+    result: Jogadores encontrados
+    the_public: O público
+    the_public_desc: Representa todos os jogadores neste servidor.
+    make_public: Tornar público
+    permissions: Permissões
+    permission:
+      read: Ler
+      write: Escrever
+      manager: Gerenciar
+  statistics:
+    statistics: Estatisticas
+    player_statistics: Estatísticas do jogador
+    global_statistics: Estatísticas do servidor
+    container_count: Contagem de blocos
+    your_blocks: Seus blocos
+messages:
+  permission_granted: Permissão garantida.
+  unlocked: Desbloqueado.
+  no_permission: Sem permissão.
+  friend_added: Amigo adicionado.
+  friend_removed: Amigo removido.
+  friend_already_added: Amigo já adicionado.
+  friend_cant_be_removed: Amigo não pode ser removido.
+  redstone_added: Proteção Redstone adicionada.
+  redstone_removed: Proteção Redstone removida.
+  exceeded_max_block_count: Você excedeu a contagem máxima de blocos bloqueáveis.
+  lock_hint: "§6Você pode proteger seus blocos agachando-se e clicando com o botão
+    direito do mouse em seus baús, fornalhas e muito mais! Além disso, verifique as
+    configurações de /blockprot para configurá-lo ao seu gosto. (Clique aqui para
+    desativar essas dicas.)\n"
+  hint_hover_text: Abra um menu do BlockProt ou clique aqui para desativar as dicas.
+  disabled_hints: "§6Dicas desativadas!"
+integrations:
+  lands:
+    protect_containers_flag_name: Proteger contêineres (BlockProt)
+    protect_containers_desc: Permite que um jogador proteja baús, fornos, ...
+    require_protect_for_friends_flag_name: Exigir "Proteger contêineres" para amigos
+      (BlockProt)
+    require_protect_for_friends_desc: Apenas jogadores com a permissão "Proteger contêineres"
+      podem ser adicionados como amigos.

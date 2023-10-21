@@ -4,7 +4,7 @@ inventories:
   back: Indietro
   last_page: Ultima pagina
   next_page: Prossima pagina
-  block_lock: Blocca blocco
+  block_lock: Blocca Blocco
   user_settings: Impostazioni Utente
   block_info: Info Blocco
   lock: Blocca
@@ -12,21 +12,24 @@ inventories:
   lock_on_place: Blocca automaticamente
   copy_configuration: Copia configurazione
   paste_configuration: Incolla configurazione
+  set_block_name: Imposta nome blocco
+  inspect_contents: Ispeziona contenuti
   redstone:
     settings: Impostazioni Redstone
-    enable_all: Abilita tutto
-    disable_all: Disabilita tutto
+    redstone_protection: Protezione redstone
+    piston_protection: Protezione pistoni
+    hopper_protection: Protezione tramogge
   friends:
     manage: Gestisci Amici
     edit: Modifica Amico
     remove: Rimuovi Amico
     search: Cerca Giocatori
     search_history: Cerca cronologia
-    result: Giocatore trovato
+    the_public: Il pubblico
+    the_public_desc: Rappresenta ogni giocatore nel server.
+    make_public: Rendi pubblico
     permissions: Permessi
     permission:
-      read: Lettura
-      write: Scrittura
       manager: Gestore
   statistics:
     statistics: Statistiche
@@ -35,21 +38,18 @@ inventories:
     container_count: Contatore blocchi
     your_blocks: I tuoi blocchi
 messages:
-  permission_granted: Permesso concesso.
   unlocked: Sbloccato.
   no_permission: Nessun permesso.
   friend_added: Amico aggiunto.
   friend_removed: Amico rimosso.
   friend_already_added: Amico già aggiunto.
   friend_cant_be_removed: L'amico non può essere rimosso.
-  redstone_added: Protezione Redstone aggiunta.
-  redstone_removed: Protezione Redstone rimossa.
+  redstone_added: Protezione redstone aggiunta.
+  redstone_removed: Protezione redstone rimossa.
   exceeded_max_block_count: Hai superato il numero massimo di blocchi bloccabili.
-  lock_hint: "§6Puoi proteggere i tuoi blocchi accovacciandoti e facendo clic-destro
-    del mouse su forzieri, fornaci e altro! Inoltre, controlla le impostazioni /blockprot
-    per configurarlo a tuo piacimento.\n"
+  hint_hover_text: Apri un menù di BlockProt o clicca qui per disattivare i suggerimenti.
+  disabled_hints: "§6Suggerimenti disattivati!"
 integrations:
   lands:
-    protect_containers_flag_name: Proteggi i forzieri(BlockProt)
     protect_containers_desc: Consente a un giocatore di proteggere forzieri, fornaci,
       ...

@@ -126,7 +126,13 @@ public final class FriendDetailInventory extends BlockProtInventory {
         final OfflinePlayer friend = state.currentFriend;
         if (friend == null) return inventory;
 
-        setPlayerSkull(0, state.currentFriend);
+        if (!state.currentFriend.getUniqueId().toString().equals(FriendSupportingHandler.zeroedUuid)) {
+            setPlayerSkull(0, state.currentFriend);
+        } else {
+            setItemStack(0, Material.PLAYER_HEAD,
+                    TranslationKey.INVENTORIES__FRIENDS__THE_PUBLIC,
+                    List.of(Translator.get(TranslationKey.INVENTORIES__FRIENDS__THE_PUBLIC_DESC)));
+        }
         setItemStack(
             1, Material.RED_STAINED_GLASS_PANE, TranslationKey.INVENTORIES__FRIENDS__REMOVE);
 

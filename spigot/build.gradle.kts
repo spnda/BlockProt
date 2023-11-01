@@ -7,7 +7,7 @@ buildscript {
 plugins {
     id("maven-publish")
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("net.kyori.blossom") version "1.3.1"
+    id("net.kyori.blossom") version "2.1.0"
 }
 
 val nbtApiVersion: String by project

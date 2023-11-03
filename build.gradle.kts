@@ -13,7 +13,7 @@ buildscript {
 
 plugins {
     id("org.gradle.java-library")
-    id("org.ajoberstar.grgit") version "5.2.0"
+    id("org.ajoberstar.grgit") version "5.2.1"
     id("org.cadixdev.licenser") version "0.6.1"
 }
 

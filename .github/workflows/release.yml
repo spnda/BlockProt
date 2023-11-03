@@ -11,7 +11,7 @@ jobs:
       options: --user root
     steps:
       - run: apt-get update && apt-get install git -y && git --version # Ensure Git is installed for the changelog script.
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: actions/checkout marks the directory as safe, but its not picked up by fabric-action-scripts.

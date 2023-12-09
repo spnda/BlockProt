@@ -27,7 +27,6 @@ import de.sean.blockprot.bukkit.inventories.BlockProtInventory;
 import de.sean.blockprot.bukkit.inventories.InventoryState;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.FriendHandler;
-import de.sean.blockprot.bukkit.nbt.NBTHandler;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -41,6 +40,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerTakeLecternBookEvent;
 import org.bukkit.inventory.BlockInventoryHolder;
@@ -55,11 +55,20 @@ public class InventoryEventListener implements Listener {
         final Player player = (Player) event.getWhoClicked();
         final InventoryState state = InventoryState.get(player.getUniqueId());
         if (state != null) {
-            // We have some sort of inventory state, so we'll
-            // assume the player is currently in some of our inventories.
+            // We have some sort of inventory state, so we'll assume the player is currently in
+            // some of our inventories. We'll check from which inventory the clicked item actually is,
+            // so that the onClick method is only called for menu clicks, but we'll still cancel all
+            // clicks in the players inventory.
             InventoryHolder holder = event.getInventory().getHolder();
             if (holder instanceof BlockProtInventory) {
-                ((BlockProtInventory) holder).onClick(event, state);
+                // While getInventory always returns the top inventory, getClickedInventory returns the
+                // inventory in which this event occurred.
+                final var clickedInventory = event.getClickedInventory();
+                if (clickedInventory != null && clickedInventory.getHolder() instanceof BlockProtInventory bpInventory) {
+                    bpInventory.onClick(event, state);
+                } else {
+                    event.setCancelled(true); // Don't allow interaction in a menu.
+                }
             }
         } else {
             // No state, let's check if they're in some block inventory.

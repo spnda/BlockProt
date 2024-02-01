@@ -389,5 +389,6 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
         // We remove the owner key for security reasons.
         container.removeKey(OWNER_ATTRIBUTE);
         super.pasteNbt(container);
+        this.applyToOtherContainer();
     }
 }

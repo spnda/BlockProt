@@ -28,7 +28,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-      - uses: gradle/wrapper-validation-action@v1
+      - uses: gradle/wrapper-validation-action@v2
       - run: ./gradlew build github --stacktrace
         env:
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}

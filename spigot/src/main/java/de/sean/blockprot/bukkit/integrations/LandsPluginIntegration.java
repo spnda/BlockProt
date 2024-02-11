@@ -29,6 +29,8 @@ import me.angeschossen.lands.api.flags.enums.FlagTarget;
 import me.angeschossen.lands.api.flags.enums.RoleFlagCategory;
 import me.angeschossen.lands.api.flags.type.NaturalFlag;
 import me.angeschossen.lands.api.flags.type.RoleFlag;
+import me.angeschossen.lands.api.role.enums.RoleType;
+
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
@@ -132,7 +134,6 @@ public class LandsPluginIntegration extends PluginIntegration implements Listene
         return BlockProt.getInstance().getPlugin("Lands");
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     protected void filterFriendsInternal(@NotNull ArrayList<OfflinePlayer> friends, @NotNull Player player, @NotNull Block block) {
         assert(this.integration != null);
@@ -146,7 +147,7 @@ public class LandsPluginIntegration extends PluginIntegration implements Listene
 
         friends.removeIf(p -> {
             var role = area.getRole(p.getUniqueId());
-            return role.isVisitorRole() || (area.hasNaturalFlag(requireProtectForFriendFlag) && role.hasFlag(protectContainersFlag));
+            return role.getType() == RoleType.VISITOR || (area.hasNaturalFlag(requireProtectForFriendFlag) && role.hasFlag(protectContainersFlag));
         });
     }
 
@@ -163,7 +164,7 @@ public class LandsPluginIntegration extends PluginIntegration implements Listene
 
         // TODO: This if-else abomination needs to be simplified
         var role = area.getRole(player.getUniqueId());
-        if (role.isVisitorRole())
+        if (role.getType() == RoleType.VISITOR)
             return false;
         else if (area.hasNaturalFlag(requireProtectForFriendFlag))
             return role.hasFlag(protectContainersFlag);
@@ -190,7 +191,7 @@ public class LandsPluginIntegration extends PluginIntegration implements Listene
         }
 
         var role = area.getRole(event.getPlayer().getUniqueId());
-        if (!role.hasFlag(this.protectContainersFlag) || role.isVisitorRole()) {
+        if (!role.hasFlag(this.protectContainersFlag) || role.getType() == RoleType.VISITOR) {
             event.removePermission(BlockAccessMenuEvent.MenuPermission.LOCK);
             event.removePermission(BlockAccessMenuEvent.MenuPermission.MANAGER);
         }
@@ -209,7 +210,7 @@ public class LandsPluginIntegration extends PluginIntegration implements Listene
         }
 
         var role = area.getRole(event.getPlayer().getUniqueId());
-        if (!role.hasFlag(this.protectContainersFlag) || role.isVisitorRole()) {
+        if (!role.hasFlag(this.protectContainersFlag) || role.getType() == RoleType.VISITOR) {
             event.setCancelled(true);
         }
     }

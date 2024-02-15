@@ -39,6 +39,8 @@ import java.util.List;
 public final class PlayerSettingsHandler extends FriendSupportingHandler<NBTCompound> {
     static final String LOCK_ON_PLACE_ATTRIBUTE = "splugin_lock_on_place";
 
+    static final String PUBLIC_ON_PLACE_ATTRIBUTE = "blockprot_public_on_place";
+
     static final String DEFAULT_FRIENDS_ATTRIBUTE = "blockprot_default_friends";
 
     static final String PLAYER_SEARCH_HISTORY = "blockprot_player_search_history";
@@ -70,6 +72,12 @@ public final class PlayerSettingsHandler extends FriendSupportingHandler<NBTComp
         this.player = player;
 
         this.container = new NBTEntity(player).getPersistentDataContainer();
+
+        if (this.getPublicOnPlace()) {
+            if (!this.containsFriend(FriendSupportingHandler.zeroedUuid)) {
+                this.addEveryoneAsFriend();
+            }
+        }
     }
 
     /**
@@ -97,6 +105,30 @@ public final class PlayerSettingsHandler extends FriendSupportingHandler<NBTComp
      */
     public void setLockOnPlace(final boolean lockOnPlace) {
         container.setBoolean(LOCK_ON_PLACE_ATTRIBUTE, lockOnPlace);
+    }
+
+    /**
+     * Check if the player wants the public to be added to friends list by
+     * default.
+     *
+     * @return Will return the default setting from the config, or false
+     * if the player has manually configured public's default access.
+     * @since 1.15.0
+     */
+    public boolean getPublicOnPlace() {
+        if (!container.hasKey(PUBLIC_ON_PLACE_ATTRIBUTE))
+            return BlockProt.getDefaultConfig().publicOnPlaceByDefault();
+        return false;
+    }
+
+    /**
+     * Called when a player manually manages public's default access.
+     * Disables adding public to the player's friends list by default.
+     *
+     * @since 1.15.0
+     */
+    public void setPublicOnPlace() {
+        container.setBoolean(PUBLIC_ON_PLACE_ATTRIBUTE, false);
     }
 
     /**

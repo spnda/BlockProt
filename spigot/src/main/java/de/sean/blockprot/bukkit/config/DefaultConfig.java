@@ -272,7 +272,7 @@ public final class DefaultConfig extends BlockProtConfig {
      * @since 1.1.15
      */
     public boolean publicOnPlaceByDefault() {
-        if (!this.config.contains("public_on_place_by_default")) return true;
+        if (!this.config.contains("public_on_place_by_default")) return false;
         return this.config.getBoolean("public_on_place_by_default");
     }
 

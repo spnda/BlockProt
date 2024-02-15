@@ -113,7 +113,7 @@ public final class PlayerSettingsHandler extends FriendSupportingHandler<NBTComp
      *
      * @return Will return the default setting from the config, or false
      * if the player has manually configured public's default access.
-     * @since 1.15.0
+     * @since 1.1.15
      */
     public boolean getPublicOnPlace() {
         if (!container.hasKey(PUBLIC_ON_PLACE_ATTRIBUTE))
@@ -125,7 +125,7 @@ public final class PlayerSettingsHandler extends FriendSupportingHandler<NBTComp
      * Called when a player manually manages public's default access.
      * Disables adding public to the player's friends list by default.
      *
-     * @since 1.15.0
+     * @since 1.1.15
      */
     public void setPublicOnPlace() {
         container.setBoolean(PUBLIC_ON_PLACE_ATTRIBUTE, false);

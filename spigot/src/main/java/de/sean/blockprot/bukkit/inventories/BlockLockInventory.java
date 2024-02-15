@@ -33,6 +33,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -163,7 +164,7 @@ public class BlockLockInventory extends BlockProtInventory {
         }
 
         // We insert a 'inspect contents' button if the player does not own the block and has admin permissions.
-        var rightItemOffset = !isNotProtected && !handler.isOwner(player.getUniqueId()) && player.hasPermission(Permissions.ADMIN.key()) ? 1 : 0;
+        var rightItemOffset = !isNotProtected && !handler.isOwner(player.getUniqueId()) && (state.getBlock().getState() instanceof InventoryHolder) && player.hasPermission(Permissions.ADMIN.key()) ? 1 : 0;
         if (rightItemOffset == 1) {
             setItemStack(
                 getSize() - 2,

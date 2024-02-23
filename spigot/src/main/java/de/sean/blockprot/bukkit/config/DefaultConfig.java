@@ -266,12 +266,12 @@ public final class DefaultConfig extends BlockProtConfig {
     }
 
     /**
-     * Whether the public on place setting should be enabled by default.
+     * Whether the public should be a friend by default.
      *
-     * @return Boolean for the default value of public on place.
+     * @return Boolean for the default value of public is friend.
      * @since 1.1.15
      */
-    public boolean publicOnPlaceByDefault() {
+    public boolean publicIsFriendByDefault() {
         if (!this.config.contains("public_on_place_by_default")) return false;
         return this.config.getBoolean("public_on_place_by_default");
     }

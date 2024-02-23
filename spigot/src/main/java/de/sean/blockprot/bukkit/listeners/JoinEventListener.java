@@ -19,8 +19,10 @@
 package de.sean.blockprot.bukkit.listeners;
 
 import de.sean.blockprot.bukkit.BlockProt;
+import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.bukkit.tasks.UpdateChecker;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -30,14 +32,18 @@ import java.util.Collections;
 public class JoinEventListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
         if (BlockProt.getDefaultConfig().shouldNotifyOpOfUpdates() && event.getPlayer().isOp()) {
             Bukkit.getScheduler().runTaskAsynchronously(
                 BlockProt.getInstance(),
                 new UpdateChecker(
                     BlockProt.getInstance().getDescription(),
-                    Collections.singletonList(event.getPlayer())
+                    Collections.singletonList(player)
                 )
             );
+        }
+        if (BlockProt.getDefaultConfig().publicIsFriendByDefault() && !player.hasPlayedBefore()) {
+            new PlayerSettingsHandler(player).addEveryoneAsFriend();
         }
     }
 }

@@ -24,7 +24,6 @@ import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.BlockAccessFlag;
 import de.sean.blockprot.bukkit.nbt.FriendHandler;
 import de.sean.blockprot.bukkit.nbt.FriendSupportingHandler;
-import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.nbt.FriendModifyAction;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Material;
@@ -81,14 +80,6 @@ public final class FriendDetailInventory extends BlockProtInventory {
             case RED_STAINED_GLASS_PANE -> {
                 OfflinePlayer friend = state.currentFriend;
                 assert friend != null;
-
-                // If we're editing our defaults, and removing public as a friend, make sure we ignore the config file in the future.
-                if (state.friendSearchState == InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH && friend.getUniqueId().toString().equals(FriendSupportingHandler.zeroedUuid)) {
-                    PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(player);
-                    if (settingsHandler.getPublicOnPlace()) {
-                        settingsHandler.setPublicOnPlace();
-                    }
-                }
                 modifyFriendsForAction(player, friend, FriendModifyAction.REMOVE_FRIEND);
                 // We remove the friend, so the player does not exist anymore either.
                 this.playerHandler = null;

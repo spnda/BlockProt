@@ -33,7 +33,7 @@ public class JoinEventListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        if (BlockProt.getDefaultConfig().shouldNotifyOpOfUpdates() && event.getPlayer().isOp()) {
+        if (BlockProt.getDefaultConfig().shouldNotifyOpOfUpdates() && player.isOp()) {
             Bukkit.getScheduler().runTaskAsynchronously(
                 BlockProt.getInstance(),
                 new UpdateChecker(

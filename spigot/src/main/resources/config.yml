@@ -43,6 +43,10 @@ excluded_worlds: [ ]
 # played on the server.
 lock_on_place_by_default: true
 
+# Setting this to 'true' will make "the public" a friend by
+# default.
+public_is_friend_by_default: false
+
 # The maximum amount of blocks a player can lock. If removed
 # or set to any negative value, this is interpreted as setting
 # no limit.

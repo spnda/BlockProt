@@ -1,0 +1,79 @@
+# Slovak translation file
+# All colour codes can be used, as found here: https://www.spigotmc.org/wiki/textcosmetics-colors-and-formats/
+# We would be very happy if you submit your translations onto the
+# GitHub repository: https://github.com/spnda/BlockProt/pulls
+
+# We use ISO 639-1 or 639-2 codes for internationalization, it
+# is however safer to use the ISO 639-1 codes for backwards compatibility.
+# See this link for a good list of all codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes.
+locale: sk
+
+enabled: Povolené
+disabled: Zakázané
+inventories:
+  back: "Späť"
+  last_page: "Posledná strana"
+  next_page: "Ďalšia strana"
+  block_lock: "Uzamknutie bloku"
+  user_settings: "Užívateľské nastavenia"
+  block_info: "Informácie o bloku"
+  lock: "Uzamknúť"
+  unlock: "Odomknúť"
+  lock_on_place: "Automaticky uzamykať"
+  copy_configuration: "Kopírovať nastavenie"
+  paste_configuration: "Použiť skopírované nastavenie"
+  set_block_name: "Nastav meno bloku"
+  inspect_contents: "Skontroluj obsah"
+  redstone:
+    settings: "Nastavenie pre Redstone"
+    redstone_protection: "Redstonová ochrana"
+    piston_protection: "Ochrana pred piestami"
+    hopper_protection: "Ochrana pred násypníkmi"
+    enable_all: "Povoliť všetko"
+    disable_all: "Zakázať všetko"
+  friends:
+    manage: "Správa priateľov"
+    edit: "Uprav priateľa"
+    remove: "Odstráň priateľa"
+    search: "Hľadaj hráčov"
+    search_history: "Hľadaj v histórií"
+    result: "Hráč bol nájdený"
+    the_public: "Verejnosť"
+    the_public_desc: "Reprezantuje všetkých hráčov na tomto serveri."
+    make_public: "Povoľ pre všetkých"
+    permissions: "Oprávnenia"
+    permission:
+      read: "Čítanie/prezeranie"
+      write: "Zapisovanie/Zmena"
+      manager: "Správca"
+  statistics:
+    statistics: "Štatistiky"
+    player_statistics: "Štatistiky hráča"
+    global_statistics: "Server statistics"
+    container_count: "Počet blokov"
+    your_blocks: "Tvoje bloky"
+
+messages:
+  permission_granted: "Oprávnenie bolo udelené."
+  unlocked: "Odomknuté."
+  no_permission: "Nemáš oprávnenie."
+  friend_added: "Priateľ bol pridaný."
+  friend_removed: "Priateľ bol odstránený."
+  friend_already_added: "Priateľ už bol pridaný."
+  friend_cant_be_removed: "Priateľa nie je možné odstrániť."
+  redstone_added: "Ochrana pred Redstonom bola aktivovaná."
+  redstone_removed: "Ochrana pred Redstonom bola de-aktivovaná."
+  exceeded_max_block_count: "Dosiahol si maximálneho počtu uzamknutých blokov."
+  lock_hint: >
+    §6Bloky môžeš ochrániť prikrčením a kliknutím pravým tlačidlom myši na svoju truhlicu, pec, alebo iné!
+    Pozri si aj príkaz /blockprot settings pre nastavenie podľa svojej chuti.
+    (Klikni sem pre zrušenie tejto nápovedy.)
+  hint_hover_text: "Otvor menu pre plugin BlockProt, alebo klikni sem pre zrušenie nápovedy."
+  disabled_hints: "§6Zrušené nápovedy!"
+
+integrations:
+  lands:
+    protect_containers_flag_name: Ochráň kontajnery (BlockProt)
+    protect_containers_desc: Povolí hráčom chrániť truhlice, prece, ...
+    require_protect_for_friends_flag_name: Pre priateľov sa vyžaduje oprávnenie "Protect containers" (BlockProt)
+    require_protect_for_friends_desc: Len hráči s označením "Protect containers" môžu byť pridaný ako priatelia.

@@ -55,9 +55,13 @@ messages:
   redstone_added: Protection Redstone ajoutée.
   redstone_removed: Protection Redstone supprimée.
   exceeded_max_block_count: Vous avez dépassé le nombre maximal de blocs verrouillables.
-  lock_hint: "§6Vous pouvez protéger vos blocs en vous accroupissant et en cliquant
-    avec le bouton droit de la souris sur vos coffres, vos fours et bien plus encore
-    ! Consultez également les paramètres /blockprot pour le configurer à votre guise.\n"
+  lock_hint: "§6Vous pouvez protéger vos blocs en vous accroupissant et en faisant
+    un clic droit sur vos coffres, vos fourneaux et bien plus encore ! Consultez également
+    les paramètres de /blockprot pour le configurer à votre convenance. (Cliquez ici
+    pour désactiver ces conseils)."
+  hint_hover_text: Ouvrez un menu à partir de BlockProt ou cliquez ici pour désactiver
+    les conseils.
+  disabled_hints: "§6Indices désactivées !"
 integrations:
   lands:
     protect_containers_flag_name: Protéger les conteneurs (BlockProt)

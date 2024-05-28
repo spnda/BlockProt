@@ -28,21 +28,17 @@ import org.jetbrains.annotations.NotNull;
  * like an incompatible version.
  */
 public class ErrorEventListener implements Listener {
-    private static boolean hasSentVersionMismatch = false;
-    private static boolean hasSentCBWarning = false;
+    private String errorMessage;
+
+    public ErrorEventListener(@NotNull String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
 
     @EventHandler
     public void onJoin(@NotNull PlayerJoinEvent event) {
-        if (event.getPlayer().isOp() && !hasSentVersionMismatch) {
-            event.getPlayer().sendMessage("§c[BlockProt]: This plugin does not support the current Minecraft version."
-                + "Please check if there is a new update available");
-            hasSentVersionMismatch = true;
-        }
-
-        if (event.getPlayer().isOp() && !hasSentCBWarning) {
-            event.getPlayer().sendMessage("§c[BlockProt]: This plugin does not work on CraftBukkit servers, "
-                + "as they are only meant for development purposes. Please use a Spigot server instead.");
-            hasSentCBWarning = true;
+        if (event.getPlayer().isOp() && !errorMessage.isEmpty()) {
+            event.getPlayer().sendMessage("§c[BlockProt]: " + errorMessage);
+            errorMessage = "";
         }
     }
 }

@@ -128,8 +128,9 @@ public final class BlockProt extends JavaPlugin {
     @Override
     public void onEnable() {
         if (isRunningCraftBukkit()) {
-            getLogger().severe("This plugin does not support running on CraftBukkit servers! Please use any Spigot server instead!");
-            getServer().getPluginManager().registerEvents(new ErrorEventListener(), this);
+            final var message = "This plugin does not support running on CraftBukkit servers! Please use any Spigot server instead!";
+            getLogger().severe(message);
+            getServer().getPluginManager().registerEvents(new ErrorEventListener(message), this);
             return;
         }
 
@@ -141,8 +142,9 @@ public final class BlockProt extends JavaPlugin {
         try {
             new VersionMatcher().match();
         } catch (IllegalStateException e) {
-            getLogger().severe("This plugin does not support the current Minecraft version! Please check if there is a new update available.");
-            getServer().getPluginManager().registerEvents(new ErrorEventListener(), this);
+            final var message = "This plugin does not support the current Minecraft version! Please check if there is a new update available.";
+            getLogger().severe(message);
+            getServer().getPluginManager().registerEvents(new ErrorEventListener(message), this);
             return;
         }
 

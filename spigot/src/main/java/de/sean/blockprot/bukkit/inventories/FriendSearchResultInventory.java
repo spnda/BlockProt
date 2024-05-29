@@ -194,7 +194,14 @@ public class FriendSearchResultInventory extends BlockProtInventory {
             int playersIndex = 0;
             while (playersIndex < maxPlayers && playersIndex < finalPotentialFriends.size()) {
                 // Only add to the inventory if this is not a friend (yet)
-                setPlayerSkull(playersIndex, finalPotentialFriends.get(playersIndex));
+                var profile = finalPotentialFriends.get(playersIndex).getPlayerProfile();
+                try {
+                    profile = profile.update().get();
+                } catch (Exception e) {
+                    BlockProt.getInstance().getLogger().warning("Failed to update PlayerProfile: " + e.getMessage());
+                }
+
+                setPlayerSkull(playersIndex, profile);
                 playersIndex++;
             }
         });

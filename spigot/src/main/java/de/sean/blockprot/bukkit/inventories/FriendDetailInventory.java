@@ -127,7 +127,7 @@ public final class FriendDetailInventory extends BlockProtInventory {
         if (friend == null) return inventory;
 
         if (!state.currentFriend.getUniqueId().toString().equals(FriendSupportingHandler.zeroedUuid)) {
-            setPlayerSkull(0, state.currentFriend);
+            setPlayerSkull(0, state.currentFriend.getPlayerProfile());
         } else {
             setItemStack(0, Material.PLAYER_HEAD,
                     TranslationKey.INVENTORIES__FRIENDS__THE_PUBLIC,

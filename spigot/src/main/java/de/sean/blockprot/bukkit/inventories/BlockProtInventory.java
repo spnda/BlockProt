@@ -18,6 +18,7 @@
 
 package de.sean.blockprot.bukkit.inventories;
 
+import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
@@ -31,6 +32,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
+import org.bukkit.block.Skull;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -42,6 +44,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.profile.PlayerProfile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -405,7 +408,6 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @since 0.4.13
      * @see #setEnchantedOptionItemStack(int, Material, TranslationKey, boolean)
      */
-    @Deprecated
     public void setEnchantedItemStack(int index, Material material, TranslationKey key, boolean value) {
         ItemStack stack = new ItemStack(material, 1);
         ItemMeta meta = stack.getItemMeta();
@@ -424,7 +426,9 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @param index  The index of the skull inside this inventory.
      * @param player The player whose skull should be used.
      * @since 0.3.2
+     * @deprecated Use setPlayerSkull(int, PlayerProfile) instead.
      */
+    @Deprecated
     public void setPlayerSkull(int index, OfflinePlayer player) {
         final ItemStack stack = new ItemStack(Material.PLAYER_HEAD, 1);
         SkullMeta meta = (SkullMeta) stack.getItemMeta();
@@ -432,9 +436,39 @@ public abstract class BlockProtInventory implements InventoryHolder {
             meta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.PLAYER_HEAD);
         }
 
-        assert meta != null;
-        meta.setOwningPlayer(player);
-        meta.setDisplayName(player.getName());
+        try {
+            assert meta != null;
+            meta.setOwningPlayer(player);
+            meta.setDisplayName(player.getName());
+        } catch (Exception e) {
+            BlockProt.getInstance().getLogger().severe("Failed to set skull head for \"" + player.getName() + "\": " + e.getMessage());
+        }
+
+        stack.setItemMeta(meta);
+        inventory.setItem(index, stack);
+    }
+
+    /**
+     * Set a player skull to {@code index}.
+     *
+     * @param index  The index of the skull inside this inventory.
+     * @param profile The player profile whose skull should be used.
+     * @since 1.1.16
+     */
+    public void setPlayerSkull(int index, @NotNull final PlayerProfile profile) {
+        final var stack = new ItemStack(Material.PLAYER_HEAD, 1);
+        var meta = (SkullMeta) stack.getItemMeta();
+        if (meta == null)
+            meta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.PLAYER_HEAD);
+
+        try {
+            assert meta != null;
+            meta.setOwnerProfile(profile);
+            if (profile.getName() != null)
+                meta.setDisplayName(profile.getName());
+        } catch (Exception e) {
+            BlockProt.getInstance().getLogger().severe("Failed to set skull head for \"" + profile.getName() + "\": " + e.getMessage());
+        }
 
         stack.setItemMeta(meta);
         inventory.setItem(index, stack);

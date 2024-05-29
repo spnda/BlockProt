@@ -97,7 +97,14 @@ public class FriendSearchHistoryInventory extends BlockProtInventory {
             BlockProt.getInstance(),
             () -> {
                 for (int i = 0; i < max; i++) {
-                    this.setPlayerSkull(i, state.friendResultCache.get(i));
+                    var profile = state.friendResultCache.get(i).getPlayerProfile();
+                    try {
+                        profile = profile.update().get();
+                    } catch (Exception e) {
+                        BlockProt.getInstance().getLogger().warning("Failed to update PlayerProfile: " + e.getMessage());
+                    }
+
+                    setPlayerSkull(i, profile);
                 }
             }
         );

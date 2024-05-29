@@ -211,8 +211,16 @@ public final class FriendManageInventory extends BlockProtInventory {
             () -> {
                 int i = 0;
                 while (i < maxSkulls && i < state.friendResultCache.size()) {
-                    if (!state.friendResultCache.get(i).getUniqueId().toString().equals(FriendSupportingHandler.zeroedUuid))
-                        setPlayerSkull(i, state.friendResultCache.get(i));
+                    if (!state.friendResultCache.get(i).getUniqueId().toString().equals(FriendSupportingHandler.zeroedUuid)) {
+                        var profile = state.friendResultCache.get(i).getPlayerProfile();
+                        try {
+                            profile = profile.update().get();
+                        } catch (Exception e) {
+                            BlockProt.getInstance().getLogger().warning("Failed to update PlayerProfile: " + e.getMessage());
+                        }
+
+                        setPlayerSkull(InventoryConstants.singleLine + i, profile);
+                    }
                     i++;
                 }
             });

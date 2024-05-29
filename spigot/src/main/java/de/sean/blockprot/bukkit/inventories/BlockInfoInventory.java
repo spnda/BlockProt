@@ -34,6 +34,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class BlockInfoInventory extends BlockProtInventory {
     private final int maxSkulls = getSize() - InventoryConstants.singleLine;
@@ -131,7 +132,7 @@ public class BlockInfoInventory extends BlockProtInventory {
         }
 
         if (!owner.isEmpty()) {
-            setPlayerSkull(0, Bukkit.getOfflinePlayer(UUID.fromString(owner)));
+            setPlayerSkull(0, Bukkit.getOfflinePlayer(UUID.fromString(owner)).getPlayerProfile());
         }
         setItemStack(
             1,
@@ -176,9 +177,16 @@ public class BlockInfoInventory extends BlockProtInventory {
             () -> {
                 int i = 0;
                 while (i < maxSkulls && i < state.friendResultCache.size()) {
-                    if (!state.friendResultCache.get(i).getUniqueId().toString().equals(FriendSupportingHandler.zeroedUuid))
-                        setPlayerSkull(InventoryConstants.singleLine + i,
-                            state.friendResultCache.get(i));
+                    if (!state.friendResultCache.get(i).getUniqueId().toString().equals(FriendSupportingHandler.zeroedUuid)) {
+                        var profile = state.friendResultCache.get(i).getPlayerProfile();
+                        try {
+                            profile = profile.update().get();
+                        } catch (Exception e) {
+                            BlockProt.getInstance().getLogger().warning("Failed to update PlayerProfile: " + e.getMessage());
+                        }
+
+                        setPlayerSkull(InventoryConstants.singleLine + i, profile);
+                    }
                     i++;
                 }
             }

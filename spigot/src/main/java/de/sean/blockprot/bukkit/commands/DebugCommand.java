@@ -31,13 +31,20 @@ import java.util.*;
 public class DebugCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!sender.hasPermission("blockprot.debug"))
+        if (!canUseCommand(sender))
             return false;
 
         switch (args[1]) {
             case "placeDebugChest" -> {
                 if (!(sender instanceof Player player)) break;
                 player.getWorld().setType(player.getLocation(), Material.CHEST);
+                final var handler = new BlockNBTHandler(player.getWorld().getBlockAt(player.getLocation()));
+                handler.setOwner("069a79f4-44e9-4726-a5be-fca90e38aaf5"); // Notch's UUID.
+                return true;
+            }
+            case "placeDebugShulker" -> {
+                if (!(sender instanceof Player player)) break;
+                player.getWorld().setType(player.getLocation(), Material.SHULKER_BOX);
                 final var handler = new BlockNBTHandler(player.getWorld().getBlockAt(player.getLocation()));
                 handler.setOwner("069a79f4-44e9-4726-a5be-fca90e38aaf5"); // Notch's UUID.
                 return true;
@@ -49,10 +56,10 @@ public class DebugCommand implements CommandExecutor {
     @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!sender.hasPermission("blockprot.debug"))
+        if (!canUseCommand(sender))
             return Collections.emptyList();
 
-        return new ArrayList<>(Arrays.asList("placeDebugChest"));
+        return new ArrayList<>(Arrays.asList("placeDebugChest", "placeDebugShulker"));
     }
 
     @Override

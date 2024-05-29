@@ -32,7 +32,7 @@ import java.util.List;
 public class UpdateCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (sender.isOp()) {
+        if (canUseCommand(sender)) {
             Bukkit.getScheduler().runTaskAsynchronously(
                 BlockProt.getInstance(),
                 new UpdateChecker(

@@ -12,3 +12,6 @@ bin
 .classpath
 .project
 .DS_Store
+
+spigot/run/
+fabric/run/

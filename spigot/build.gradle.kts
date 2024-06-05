@@ -10,6 +10,7 @@ plugins {
     // See https://plugins.gradle.org/plugin/io.github.goooler.shadow
     id("io.github.goooler.shadow") version "8.1.7"
     id("net.kyori.blossom") version "1.3.1"
+    id("xyz.jpenilla.run-paper") version "2.3.0"
 }
 
 val nbtApiVersion: String by project
@@ -118,6 +119,13 @@ tasks.shadowJar {
 tasks.build {
     dependsOn(tasks["javadocJar"])
     dependsOn(tasks.shadowJar)
+}
+
+tasks.runServer {
+    minecraftVersion("1.20.4")
+    downloadPlugins {
+        url("https://download.luckperms.net/1544/bukkit/loader/LuckPerms-Bukkit-5.4.131.jar")
+    }
 }
 
 publishing {

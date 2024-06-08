@@ -331,7 +331,7 @@ public final class DefaultConfig extends BlockProtConfig {
      */
     public double getFriendSearchSimilarityPercentage() {
         if (!config.contains("friend_search_similarity")) {
-            return 0.3;
+            return 0.5;
         }
         return config.getDouble("friend_search_similarity");
     }

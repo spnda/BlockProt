@@ -61,7 +61,7 @@ lock_hint_cooldown_in_seconds: 10
 # default, this is 0.3, meaning only names that are less than 30% similar
 # are shown in the friend search. To determine similarity, the levenshtein
 # algorithm is used.
-friend_search_similarity: 0.3
+friend_search_similarity: 0.5
 
 # If desired, you can disable the friends functionality entirely. This will
 # no longer allow players to give other players access to their blocks, and

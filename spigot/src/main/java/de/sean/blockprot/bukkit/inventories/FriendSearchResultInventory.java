@@ -22,10 +22,8 @@ import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.integrations.PluginIntegration;
-import de.sean.blockprot.bukkit.nbt.FriendSupportingHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.nbt.FriendModifyAction;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -37,9 +35,9 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.StreamSupport;
+
+import static java.util.Arrays.spliterator;
 
 public class FriendSearchResultInventory extends BlockProtInventory {
     @Override
@@ -148,53 +146,53 @@ public class FriendSearchResultInventory extends BlockProtInventory {
         InventoryState state = InventoryState.get(player.getUniqueId());
         if (state == null) return inventory;
 
-        ArrayList<OfflinePlayer> potentialFriends = new ArrayList<>(Arrays.asList(Bukkit.getOfflinePlayers()));
-
         // The already existing friends we want to add to.
-        final @Nullable FriendSupportingHandler<NBTCompound> handler =
+        final @Nullable var handler =
             getFriendSupportingHandler(state.friendSearchState, player, state.getBlock());
         if (handler == null) return null; // return null to indicate an issue.
 
         // We'll filter all doubled friends out of the list and add them to the current InventoryState.
         double minimumSimilarity = BlockProt.getDefaultConfig().getFriendSearchSimilarityPercentage();
-        potentialFriends.removeIf(p -> {
+        final var offlinePlayers = Bukkit.getOfflinePlayers();
+        final var filterStream = StreamSupport.stream(spliterator(offlinePlayers, 0, offlinePlayers.length), true).filter(p -> {
             // Filter all the players by search criteria.
             // If the strings are similar by 30%, the strings are considered similar (imo) and should be added.
             // If they're less than 30% similar, we should still check if it possibly contains the search criteria
             // and still add that user.
-            if (p.getName() == null || p.getUniqueId().equals(player.getUniqueId())) return true;
-            else if (handler.containsFriend(p.getUniqueId().toString())) return true;
-            else if (p.getName().contains(searchQuery)) return false;
-            else return compareStrings(p.getName(), searchQuery) < minimumSimilarity;
+            if (p.getName() == null || p.getUniqueId().equals(player.getUniqueId())) return false;
+            else if (p.getName().contains(searchQuery)) return true;
+            else return compareStrings(p.getName(), searchQuery) >= minimumSimilarity;
+        }).sequential().filter(p -> {
+            // We need to convert it back to a sequential list since NBT can only be accessed from the main thread.
+            return !handler.containsFriend(p.getUniqueId().toString());
         });
 
         state.friendResultCache.clear();
         if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH && state.getBlock() != null) {
             // Allow integrations to additionally filter friends.
-            var filtered = potentialFriends.stream()
+            var filtered = filterStream
                 .filter(f -> PluginIntegration.filterFriendByUuidForAll(f.getUniqueId(), player, state.getBlock()))
                 .toList();
             state.friendResultCache.addAll(filtered);
         } else {
-            state.friendResultCache.addAll(potentialFriends);
+            state.friendResultCache.addAll(filterStream.toList());
         }
-
 
         // Finally, construct the inventory with all the potential friends.
         // To not delay when the inventory opens, we'll asynchronously get the items after
         // the inventory has been opened and later add them to the inventory. In the meantime,
         // we'll show the same amount of skeleton heads.
-        final int maxPlayers = Math.min(potentialFriends.size(), InventoryConstants.tripleLine - 1);
+        final var finalList = state.friendResultCache;
+        final int maxPlayers = Math.min(finalList.size(), InventoryConstants.tripleLine - 1);
         for (int i = 0; i < maxPlayers; i++) {
-            this.setItemStack(i, Material.SKELETON_SKULL, potentialFriends.get(i).getName());
+            this.setItemStack(i, Material.SKELETON_SKULL, finalList.get(i).getName());
         }
-        final List<OfflinePlayer> finalPotentialFriends = potentialFriends;
         Bukkit.getScheduler().runTaskAsynchronously(BlockProt.getInstance(), () -> {
             // Only show the 9 * 3 - 1 most relevant players. Don't show any extra.
             int playersIndex = 0;
-            while (playersIndex < maxPlayers && playersIndex < finalPotentialFriends.size()) {
+            while (playersIndex < maxPlayers && playersIndex < finalList.size()) {
                 // Only add to the inventory if this is not a friend (yet)
-                var profile = finalPotentialFriends.get(playersIndex).getPlayerProfile();
+                var profile = finalList.get(playersIndex).getPlayerProfile();
                 try {
                     profile = profile.update().get();
                 } catch (Exception e) {

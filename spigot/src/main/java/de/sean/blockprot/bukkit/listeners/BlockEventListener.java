@@ -29,14 +29,17 @@ import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.bukkit.nbt.StatHandler;
 import de.sean.blockprot.bukkit.util.BlockUtil;
 import de.sean.blockprot.nbt.LockReturnValue;
+import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
+import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
@@ -44,9 +47,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 
 public class BlockEventListener implements Listener {
@@ -106,12 +111,28 @@ public class BlockEventListener implements Listener {
             event.setDropItems(false); // Prevent the event from dropping items itself
             Collection<ItemStack> itemsToDrop = event.getBlock().getDrops();
             if (itemsToDrop.isEmpty()) return;
-            ItemStack item = Iterables.getFirst(itemsToDrop, null); // Shulker blocks should only have a single drop anyway
+
+            var item = Iterables.getFirst(itemsToDrop, null); // Shulker blocks should only have a single drop anyway
             if (item == null) return;
 
-            NBTCompound nbtTile = new NBTTileEntity(event.getBlock().getState()).getPersistentDataContainer();
-            NBTItem nbtItem = new NBTItem(item, true);
-            nbtItem.getOrCreateCompound("BlockEntityTag").getOrCreateCompound("PublicBukkitValues").mergeCompound(nbtTile);
+            if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+                final var meta = item.getItemMeta();
+                final var pdc = meta.getPersistentDataContainer();
+                pdc.set(new NamespacedKey(BlockProt.getInstance(), "shulker_data"), PersistentDataType.STRING, "Hi!");
+                item.setItemMeta(meta);
+
+                // Since Minecraft 1.20.6 item stacks use components instead of NBT.
+                // The block_entity_data tag works like the BlockEntityTag used to, but requires an "id" field for the type of block.
+                final var nbt = NBT.itemStackToNBT(item);
+                final var entityData = nbt.getOrCreateCompound("components").getOrCreateCompound("minecraft:block_entity_data");
+                entityData.setString("id", item.getType().getKey().toString());
+                entityData.getOrCreateCompound("PublicBukkitValues").mergeCompound(handler.getNbtCopy());
+                item = Objects.requireNonNull(NBT.itemStackFromNBT(nbt));
+            } else {
+                NBT.modify(item, readWriteItemNBT -> {
+                    readWriteItemNBT.getOrCreateCompound("BlockEntityTag").getOrCreateCompound("PublicBukkitValues").mergeCompound(handler.getNbtCopy());
+                });
+            }
 
             event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(), item);
 

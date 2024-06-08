@@ -63,6 +63,11 @@ lock_hint_cooldown_in_seconds: 10
 # algorithm is used.
 friend_search_similarity: 0.3
 
+# If desired, you can disable the friends functionality entirely. This will
+# no longer allow players to give other players access to their blocks, and
+# current settings are ignored until re-activated.
+disable_friend_functionality: false
+
 # Tile entities that should be locked. Tile entities are blocks
 # that can contain items. You can find a detailed list of all
 # possible values at https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html.

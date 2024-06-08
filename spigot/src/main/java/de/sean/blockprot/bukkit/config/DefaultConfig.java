@@ -337,6 +337,19 @@ public final class DefaultConfig extends BlockProtConfig {
     }
 
     /**
+     * Returns if the friend functionality is fully disabled. This will
+     * no longer allow players to give other players access to their blocks, and
+     * current settings are ignored until re-activated.
+     * @since 1.1.15
+     */
+    public boolean isFriendFunctionalityDisabled() {
+        if (!config.contains("disable_friend_functionality")) {
+            return false;
+        }
+        return config.getBoolean("disable_friend_functionality");
+    }
+
+    /**
      * <p> Whether the given {@code type} is either a lockable block or a lockable tile entity.
      *
      * <p> Keep in mind, that only tile entities are lockable through this plugin after Spigot 1.16_R3.

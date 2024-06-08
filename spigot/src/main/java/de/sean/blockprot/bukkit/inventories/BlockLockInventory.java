@@ -174,18 +174,21 @@ public class BlockLockInventory extends BlockProtInventory {
         }
 
         if (!isNotProtected && state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.MANAGER)) {
+            var offset = 1;
             setItemStack(
-                1,
+                offset++,
                 Material.REDSTONE,
                 TranslationKey.INVENTORIES__REDSTONE__SETTINGS
             );
+            if (!BlockProt.getDefaultConfig().isFriendFunctionalityDisabled()) {
+                setItemStack(
+                    offset++,
+                    Material.PLAYER_HEAD,
+                    TranslationKey.INVENTORIES__FRIENDS__MANAGE
+                );
+            }
             setItemStack(
-                2,
-                Material.PLAYER_HEAD,
-                TranslationKey.INVENTORIES__FRIENDS__MANAGE
-            );
-            setItemStack(
-                3,
+                offset,
                 Material.NAME_TAG,
                 TranslationKey.INVENTORIES__SET_BLOCK_NAME
             );

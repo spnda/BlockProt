@@ -18,6 +18,7 @@
 
 package de.sean.blockprot.bukkit.nbt;
 
+import de.sean.blockprot.bukkit.BlockProt;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -64,7 +65,8 @@ public abstract class FriendSupportingHandler<T extends NBTCompound> extends NBT
      */
     public Stream<FriendHandler> getFriendsStream() {
         preFriendReadCallback();
-        if (!this.container.hasKey(friendNbtKey)) return Stream.empty();
+        if (!this.container.hasTag(friendNbtKey)) return Stream.empty();
+        if (BlockProt.getDefaultConfig().isFriendFunctionalityDisabled()) return Stream.empty();
 
         final NBTCompound compound = this.container.getOrCreateCompound(friendNbtKey);
         return compound

@@ -18,6 +18,7 @@
 
 package de.sean.blockprot.bukkit.inventories;
 
+import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
@@ -75,11 +76,13 @@ public class UserSettingsInventory extends BlockProtInventory {
             TranslationKey.INVENTORIES__LOCK_ON_PLACE,
             lockOnPlace
         );
-        setItemStack(
-            1,
-            Material.PLAYER_HEAD,
-            TranslationKey.INVENTORIES__FRIENDS__MANAGE
-        );
+        if (!BlockProt.getDefaultConfig().isFriendFunctionalityDisabled()) {
+            setItemStack(
+                1,
+                Material.PLAYER_HEAD,
+                TranslationKey.INVENTORIES__FRIENDS__MANAGE
+            );
+        }
         setBackButton();
         return inventory;
     }

@@ -25,8 +25,8 @@ commands, so that any player can easily understand how to use all of its feature
 To use this plugin, you can simply download it from [CurseForge](https://www.curseforge.com/minecraft/bukkit-plugins/blockprot),
 [Modrinth](https://modrinth.com/plugin/blockprot) or [SpigotMC](https://www.spigotmc.org/resources/blockprot.87829/)
 and place it in your `plugins` directory. You do not have to install anything else and any recent
-version will work with 1.14, 1.15, 1.16, 1.17 and 1.18. It runs on any Spigot and any fork thereof
-and does **not** run on CraftBukkit.
+version will work with any recent Minecraft version, as long as you're running Java 17 or higher.
+It runs on any Spigot and any fork thereof and does **not** run on CraftBukkit.
 
 To get the latest updates the quickest, you can "watch" or "star" this repository or frequently
 check the [Release tab](https://github.com/spnda/BlockProt/releases). Alternatively, it is also
@@ -35,7 +35,7 @@ Spigot, which will also notify you as soon as new builds get released.
 
 ---
 
-If you want to build the plugin from source yourself, you can simply do so by installing JDK 16
+If you want to build the plugin from source yourself, you can simply do so by installing JDK 17
 or newer, cloning this repository and running `./gradlew build` in the main directory.
 
 ## Translating

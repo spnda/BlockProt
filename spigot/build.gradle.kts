@@ -86,7 +86,7 @@ tasks.processResources {
 
 tasks.javadoc {
     options {
-        source = "16"
+        source = "17"
         encoding = "UTF-8"
         memberLevel = JavadocMemberLevel.PACKAGE
         (this as CoreJavadocOptions).addStringOption("Xdoclint:none", "-quiet")

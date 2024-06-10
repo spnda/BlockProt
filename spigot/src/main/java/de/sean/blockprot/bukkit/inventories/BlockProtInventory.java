@@ -22,7 +22,6 @@ import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
-import de.sean.blockprot.bukkit.nbt.FriendHandler;
 import de.sean.blockprot.bukkit.nbt.FriendSupportingHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.nbt.FriendModifyAction;
@@ -47,15 +46,11 @@ import org.bukkit.profile.PlayerProfile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * A base inventory holder for each of the plugins inventories.
@@ -296,50 +291,6 @@ public abstract class BlockProtInventory implements InventoryHolder {
             if (stack.equals(item)) return i;
         }
         return -1;
-    }
-
-    /**
-     * Map a {@link Stream} of {@link String} to a {@link List} of {@link OfflinePlayer} using
-     * {@link UUID#fromString(String)} and {@link Bukkit#getOfflinePlayer(UUID)}.
-     *
-     * @param friends A {@link Stream} of {@link String} in which each entry should be parseable
-     *                by {@link UUID#fromString(String)}.
-     * @return A list of all players that mapped successfully.
-     * @since 0.3.0
-     */
-    @NotNull
-    protected final List<OfflinePlayer> mapFriendsToPlayer(@NotNull final Stream<FriendHandler> friends) {
-        return friends
-            .map((f) -> Bukkit.getOfflinePlayer(UUID.fromString(f.getName())))
-            .collect(Collectors.toList());
-    }
-
-    /**
-     * Allows for quick filtering of a list of {@link String}s for a list of {@link OfflinePlayer}.
-     *
-     * @param <T>        The type of the {@code filterList} and is the type used for the
-     *                   returned list.
-     * @param <U>        The type of the {@code input} list, which we check for each
-     *                   entry in {@code filterList}.
-     * @param input      A list of {@code U} that can be accessed inside of the
-     *                   callback for validation.
-     * @param filterList A list of all players to filter by.
-     * @param check      A callback function, allowing the caller to easily define custom filter logic.
-     *                   If false, we shall filter the item out of the original list.
-     * @return A list of all {@link OfflinePlayer} in {@code allPlayers} which were valid as by
-     * {@code check}.
-     * @since 0.3.2
-     */
-    @NotNull
-    protected <T, U> List<T> filterList(
-        @NotNull final List<U> input,
-        @NotNull final List<T> filterList,
-        @NotNull final BiFunction<T, List<U>, Boolean> check) {
-        final List<T> ret = new ArrayList<>();
-        for (T filterListEntry : filterList) {
-            if (check.apply(filterListEntry, input)) ret.add(filterListEntry);
-        }
-        return ret;
     }
 
     /**

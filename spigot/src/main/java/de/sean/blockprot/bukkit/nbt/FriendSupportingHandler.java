@@ -20,8 +20,6 @@ package de.sean.blockprot.bukkit.nbt;
 
 import de.sean.blockprot.bukkit.BlockProt;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -81,34 +79,6 @@ public abstract class FriendSupportingHandler<T extends NBTCompound> extends NBT
      */
     public List<FriendHandler> getFriends() {
         return this.getFriendsStream().collect(Collectors.toList());
-    }
-
-    /**
-     * Gets friends as a list of {@link OfflinePlayer}. Note that this call
-     * could be expensive and block the current thread due to web-based API calls.
-     *
-     * Note that this will return every player on the server if everyone was added
-     * to the block.
-     */
-    public List<OfflinePlayer> getFriendsAsPlayers() {
-        return this.getFriendsStream()
-            .flatMap(f -> {
-                if (f.doesRepresentPublic()) {
-                    return Arrays.stream(Bukkit.getOfflinePlayers())
-                        // Other plugins/mods might use other UUID versions for NPCs or other players.
-                        .filter(p -> p.getUniqueId().version() == 3 || p.getUniqueId().version() == 4);
-                } else {
-                    return Stream.of(f);
-                }
-            })
-            .map(f -> {
-                if (f instanceof FriendHandler fh) {
-                    return Bukkit.getOfflinePlayer(UUID.fromString(fh.getName()));
-                } else {
-                    return (OfflinePlayer) f;
-                }
-            })
-            .collect(Collectors.toList());
     }
 
     /**

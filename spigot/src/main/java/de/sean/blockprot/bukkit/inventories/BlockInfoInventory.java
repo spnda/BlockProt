@@ -130,7 +130,13 @@ public class BlockInfoInventory extends BlockProtInventory {
         }
 
         if (!owner.isEmpty()) {
-            setPlayerSkull(0, Bukkit.getOfflinePlayer(UUID.fromString(owner)).getPlayerProfile());
+            try {
+                final var profile = BlockProt.getProfileService().findByUuid(UUID.fromString(owner));
+                assert profile != null;
+                setPlayerSkull(0, Bukkit.getServer().createPlayerProfile(profile.getUniqueId(), profile.getName()));
+            } catch (Exception e) {
+                BlockProt.getInstance().getLogger().warning("Failed to update PlayerProfile: " + e.getMessage());
+            }
         }
         setItemStack(
             1,

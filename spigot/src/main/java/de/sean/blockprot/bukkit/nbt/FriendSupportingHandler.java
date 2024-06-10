@@ -24,10 +24,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,7 +36,8 @@ import java.util.stream.Stream;
 public abstract class FriendSupportingHandler<T extends NBTCompound> extends NBTHandler<T> {
     private final @NotNull String friendNbtKey;
 
-    public static final String zeroedUuid = new UUID(0, 0).toString();
+    /** Mojang recently started requiring zeroed UUIDs to *not* be used, so we instead use an invalid UUID */
+    public static final UUID publicUuid = new UUID(~0, ~0);
     
     public FriendSupportingHandler(@NotNull String friendNbtKey) {
         this.friendNbtKey = friendNbtKey;
@@ -72,7 +70,10 @@ public abstract class FriendSupportingHandler<T extends NBTCompound> extends NBT
         return compound
             .getKeys()
             .stream()
-            .map((k) -> new FriendHandler(compound.getCompound(k)));
+            .map((k) -> new FriendHandler(compound.getCompound(k)))
+            // This is a weird Comparator, but it essentially just guarantees that the entry where
+            // getName().equals(publicUuid.toString()) is at the front of the stream.
+            .sorted((a, b) -> a.doesRepresentPublic() ? -1 : 1);
     }
 
     /**
@@ -92,8 +93,10 @@ public abstract class FriendSupportingHandler<T extends NBTCompound> extends NBT
     public List<OfflinePlayer> getFriendsAsPlayers() {
         return this.getFriendsStream()
             .flatMap(f -> {
-                if (f.getName().equals(zeroedUuid)) {
-                    return Arrays.stream(Bukkit.getOfflinePlayers());
+                if (f.doesRepresentPublic()) {
+                    return Arrays.stream(Bukkit.getOfflinePlayers())
+                        // Other plugins/mods might use other UUID versions for NPCs or other players.
+                        .filter(p -> p.getUniqueId().version() == 3 || p.getUniqueId().version() == 4);
                 } else {
                     return Stream.of(f);
                 }
@@ -129,10 +132,10 @@ public abstract class FriendSupportingHandler<T extends NBTCompound> extends NBT
     @NotNull
     public Optional<FriendHandler> getFriend(@NotNull final String id) {
         return getFriendsStream()
-            .filter(f -> f.getName().equals(id) || f.getName().equals(zeroedUuid))
+            .filter(f -> f.getName().equals(id) || f.doesRepresentPublic())
             // This is a weird Comparator, but it essentially just guarantees that the entry where
-            // getName().equals(zeroedUuid) is at the end of the stream.
-            .min((a, b) -> a.getName().equals(zeroedUuid) ? 1 : -1);
+            // getName().equals(publicUuid.toString()) is at the end of the stream.
+            .min((a, b) -> a.doesRepresentPublic() ? 1 : -1);
     }
 
     /**
@@ -154,7 +157,7 @@ public abstract class FriendSupportingHandler<T extends NBTCompound> extends NBT
      * @since 1.1.0
      */
     public void addEveryoneAsFriend() {
-        addFriend(zeroedUuid);
+        addFriend(publicUuid.toString());
     }
 
     /**

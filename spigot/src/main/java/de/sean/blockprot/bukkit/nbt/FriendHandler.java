@@ -57,11 +57,10 @@ public final class FriendHandler extends NBTHandler<NBTCompound> {
     /**
      * A single friend handler can represent the whole player-base, giving access
      * to anyone on the server with specific access flags. We represent everyone by
-     * using a zeroed UUID. Nobody seems to have this UUID:
-     * <a href="https://namemc.com/profile/00000000-0000-0000-0000-000000000000?q=00000000-0000-0000-0000-000000000000">https://namemc.com/profile/00000000-0000-0000-0000-000000000000?q=00000000-0000-0000-0000-000000000000</a>
+     * using an invalid UUID.
      */
     public boolean doesRepresentPublic() {
-        return getName().equals(FriendSupportingHandler.zeroedUuid);
+        return getName().equals(FriendSupportingHandler.publicUuid.toString());
     }
 
     /**

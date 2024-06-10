@@ -26,8 +26,8 @@ import de.sean.blockprot.bukkit.nbt.FriendHandler;
 import de.sean.blockprot.bukkit.nbt.FriendSupportingHandler;
 import de.sean.blockprot.nbt.FriendModifyAction;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -78,8 +78,9 @@ public final class FriendDetailInventory extends BlockProtInventory {
         switch (item.getType()) {
             case BLACK_STAINED_GLASS_PANE -> closeAndOpen(player, new FriendManageInventory().fill(player));
             case RED_STAINED_GLASS_PANE -> {
-                OfflinePlayer friend = state.currentFriend;
+                final var friend = state.currentFriend;
                 assert friend != null;
+
                 modifyFriendsForAction(player, friend, FriendModifyAction.REMOVE_FRIEND);
                 // We remove the friend, so the player does not exist anymore either.
                 this.playerHandler = null;
@@ -123,11 +124,17 @@ public final class FriendDetailInventory extends BlockProtInventory {
         final InventoryState state = InventoryState.get(player.getUniqueId());
         if (state == null) return inventory;
 
-        final OfflinePlayer friend = state.currentFriend;
-        if (friend == null) return inventory;
+        final var uuid = state.currentFriend;
+        if (uuid == null) return inventory;
 
-        if (!state.currentFriend.getUniqueId().toString().equals(FriendSupportingHandler.zeroedUuid)) {
-            setPlayerSkull(0, state.currentFriend.getPlayerProfile());
+        if (!uuid.equals(FriendSupportingHandler.publicUuid)) {
+            try {
+                final var profile = BlockProt.getProfileService().findByUuid(uuid);
+                assert profile != null;
+                setPlayerSkull(0, Bukkit.getServer().createPlayerProfile(profile.getUniqueId(), profile.getName()));
+            } catch (Exception e) {
+                BlockProt.getInstance().getLogger().warning("Failed to find PlayerProfile: " + uuid);
+            }
         } else {
             setItemStack(0, Material.PLAYER_HEAD,
                     TranslationKey.INVENTORIES__FRIENDS__THE_PUBLIC,
@@ -141,7 +148,7 @@ public final class FriendDetailInventory extends BlockProtInventory {
         if (handler == null) return null;
 
         final Optional<FriendHandler> friendHandler =
-            handler.getFriend(friend.getUniqueId().toString());
+            handler.getFriend(uuid.toString());
 
         if (friendHandler.isEmpty()) {
             BlockProt.getInstance().getLogger().warning(

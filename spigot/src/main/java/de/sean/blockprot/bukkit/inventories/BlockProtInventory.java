@@ -32,7 +32,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
-import org.bukkit.block.Skull;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -195,6 +194,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @param action The action to perform with {@code friend}.
      * @since 0.4.7
      */
+    @Deprecated
     protected final void modifyFriendsForAction(
         @NotNull final Player player,
         @NotNull final OfflinePlayer friend,
@@ -211,6 +211,36 @@ public abstract class BlockProtInventory implements InventoryHolder {
                 switch (action) {
                     case ADD_FRIEND -> handler.addFriend(friend.getUniqueId().toString());
                     case REMOVE_FRIEND -> handler.removeFriend(friend.getUniqueId().toString());
+                }
+            }
+        );
+    }
+
+    /**
+     * Modifies given {@code friend} for given {@code action}.
+     *
+     * @param player The player, or better the owner of the block we want to modify
+     *               or the player we want to edit the default friends for.
+     * @param friend The friend's UUID we want to do {@code action} for.
+     * @param action The action to perform with {@code friend}.
+     * @since 1.1.16
+     */
+    protected final void modifyFriendsForAction(
+            @NotNull final Player player,
+            @NotNull final UUID friend,
+            @NotNull final FriendModifyAction action
+    ) {
+        applyChanges(
+            player,
+            (handler) -> handler.modifyFriends(
+                player.getUniqueId().toString(),
+                friend.toString(),
+                action
+            ),
+            (handler) -> {
+                switch (action) {
+                    case ADD_FRIEND -> handler.addFriend(friend.toString());
+                    case REMOVE_FRIEND -> handler.removeFriend(friend.toString());
                 }
             }
         );
@@ -455,7 +485,7 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @param profile The player profile whose skull should be used.
      * @since 1.1.16
      */
-    public void setPlayerSkull(int index, @NotNull final PlayerProfile profile) {
+    public void setPlayerSkull(int index, @Nullable final PlayerProfile profile) {
         final var stack = new ItemStack(Material.PLAYER_HEAD, 1);
         var meta = (SkullMeta) stack.getItemMeta();
         if (meta == null)
@@ -464,10 +494,10 @@ public abstract class BlockProtInventory implements InventoryHolder {
         try {
             assert meta != null;
             meta.setOwnerProfile(profile);
-            if (profile.getName() != null)
+            if (profile != null && profile.getName() != null)
                 meta.setDisplayName(profile.getName());
         } catch (Exception e) {
-            BlockProt.getInstance().getLogger().severe("Failed to set skull head for \"" + profile.getName() + "\": " + e.getMessage());
+            BlockProt.getInstance().getLogger().severe("Failed to set skull head for \"" + (profile == null ? "" : profile.getName()) + "\": " + e.getMessage());
         }
 
         stack.setItemMeta(meta);

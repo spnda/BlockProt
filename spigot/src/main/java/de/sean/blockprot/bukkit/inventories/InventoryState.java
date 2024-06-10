@@ -19,7 +19,6 @@
 package de.sean.blockprot.bukkit.inventories;
 
 import de.sean.blockprot.bukkit.events.BlockAccessMenuEvent;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,10 +43,10 @@ public final class InventoryState {
     /**
      * A local cache of offline players for this state.
      *
-     * @since 0.4.7
+     * @since 1.1.16
      */
     @NotNull
-    public final ArrayList<OfflinePlayer> friendResultCache = new ArrayList<>();
+    public final ArrayList<UUID> friendResultCache = new ArrayList<>();
 
     @Nullable
     private final Block block;
@@ -75,10 +74,10 @@ public final class InventoryState {
     /**
      * The friend we currently want to modify with {@link FriendDetailInventory}.
      *
-     * @since 0.4.7
+     * @since 1.1.16
      */
     @Nullable
-    public OfflinePlayer currentFriend = null;
+    public UUID currentFriend = null;
 
     /**
      * The current cached menu permissions for this player.

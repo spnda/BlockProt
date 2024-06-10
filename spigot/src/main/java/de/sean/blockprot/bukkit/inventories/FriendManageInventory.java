@@ -24,7 +24,6 @@ import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.inventories.InventoryState.FriendSearchState;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.FriendSupportingHandler;
-import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.nbt.LockReturnValue;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Bukkit;
@@ -34,11 +33,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 public final class FriendManageInventory extends BlockProtInventory {
@@ -116,9 +115,9 @@ public final class FriendManageInventory extends BlockProtInventory {
             }
             case SKELETON_SKULL, PLAYER_HEAD -> {
                 // Get the clicked player head and open the detail inventory.
-                var index = findItemIndex(item);
-                if (index >= 0 && index < state.friendResultCache.size()) {
-                    state.currentFriend = state.friendResultCache.get(index);
+                final var meta = (SkullMeta) item.getItemMeta();
+                if (meta != null) {
+                    state.currentFriend = meta.getOwningPlayer().getUniqueId();
                     var inv = new FriendDetailInventory().fill(player);
                     closeAndOpen(player, inv);
                 }
@@ -162,23 +161,20 @@ public final class FriendManageInventory extends BlockProtInventory {
         state.friendResultCache.clear();
         this.inventory.clear();
 
-        var has_added_public = false;
+        var hasAddedPublic = false;
         var pageOffset = maxSkulls * state.currentPageIndex;
         for (int i = 0; i < Math.min(friends.size() - pageOffset, maxSkulls); i++) {
-            // As far as I can tell Bukkit.getOfflinePlayer will return even if the player
-            // cannot be found. This allows us to use the zeroed UUID for representing the public.
-            var curPlayer = Bukkit.getOfflinePlayer(
-                UUID.fromString(friends.get(pageOffset + i).getName()));
+            final var uuid = friends.get(pageOffset + i).getName();
 
             if (friends.get(pageOffset + i).doesRepresentPublic()) {
                 this.setItemStack(i, Material.PLAYER_HEAD,
                     TranslationKey.INVENTORIES__FRIENDS__THE_PUBLIC,
                     List.of(Translator.get(TranslationKey.INVENTORIES__FRIENDS__THE_PUBLIC_DESC)));
-                has_added_public = true;
+                hasAddedPublic = true;
             } else {
-                this.setItemStack(i, Material.SKELETON_SKULL, curPlayer.getName());
+                this.setItemStack(i, Material.SKELETON_SKULL, uuid);
             }
-            state.friendResultCache.add(curPlayer);
+            state.friendResultCache.add(UUID.fromString(uuid));
         }
 
         setItemStack(
@@ -190,7 +186,7 @@ public final class FriendManageInventory extends BlockProtInventory {
             Material.BLUE_STAINED_GLASS_PANE,
             TranslationKey.INVENTORIES__NEXT_PAGE);
 
-        if (!has_added_public) {
+        if (!hasAddedPublic) {
             setItemStack(
                 getSize() - 4,
                 Material.WITHER_SKELETON_SKULL,
@@ -209,23 +205,24 @@ public final class FriendManageInventory extends BlockProtInventory {
         Bukkit.getScheduler().runTaskAsynchronously(
             BlockProt.getInstance(),
             () -> {
-                int i = 0;
-                while (i < maxSkulls && i < state.friendResultCache.size()) {
-                    if (!state.friendResultCache.get(i).getUniqueId().toString().equals(FriendSupportingHandler.zeroedUuid)) {
-                        var profile = state.friendResultCache.get(i).getPlayerProfile();
-                        try {
-                            profile = profile.update().get();
-                        } catch (Exception e) {
-                            BlockProt.getInstance().getLogger().warning("Failed to update PlayerProfile: " + e.getMessage());
-                        }
+                try {
+                    final var profiles = BlockProt.getProfileService().findAllByUuid(state.friendResultCache);
 
-                        setPlayerSkull(InventoryConstants.singleLine + i, profile);
+                    var offset = state.friendResultCache.contains(FriendSupportingHandler.publicUuid) ? 1 : 0;
+                    int i = 0;
+                    while (i < Math.min(maxSkulls, profiles.size())) {
+                        final var profile = profiles.get(i);
+
+                        if (!profile.getUniqueId().equals(FriendSupportingHandler.publicUuid)) {
+                            setPlayerSkull(offset + i, Bukkit.getServer().createPlayerProfile(profile.getUniqueId(), profile.getName()));
+                        }
+                        i++;
                     }
-                    i++;
+                } catch (Exception e) {
+                    BlockProt.getInstance().getLogger().warning("Failed to update PlayerProfile: " + e.getMessage());
                 }
             });
 
         return inventory;
     }
 }
-

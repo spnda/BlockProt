@@ -25,12 +25,12 @@ import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.nbt.FriendModifyAction;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -62,10 +62,10 @@ public class FriendSearchHistoryInventory extends BlockProtInventory {
         switch (item.getType()) {
             case BLACK_STAINED_GLASS_PANE -> closeAndOpen(player, new FriendManageInventory().fill(player));
             case PLAYER_HEAD, SKELETON_SKULL -> {
-                int index = findItemIndex(item);
-                if (index >= 0 && index < state.friendResultCache.size()) {
-                    OfflinePlayer friend = state.friendResultCache.get(index);
-                    modifyFriendsForAction(player, friend, FriendModifyAction.ADD_FRIEND);
+                final var meta = (SkullMeta) item.getItemMeta();
+                if (meta != null) {
+                    final var id = meta.getOwningPlayer().getUniqueId();
+                    modifyFriendsForAction(player, id, FriendModifyAction.ADD_FRIEND);
                     closeAndOpen(player, new FriendManageInventory().fill(player));
                 }
             }
@@ -88,7 +88,7 @@ public class FriendSearchHistoryInventory extends BlockProtInventory {
         final int max = Math.min(searchHistory.size(), maxSkulls);
         for (int i = 0; i < max; i++) {
             this.setItemStack(i, Material.SKELETON_SKULL, searchHistory.get(i));
-            state.friendResultCache.add(Bukkit.getOfflinePlayer(UUID.fromString(searchHistory.get(i))));
+            state.friendResultCache.add(UUID.fromString(searchHistory.get(i)));
         }
 
         setBackButton();
@@ -96,15 +96,18 @@ public class FriendSearchHistoryInventory extends BlockProtInventory {
         Bukkit.getScheduler().runTaskAsynchronously(
             BlockProt.getInstance(),
             () -> {
-                for (int i = 0; i < max; i++) {
-                    var profile = state.friendResultCache.get(i).getPlayerProfile();
-                    try {
-                        profile = profile.update().get();
-                    } catch (Exception e) {
-                        BlockProt.getInstance().getLogger().warning("Failed to update PlayerProfile: " + e.getMessage());
-                    }
+                try {
+                    final var profiles = BlockProt.getProfileService().findAllByUuid(state.friendResultCache);
 
-                    setPlayerSkull(i, profile);
+                    int i = 0;
+                    while (i < Math.min(profiles.size(), maxSkulls)) {
+                        final var profile = profiles.get(i);
+
+                        setPlayerSkull(i, Bukkit.getServer().createPlayerProfile(profile.getUniqueId(), profile.getName()));
+                        i++;
+                    }
+                } catch (Exception e) {
+                    BlockProt.getInstance().getLogger().warning("Failed to update PlayerProfile: " + e.getMessage());
                 }
             }
         );

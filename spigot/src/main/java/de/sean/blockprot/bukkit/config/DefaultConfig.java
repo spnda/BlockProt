@@ -340,7 +340,7 @@ public final class DefaultConfig extends BlockProtConfig {
      * Returns if the friend functionality is fully disabled. This will
      * no longer allow players to give other players access to their blocks, and
      * current settings are ignored until re-activated.
-     * @since 1.1.15
+     * @since 1.1.16
      */
     public boolean isFriendFunctionalityDisabled() {
         if (!config.contains("disable_friend_functionality")) {

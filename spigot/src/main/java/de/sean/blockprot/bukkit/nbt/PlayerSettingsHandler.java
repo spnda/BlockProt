@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * A simple handler to get a player's BlockProt settings.
@@ -126,10 +127,21 @@ public final class PlayerSettingsHandler extends FriendSupportingHandler<NBTComp
      * searched for.
      */
     public List<String> getSearchHistory() {
-        if (!container.hasKey(PLAYER_SEARCH_HISTORY)) return new ArrayList<>();
+        if (!container.hasTag(PLAYER_SEARCH_HISTORY)) return new ArrayList<>();
         else {
             return BlockProtUtil
                 .parseStringList(container.getString(PLAYER_SEARCH_HISTORY));
+        }
+    }
+
+    /**
+     * Clears the search history by removing the list completely.
+     *
+     * @since 1.1.16
+     */
+    public void clearSearchHistory() {
+        if (container.hasTag(PLAYER_SEARCH_HISTORY)) {
+            container.removeKey(PLAYER_SEARCH_HISTORY);
         }
     }
 
@@ -138,8 +150,9 @@ public final class PlayerSettingsHandler extends FriendSupportingHandler<NBTComp
      * 
      * @param player The player to add.
      */
+    @Deprecated
     public void addPlayerToSearchHistory(@NotNull final OfflinePlayer player) {
-        this.addPlayerToSearchHistory(player.getUniqueId().toString());
+        this.addPlayerToSearchHistory(player.getUniqueId());
     }
 
     /**
@@ -147,15 +160,26 @@ public final class PlayerSettingsHandler extends FriendSupportingHandler<NBTComp
      * 
      * @param playerUuid The player UUID to add.
      */
+    @Deprecated
     public void addPlayerToSearchHistory(@NotNull final String playerUuid) {
+        this.addPlayerToSearchHistory(UUID.fromString(playerUuid));
+    }
+
+    /**
+     * Add a player to the search history.
+     *
+     * @param player The player to add.
+     * @since 1.1.16
+     */
+    public void addPlayerToSearchHistory(@NotNull final UUID player) {
         List<String> history = getSearchHistory();
-        if (!history.contains(playerUuid)) {
+        if (!history.contains(player.toString())) {
             // We want the list to not be bigger than MAX_HISTORY_SIZE,
             // therefore we remove the first entry if we would exceed that size.
             if (history.size() == MAX_HISTORY_SIZE) {
                 history.remove(0);
             }
-            history.add(playerUuid);
+            history.add(player.toString());
             container.setString(PLAYER_SEARCH_HISTORY, history.toString());
         }
     }

@@ -35,13 +35,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.enginehub.squirrelid.cache.ProfileCache;
+import org.enginehub.squirrelid.cache.SQLiteCache;
+import org.enginehub.squirrelid.resolver.ProfileService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -69,6 +69,11 @@ public final class BlockProt extends JavaPlugin {
     private static DefaultConfig defaultConfig = null;
 
     private final ArrayList<PluginIntegration> integrations = new ArrayList<>();
+
+    @Nullable
+    private static SQLiteCache playerProfileCache = null;
+    @Nullable
+    private static ProfileService playerProfileService = null;
 
     private Metrics metrics;
 
@@ -109,9 +114,28 @@ public final class BlockProt extends JavaPlugin {
         return Collections.unmodifiableList(integrations);
     }
 
+    @NotNull
+    public static ProfileCache getProfileCache() {
+        assert playerProfileCache != null;
+        return playerProfileCache;
+    }
+
+    @NotNull
+    public static ProfileService getProfileService() {
+        assert playerProfileService != null;
+        return playerProfileService;
+    }
+
     @Override
     public void onLoad() {
         instance = this;
+
+        try {
+            playerProfileCache = new SQLiteCache(new File(Bukkit.getWorldContainer(), "blockprot_usercache.sqlite"));
+            playerProfileService = new CachedProfileService(playerProfileCache);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to open SQLite connection to usercache database", e);
+        }
 
         try { registerIntegration(new WorldGuardIntegration());     } catch (NoClassDefFoundError ignored) {}
         try { registerIntegration(new TownyIntegration());          } catch (NoClassDefFoundError ignored) {}

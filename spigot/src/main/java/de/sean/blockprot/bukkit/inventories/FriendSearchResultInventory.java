@@ -24,6 +24,7 @@ import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.integrations.PluginIntegration;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import de.sean.blockprot.nbt.FriendModifyAction;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -32,14 +33,24 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.scheduler.BukkitTask;
+import org.enginehub.squirrelid.Profile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.stream.StreamSupport;
-
-import static java.util.Arrays.spliterator;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class FriendSearchResultInventory extends BlockProtInventory {
+    final ConcurrentLinkedQueue<Profile> resultQueue = new ConcurrentLinkedQueue<>();
+
+    private final int maxResults = getSize() - 1;
+
+    BukkitTask loadTask = null;
+    BukkitTask updateTask = null;
+
     @Override
     int getSize() {
         return InventoryConstants.tripleLine;
@@ -104,15 +115,15 @@ public class FriendSearchResultInventory extends BlockProtInventory {
                     new FriendManageInventory().fill(player)
                 );
             case PLAYER_HEAD, SKELETON_SKULL -> {
-                int index = findItemIndex(item);
-                if (index >= 0 && index < state.friendResultCache.size()) {
-                    OfflinePlayer friend = state.friendResultCache.get(index);
-                    modifyFriendsForAction(player, friend, FriendModifyAction.ADD_FRIEND);
+                final var meta = (SkullMeta) item.getItemMeta();
+                if (meta != null) {
+                    final var id = meta.getOwningPlayer().getUniqueId();
+                    modifyFriendsForAction(player, id, FriendModifyAction.ADD_FRIEND);
                     closeAndOpen(player, new FriendManageInventory().fill(player));
 
                     // Update the search history
                     PlayerSettingsHandler settingsHandler = new PlayerSettingsHandler(player);
-                    settingsHandler.addPlayerToSearchHistory(friend);
+                    settingsHandler.addPlayerToSearchHistory(id);
                 }
             }
             default -> closeAndOpen(player, null);
@@ -122,7 +133,10 @@ public class FriendSearchResultInventory extends BlockProtInventory {
 
     @Override
     public void onClose(@NotNull InventoryCloseEvent event, @NotNull InventoryState state) {
-
+        if (loadTask != null)
+            loadTask.cancel();
+        if (updateTask != null)
+            updateTask.cancel();
     }
 
     /**
@@ -146,64 +160,103 @@ public class FriendSearchResultInventory extends BlockProtInventory {
         InventoryState state = InventoryState.get(player.getUniqueId());
         if (state == null) return inventory;
 
-        // The already existing friends we want to add to.
-        final @Nullable var handler =
-            getFriendSupportingHandler(state.friendSearchState, player, state.getBlock());
-        if (handler == null) return null; // return null to indicate an issue.
+        updateTask = Bukkit.getScheduler().runTaskTimer(BlockProt.getInstance(), new ResultUpdateTask(state), 0, 1);
+        loadTask = Bukkit.getScheduler().runTaskAsynchronously(BlockProt.getInstance(), new AsyncResultLoadTask(state, player, searchQuery));
 
-        // We'll filter all doubled friends out of the list and add them to the current InventoryState.
-        double minimumSimilarity = BlockProt.getDefaultConfig().getFriendSearchSimilarityPercentage();
-        final var offlinePlayers = Bukkit.getOfflinePlayers();
-        final var filterStream = StreamSupport.stream(spliterator(offlinePlayers, 0, offlinePlayers.length), true).filter(p -> {
-            // Filter all the players by search criteria.
-            // If the strings are similar by 30%, the strings are considered similar (imo) and should be added.
-            // If they're less than 30% similar, we should still check if it possibly contains the search criteria
-            // and still add that user.
-            if (p.getName() == null || p.getUniqueId().equals(player.getUniqueId())) return false;
-            else if (p.getName().contains(searchQuery)) return true;
-            else return compareStrings(p.getName(), searchQuery) >= minimumSimilarity;
-        }).sequential().filter(p -> {
-            // We need to convert it back to a sequential list since NBT can only be accessed from the main thread.
-            return !handler.containsFriend(p.getUniqueId().toString());
-        });
-
-        state.friendResultCache.clear();
-        if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH && state.getBlock() != null) {
-            // Allow integrations to additionally filter friends.
-            var filtered = filterStream
-                .filter(f -> PluginIntegration.filterFriendByUuidForAll(f.getUniqueId(), player, state.getBlock()))
-                .toList();
-            state.friendResultCache.addAll(filtered);
-        } else {
-            state.friendResultCache.addAll(filterStream.toList());
+        for (int i = 0; i < maxResults; i++) {
+            this.setItemStack(i, Material.SKELETON_SKULL, "Loading...");
         }
-
-        // Finally, construct the inventory with all the potential friends.
-        // To not delay when the inventory opens, we'll asynchronously get the items after
-        // the inventory has been opened and later add them to the inventory. In the meantime,
-        // we'll show the same amount of skeleton heads.
-        final var finalList = state.friendResultCache;
-        final int maxPlayers = Math.min(finalList.size(), InventoryConstants.tripleLine - 1);
-        for (int i = 0; i < maxPlayers; i++) {
-            this.setItemStack(i, Material.SKELETON_SKULL, finalList.get(i).getName());
-        }
-        Bukkit.getScheduler().runTaskAsynchronously(BlockProt.getInstance(), () -> {
-            // Only show the 9 * 3 - 1 most relevant players. Don't show any extra.
-            int playersIndex = 0;
-            while (playersIndex < maxPlayers && playersIndex < finalList.size()) {
-                // Only add to the inventory if this is not a friend (yet)
-                var profile = finalList.get(playersIndex).getPlayerProfile();
-                try {
-                    profile = profile.update().get();
-                } catch (Exception e) {
-                    BlockProt.getInstance().getLogger().warning("Failed to update PlayerProfile: " + e.getMessage());
-                }
-
-                setPlayerSkull(playersIndex, profile);
-                playersIndex++;
-            }
-        });
         setBackButton();
         return inventory;
+    }
+
+    /** This task is responsible for taking available results and inserting it into the inventory */
+    private class ResultUpdateTask implements Runnable {
+        InventoryState state;
+        int playersIndex = 0;
+
+        ResultUpdateTask(@NotNull InventoryState state) {
+            this.state = state;
+        }
+
+        @Override
+        public void run() {
+            final var scheduler = Bukkit.getScheduler();
+            if (!scheduler.isQueued(loadTask.getTaskId()) && !scheduler.isCurrentlyRunning(loadTask.getTaskId()) && resultQueue.isEmpty()) {
+                if (playersIndex == 0) {
+                    // If the task has stopped running and there are no results, clear the inventory
+                    for (int i = 0; i < maxResults; i++) {
+                        inventory.clear(i);
+                    }
+                }
+                loadTask.cancel();
+                updateTask.cancel();
+            }
+
+            Profile profile;
+            while ((profile = resultQueue.poll()) != null && playersIndex < maxResults) {
+                // Clear all the skeleton skulls named "Loading"
+                if (playersIndex == 0) {
+                    for (int i = 0; i < maxResults; i++) {
+                        inventory.clear(i);
+                    }
+                }
+
+                state.friendResultCache.add(profile.getUniqueId());
+
+                setPlayerSkull(playersIndex, Bukkit.getServer().createPlayerProfile(profile.getUniqueId(), profile.getName()));
+                ++playersIndex;
+            }
+
+            // If we hit the maximum amount of results we can just tell the task to stop, and cancel ourselves.
+            if (playersIndex == maxResults) {
+                loadTask.cancel();
+                updateTask.cancel();
+            }
+        }
+    }
+
+    /** This task asynchronously loads all possible players and filters them based on the search criteria.
+     * It then adds every possible result to a queue that the {@link ResultUpdateTask} then consumes. */
+    private class AsyncResultLoadTask implements Runnable {
+        InventoryState state;
+        Player player;
+        String searchQuery;
+
+        AsyncResultLoadTask(@NotNull InventoryState state, @NotNull Player player, @NotNull String searchQuery) {
+            this.state = state;
+            this.player = player;
+            this.searchQuery = searchQuery;
+        }
+
+        @Override
+        public void run() {
+            double minimumSimilarity = BlockProt.getDefaultConfig().getFriendSearchSimilarityPercentage();
+            final var offlinePlayers = Bukkit.getOfflinePlayers();
+
+            final var stream = Arrays.stream(offlinePlayers)
+                .map(OfflinePlayer::getUniqueId)
+                // Other plugins/mods might use other UUID versions for NPCs or other players.
+                .filter(uuid -> uuid.version() == 3 || uuid.version() == 4);
+
+            try {
+                var filterStream = BlockProt.getProfileService().findAllByUuid(stream.toList()).stream()
+                    .filter(Objects::nonNull)
+                    .filter(p -> p.getName() != null && !p.getUniqueId().equals(player.getUniqueId()))
+                    .map(p -> new ImmutablePair<>(p, compareStrings(p.getName(), searchQuery)))
+                    .filter(p -> p.right >= minimumSimilarity)
+                    .sorted((a, b) -> b.right.compareTo(a.right))
+                    .map(p -> p.left);
+
+                if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH && state.getBlock() != null) {
+                    filterStream = filterStream
+                            .filter(f -> PluginIntegration.filterFriendByUuidForAll(f.getUniqueId(), player, state.getBlock()));
+                }
+
+                filterStream.limit(maxResults).forEach(resultQueue::add);
+            } catch (Exception e) {
+                BlockProt.getInstance().getLogger().warning("Failed to search and filter players during friend search: " + e.getMessage());
+            }
+        }
     }
 }

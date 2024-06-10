@@ -40,6 +40,7 @@ dependencies {
 
     // Spigot
     compileOnly("org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT")
+    compileOnly("org.apache.commons:commons-lang3:3.13.0")
 
     // bStats
     api("org.bstats:bstats-bukkit:3.0.2")
@@ -47,6 +48,7 @@ dependencies {
     // Dependencies
     implementation("de.tr7zw:item-nbt-api:$nbtApiVersion")
     implementation("net.wesjd:anvilgui:$anvilGuiVersion") // Allows us to use anvils as inventories without using NMS.
+    implementation("org.enginehub:squirrelid:0.3.2")
 
     // Integrations
     implementation("com.github.TownyAdvanced:Towny:$townyVersion")
@@ -99,6 +101,7 @@ tasks.shadowJar {
     relocate("de.tr7zw.changeme.nbtapi", "de.sean.blockprot.bukkit.shaded.nbtapi")
     relocate("net.wesjd.anvilgui", "de.sean.blockprot.bukkit.shaded.anvilgui")
     relocate("org.bstats", "de.sean.blockprot.bukkit.metrics")
+    relocate("org.enginehub.squirrelid", "de.sean.blockprot.bukkit.squirrelid")
     // minimize()
 
     dependencies {
@@ -108,6 +111,7 @@ tasks.shadowJar {
         this.include(dependency("net.wesjd:anvilgui"))
         this.include(dependency("org.bstats:bstats-base"))
         this.include(dependency("org.bstats:bstats-bukkit"))
+        this.include(dependency("org.enginehub:squirrelid"))
     }
 
     archiveClassifier.set(

@@ -19,6 +19,7 @@
 package de.sean.blockprot.bukkit.commands;
 
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
+import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -49,6 +50,11 @@ public class DebugCommand implements CommandExecutor {
                 handler.setOwner("069a79f4-44e9-4726-a5be-fca90e38aaf5"); // Notch's UUID.
                 return true;
             }
+            case "clearSearchHistory" -> {
+                if (!(sender instanceof Player player)) break;
+                new PlayerSettingsHandler(player).clearSearchHistory();
+                return true;
+            }
         }
         return false;
     }
@@ -59,7 +65,7 @@ public class DebugCommand implements CommandExecutor {
         if (!canUseCommand(sender))
             return Collections.emptyList();
 
-        return new ArrayList<>(Arrays.asList("placeDebugChest", "placeDebugShulker"));
+        return new ArrayList<>(Arrays.asList("placeDebugChest", "placeDebugShulker", "clearSearchHistory"));
     }
 
     @Override

@@ -115,9 +115,9 @@ public final class FriendManageInventory extends BlockProtInventory {
             }
             case SKELETON_SKULL, PLAYER_HEAD -> {
                 // Get the clicked player head and open the detail inventory.
-                final var meta = (SkullMeta) item.getItemMeta();
-                if (meta != null) {
-                    state.currentFriend = meta.getOwningPlayer().getUniqueId();
+                final var index = findItemIndex(item);
+                if (index >= 0 && index < state.friendResultCache.size()) {
+                    state.currentFriend = state.friendResultCache.get(index);
                     var inv = new FriendDetailInventory().fill(player);
                     closeAndOpen(player, inv);
                 }
@@ -162,6 +162,11 @@ public final class FriendManageInventory extends BlockProtInventory {
         this.inventory.clear();
 
         var hasAddedPublic = false;
+        for (final var friend : friends) {
+            if (friend.doesRepresentPublic())
+                hasAddedPublic = true;
+        }
+
         var pageOffset = maxSkulls * state.currentPageIndex;
         for (int i = 0; i < Math.min(friends.size() - pageOffset, maxSkulls); i++) {
             final var uuid = friends.get(pageOffset + i).getName();
@@ -170,7 +175,6 @@ public final class FriendManageInventory extends BlockProtInventory {
                 this.setItemStack(i, Material.PLAYER_HEAD,
                     TranslationKey.INVENTORIES__FRIENDS__THE_PUBLIC,
                     List.of(Translator.get(TranslationKey.INVENTORIES__FRIENDS__THE_PUBLIC_DESC)));
-                hasAddedPublic = true;
             } else {
                 this.setItemStack(i, Material.SKELETON_SKULL, uuid);
             }

@@ -69,7 +69,7 @@ allprojects {
             header(rootProject.file("HEADER.txt"))
             include("**/*.java")
             properties {
-                this["year"] = "2021 - 2023"
+                this["year"] = "2021 - 2024"
             }
         }
     }

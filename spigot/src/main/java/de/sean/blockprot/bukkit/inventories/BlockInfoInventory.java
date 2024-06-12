@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 - 2023 spnda
+ * Copyright (C) 2021 - 2024 spnda
  * This file is part of BlockProt <https://github.com/spnda/BlockProt>.
  *
  * BlockProt is free software: you can redistribute it and/or modify

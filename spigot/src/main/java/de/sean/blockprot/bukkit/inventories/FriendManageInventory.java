@@ -18,6 +18,7 @@
 
 package de.sean.blockprot.bukkit.inventories;
 
+import com.google.common.collect.Iterables;
 import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
@@ -33,7 +34,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -212,13 +212,14 @@ public final class FriendManageInventory extends BlockProtInventory {
                 try {
                     final var profiles = BlockProt.getProfileService().findAllByUuid(state.friendResultCache);
 
-                    var offset = state.friendResultCache.contains(FriendSupportingHandler.publicUuid) ? 1 : 0;
                     int i = 0;
                     while (i < Math.min(maxSkulls, profiles.size())) {
                         final var profile = profiles.get(i);
+                        // The profiles array doesn't necessarily have the same order as the friendResultCache.
+                        final var index = Iterables.indexOf(state.friendResultCache, f -> f.equals(profile.getUniqueId()));
 
                         if (!profile.getUniqueId().equals(FriendSupportingHandler.publicUuid)) {
-                            setPlayerSkull(offset + i, Bukkit.getServer().createPlayerProfile(profile.getUniqueId(), profile.getName()));
+                            setPlayerSkull(index, Bukkit.getServer().createPlayerProfile(profile.getUniqueId(), profile.getName()));
                         }
                         i++;
                     }

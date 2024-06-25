@@ -34,7 +34,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-      - uses: gradle/wrapper-validation-action@v2
+      - uses: gradle/wrapper-validation-action@v3
       - name: Ensure gradlew.sh is executable
         run: chmod +x gradlew
       - name: Build project

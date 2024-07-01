@@ -8,7 +8,7 @@ plugins {
     id("maven-publish")
     // Since the original shadow is currently not being updated, we need to use this fork instead.
     // See https://plugins.gradle.org/plugin/io.github.goooler.shadow
-    id("io.github.goooler.shadow") version "8.1.7"
+    id("io.github.goooler.shadow") version "8.1.8"
     id("net.kyori.blossom") version "1.3.1"
     id("xyz.jpenilla.run-paper") version "2.3.0"
 }

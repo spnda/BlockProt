@@ -272,8 +272,8 @@ public final class DefaultConfig extends BlockProtConfig {
      * @since 1.1.15
      */
     public boolean publicIsFriendByDefault() {
-        if (!this.config.contains("public_on_place_by_default")) return false;
-        return this.config.getBoolean("public_on_place_by_default");
+        if (!this.config.contains("public_is_friend_by_default")) return false;
+        return this.config.getBoolean("public_is_friend_by_default");
     }
 
     /**

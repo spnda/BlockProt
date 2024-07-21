@@ -77,13 +77,23 @@ public class InventoryEventListener implements Listener {
         try {
             // Casting null does not trigger a ClassCastException.
             if (event.getInventory().getHolder() == null) return;
-            BlockInventoryHolder blockHolder = (BlockInventoryHolder) event.getInventory().getHolder();
-            if (BlockProt.getDefaultConfig().isLockable(blockHolder.getBlock().getType())) {
+            final InventoryHolder holder = event.getInventory().getHolder();
+
+            Block block;
+            if (holder instanceof BlockInventoryHolder blockHolder) {
+                block = blockHolder.getBlock();
+            } else if (holder instanceof DoubleChest doubleChestHolder) {
+                block = doubleChestHolder.getLocation().getBlock();
+            } else {
+                return;
+            }
+
+            if (BlockProt.getDefaultConfig().isLockable(block.getType())) {
                 // Ok, we have a lockable block, check if they can write anything to this.
                 // TODO: Implement a Cache for this lookup, it seems to be quite expensive.
                 //       We should probably use a MultiMap, or implement our own Key that
                 //       can use multiple key objects, a Block and Player in this case.
-                BlockNBTHandler handler = new BlockNBTHandler(blockHolder.getBlock());
+                BlockNBTHandler handler = new BlockNBTHandler(block);
                 String playerUuid = player.getUniqueId().toString();
 
                 if (handler.isProtected() && !handler.isOwner(playerUuid)) {

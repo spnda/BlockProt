@@ -68,43 +68,45 @@ public class InventoryEventListener implements Listener {
                 } else {
                     event.setCancelled(true); // Don't allow interaction in a menu.
                 }
-            }
-        } else {
-            // No state, let's check if they're in some block inventory.
-            try {
-                // Casting null does not trigger a ClassCastException.
-                if (event.getInventory().getHolder() == null) return;
-                BlockInventoryHolder blockHolder = (BlockInventoryHolder) event.getInventory().getHolder();
-                if (BlockProt.getDefaultConfig().isLockable(blockHolder.getBlock().getType())) {
-                    // Ok, we have a lockable block, check if they can write anything to this.
-                    // TODO: Implement a Cache for this lookup, it seems to be quite expensive.
-                    //       We should probably use a MultiMap, or implement our own Key that
-                    //       can use multiple key objects, a Block and Player in this case.
-                    BlockNBTHandler handler = new BlockNBTHandler(blockHolder.getBlock());
-                    String playerUuid = player.getUniqueId().toString();
 
-                    if (handler.isProtected() && !handler.isOwner(playerUuid)) {
-                        final var friend = handler.getFriend(playerUuid);
-                        if (friend.isPresent()) {
-                            if (!friend.get().canWrite()) {
-                                event.setCancelled(true);
-                            } else if (!friend.get().canRead()) {
-                                event.setCancelled(true);
-                                player.closeInventory();
-                            }
-                        } else {
-                            // The player is not a friend and not the owner; they shouldn't have
-                            // access anyway.
-                            player.closeInventory();
+                return;
+            }
+        }
+
+        // No state, let's check if they're in some block inventory.
+        try {
+            // Casting null does not trigger a ClassCastException.
+            if (event.getInventory().getHolder() == null) return;
+            BlockInventoryHolder blockHolder = (BlockInventoryHolder) event.getInventory().getHolder();
+            if (BlockProt.getDefaultConfig().isLockable(blockHolder.getBlock().getType())) {
+                // Ok, we have a lockable block, check if they can write anything to this.
+                // TODO: Implement a Cache for this lookup, it seems to be quite expensive.
+                //       We should probably use a MultiMap, or implement our own Key that
+                //       can use multiple key objects, a Block and Player in this case.
+                BlockNBTHandler handler = new BlockNBTHandler(blockHolder.getBlock());
+                String playerUuid = player.getUniqueId().toString();
+
+                if (handler.isProtected() && !handler.isOwner(playerUuid)) {
+                    final var friend = handler.getFriend(playerUuid);
+                    if (friend.isPresent()) {
+                        if (!friend.get().canWrite()) {
                             event.setCancelled(true);
+                        } else if (!friend.get().canRead()) {
+                            event.setCancelled(true);
+                            player.closeInventory();
                         }
+                    } else {
+                        // The player is not a friend and not the owner; they shouldn't have
+                        // access anyway.
+                        player.closeInventory();
+                        event.setCancelled(true);
                     }
                 }
-            } catch (ClassCastException e) {
-                // It's not a block, and it's therefore also not lockable.
-                // This is probably some other custom inventory from another
-                // plugin, or possibly some entity inventory, e.g. villagers.
             }
+        } catch (ClassCastException e) {
+            // It's not a block, and it's therefore also not lockable.
+            // This is probably some other custom inventory from another
+            // plugin, or possibly some entity inventory, e.g. villagers.
         }
     }
 

@@ -573,9 +573,9 @@ public abstract class BlockProtInventory implements InventoryHolder {
         }
         if (meta != null) {
             if (meta.hasEnchants() && (toggle == null || !toggle)) {
-                meta.removeEnchant(Enchantment.ARROW_INFINITE);
+                meta.removeEnchant(Enchantment.INFINITY);
             } else if (!meta.hasEnchants() && (toggle == null || toggle)) {
-                meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
+                meta.addEnchant(Enchantment.INFINITY, 1, true);
             }
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             stack.setItemMeta(meta);
@@ -644,10 +644,10 @@ public abstract class BlockProtInventory implements InventoryHolder {
             }
 
             if (meta.hasEnchants() && (toggle == null || !toggle)) {
-                meta.removeEnchant(Enchantment.ARROW_INFINITE);
+                meta.removeEnchant(Enchantment.INFINITY);
                 meta.setDisplayName(name + ": " + Translator.get(TranslationKey.DISABLED));
             } else if (!meta.hasEnchants() && (toggle == null || toggle)) {
-                meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
+                meta.addEnchant(Enchantment.INFINITY, 1, true);
                 meta.setDisplayName(name + ": " + Translator.get(TranslationKey.ENABLED));
             }
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

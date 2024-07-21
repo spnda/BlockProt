@@ -93,13 +93,13 @@ public class InventoryEventListener implements Listener {
                             event.setCancelled(true);
                         } else if (!friend.get().canRead()) {
                             event.setCancelled(true);
-                            player.closeInventory();
+                            Bukkit.getScheduler().runTask(BlockProt.getInstance(), player::closeInventory);
                         }
                     } else {
                         // The player is not a friend and not the owner; they shouldn't have
                         // access anyway.
-                        player.closeInventory();
                         event.setCancelled(true);
+                        Bukkit.getScheduler().runTask(BlockProt.getInstance(), player::closeInventory);
                     }
                 }
             }

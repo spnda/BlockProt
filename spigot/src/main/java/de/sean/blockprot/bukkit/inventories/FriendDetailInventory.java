@@ -22,12 +22,14 @@ import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.BlockAccessFlag;
+import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.FriendHandler;
 import de.sean.blockprot.bukkit.nbt.FriendSupportingHandler;
 import de.sean.blockprot.nbt.FriendModifyAction;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -115,8 +117,17 @@ public final class FriendDetailInventory extends BlockProtInventory {
 
     @Override
     public void onClose(@NotNull InventoryCloseEvent event, @NotNull InventoryState state) {
-        if (this.playerHandler != null && curFlags != null)
+        if (this.playerHandler != null && curFlags != null) {
             this.playerHandler.setAccessFlags(curFlags);
+
+            final Block block = state.getBlock();
+            if (block == null) return;
+
+            final BlockNBTHandler nbtHandler = getNbtHandlerOrNull(block);
+            if (nbtHandler == null) return;
+
+            nbtHandler.applyToOtherContainer();
+        }
     }
 
     @Nullable

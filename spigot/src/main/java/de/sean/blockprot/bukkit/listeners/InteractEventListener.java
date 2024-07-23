@@ -29,7 +29,10 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.data.type.Door;
+import org.bukkit.block.data.type.Gate;
 import org.bukkit.block.data.type.Lectern;
+import org.bukkit.block.data.type.TrapDoor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -64,14 +67,15 @@ public class InteractEventListener implements Listener {
                 sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
             } else {
                 BlockNBTHandler handler = new BlockNBTHandler(event.getClickedBlock());
+                final var blockData = event.getClickedBlock().getBlockData();
                 if (!(handler.canAccess(player.getUniqueId().toString()) || player.hasPermission(Permissions.BYPASS.key()))) {
                     event.setCancelled(true);
                     sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
-                } else if (event.getClickedBlock().getType() == Material.LECTERN && !handler.isOwner(player.getUniqueId())) {
+                } else if (event.getClickedBlock().getType() == Material.LECTERN && handler.isProtected() && !handler.isOwner(player.getUniqueId())) {
                     // With Lecterns you place the books by interacting with the block. canAccess will return true because the
                     // player has the READ permission, but this should not be allowed in this case. In the case that the player
                     // wants to take the book from the lectern (hasBook returns true) we already listen for PlayerTakeLecternBookEvent.
-                    final var lectern = (Lectern)event.getClickedBlock().getBlockData();
+                    final var lectern = (Lectern)blockData;
                     if (!lectern.hasBook()) {
                         final var friend = handler.getFriend(player.getUniqueId().toString());
                         if (friend.isEmpty() || !friend.get().canWrite()) {
@@ -79,6 +83,13 @@ public class InteractEventListener implements Listener {
                             event.setCancelled(true);
                             sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
                         }
+                    }
+                } else if ((blockData instanceof Door || blockData instanceof TrapDoor || blockData instanceof Gate) && handler.isProtected() && !handler.isOwner(player.getUniqueId())) {
+                    final var friend = handler.getFriend(player.getUniqueId().toString());
+                    if (friend.isEmpty() || !friend.get().canWrite()) {
+                        // The player cannot write and therefore is not allowed to change the door open state.
+                        event.setCancelled(true);
+                        sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
                     }
                 } else if (!(new PlayerSettingsHandler(player).hasPlayerInteractedWithMenu())) {
                     Long timestamp = LockHintMessageCooldown.getTimestamp(player);

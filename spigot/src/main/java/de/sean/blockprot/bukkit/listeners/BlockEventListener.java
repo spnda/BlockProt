@@ -39,6 +39,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -227,10 +228,19 @@ public class BlockEventListener implements Listener {
 
     @EventHandler
     public void onSignChanged(@NotNull final SignChangeEvent event) {
-        if (BlockProt.getDefaultConfig().isLockableBlock(event.getBlock().getType())) {
-            final var handler = new BlockNBTHandler(event.getBlock());
-            if (handler.isProtected() && !handler.isOwner(event.getPlayer().getUniqueId()))
-                event.setCancelled(true);
-        }
+        final Block block = event.getBlock();
+        if (!BlockProt.getDefaultConfig().isLockableBlock(block.getType())) return;
+
+        final BlockNBTHandler handler = new BlockNBTHandler(block);
+        if (!handler.isProtected()) return;
+
+        final Player player = event.getPlayer();
+        final String playerUuid = player.getUniqueId().toString();
+        if (handler.isOwner(playerUuid)) return;
+
+        final var friend = handler.getFriend(playerUuid);
+        if (friend.isPresent() && friend.get().canWrite()) return;
+
+        event.setCancelled(true);
     }
 }

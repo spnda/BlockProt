@@ -237,7 +237,7 @@ public class FriendSearchResultInventory extends BlockProtInventory {
             final var stream = Arrays.stream(offlinePlayers)
                 .map(OfflinePlayer::getUniqueId)
                 // Other plugins/mods might use other UUID versions for NPCs or other players.
-                .filter(uuid -> uuid.version() == 3 || uuid.version() == 4);
+                .filter(uuid -> uuid.version() == 3 || uuid.version() == 4 || uuid.version() == 0);
 
             try {
                 var filterStream = BlockProt.getProfileService().findAllByUuid(stream.toList()).stream()

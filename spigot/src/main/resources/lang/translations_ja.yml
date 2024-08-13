@@ -1,0 +1,72 @@
+# 日本語翻訳ファイル Japanese translation file
+locale: ja
+
+enabled: 有効
+disabled: 無効
+inventories:
+  back: "戻る"
+  last_page: "最後のページ"
+  next_page: "次のページ"
+  block_lock: "ブロックをロック"
+  user_settings: "ユーザー設定"
+  block_info: "ブロック情報"
+  lock: "ロック"
+  unlock: "ロック解除"
+  lock_on_place: "自動的にロックする"
+  copy_configuration: "設定をコピー"
+  paste_configuration: "設定を貼り付け"
+  set_block_name: "ブロック名を設定"
+  inspect_contents: "内容を確認する"
+  redstone:
+    settings: "レットストーン設定"
+    redstone_protection: "レットストーン保護"
+    piston_protection: "ピストン保護"
+    hopper_protection: "ポッパー保護"
+    enable_all: "すべてを有効"
+    disable_all: "すべてを無効"
+  friends:
+    manage: "フレンドを管理"
+    edit: "フレンドを編集"
+    remove: "フレンドを削除"
+    search: "プレイヤーを検索"
+    search_history: "検索履歴"
+    result: "見つかったプレイヤー"
+    the_public: "パクリック"
+    the_public_desc: "このサーバー上のすべてのプレイヤーを表示します。"
+    make_public: "公開する"
+    permissions: "権限"
+    permission:
+      read: "読む"
+      write: "書く"
+      manager: "マネージャー"
+  statistics:
+    statistics: "統計"
+    player_statistics: "プレイヤー統計"
+    global_statistics: "サーバー統計"
+    container_count: "ブロック数"
+    your_blocks: "あなたのブロック"
+
+messages:
+  permission_granted: "許可されました"
+  unlocked: "ロックが解除されました。"
+  no_permission: "権限がありません"
+  friend_added: "フレンドを追加しました"
+  friend_removed: "フレンドを削除しました"
+  friend_already_added: "すでにフレンドに追加されています"
+  friend_cant_be_removed: "フレンドを削除することができません。"
+  redstone_added: "レッドストーン保護が追加されました"
+  redstone_removed: "レッドストーン保護が削除されました"
+  exceeded_max_block_count: "ロック可能なブロックの最大値を超えました"
+  lock_hint: >
+    §6しゃがんでチェストやかまどなどを右クリックすることで、ブロックを保護することができます。
+    また、 /blockprot で設定を確認して、好みに合わせて設定してください。
+    (これらのヒントを無効にするにはここをクリックしてください)
+  hint_hover_text: "ヒントを無効にするには、BlockProt からメニューを開くかここをクリックします。"
+  disabled_hints: "§6ヒントが無効になりました"
+
+integrations:
+  lands:
+    protect_containers_flag_name: コンテナを保護する (BlockProt)
+    protect_containers_desc: プレイヤーがチェスト、かまどなどを保護できるようにします
+    require_protect_for_friends_flag_name: フレンドに「コンテナの保護」を要求する (BlockProt)
+    require_protect_for_friends_desc: フレンドとして追加できるのは、「コンテナを保護する」フラグを持つプレイヤーのみです。

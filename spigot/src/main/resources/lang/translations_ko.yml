@@ -57,6 +57,8 @@ messages:
   exceeded_max_block_count: 잠글 수 있는 최대 블록 수를 초과했습니다.
   lock_hint: "§6상자, 용광로 등을 웅크리고 오른쪽 클릭하여 블록을 보호할 수 있습니다! 또한 /blockprot 설정을 확인하여 원하는
     대로 구성하십시오. (이 힌트를 비활성화하려면 여기를 클릭하십시오.)\n"
+  hint_hover_text: 힌트를 비활성화하려면 BlockProt에서 메뉴를 열거나 여기를 클릭하십시오.
+  disabled_hints: "§6힌트 비활성화!"
 integrations:
   lands:
     protect_containers_flag_name: 보호받고 있는 보관함입니다. (BlockProt)

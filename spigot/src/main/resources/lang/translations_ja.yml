@@ -1,0 +1,27 @@
+---
+locale: ja
+enabled: 有効
+inventories:
+  block_lock: ブロックをロック
+  paste_configuration: 設定を貼り付け
+  set_block_name: ブロック名を設定
+  inspect_contents: 内容を確認する
+  redstone:
+    enable_all: すべてを有効
+    disable_all: すべてを無効
+  friends:
+    manage: フレンドの管理
+    edit: フレンドを編集
+    remove: フレンドを削除
+    the_public: パプリック
+    permission: {}
+  statistics: {}
+messages:
+  no_permission: 権限がありません
+  friend_added: フレンドを追加しました。
+  friend_removed: フレンドを削除しました。
+  friend_already_added: フレンドはすでに追加されています。
+  friend_cant_be_removed: フレンドを削除できません。
+integrations:
+  lands:
+    require_protect_for_friends_desc: フレンドとして追加できるのは、「コンテナを保護する」フラグを持つプレイヤーのみです。

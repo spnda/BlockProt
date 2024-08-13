@@ -1,5 +1,7 @@
 ---
 locale: es
+enabled: Activado
+disabled: Desactivado
 inventories:
   back: Atrás
   last_page: Última página
@@ -13,8 +15,12 @@ inventories:
   copy_configuration: Copiar configuración
   paste_configuration: Pegar configuración
   set_block_name: Establecer el nombre del bloque
+  inspect_contents: Inspeccionar contenido
   redstone:
     settings: Configuración de Redstone
+    redstone_protection: Protección contra redstone
+    piston_protection: Protección contra pistones
+    hopper_protection: Protección contra tolvas
     enable_all: Habilitar todo
     disable_all: Desactivar todo
   friends:
@@ -49,9 +55,12 @@ messages:
   redstone_added: Se ha añadido protección contra Redstone.
   redstone_removed: Se ha eliminado la protección contra Redstone.
   exceeded_max_block_count: Has excedido el número máximo de bloques bloqueables.
-  lock_hint: "§6Puedes proteger tus bloques agachandote y haciendo click derecho en
-    tus cofres, hornos y más! También, revisa /blockprot settings para configurarlo
-    a tu manera."
+  lock_hint: "§6Puedes proteger tus bloques agachándote y haciendo clic derecho en
+    tus cofres, hornos, ¡y mucho más! Además, echa un vistazo a los ajustes con /blockprot
+    settings para configurarlo a tu gusto. (Haz clic aquí para desactivar estas sugerencias).\n"
+  hint_hover_text: Abra un menú desde blockport o haga clic aquí para desactivar las
+    sugerencias
+  disabled_hints: "§6Desactivar sugerencias!"
 integrations:
   lands:
     protect_containers_flag_name: Proteger contenedores (BlockProt)

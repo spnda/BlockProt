@@ -10,7 +10,7 @@ plugins {
     // See https://plugins.gradle.org/plugin/io.github.goooler.shadow
     id("io.github.goooler.shadow") version "8.1.7"
     id("net.kyori.blossom") version "1.3.1"
-    id("xyz.jpenilla.run-paper") version "2.3.0"
+    id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
 val nbtApiVersion: String by project

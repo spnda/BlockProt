@@ -40,7 +40,7 @@ dependencies {
 
     // Spigot
     compileOnly("org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT")
-    compileOnly("org.apache.commons:commons-lang3:3.13.0")
+    compileOnly("org.apache.commons:commons-lang3:3.17.0")
 
     // bStats
     api("org.bstats:bstats-bukkit:3.0.2")

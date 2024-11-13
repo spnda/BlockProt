@@ -1,0 +1,79 @@
+# Reference translation file for English
+# All colour codes can be used, as found here: https://www.spigotmc.org/wiki/textcosmetics-colors-and-formats/
+# We would be very happy if you submit your translations onto the
+# GitHub repository: https://github.com/spnda/BlockProt/pulls
+
+# We use ISO 639-1 or 639-2 codes for internationalization, it
+# is however safer to use the ISO 639-1 codes for backwards compatibility.
+# See this link for a good list of all codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes.
+locale: cs
+
+enabled: Zapnuto
+disabled: Vypnuto
+inventories:
+  back: "Zpět"
+  last_page: "Poslední strana"
+  next_page: "Další"
+  block_lock: "Zámek"
+  user_settings: "Uživatelské nastavení"
+  block_info: "Informace"
+  lock: "Zamknout"
+  unlock: "Odemknout"
+  lock_on_place: "Zamykat automaticky"
+  copy_configuration: "Kopírovat nastavení"
+  paste_configuration: "Vložit nastavení"
+  set_block_name: "Nastavit název bloku"
+  inspect_contents: "Prohlédnout obsah"
+  redstone:
+    settings: "Nastavení ruditu"
+    redstone_protection: "Rudit ochrana"
+    piston_protection: "Ochrana před pístem"
+    hopper_protection: "Ochrana před násypkou"
+    enable_all: "Aktivovat vše"
+    disable_all: "Deaktivovat vše"
+  friends:
+    manage: "Správa přátel"
+    edit: "Upravit  přítele"
+    remove: "Odebrat přítele"
+    search: "Vyhledat hráče"
+    search_history: "Historie vyhledávání"
+    result: "Nalezení hráči"
+    the_public: "Veřejnost"
+    the_public_desc: "Všichni hráči na serveru."
+    make_public: "Zveřejnit"
+    permissions: "Oprávnění"
+    permission:
+      read: "Číst"
+      write: "Psát"
+      manager: "Správce"
+  statistics:
+    statistics: "Statistiky"
+    player_statistics: "Statistiky hráče"
+    global_statistics: "Statistiky serveru"
+    container_count: "Počet kostek"
+    your_blocks: "Moje kostky"
+
+messages:
+  permission_granted: "Oprávění uděleno."
+  unlocked: "Odemknuto."
+  no_permission: "Bez oprávnění."
+  friend_added: "Přítel přidán."
+  friend_removed: "Přítel odebrán."
+  friend_already_added: "Přítel již přidán."
+  friend_cant_be_removed: "Přítele nelze odebrat."
+  redstone_added: "Rudit ochrana přidána."
+  redstone_removed: "Rudit ochrana odebrána."
+  exceeded_max_block_count: "Překročili jste limit zamčených kostek."
+  lock_hint: >
+    §6Můžete ochránit své bloky přikrčením apravým kliknutím prázdnou rukou na truhlu, pec, atd!
+    Také zkuste /blockprot settings pro preferovanou kustomizaci.
+    (Klikem zde vypnete tuto hlášku)
+  hint_hover_text: "Otevřete BlockProt menu nebo klikněte zde pro vypnutí nápovědy."
+  disabled_hints: "§6Nápověda vypnuta!"
+
+integrations:
+  lands:
+    protect_containers_flag_name: Ochrana skladů (BlockProt)
+    protect_containers_desc: Umožní hráči chránit truhly, pece, ...
+    require_protect_for_friends_flag_name: Vyžadovat "Ochrana skladů" po přátelích (BlockProt)
+    require_protect_for_friends_desc: Jako přítele si můžete přidat jen hráče s povolením "Ochrana skladů".

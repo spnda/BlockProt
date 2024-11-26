@@ -28,6 +28,13 @@ notify_op_of_updates: false
 # placed block, if the player has lock on place enabled.
 redstone_disallowed_by_default: false
 
+# Toggle simple hopper protection, meaning any protected chest
+# can not be interacted with by any hopper. Should significantly
+# improve performance in some cases.
+# WARNING: Will fully disable hoppers moving items from ANY
+# protected container
+simple_hopper_protection: false
+
 # A list of world names the plugin should not be usable in.
 # The case of each name is ignored.
 # Useful for a mining-only world where a block should not be

@@ -88,6 +88,8 @@ public final class DefaultConfig extends BlockProtConfig {
 
     private final List<String> excludedWorlds;
 
+    private final boolean simpleHopperProtection;
+
     /**
      * Create a new default configuration from given {@code config}.
      *
@@ -98,6 +100,7 @@ public final class DefaultConfig extends BlockProtConfig {
         super(config);
 
         this.excludedWorlds = config.getStringList("excluded_worlds");
+        this.simpleHopperProtection = config.getBoolean("simple_hopper_protection");
         this.removeBlockDefaults();
         this.loadBlocksFromConfig();
     }
@@ -403,5 +406,9 @@ public final class DefaultConfig extends BlockProtConfig {
 
     public boolean isLockableInventory(InventoryType type) {
         return lockableInventories.contains(type);
+    }
+
+    public boolean isSimpleHopperProtection() {
+        return simpleHopperProtection;
     }
 }

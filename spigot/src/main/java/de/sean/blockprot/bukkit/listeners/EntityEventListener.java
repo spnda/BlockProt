@@ -44,5 +44,10 @@ public final class EntityEventListener implements Listener {
                     event.setCancelled(true);
             }
         }
+        else if (BlockProt.getDefaultConfig().isLockable(event.getBlock().getType())) {
+            BlockNBTHandler handler = new BlockNBTHandler(event.getBlock());
+            if (handler.isProtected())
+                event.setCancelled(true);
+        }
     }
 }

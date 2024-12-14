@@ -19,13 +19,14 @@
 package de.sean.blockprot.bukkit.nbt;
 
 import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * A NBT handler specific to all redstone settings.
  * @since 0.4.13
  */
-public class RedstoneSettingsHandler extends NBTHandler<NBTCompound> {
+public class RedstoneSettingsHandler extends NBTHandler<ReadWriteNBT> {
     public static final boolean DEFAULT_PROTECTION_VALUE = true;
 
     // Redstone-Current protection, so e.g. doors do not react to buttons etc.
@@ -33,8 +34,8 @@ public class RedstoneSettingsHandler extends NBTHandler<NBTCompound> {
     static final String PISTON_PROTECTION_ATTRIBUTE = "piston_protection";
     static final String HOPPER_PROTECTION_ATTRIBUTE = "hopper_protection";
 
-    RedstoneSettingsHandler(@NotNull final NBTCompound compound) {
-        super();
+    RedstoneSettingsHandler(@NotNull final ReadWriteNBT compound) {
+        super(null);
         this.container = compound;
     }
 

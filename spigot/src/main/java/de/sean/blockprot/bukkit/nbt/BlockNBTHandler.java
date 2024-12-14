@@ -25,6 +25,8 @@ import de.sean.blockprot.bukkit.util.BlockUtil;
 import de.sean.blockprot.nbt.FriendModifyAction;
 import de.sean.blockprot.nbt.LockReturnValue;
 import de.tr7zw.changeme.nbtapi.*;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
+import de.tr7zw.changeme.nbtapi.iface.ReadableNBT;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -42,7 +44,7 @@ import java.util.function.Predicate;
  *
  * @since 0.2.3
  */
-public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> {
+public final class BlockNBTHandler extends FriendSupportingHandler<ReadWriteNBT> {
     static final String OWNER_ATTRIBUTE = "splugin_owner";
 
     static final String LOCK_ATTRIBUTE = "blockprot_friends";
@@ -59,6 +61,10 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
     @NotNull
     public final Block block;
 
+    BlockNBTHandler(@NotNull final ReadWriteNBT nbt) throws RuntimeException {
+        super(LOCK_ATTRIBUTE);
+    }
+
     /**
      * Create a new handler for given {@code block}.
      *
@@ -68,6 +74,7 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
      *                          or lockable tile entity.
      * @since 0.2.3
      */
+    @Deprecated
     public BlockNBTHandler(@NotNull final Block block) throws RuntimeException {
         super(LOCK_ATTRIBUTE);
         this.block = block;
@@ -385,7 +392,7 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
     }
 
     @Override
-    public void pasteNbt(@NotNull NBTContainer container) {
+    public void pasteNbt(@NotNull ReadWriteNBT container) {
         // We remove the owner key for security reasons.
         container.removeKey(OWNER_ATTRIBUTE);
         super.pasteNbt(container);

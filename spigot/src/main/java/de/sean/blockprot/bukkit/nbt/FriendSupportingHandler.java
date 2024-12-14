@@ -20,6 +20,7 @@ package de.sean.blockprot.bukkit.nbt;
 
 import de.sean.blockprot.bukkit.BlockProt;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -31,17 +32,18 @@ import java.util.stream.Stream;
  * 
  * @since 1.0.0
  */
-public abstract class FriendSupportingHandler<T extends NBTCompound> extends NBTHandler<T> {
+public abstract class FriendSupportingHandler<T extends ReadWriteNBT> extends NBTHandler<T> {
     private final @NotNull String friendNbtKey;
 
     /** Mojang recently started requiring zeroed UUIDs to *not* be used, so we instead use an invalid UUID */
     public static final UUID publicUuid = new UUID(~0, ~0);
     
     public FriendSupportingHandler(@NotNull String friendNbtKey) {
+        super(null);
         this.friendNbtKey = friendNbtKey;
     }
 
-    private NBTCompound compound() {
+    private ReadWriteNBT compound() {
         return container.getOrCreateCompound(friendNbtKey);
     }
 
@@ -64,11 +66,11 @@ public abstract class FriendSupportingHandler<T extends NBTCompound> extends NBT
         if (!this.container.hasTag(friendNbtKey)) return Stream.empty();
         if (BlockProt.getDefaultConfig().isFriendFunctionalityDisabled()) return Stream.empty();
 
-        final NBTCompound compound = this.container.getOrCreateCompound(friendNbtKey);
-        return compound
+        final var comp = compound();
+        return comp
             .getKeys()
             .stream()
-            .map((k) -> new FriendHandler(compound.getCompound(k)))
+            .map((k) -> new FriendHandler(comp.getCompound(k), k))
             // This is a weird Comparator, but it essentially just guarantees that the entry where
             // getName().equals(publicUuid.toString()) is at the front of the stream.
             .sorted((a, b) -> a.doesRepresentPublic() ? -1 : 1);

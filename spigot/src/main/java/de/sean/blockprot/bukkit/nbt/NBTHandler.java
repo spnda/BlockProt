@@ -18,9 +18,12 @@
 
 package de.sean.blockprot.bukkit.nbt;
 
+import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The base NBT Handler.
@@ -31,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
  *            for specific containers.
  * @since 0.3.0
  */
-public abstract class NBTHandler<T extends NBTCompound> {
+public abstract class NBTHandler<T extends ReadWriteNBT> {
     @Deprecated
     public static final String PERMISSION_LOCK = "blockprot.lock";
 
@@ -51,12 +54,15 @@ public abstract class NBTHandler<T extends NBTCompound> {
      */
     protected T container;
 
+    @Nullable private final String name;
+
     /**
      * Create a new base NBTHandler.
      *
      * @since 0.3.0
      */
-    protected NBTHandler() {
+    protected NBTHandler(@Nullable final String name) {
+        this.name = name;
     }
 
     /**
@@ -67,7 +73,6 @@ public abstract class NBTHandler<T extends NBTCompound> {
      */
     @NotNull
     public String getName() {
-        String name = container.getName();
         return name == null ? "" : name;
     }
 
@@ -80,12 +85,12 @@ public abstract class NBTHandler<T extends NBTCompound> {
     public void mergeHandler(@NotNull final NBTHandler<?> handler) {}
 
     /**
-     * Get's a copy of this NBT inside of a {@link NBTContainer}.
+     * Gets a copy of this NBT inside a new {@link NBTContainer}.
      * @since 1.0.0
      */
     @NotNull
-    public NBTContainer getNbtCopy() {
-        NBTContainer copy = new NBTContainer();
+    public ReadWriteNBT getNbtCopy() {
+        final var copy = NBT.createNBTObject();
         copy.mergeCompound(this.container);
         return copy;
     }
@@ -97,7 +102,7 @@ public abstract class NBTHandler<T extends NBTCompound> {
      * @param container The NBT to paste.
      * @since 1.0.0
      */
-    public void pasteNbt(@NotNull NBTContainer container) {
+    public void pasteNbt(@NotNull ReadWriteNBT container) {
         this.container.mergeCompound(container);
     }
 }

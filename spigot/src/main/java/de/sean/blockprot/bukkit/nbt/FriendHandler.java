@@ -19,6 +19,7 @@
 package de.sean.blockprot.bukkit.nbt;
 
 import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
@@ -31,27 +32,16 @@ import java.util.EnumSet;
  *
  * @since 0.3.0
  */
-public final class FriendHandler extends NBTHandler<NBTCompound> {
+public final class FriendHandler extends NBTHandler<ReadWriteNBT> {
     static final String ACCESS_FLAGS_ATTRIBUTE = "blockprot_access_flags";
 
     /**
      * @param compound The NBT compound used.
      * @since 0.3.0
      */
-    public FriendHandler(@NotNull final NBTCompound compound) {
-        super();
+    public FriendHandler(@NotNull final ReadWriteNBT compound, @NotNull final String name) {
+        super(name);
         this.container = compound;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 0.3.0
-     */
-    @NotNull
-    public String getName() {
-        String name = container.getName();
-        return name == null ? "" : name;
     }
 
     /**
@@ -71,7 +61,7 @@ public final class FriendHandler extends NBTHandler<NBTCompound> {
      * @since 0.4.7
      */
     private int getAccessFlagsBitset() {
-        if (!container.hasKey(ACCESS_FLAGS_ATTRIBUTE)) return BlockAccessFlag.READ.getFlag() | BlockAccessFlag.WRITE.getFlag();
+        if (!container.hasTag(ACCESS_FLAGS_ATTRIBUTE)) return BlockAccessFlag.READ.getFlag() | BlockAccessFlag.WRITE.getFlag();
         else return container.getInteger(ACCESS_FLAGS_ATTRIBUTE);
     }
 
@@ -95,7 +85,7 @@ public final class FriendHandler extends NBTHandler<NBTCompound> {
     public EnumSet<BlockAccessFlag> getAccessFlags() {
         // We don't just use #getAccessFlagsBitset, as it would have a minor overhead due to
         // using the BlockAccessFlag#parseFlags method.
-        if (!container.hasKey(ACCESS_FLAGS_ATTRIBUTE)) return EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE);
+        if (!container.hasTag(ACCESS_FLAGS_ATTRIBUTE)) return EnumSet.of(BlockAccessFlag.READ, BlockAccessFlag.WRITE);
         else return BlockAccessFlag.parseFlags(container.getInteger(ACCESS_FLAGS_ATTRIBUTE));
     }
 

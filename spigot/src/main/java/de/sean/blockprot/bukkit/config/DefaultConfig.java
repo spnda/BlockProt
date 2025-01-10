@@ -106,12 +106,14 @@ public final class DefaultConfig extends BlockProtConfig {
             @NotNull String key, @NotNull final ArrayList<T> list, @NotNull final T[] enumValues, Function<T, Boolean> validateCallback) {
         List<?> configList = config.getList(key);
         if (configList == null) return;
-        ArrayList<String> stringList = configList
+        final var stringList = configList
             .stream()
             .filter(String.class::isInstance)
             .map(String.class::cast)
+            .distinct() // Remove duplicates
             .collect(Collectors.toCollection(ArrayList::new));
-        Set<T> newEnumValues = this.loadEnumValuesByName(enumValues, stringList);
+
+        final var newEnumValues = this.loadEnumValuesByName(enumValues, stringList);
         newEnumValues.removeIf((value) -> {
            if (!validateCallback.apply(value)) {
                BlockProt.getInstance().getLogger().warning("Caught invalid value passed to " + key + ": " + value.toString());

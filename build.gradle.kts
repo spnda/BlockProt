@@ -59,7 +59,8 @@ allprojects {
         // [baseName]-[appendix]-[version]-[classifier].[extension]
         archiveClassifier.set(
             if (ext["gitBranchName"] == "master" || ext["gitBranchName"] == "HEAD") null
-            else (ext["gitBranchName"] as String))
+            else (ext["gitBranchName"] as String)
+        )
     }
 
     afterEvaluate {
@@ -69,7 +70,7 @@ allprojects {
             header(rootProject.file("HEADER.txt"))
             include("**/*.java")
             properties {
-                this["year"] = "2021 - 2024"
+                this["year"] = "2021 - 2025"
             }
         }
     }

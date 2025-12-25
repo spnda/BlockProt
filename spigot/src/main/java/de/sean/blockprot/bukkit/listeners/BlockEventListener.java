@@ -122,7 +122,12 @@ public class BlockEventListener implements Listener {
                 // The block_entity_data tag works like the BlockEntityTag used to, but requires an "id" field for the type of block.
                 final var nbt = NBT.itemStackToNBT(item);
                 final var entityData = nbt.getOrCreateCompound("components").getOrCreateCompound("minecraft:block_entity_data");
-                entityData.setString("id", item.getType().getKey().toString());
+                if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+                    // See https://github.com/spnda/BlockProt/issues/339#issuecomment-3690954598
+                    entityData.setString("id", "minecraft:shulker_box");
+                } else {
+                    entityData.setString("id", item.getType().getKey().toString());
+                }
                 entityData.getOrCreateCompound("PublicBukkitValues").mergeCompound(handler.getNbtCopy());
                 item = Objects.requireNonNull(NBT.itemStackFromNBT(nbt));
             } else {

@@ -42,6 +42,11 @@ public class HopperEventListener implements Listener {
             if (source != null && BlockProt.getDefaultConfig().isLockable(source.getType())) {
                 BlockNBTHandler sourceHandler = new BlockNBTHandler(source);
                 if (sourceHandler.isProtected()) {
+                    // Check if simple hopper protection is enabled, if so we can skip the rest
+                    if (BlockProt.getDefaultConfig().isSimpleHopperProtection()) {
+                        event.setCancelled(true);
+                        return;
+                    }
                     // The source chest is owned by someone. Check if the hopper block is also owned by
                     // the same player and if so, allow this event to happen, regardless of the hopper
                     // protection.

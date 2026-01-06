@@ -30,6 +30,11 @@ repositories {
         name = "CodeMC"
         content {
             includeGroup("de.tr7zw")
+        }
+    }
+    maven("https://mvn.wesjd.net/") {
+        name = "WesJD"
+        content {
             includeGroup("net.wesjd")
         }
     }

@@ -230,69 +230,81 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
         String owner = getOwner();
         final String playerUuid = player.getUniqueId().toString();
 
+        LockReturnValue maxCheck = checkMaxBlockCount(player, owner);
+        if (maxCheck != null) return maxCheck;
+
         if (owner.isEmpty()) {
-            // Check if the player is not exceeding their max block count.
-            Integer maxBlockCount = BlockProt.getDefaultConfig().getMaxLockedBlockCount();
-            if (maxBlockCount != null) {
-                PlayerBlocksStatistic playerBlocksStatistic = new PlayerBlocksStatistic();
-                StatHandler.getStatistic(playerBlocksStatistic, player);
-                if (player.hasPermission("blockprot.lockmax")){
-                    List<PermissionAttachmentInfo> lists = new ArrayList<>(player.getEffectivePermissions());
-                    Integer highestValueFound = null;
-                    for (int i = -1; ++i < lists.size(); ) {
-                        PermissionAttachmentInfo permission = lists.get(i);
-                        if (permission.getPermission().toLowerCase().startsWith("blockprot.locklimit.") && permission.getValue()) {
-                            String foundValue = permission.getPermission().toLowerCase().replace("blockprot.locklimit.", "");
-                            if (isNotNumeric(foundValue)) continue;
-
-                            if (Integer.parseInt(foundValue) > (highestValueFound == null ? 0 : highestValueFound)) {
-                                highestValueFound = Integer.parseInt(foundValue);
-                            }
-                        }
-                    }
-
-                    if (highestValueFound != null && playerBlocksStatistic.get().size() >= highestValueFound){
-                        return new LockReturnValue(false, LockReturnValue.Reason.EXCEEDED_MAX_BLOCK_COUNT);
-                    }
-                } else if (playerBlocksStatistic.get().size() >= maxBlockCount) {
-                    return new LockReturnValue(false, LockReturnValue.Reason.EXCEEDED_MAX_BLOCK_COUNT);
-                }
-            }
-
-            // This block is not owned by anyone, this user can claim this block
-            BlockProtLockEvent event = new BlockProtLockEvent(block, player, cause);
-            BlockProt.getInstance().getServer().getPluginManager().callEvent(event);
-            if (event.isCancelled()) {
-                return new LockReturnValue(false, LockReturnValue.Reason.NO_PERMISSION);
-            }
-
-            owner = playerUuid;
-            setOwner(owner);
-            this.applyToOtherContainer();
-            StatHandler.addBlock(player, block.getLocation());
-            HybridDatabase hybridDatabase = BlockProt.getHybridDatabase();
-            if (hybridDatabase != null) {
-                hybridDatabase.upsertBlockIndex(player.getUniqueId(), block.getLocation(), block.getType().name());
-            }
-            return new LockReturnValue(true, null);
+            return performClaim(player, cause, playerUuid);
         } else if (owner.equals(playerUuid) || player.isOp() || player.hasPermission(Permissions.ADMIN.key())) {
-            BlockProtUnlockEvent event = new BlockProtUnlockEvent(block, player, BlockProtUnlockEvent.Cause.MANUAL);
-            BlockProt.getInstance().getServer().getPluginManager().callEvent(event);
-            if (event.isCancelled()) {
-                return new LockReturnValue(false, LockReturnValue.Reason.NO_PERMISSION);
-            }
-
-            StatHandler.removeContainer(player, block);
-            HybridDatabase hybridDatabase = BlockProt.getHybridDatabase();
-            if (hybridDatabase != null) {
-                hybridDatabase.removeBlockIndex(block.getLocation());
-            }
-            this.clear();
-            this.applyToOtherContainer();
-            return new LockReturnValue(true, null);
+            return performUnlock(player);
         }
 
         return new LockReturnValue(false, LockReturnValue.Reason.NO_PERMISSION);
+    }
+
+    private LockReturnValue checkMaxBlockCount(@NotNull final Player player, String owner) {
+        if (!owner.isEmpty()) return null;
+        Integer maxBlockCount = BlockProt.getDefaultConfig().getMaxLockedBlockCount();
+        if (maxBlockCount == null) return null;
+
+        PlayerBlocksStatistic playerBlocksStatistic = new PlayerBlocksStatistic();
+        StatHandler.getStatistic(playerBlocksStatistic, player);
+        if (player.hasPermission("blockprot.lockmax")){
+            List<PermissionAttachmentInfo> lists = new ArrayList<>(player.getEffectivePermissions());
+            Integer highestValueFound = null;
+            for (int i = -1; ++i < lists.size(); ) {
+                PermissionAttachmentInfo permission = lists.get(i);
+                if (permission.getPermission().toLowerCase().startsWith("blockprot.locklimit.") && permission.getValue()) {
+                    String foundValue = permission.getPermission().toLowerCase().replace("blockprot.locklimit.", "");
+                    if (isNotNumeric(foundValue)) continue;
+
+                    if (Integer.parseInt(foundValue) > (highestValueFound == null ? 0 : highestValueFound)) {
+                        highestValueFound = Integer.parseInt(foundValue);
+                    }
+                }
+            }
+
+            if (highestValueFound != null && playerBlocksStatistic.get().size() >= highestValueFound){
+                return new LockReturnValue(false, LockReturnValue.Reason.EXCEEDED_MAX_BLOCK_COUNT);
+            }
+        } else if (playerBlocksStatistic.get().size() >= maxBlockCount) {
+            return new LockReturnValue(false, LockReturnValue.Reason.EXCEEDED_MAX_BLOCK_COUNT);
+        }
+        return null;
+    }
+
+    private LockReturnValue performClaim(@NotNull final Player player, @NotNull final BlockProtLockEvent.Cause cause, String playerUuid) {
+        BlockProtLockEvent event = new BlockProtLockEvent(block, player, cause);
+        BlockProt.getInstance().getServer().getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return new LockReturnValue(false, LockReturnValue.Reason.NO_PERMISSION);
+        }
+
+        setOwner(playerUuid);
+        this.applyToOtherContainer();
+        StatHandler.addBlock(player, block.getLocation());
+        HybridDatabase hybridDatabase = BlockProt.getHybridDatabase();
+        if (hybridDatabase != null) {
+            hybridDatabase.upsertBlockIndex(player.getUniqueId(), block.getLocation(), block.getType().name());
+        }
+        return new LockReturnValue(true, null);
+    }
+
+    private LockReturnValue performUnlock(@NotNull final Player player) {
+        BlockProtUnlockEvent event = new BlockProtUnlockEvent(block, player, BlockProtUnlockEvent.Cause.MANUAL);
+        BlockProt.getInstance().getServer().getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return new LockReturnValue(false, LockReturnValue.Reason.NO_PERMISSION);
+        }
+
+        StatHandler.removeContainer(player, block);
+        HybridDatabase hybridDatabase = BlockProt.getHybridDatabase();
+        if (hybridDatabase != null) {
+            hybridDatabase.removeBlockIndex(block.getLocation());
+        }
+        this.clear();
+        this.applyToOtherContainer();
+        return new LockReturnValue(true, null);
     }
 
     /**

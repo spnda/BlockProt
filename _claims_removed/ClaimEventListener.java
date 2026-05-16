@@ -316,39 +316,42 @@ public class ClaimEventListener implements Listener {
      */
     void handleChatInput(@NotNull Player player, @NotNull String rawMessage,
                          @NotNull Runnable cancelEvent) {
+        if (handleWelcomeFlow(player, rawMessage, cancelEvent)) return;
+        if (handleClaimNameFlow(player, rawMessage, cancelEvent)) return;
+    }
 
-        // ── Welcome-message flow ──────────────────────────────────────────────
-        if (pendingWelcome.containsKey(player.getUniqueId())) {
-            cancelEvent.run();
-            String input  = rawMessage.trim();
-            UUID claimId  = pendingWelcome.remove(player.getUniqueId());
-            BukkitTask t  = welcomeTimeouts.remove(player.getUniqueId());
-            if (t != null) t.cancel();
+    private boolean handleWelcomeFlow(@NotNull Player player, @NotNull String rawMessage, @NotNull Runnable cancelEvent) {
+        if (!pendingWelcome.containsKey(player.getUniqueId())) return false;
+        cancelEvent.run();
+        String input  = rawMessage.trim();
+        UUID claimId  = pendingWelcome.remove(player.getUniqueId());
+        BukkitTask t  = welcomeTimeouts.remove(player.getUniqueId());
+        if (t != null) t.cancel();
 
-            String cancelWord = Translator.get(TranslationKey.CLAIMS__NAME_CANCEL_WORD);
-            if (input.equalsIgnoreCase(cancelWord)) {
-                Bukkit.getScheduler().runTask(BlockProt.getInstance(),
-                    () -> send(player, Translator.get(TranslationKey.CLAIMS__NAME_CANCELLED)));
-                return;
-            }
-
-            Bukkit.getScheduler().runTask(BlockProt.getInstance(), () -> {
-                Claim claim = ClaimManager.getInstance().getClaimById(claimId);
-                if (claim == null) return;
-                String msg = input.equalsIgnoreCase("clear") ? null : input;
-                claim.setWelcomeMessage(msg);
-                ClaimManager.getInstance().saveAsync();
-                String response = (msg == null
-                    ? Translator.get(TranslationKey.CLAIMS__WELCOME_CLEARED)
-                    : Translator.get(TranslationKey.CLAIMS__WELCOME_SET))
-                    .replace("{name}", claim.getName());
-                send(player, response);
-            });
-            return;
+        String cancelWord = Translator.get(TranslationKey.CLAIMS__NAME_CANCEL_WORD);
+        if (input.equalsIgnoreCase(cancelWord)) {
+            Bukkit.getScheduler().runTask(BlockProt.getInstance(),
+                () -> send(player, Translator.get(TranslationKey.CLAIMS__NAME_CANCELLED)));
+            return true;
         }
 
-        // ── Claim-name flow (wand) ────────────────────────────────────────────
-        if (!pendingName.contains(player.getUniqueId())) return;
+        Bukkit.getScheduler().runTask(BlockProt.getInstance(), () -> {
+            Claim claim = ClaimManager.getInstance().getClaimById(claimId);
+            if (claim == null) return;
+            String msg = input.equalsIgnoreCase("clear") ? null : input;
+            claim.setWelcomeMessage(msg);
+            ClaimManager.getInstance().saveAsync();
+            String response = (msg == null
+                ? Translator.get(TranslationKey.CLAIMS__WELCOME_CLEARED)
+                : Translator.get(TranslationKey.CLAIMS__WELCOME_SET))
+                .replace("{name}", claim.getName());
+            send(player, response);
+        });
+        return true;
+    }
+
+    private boolean handleClaimNameFlow(@NotNull Player player, @NotNull String rawMessage, @NotNull Runnable cancelEvent) {
+        if (!pendingName.contains(player.getUniqueId())) return false;
 
         cancelEvent.run();
 
@@ -361,7 +364,7 @@ public class ClaimEventListener implements Listener {
             clearSelection(player.getUniqueId());
             Bukkit.getScheduler().runTask(BlockProt.getInstance(), () ->
                 send(player, Translator.get(TranslationKey.CLAIMS__NAME_CANCELLED)));
-            return;
+            return true;
         }
 
         if (input.isEmpty() || input.length() > MAX_NAME_LEN) {
@@ -371,7 +374,7 @@ public class ClaimEventListener implements Listener {
                 send(player, Translator.get(TranslationKey.CLAIMS__NAME_PROMPT)
                     .replace("{cancel}", Translator.get(TranslationKey.CLAIMS__NAME_CANCEL_WORD)));
             });
-            return;
+            return true;
         }
 
         if (!input.matches("[\\w\\- ]+")) {
@@ -380,7 +383,7 @@ public class ClaimEventListener implements Listener {
                 send(player, Translator.get(TranslationKey.CLAIMS__NAME_PROMPT)
                     .replace("{cancel}", Translator.get(TranslationKey.CLAIMS__NAME_CANCEL_WORD)));
             });
-            return;
+            return true;
         }
 
         final String claimName = input;
@@ -423,6 +426,7 @@ public class ClaimEventListener implements Listener {
                     .replace("{z2}", String.valueOf(created.getMaxZ())));
             }
         });
+        return true;
     }
 
     // ─── Paper AsyncChatEvent inner listener ──────────────────────────────────

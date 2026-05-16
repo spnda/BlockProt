@@ -173,36 +173,7 @@ public class BlockLockInventory extends BlockProtInventory {
         }
 
         if (!isNotProtected && state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.MANAGER)) {
-            var offset = 1;
-            setItemStack(
-                offset++,
-                Material.REDSTONE,
-                TranslationKey.INVENTORIES__REDSTONE__SETTINGS
-            );
-            if (!BlockProt.getDefaultConfig().isFriendFunctionalityDisabled()) {
-                setItemStack(
-                    offset++,
-                    Material.PLAYER_HEAD,
-                    TranslationKey.INVENTORIES__FRIENDS__MANAGE
-                );
-            }
-            setItemStack(
-                offset,
-                Material.NAME_TAG,
-                TranslationKey.INVENTORIES__SET_BLOCK_NAME
-            );
-            if (PlayerInventoryClipboard.contains(player.getUniqueId().toString())) {
-                setItemStack(
-                    getSize() - 4 - rightItemOffset,
-                    Material.KNOWLEDGE_BOOK,
-                    TranslationKey.INVENTORIES__PASTE_CONFIGURATION
-                );
-            }
-            setItemStack(
-                getSize() - 3 - rightItemOffset,
-                Material.PAPER,
-                TranslationKey.INVENTORIES__COPY_CONFIGURATION
-            );
+            fillManagerItems(state, player, rightItemOffset);
         }
 
         if (!isNotProtected && state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.INFO)) {
@@ -224,5 +195,38 @@ public class BlockLockInventory extends BlockProtInventory {
         }
         setBackButton();
         return inventory;
+    }
+
+    private void fillManagerItems(@NotNull InventoryState state, @NotNull Player player, int rightItemOffset) {
+        var offset = 1;
+        setItemStack(
+            offset++,
+            Material.REDSTONE,
+            TranslationKey.INVENTORIES__REDSTONE__SETTINGS
+        );
+        if (!BlockProt.getDefaultConfig().isFriendFunctionalityDisabled()) {
+            setItemStack(
+                offset++,
+                Material.PLAYER_HEAD,
+                TranslationKey.INVENTORIES__FRIENDS__MANAGE
+            );
+        }
+        setItemStack(
+            offset,
+            Material.NAME_TAG,
+            TranslationKey.INVENTORIES__SET_BLOCK_NAME
+        );
+        if (PlayerInventoryClipboard.contains(player.getUniqueId().toString())) {
+            setItemStack(
+                getSize() - 4 - rightItemOffset,
+                Material.KNOWLEDGE_BOOK,
+                TranslationKey.INVENTORIES__PASTE_CONFIGURATION
+            );
+        }
+        setItemStack(
+            getSize() - 3 - rightItemOffset,
+            Material.PAPER,
+            TranslationKey.INVENTORIES__COPY_CONFIGURATION
+        );
     }
 }

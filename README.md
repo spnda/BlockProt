@@ -18,7 +18,7 @@ BlockProt is a lightweight Bukkit and Spigot plugin that gives players the abili
 chests, furnaces and many more blocks. The plugin features a modern GUI approach instead of
 commands, so that any player can easily understand how to use all of its features.
 
-![image1](https://raw.githubusercontent.com/spnda/BlockProt/master/images/main_menu.png)
+![image1](https://github.com/VictorGugug/BlockProt-SP26-U/blob/master/images/main_menu.png)
 
 ## SP26-U fork notes
 

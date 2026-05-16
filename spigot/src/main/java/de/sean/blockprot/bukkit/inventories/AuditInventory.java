@@ -48,7 +48,10 @@ public final class AuditInventory extends BlockProtInventory {
     public void onClick(@NotNull InventoryClickEvent event, @NotNull InventoryState state) {
         final Player player = (Player) event.getWhoClicked();
         final ItemStack item = event.getCurrentItem();
-        if (item == null) { event.setCancelled(true); return; }
+        if (item == null) {
+            event.setCancelled(true);
+            return;
+        }
 
         switch (item.getType()) {
             case BLACK_STAINED_GLASS_PANE -> {

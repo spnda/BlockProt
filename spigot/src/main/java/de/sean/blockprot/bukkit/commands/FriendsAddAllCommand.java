@@ -77,7 +77,10 @@ public final class FriendsAddAllCommand implements CommandExecutor {
                 if (fallback.hasPlayedBefore()) target = fallback;
             }
 
-            if (clearTask[0] != null) { clearTask[0].cancel(); clearTask[0] = null; }
+            if (clearTask[0] != null) {
+                clearTask[0].cancel();
+                clearTask[0] = null;
+            }
 
             if (target == null || target.getUniqueId() == null) {
                 Bukkit.getScheduler().runTask(BlockProt.getInstance(), () -> {

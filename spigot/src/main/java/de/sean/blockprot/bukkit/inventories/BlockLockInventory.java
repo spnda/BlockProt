@@ -140,14 +140,17 @@ public class BlockLockInventory extends BlockProtInventory {
 
     public Inventory fill(@NotNull Player player, Material material, BlockNBTHandler handler) {
         final InventoryState state = InventoryState.get(player.getUniqueId());
-        if (state == null) return inventory;
+        if (state == null) {
+            return inventory;
+        }
 
         var isNotProtected = handler.isNotProtected();
         // This means the user only has INFO permissions but the block is not locked and can
         // therefore not provide any information.
         if (isNotProtected && state.menuPermissions.size() == 1
-            && state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.INFO))
+            && state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.INFO)) {
             return null;
+        }
 
         if (state.menuPermissions.contains(BlockAccessMenuEvent.MenuPermission.LOCK)) {
             setItemStack(

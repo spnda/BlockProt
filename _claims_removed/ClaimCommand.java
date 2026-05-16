@@ -36,7 +36,9 @@ public class ClaimCommand implements CommandExecutor {
     @Nullable
     private static ClaimEventListener listener;
 
-    public static void setListener(@NotNull ClaimEventListener l) { listener = l; }
+    public static void setListener(@NotNull ClaimEventListener l) {
+        listener = l;
+    }
 
     private static final List<String> SUB_COMMANDS =
         List.of("wand", "delete", "flags", "list", "info", "welcome");
@@ -49,7 +51,10 @@ public class ClaimCommand implements CommandExecutor {
             return true;
         }
 
-        if (args.length < 2) { sendUsage(player); return true; }
+        if (args.length < 2) {
+            sendUsage(player);
+            return true;
+        }
 
         return switch (args[1].toLowerCase()) {
 
@@ -196,7 +201,10 @@ public class ClaimCommand implements CommandExecutor {
                 yield true;
             }
 
-            default -> { sendUsage(player); yield true; }
+            default -> {
+                sendUsage(player);
+                yield true;
+            }
         };
     }
 

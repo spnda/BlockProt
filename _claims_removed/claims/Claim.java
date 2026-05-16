@@ -73,8 +73,12 @@ public class Claim {
         this.ownerUuid = ownerUuid;
         this.name = name;
         this.worldName = worldName;
-        this.minX = minX; this.minY = minY; this.minZ = minZ;
-        this.maxX = maxX; this.maxY = maxY; this.maxZ = maxZ;
+        this.minX = minX;
+        this.minY = minY;
+        this.minZ = minZ;
+        this.maxX = maxX;
+        this.maxY = maxY;
+        this.maxZ = maxZ;
         this.flags = new EnumMap<>(flags);
         this.welcomeMessage = welcomeMessage;
     }

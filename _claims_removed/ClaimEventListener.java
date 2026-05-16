@@ -514,7 +514,10 @@ public class ClaimEventListener implements Listener {
 
         BukkitTask task = Bukkit.getScheduler().runTaskTimer(
             BlockProt.getInstance(), () -> {
-                if (!player.isOnline()) { cancelBorder(player.getUniqueId()); return; }
+                if (!player.isOnline()) {
+                    cancelBorder(player.getUniqueId());
+                    return;
+                }
                 drawCuboidEdges(world, player, minX, minY, minZ, maxX, maxY, maxZ);
             }, 0L, BORDER_PERIOD);
 

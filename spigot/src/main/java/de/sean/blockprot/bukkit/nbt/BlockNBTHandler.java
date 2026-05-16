@@ -20,7 +20,10 @@ package de.sean.blockprot.bukkit.nbt;
 
 import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.Permissions;
+import de.sean.blockprot.bukkit.events.BlockProtLockEvent;
+import de.sean.blockprot.bukkit.events.BlockProtUnlockEvent;
 import de.sean.blockprot.bukkit.nbt.stats.PlayerBlocksStatistic;
+import de.sean.blockprot.bukkit.storage.HybridDatabase;
 import de.sean.blockprot.bukkit.util.BlockUtil;
 import de.sean.blockprot.nbt.FriendModifyAction;
 import de.sean.blockprot.nbt.LockReturnValue;
@@ -219,6 +222,11 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
      */
     @NotNull
     public LockReturnValue lockBlock(@NotNull final Player player) {
+        return lockBlock(player, BlockProtLockEvent.Cause.MANUAL);
+    }
+
+    @NotNull
+    public LockReturnValue lockBlock(@NotNull final Player player, @NotNull final BlockProtLockEvent.Cause cause) {
         String owner = getOwner();
         final String playerUuid = player.getUniqueId().toString();
 
@@ -252,13 +260,33 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
             }
 
             // This block is not owned by anyone, this user can claim this block
+            BlockProtLockEvent event = new BlockProtLockEvent(block, player, cause);
+            BlockProt.getInstance().getServer().getPluginManager().callEvent(event);
+            if (event.isCancelled()) {
+                return new LockReturnValue(false, LockReturnValue.Reason.NO_PERMISSION);
+            }
+
             owner = playerUuid;
             setOwner(owner);
             this.applyToOtherContainer();
             StatHandler.addBlock(player, block.getLocation());
+            HybridDatabase hybridDatabase = BlockProt.getHybridDatabase();
+            if (hybridDatabase != null) {
+                hybridDatabase.upsertBlockIndex(player.getUniqueId(), block.getLocation(), block.getType().name());
+            }
             return new LockReturnValue(true, null);
         } else if (owner.equals(playerUuid) || player.isOp() || player.hasPermission(Permissions.ADMIN.key())) {
+            BlockProtUnlockEvent event = new BlockProtUnlockEvent(block, player, BlockProtUnlockEvent.Cause.MANUAL);
+            BlockProt.getInstance().getServer().getPluginManager().callEvent(event);
+            if (event.isCancelled()) {
+                return new LockReturnValue(false, LockReturnValue.Reason.NO_PERMISSION);
+            }
+
             StatHandler.removeContainer(player, block);
+            HybridDatabase hybridDatabase = BlockProt.getHybridDatabase();
+            if (hybridDatabase != null) {
+                hybridDatabase.removeBlockIndex(block.getLocation());
+            }
             this.clear();
             this.applyToOtherContainer();
             return new LockReturnValue(true, null);
@@ -363,6 +391,10 @@ public final class BlockNBTHandler extends FriendSupportingHandler<NBTCompound> 
      * @since 0.3.2
      */
     public void clear() {
+        HybridDatabase hybridDatabase = BlockProt.getHybridDatabase();
+        if (hybridDatabase != null) {
+            hybridDatabase.removeBlockIndex(block.getLocation());
+        }
         this.setOwner("");
         this.setFriends(Collections.emptyList());
         this.getRedstoneHandler().reset();

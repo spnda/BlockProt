@@ -1,7 +1,12 @@
----
 locale: fr
 enabled: Activé
 disabled: Désactivé
+about:
+  title: §x§a§3§c§6§e§bBlockProt {version} - Spigot Plugin
+  original_author: '§7Auteur original: §fspnda'
+  fork_maintainers: '§7Mainteneurs du fork: §fVickey & Reim §8(alias ZarZey)'
+  report_original: §x§c§3§e§e§a§7Signaler des problèmes (plugin original)
+  report_fork: §x§6§6§c§6§6§6Signaler des problèmes (fork SP26)
 inventories:
   back: Retour
   last_page: Dernière page
@@ -44,6 +49,11 @@ inventories:
     global_statistics: Statistiques du serveur
     container_count: Nombre de blocs
     your_blocks: Vos blocs
+  audit:
+    title: Journal d'accès
+    no_entries: Aucune entrée trouvée.
+    teleport: Téléporter au bloc
+    open: Journal d'accès
 messages:
   permission_granted: Permission accordée.
   unlocked: Déverrouillé.
@@ -55,18 +65,79 @@ messages:
   redstone_added: Protection Redstone ajoutée.
   redstone_removed: Protection Redstone supprimée.
   exceeded_max_block_count: Vous avez dépassé le nombre maximal de blocs verrouillables.
-  lock_hint: "§6Vous pouvez protéger vos blocs en vous accroupissant et en faisant
-    un clic droit sur vos coffres, vos fourneaux et bien plus encore ! Consultez également
-    les paramètres de /blockprot pour le configurer à votre convenance. (Cliquez ici
-    pour désactiver ces conseils)."
-  hint_hover_text: Ouvrez un menu à partir de BlockProt ou cliquez ici pour désactiver
-    les conseils.
-  disabled_hints: "§6Indices désactivées !"
+  lock_hint: §6Vous pouvez protéger vos blocs en vous accroupissant et en faisant un clic droit sur vos coffres, vos fourneaux
+    et bien plus encore ! Consultez également les paramètres de /blockprot pour le configurer à votre convenance. (Cliquez
+    ici pour désactiver ces conseils).
+  hint_hover_text: Ouvrez un menu à partir de BlockProt ou cliquez ici pour désactiver les conseils.
+  disabled_hints: §6Indices désactivées !
+  chat_input_prompt: '§eTapez le nom du joueur §7(§bTab§7 suggestions · §aEntrée§7 confirmer · §c{cancel}§7 annuler):'
+  chat_input_cancel_word: annuler
+  chat_input_cancelled: §cRecherche annulée.
+  lock_on_place_success: §aBloc verrouillé !
+  friends_searching: §eRecherche de §f{player}§e...
+  friends_addall_success: §a§f{player}§a ajouté comme ami dans §f{count}§a bloc(s).
+  friends_addall_usage: '§cUsage: /blockprot friends addall <joueur>'
+  inactivity_cleanup_done: '§e[BlockProt] Nettoyage d''inactivité: §f{count}§e bloc(s) libéré(s).'
+  friends_list_title: §6Vos amis
+worlds:
+  scan_start: '[BlockProt] Analyse des mondes... ({count} chargés)'
+  scan_world_added: '[BlockProt] Monde ''{world}'' ajouté à worlds.yml — protection DÉSACTIVÉE par défaut. Activer manuellement.'
+  scan_complete: '[BlockProt] Analyse terminée. {added} nouveau(x) monde(s) enregistré(s).'
+claims:
+  wand_pos_a: §bCoin A défini à §f({x}, {y}, {z})§b. Faites un clic droit sur le coin B.
+  wand_pos_b: §bCoin B défini à §f({x}, {y}, {z})§b. Tapez un nom dans le chat pour créer la parcelle.
+  created: '§aParcelle §6{name} §acréée ! Région: §f{x1},{y1},{z1} §a→ §f{x2},{y2},{z2} §7(monde: {world}).'
+  deleted: §aParcelle §6{name} §asupprimée.
+  no_claim_here: §cIl n'y a pas de parcelle à votre emplacement.
+  overlap: §cCette zone chevauche la parcelle d'un autre joueur.
+  no_permission: §cVous n'avez pas la permission de modifier cette parcelle.
+  list_header: '§6Vos parcelles actives:'
+  name_prompt: '§eTapez un nom pour votre parcelle dans le chat. §7(Tapez §c{cancel}§7 pour annuler):'
+  name_cancel_word: annuler
+  name_cancelled: §cCréation de parcelle annulée.
+  name_too_long: §cNom trop long. Maximum {max} caractères.
+  name_invalid: §cNom invalide. Utilisez uniquement des lettres, chiffres, espaces, tirets bas ou tirets.
+  wand_removed: §7Baguette de parcelle retirée.
+  timeout: §cDélai expiré. Veuillez utiliser la baguette à nouveau.
+  flags:
+    title: Options de parcelle
+    fire: Propagation du feu
+    tnt: TNT / Explosions
+    redstone: Redstone (par d'autres)
+    pvp: PvP
+    flow: Water & Lava flow
+    leaf_decay: Leaf decay
+    mob_spawning: Mob spawning
+    chest: Container access (non-members)
+    door: Door / Trapdoor use (non-members)
+    lever_button: Lever & Button use (non-members)
+    use_bucket: Bucket use (non-members)
+    pet_spawning: Pet taming (non-members)
+    pet_riding: Pet riding (non-members)
+    pet_moving: Lead animals in (non-members)
+    invincible: Invincible zone (no damage)
+    deny_enderpearl: Allow ender pearl entry
+  welcome_set: §aWelcome message set for claim §6{name}§a.
+  welcome_cleared: §7Welcome message cleared for claim §6{name}§7.
+  welcome_prompt: '§eType the welcome message in chat (supports §r&§e colour codes). §7Type §c{cancel}§7 to abort:'
+  delete_confirm_title: §cConfirm deletion
+  delete_yes: §c§lDelete claim
+  delete_cancel: §a§lKeep claim
+  hub:
+    title: Claim Management
+    info: §6Claim Info
+    flags: §6Flags
+    delete: §cDelete Claim
+    wand: §eGet Wand
+    my_claims: §eMy Claims
+    welcome: §eWelcome Message
 integrations:
   lands:
     protect_containers_flag_name: Protéger les conteneurs (BlockProt)
     protect_containers_desc: Autorise un joueur de protéger des coffres, des fours...
-    require_protect_for_friends_flag_name: Exige "Protéger les conteneurs" pour les
-      amis (BlockProt)
-    require_protect_for_friends_desc: Seuls les joueurs qui ont l'autorisation "Protéger
-      les conteneurs" peuvent être ajoutés en tant qu'amis.
+    require_protect_for_friends_flag_name: Exige "Protéger les conteneurs" pour les amis (BlockProt)
+    require_protect_for_friends_desc: Seuls les joueurs qui ont l'autorisation "Protéger les conteneurs" peuvent être ajoutés
+      en tant qu'amis.
+help:
+  header: §6=== Aide BlockProt ===
+  footer: §6==================

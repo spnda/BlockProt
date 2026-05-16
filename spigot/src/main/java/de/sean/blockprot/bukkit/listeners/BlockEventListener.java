@@ -21,8 +21,10 @@ package de.sean.blockprot.bukkit.listeners;
 import com.google.common.collect.Iterables;
 import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.Permissions;
+import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.events.BlockLockOnPlaceEvent;
+import de.sean.blockprot.bukkit.events.BlockProtLockEvent;
 import de.sean.blockprot.bukkit.integrations.PluginIntegration;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
@@ -31,8 +33,7 @@ import de.sean.blockprot.bukkit.util.BlockUtil;
 import de.sean.blockprot.nbt.LockReturnValue;
 import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -74,7 +75,7 @@ public class BlockEventListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent event) {
         if (BlockProt.getDefaultConfig().isWorldExcluded(event.getBlock().getWorld())) return;
-        if (!BlockProt.getDefaultConfig().isLockable(event.getBlock().getType())) return; // We only want to check for lockable blocks.
+        if (!BlockProt.getDefaultConfig().isLockable(event.getBlock().getType(), event.getBlock().getWorld())) return;
 
         BlockNBTHandler handler = new BlockNBTHandler(event.getBlock());
         if (!handler.isOwner(event.getPlayer().getUniqueId().toString()) && handler.isProtected()) {
@@ -99,7 +100,7 @@ public class BlockEventListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onShulkerBoxBreak(BlockBreakEvent event) {
         if (BlockProt.getDefaultConfig().isWorldExcluded(event.getBlock().getWorld())) return;
-        if (!BlockProt.getDefaultConfig().isLockableShulkerBox(event.getBlock().getType())) return;
+        if (!BlockProt.getDefaultConfig().isLockableShulkerBox(event.getBlock().getType(), event.getBlock().getWorld())) return;
 
         BlockNBTHandler handler = new BlockNBTHandler(event.getBlock());
         if (handler.isOwner(event.getPlayer().getUniqueId().toString()) && (!event.isCancelled() && event.isDropItems() && event.getPlayer().getGameMode() != GameMode.CREATIVE)) {
@@ -122,12 +123,8 @@ public class BlockEventListener implements Listener {
                 // The block_entity_data tag works like the BlockEntityTag used to, but requires an "id" field for the type of block.
                 final var nbt = NBT.itemStackToNBT(item);
                 final var entityData = nbt.getOrCreateCompound("components").getOrCreateCompound("minecraft:block_entity_data");
-                if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
-                    // See https://github.com/spnda/BlockProt/issues/339#issuecomment-3690954598
-                    entityData.setString("id", "minecraft:shulker_box");
-                } else {
-                    entityData.setString("id", item.getType().getKey().toString());
-                }
+                // See https://github.com/spnda/BlockProt/issues/339#issuecomment-3690954598
+                entityData.setString("id", "minecraft:shulker_box");
                 entityData.getOrCreateCompound("PublicBukkitValues").mergeCompound(handler.getNbtCopy());
                 item = Objects.requireNonNull(NBT.itemStackFromNBT(nbt));
             } else {
@@ -147,7 +144,7 @@ public class BlockEventListener implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         if (BlockProt.getDefaultConfig().isWorldExcluded(event.getBlock().getWorld())) return;
         if (!event.getPlayer().hasPermission(Permissions.LOCK.key())) return;
-        if (!BlockProt.getDefaultConfig().isLockable(event.getBlock().getType())) return;
+        if (!BlockProt.getDefaultConfig().isLockable(event.getBlock().getType(), event.getBlock().getWorld())) return;
 
         Block block = event.getBlockPlaced();
         String playerUuid = event.getPlayer().getUniqueId().toString();
@@ -164,13 +161,12 @@ public class BlockEventListener implements Listener {
 
                 Bukkit.getPluginManager().callEvent(lockOnPlaceEvent);
                 if (!lockOnPlaceEvent.isCancelled()) {
-                    LockReturnValue lock = handler.lockBlock(event.getPlayer());
+                    LockReturnValue lock = handler.lockBlock(event.getPlayer(), BlockProtLockEvent.Cause.LOCK_ON_PLACE);
                     if (!lock.success) {
                         event.setCancelled(true);
                         if (lock.reason != null) {
-                            event.getPlayer().spigot().sendMessage(
-                                    ChatMessageType.ACTION_BAR,
-                                    TextComponent.fromLegacyText(Translator.get(lock.reason)));
+                            event.getPlayer().sendActionBar(
+                            LegacyComponentSerializer.legacySection().deserialize(Translator.get(lock.reason)));
                         }
                         return;
                     }
@@ -178,6 +174,13 @@ public class BlockEventListener implements Listener {
                     settingsHandler.getFriendsStream()
                         .filter(fh -> PluginIntegration.filterFriendByUuidForAll(UUID.fromString(fh.getName()), event.getPlayer(), block))
                         .forEach(handler::addFriend);
+
+                    // Confirmar proteccion en la action bar
+                    event.getPlayer().sendActionBar(
+                        LegacyComponentSerializer.legacySection().deserialize(
+                            Translator.get(TranslationKey.MESSAGES__LOCK_ON_PLACE_SUCCESS)
+                        )
+                    );
                 }
 
                 if (BlockProt.getDefaultConfig().disallowRedstoneOnPlace()) {

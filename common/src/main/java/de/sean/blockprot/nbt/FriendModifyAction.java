@@ -22,19 +22,6 @@ package de.sean.blockprot.nbt;
  * @since 0.1.16
  */
 public enum FriendModifyAction {
-    /**
-     * We want to add a friend to the block or to the
-     * default friends for a player.
-     *
-     * @since 0.1.16
-     */
     ADD_FRIEND,
-
-    /**
-     * We want to remove a friend to the block or to the
-     * default friends for a player.
-     *
-     * @since 0.1.16
-     */
     REMOVE_FRIEND
 }

@@ -1,7 +1,12 @@
----
 locale: zh_TW
 enabled: 啟用
 disabled: 禁用
+about:
+  title: §x§a§3§c§6§e§bBlockProt {version} - Spigot Plugin
+  original_author: '§7原始作者: §fspnda'
+  fork_maintainers: '§7Fork 維護者: §fVickey & Reim §8(別名 ZarZey)'
+  report_original: §x§c§3§e§e§a§7回報問題 (原始外掛)
+  report_fork: §x§6§6§c§6§6§6回報問題 (SP26 Fork)
 inventories:
   back: 返回
   last_page: 上一頁
@@ -31,7 +36,7 @@ inventories:
     search_history: 搜索歷史
     result: 找到的玩家
     the_public: 公開的
-    the_public_desc: 代表此伺服器上的每個玩家
+    the_public_desc: 代表此伺服器上的每個玩家。
     make_public: 公開
     permissions: 權限
     permission:
@@ -44,23 +49,94 @@ inventories:
     global_statistics: 伺服器統計數據
     container_count: 方塊數
     your_blocks: 你的方塊
+  audit:
+    title: 訪問日誌
+    no_entries: 沒有找到記錄。
+    teleport: 傳送到方塊
+    open: 訪問日誌
 messages:
-  permission_granted: 許可授予
-  unlocked: 已被解鎖
-  no_permission: 無權限
-  friend_added: 已增加信任者
-  friend_removed: 已移除信任者
-  friend_already_added: 該玩家已經加入信任者了
-  friend_cant_be_removed: 該信任者無法移除
-  redstone_added: 添加了紅石保護
-  redstone_removed: 移除了紅石保護
-  exceeded_max_block_count: 您已超過最大可上鎖的方塊數
-  lock_hint: "§6您可以通過蹲下並右鍵點擊您的箱子、熔爐等來保護您的方塊!另外，請檢查 /blockprot settings 以根據您的喜好進行配置。(點擊此處禁用這些提示)\n"
-  hint_hover_text: 從 BlockProt 打開選單或點擊此處禁用提示
-  disabled_hints: "§6已關閉提示!"
+  permission_granted: 許可授予。
+  unlocked: 已被解鎖。
+  no_permission: 無權限。
+  friend_added: 已增加信任者。
+  friend_removed: 已移除信任者。
+  friend_already_added: 該玩家已經加入信任者了。
+  friend_cant_be_removed: 該信任者無法移除。
+  redstone_added: 添加了紅石保護。
+  redstone_removed: 移除了紅石保護。
+  exceeded_max_block_count: 您已超過最大可上鎖的方塊數。
+  lock_hint: '§6您可以通過蹲下並右鍵點擊您的箱子、熔爐等來保護您的方塊！另外，請檢查 /blockprot settings 以根據您的喜好進行配置。(點擊此處禁用這些提示)
+
+    '
+  hint_hover_text: 從 BlockProt 打開選單或點擊此處禁用提示。
+  disabled_hints: §6已關閉提示！
+  chat_input_prompt: '§e輸入玩家名稱 §7(§bTab§7 建議 · §aEnter§7 確認 · §c{cancel}§7 取消):'
+  chat_input_cancel_word: 取消
+  chat_input_cancelled: §c搜索已取消。
+  lock_on_place_success: §a方塊已上鎖！
+  friends_searching: §e正在搜索 §f{player}§e...
+  friends_addall_success: §a已將 §f{player}§a 作為信任者添加到 §f{count}§a 個方塊中。
+  friends_addall_usage: '§c用法: /blockprot friends addall <玩家>'
+  inactivity_cleanup_done: '§e[BlockProt] 非活躍清理: §f{count}§e 個方塊已釋放。'
+  friends_list_title: §6你的信任者
+worlds:
+  scan_start: '[BlockProt] 正在掃描世界... ({count} 已載入)'
+  scan_world_added: '[BlockProt] 世界 ''{world}'' 已新增到 worlds.yml — 保護預設禁用。請手動啟用。'
+  scan_complete: '[BlockProt] 掃描完成。{added} 個新世界已註冊。'
+claims:
+  wand_pos_a: §b角落A已設置在 §f({x}, {y}, {z})§b。現在右鍵點擊角落B。
+  wand_pos_b: §b角落B已設置在 §f({x}, {y}, {z})§b。在聊天中輸入名稱以創建領地。
+  created: '§a領地 §6{name} §a已創建！區域: §f{x1},{y1},{z1} §a→ §f{x2},{y2},{z2} §7(世界: {world})。'
+  deleted: §a領地 §6{name} §a已刪除。
+  no_claim_here: §c您當前位置沒有領地。
+  overlap: §c該區域與其他玩家的領地重疊。
+  no_permission: §c您沒有修改此領地的權限。
+  list_header: '§6您的活躍領地:'
+  name_prompt: '§e在聊天中輸入領地名稱。§7(輸入 §c{cancel}§7 取消):'
+  name_cancel_word: 取消
+  name_cancelled: §c創建領地已取消。
+  name_too_long: §c名稱太長。最多 {max} 個字符。
+  name_invalid: §c無效名稱。只能使用字母、數字、空格、底線或連字符。
+  wand_removed: §7領地魔杖已移除。
+  timeout: §c操作超時。請重新使用魔杖。
+  flags:
+    title: 領地設置
+    fire: 火焰蔓延
+    tnt: TNT / 爆炸
+    redstone: 紅石 (被他人觸發)
+    pvp: PvP
+    flow: Water & Lava flow
+    leaf_decay: Leaf decay
+    mob_spawning: Mob spawning
+    chest: Container access (non-members)
+    door: Door / Trapdoor use (non-members)
+    lever_button: Lever & Button use (non-members)
+    use_bucket: Bucket use (non-members)
+    pet_spawning: Pet taming (non-members)
+    pet_riding: Pet riding (non-members)
+    pet_moving: Lead animals in (non-members)
+    invincible: Invincible zone (no damage)
+    deny_enderpearl: Allow ender pearl entry
+  welcome_set: §aWelcome message set for claim §6{name}§a.
+  welcome_cleared: §7Welcome message cleared for claim §6{name}§7.
+  welcome_prompt: '§eType the welcome message in chat (supports §r&§e colour codes). §7Type §c{cancel}§7 to abort:'
+  delete_confirm_title: §cConfirm deletion
+  delete_yes: §c§lDelete claim
+  delete_cancel: §a§lKeep claim
+  hub:
+    title: Claim Management
+    info: §6Claim Info
+    flags: §6Flags
+    delete: §cDelete Claim
+    wand: §eGet Wand
+    my_claims: §eMy Claims
+    welcome: §eWelcome Message
 integrations:
   lands:
-    protect_containers_flag_name: 保護方塊(BlockProt)
-    protect_containers_desc: 允許玩家保護箱子、熔爐、......
-    require_protect_for_friends_flag_name: 要求信任者"保護方塊"(BlockProt)
-    require_protect_for_friends_desc: 只有擁有"保護方塊"標誌的玩家才有資格被添加信任者
+    protect_containers_flag_name: 保護方塊 (BlockProt)
+    protect_containers_desc: 允許玩家保護箱子、熔爐、...
+    require_protect_for_friends_flag_name: 要求信任者擁有「保護方塊」權限 (BlockProt)
+    require_protect_for_friends_desc: 只有擁有「保護方塊」標誌的玩家才有資格被添加為信任者。
+help:
+  header: §6=== BlockProt 幫助 ===
+  footer: §6==================

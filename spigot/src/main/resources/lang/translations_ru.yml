@@ -1,25 +1,35 @@
----
 locale: ru
+enabled: Включено
+disabled: Выключено
+about:
+  title: §x§a§3§c§6§e§bBlockProt {version} - Spigot Plugin
+  original_author: '§7Оригинальный автор: §fspnda'
+  fork_maintainers: '§7Сопровождающие форка: §fVickey & Reim §8(псевдоним ZarZey)'
+  report_original: §x§c§3§e§e§a§7Сообщить о проблеме (оригинальный плагин)
+  report_fork: §x§6§6§c§6§6§6Сообщить о проблеме (форк SP26)
 inventories:
   back: Назад
   last_page: Последняя страница
   next_page: Следующая страница
-  block_lock: Block Lock
+  block_lock: Замок блока
   user_settings: Мои настройки
   block_info: Список хозяев
-  lock: Запереть на замок
-  unlock: Убрать замок
+  lock: Запереть
+  unlock: Открыть
   lock_on_place: Запирать автоматически
   copy_configuration: Скопировать настройки
   paste_configuration: Вставить настройки
   set_block_name: Установить имя блока
-  inspect_contents: Осмотрить содержимое
+  inspect_contents: Осмотреть содержимое
   redstone:
-    settings: Редстоун настройки
+    settings: Настройки редстоуна
+    redstone_protection: Защита редстоуном
+    piston_protection: Защита от поршней
+    hopper_protection: Защита от воронок
     enable_all: Включить всё
     disable_all: Отключить всё
   friends:
-    manage: Добавить друга
+    manage: Управление друзьями
     edit: Настройки доступа
     remove: Удалить друга
     search: Поиск игроков
@@ -31,7 +41,7 @@ inventories:
     permissions: Разрешения
     permission:
       read: Только смотреть
-      write: Брать блоки
+      write: Брать предметы
       manager: Управлять
   statistics:
     statistics: Статистика
@@ -39,6 +49,11 @@ inventories:
     global_statistics: Статистика сервера
     container_count: Количество запираемых объектов
     your_blocks: Количество твоих запираемых объектов
+  audit:
+    title: Журнал доступа
+    no_entries: Записей не найдено.
+    teleport: Телепортироваться к блоку
+    open: Журнал доступа
 messages:
   permission_granted: Доступ разрешён.
   unlocked: Разблокировано.
@@ -46,19 +61,83 @@ messages:
   friend_added: Друг добавлен.
   friend_removed: Друг удалён.
   friend_already_added: Этот друг уже добавлен.
-  friend_cant_be_removed: Этот друг не может быть удалён.
-  redstone_added: Редстоун защита была добавлена.
-  redstone_removed: Редстоун защита была убрана.
-  exceeded_max_block_count: Вы превысили максимальное количество блоков, которые можно
-    запереть.
-  lock_hint: "&6Вы можете запереть свои блоки, приседая  и нажимая одновременно правую
-    кнопку мыши по сундукам, печкам и другим предметам! Кроме того, проверьте настройки
-    /blockprot, чтобы настроить их по своему вкусу."
+  friend_cant_be_removed: Этого друга нельзя удалить.
+  redstone_added: Защита редстоуном добавлена.
+  redstone_removed: Защита редстоуном убрана.
+  exceeded_max_block_count: Вы превысили максимальное количество блоков, которые можно запереть.
+  lock_hint: '§6Вы можете запереть свои блоки, приседая и нажимая правую кнопку мыши на сундуки, печи и другие предметы! Также
+    проверьте /blockprot settings, чтобы настроить всё по своему вкусу. (Нажмите здесь, чтобы отключить эти подсказки)
+
+    '
+  hint_hover_text: Откройте меню BlockProt или нажмите здесь, чтобы отключить подсказки.
+  disabled_hints: §6Подсказки отключены!
+  chat_input_prompt: '§eВведите имя игрока §7(§bTab§7 подсказки · §aEnter§7 подтвердить · §c{cancel}§7 отмена):'
+  chat_input_cancel_word: отмена
+  chat_input_cancelled: §cПоиск отменён.
+  lock_on_place_success: §aБлок заперт!
+  friends_searching: §eПоиск §f{player}§e...
+  friends_addall_success: §a§f{player}§a добавлен как друг в §f{count}§a блок(ов).
+  friends_addall_usage: '§cИспользование: /blockprot friends addall <игрок>'
+  inactivity_cleanup_done: '§e[BlockProt] Очистка неактивности: §f{count}§e блок(ов) освобождено.'
+  friends_list_title: §6Ваши друзья
+worlds:
+  scan_start: '[BlockProt] Сканирование миров... ({count} загружено)'
+  scan_world_added: '[BlockProt] Мир ''{world}'' добавлен в worlds.yml — защита ОТКЛЮЧЕНА по умолчанию. Включите вручную.'
+  scan_complete: '[BlockProt] Сканирование завершено. {added} новый(х) мир(ов) зарегистрировано.'
+claims:
+  wand_pos_a: §bУгол A установлен в §f({x}, {y}, {z})§b. Теперь кликните правой кнопкой на угол B.
+  wand_pos_b: §bУгол B установлен в §f({x}, {y}, {z})§b. Введите название в чат, чтобы создать участок.
+  created: '§aУчасток §6{name} §aсоздан! Область: §f{x1},{y1},{z1} §a→ §f{x2},{y2},{z2} §7(мир: {world}).'
+  deleted: §aУчасток §6{name} §aудалён.
+  no_claim_here: §cНа вашей текущей позиции нет участка.
+  overlap: §cЭта область пересекается с участком другого игрока.
+  no_permission: §cУ вас нет прав для изменения этого участка.
+  list_header: '§6Ваши активные участки:'
+  name_prompt: '§eВведите название для вашего участка в чат. §7(Напишите §c{cancel}§7 для отмены):'
+  name_cancel_word: отмена
+  name_cancelled: §cСоздание участка отменено.
+  name_too_long: §cНазвание слишком длинное. Максимум {max} символов.
+  name_invalid: §cНеверное название. Используйте только буквы, цифры, пробелы, подчёркивания или дефисы.
+  wand_removed: §7Жезл участка убран.
+  timeout: §cВремя истекло. Пожалуйста, используйте жезл снова.
+  flags:
+    title: Настройки участка
+    fire: Распространение огня
+    tnt: TNT / Взрывы
+    redstone: Редстоун (другими игроками)
+    pvp: PvP
+    flow: Water & Lava flow
+    leaf_decay: Leaf decay
+    mob_spawning: Mob spawning
+    chest: Container access (non-members)
+    door: Door / Trapdoor use (non-members)
+    lever_button: Lever & Button use (non-members)
+    use_bucket: Bucket use (non-members)
+    pet_spawning: Pet taming (non-members)
+    pet_riding: Pet riding (non-members)
+    pet_moving: Lead animals in (non-members)
+    invincible: Invincible zone (no damage)
+    deny_enderpearl: Allow ender pearl entry
+  welcome_set: §aWelcome message set for claim §6{name}§a.
+  welcome_cleared: §7Welcome message cleared for claim §6{name}§7.
+  welcome_prompt: '§eType the welcome message in chat (supports §r&§e colour codes). §7Type §c{cancel}§7 to abort:'
+  delete_confirm_title: §cConfirm deletion
+  delete_yes: §c§lDelete claim
+  delete_cancel: §a§lKeep claim
+  hub:
+    title: Claim Management
+    info: §6Claim Info
+    flags: §6Flags
+    delete: §cDelete Claim
+    wand: §eGet Wand
+    my_claims: §eMy Claims
+    welcome: §eWelcome Message
 integrations:
   lands:
     protect_containers_flag_name: Запереть хранилища (BlockProt)
     protect_containers_desc: Позволяет игроку запереть сундуки, печи, ...
-    require_protect_for_friends_flag_name: Требовать активировать настройку «Защитить
-      контейнеры» от друзей (BlockProt)
-    require_protect_for_friends_desc: Только игроки, у которых есть установлена настройка
-      «Защитить контейнеры», могут быть добавлены в друзья.
+    require_protect_for_friends_flag_name: Требовать «Защитить контейнеры» от друзей (BlockProt)
+    require_protect_for_friends_desc: Только игроки с настройкой «Защитить контейнеры» могут быть добавлены в друзья.
+help:
+  header: §6=== Помощь BlockProt ===
+  footer: §6==================

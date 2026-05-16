@@ -20,6 +20,7 @@ package de.sean.blockprot.bukkit.commands;
 
 import de.sean.blockprot.bukkit.BlockProt;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +32,9 @@ public class ReloadCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (canUseCommand(sender)) {
+            // Backup antes de recargar por si acaso
+            Bukkit.getScheduler().runTaskAsynchronously(BlockProt.getInstance(),
+                new de.sean.blockprot.bukkit.tasks.BackupTask(BlockProt.getInstance().getDataFolder()));
             BlockProt.getInstance().reloadConfigAndTranslations();
             sender.spigot().sendMessage(new TextComponent("Finished reloading BlockProt!"));
             return true;

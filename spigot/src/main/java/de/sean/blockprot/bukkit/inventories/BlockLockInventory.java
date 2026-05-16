@@ -25,7 +25,6 @@ import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.events.BlockAccessMenuEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerInventoryClipboard;
-import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -36,8 +35,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.List;
 
 public class BlockLockInventory extends BlockProtInventory {
     @Override
@@ -108,26 +105,26 @@ public class BlockLockInventory extends BlockProtInventory {
                 }
                 case NAME_TAG -> {
                     player.closeInventory();
-                    new AnvilGUI.Builder()
-                        .text("Block name")
-                        .title(Translator.get(TranslationKey.INVENTORIES__SET_BLOCK_NAME))
-                        .plugin(BlockProt.getInstance())
-                        .onClick((Integer slot, AnvilGUI.StateSnapshot snapshot) -> {
-                            if (slot != AnvilGUI.Slot.OUTPUT) {
-                                return Collections.emptyList();
+                    var currentName = new BlockNBTHandler(block).getName();
+                    AnvilInput.open(
+                        player,
+                        BlockProt.getInstance(),
+                        currentName,
+                        Translator.get(TranslationKey.INVENTORIES__SET_BLOCK_NAME),
+                        text -> {
+                            var invState = InventoryState.get(player.getUniqueId());
+                            if (invState != null && invState.getBlock() != null) {
+                                new BlockNBTHandler(invState.getBlock()).setName(text);
+                                Inventory inventory = new BlockLockInventory().fill(player, block.getType(), new BlockNBTHandler(block));
+                                if (inventory != null) {
+                                    player.openInventory(inventory);
+                                }
                             }
-
-                            var invState = InventoryState.get(snapshot.getPlayer().getUniqueId());
-                            assert(invState.getBlock() != null);
-
-                            new BlockNBTHandler(invState.getBlock()).setName(snapshot.getText());
-                            Inventory inventory = new BlockLockInventory().fill(player, block.getType(), new BlockNBTHandler(block));
-                            if (inventory == null) return List.of(AnvilGUI.ResponseAction.close());
-                            return List.of(AnvilGUI.ResponseAction.openInventory(inventory));
-                        })
-                        .open(player);
+                        }
+                    );
                 }
                 case SPYGLASS -> closeAndOpen(player, new BlockInspectContentsInventory(player).fill());
+                case CLOCK -> closeAndOpen(player, new AuditInventory().fill(player));
                 default -> closeAndOpen(
                     player,
                     null
@@ -210,6 +207,16 @@ public class BlockLockInventory extends BlockProtInventory {
                 getSize() - 2 - rightItemOffset,
                 Material.OAK_SIGN,
                 TranslationKey.INVENTORIES__BLOCK_INFO
+            );
+        }
+
+        // Botón de auditoría: dueño o admin, y solo si el audit logger está activo
+        boolean isOwnerOrAdmin = handler.isOwner(player.getUniqueId()) || player.hasPermission(Permissions.ADMIN.key());
+        if (!isNotProtected && isOwnerOrAdmin && BlockProt.getAuditLogger() != null) {
+            setItemStack(
+                getSize() - 5 - rightItemOffset,
+                Material.CLOCK,
+                TranslationKey.INVENTORIES__AUDIT__OPEN
             );
         }
         setBackButton();

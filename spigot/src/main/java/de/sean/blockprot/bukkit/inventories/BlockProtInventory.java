@@ -483,32 +483,16 @@ public abstract class BlockProtInventory implements InventoryHolder {
      * @since 0.4.2
      */
     protected Material getProperMaterial(Material material) {
-        return switch (material) {
-            case ACACIA_WALL_SIGN -> Material.ACACIA_SIGN;
-            case BAMBOO_WALL_SIGN -> Material.BAMBOO_SIGN;
-            case BIRCH_WALL_SIGN -> Material.BIRCH_SIGN;
-            case CHERRY_WALL_SIGN -> Material.CHERRY_SIGN;
-            case CRIMSON_WALL_SIGN -> Material.CRIMSON_SIGN;
-            case DARK_OAK_WALL_SIGN -> Material.DARK_OAK_SIGN;
-            case JUNGLE_WALL_SIGN -> Material.JUNGLE_SIGN;
-            case MANGROVE_WALL_SIGN -> Material.MANGROVE_SIGN;
-            case OAK_WALL_SIGN -> Material.OAK_SIGN;
-            case SPRUCE_WALL_SIGN -> Material.SPRUCE_SIGN;
-            case WARPED_WALL_SIGN -> Material.WARPED_SIGN;
-
-            case ACACIA_WALL_HANGING_SIGN -> Material.ACACIA_HANGING_SIGN;
-            case BAMBOO_WALL_HANGING_SIGN -> Material.BAMBOO_HANGING_SIGN;
-            case BIRCH_WALL_HANGING_SIGN -> Material.BIRCH_HANGING_SIGN;
-            case CHERRY_WALL_HANGING_SIGN -> Material.CHERRY_HANGING_SIGN;
-            case CRIMSON_WALL_HANGING_SIGN-> Material.CRIMSON_HANGING_SIGN;
-            case DARK_OAK_WALL_HANGING_SIGN -> Material.DARK_OAK_HANGING_SIGN;
-            case JUNGLE_WALL_HANGING_SIGN -> Material.JUNGLE_HANGING_SIGN;
-            case MANGROVE_WALL_HANGING_SIGN -> Material.MANGROVE_HANGING_SIGN;
-            case OAK_WALL_HANGING_SIGN -> Material.OAK_HANGING_SIGN;
-            case SPRUCE_WALL_HANGING_SIGN -> Material.SPRUCE_HANGING_SIGN;
-            case WARPED_WALL_HANGING_SIGN -> Material.WARPED_HANGING_SIGN;
-            default -> material;
-        };
+        String name = material.name();
+        if (name.endsWith("_WALL_SIGN")) {
+            Material m = Material.matchMaterial(name.replace("_WALL_SIGN", "_SIGN"));
+            return m == null ? material : m;
+        }
+        if (name.endsWith("_WALL_HANGING_SIGN")) {
+            Material m = Material.matchMaterial(name.replace("_WALL_HANGING_SIGN", "_HANGING_SIGN"));
+            return m == null ? material : m;
+        }
+        return material;
     }
 
     /**

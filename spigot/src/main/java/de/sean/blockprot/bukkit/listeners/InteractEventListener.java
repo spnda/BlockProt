@@ -22,11 +22,10 @@ import de.sean.blockprot.bukkit.*;
 import de.sean.blockprot.bukkit.events.BlockAccessEvent;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.data.type.Lectern;
@@ -67,6 +66,12 @@ public class InteractEventListener implements Listener {
                 if (!(handler.canAccess(player.getUniqueId().toString()) || player.hasPermission(Permissions.BYPASS.key()))) {
                     event.setCancelled(true);
                     sendMessage(player, Translator.get(TranslationKey.MESSAGES__NO_PERMISSION));
+                    // Registrar intento fallido en el audit log
+                    de.sean.blockprot.bukkit.audit.AuditLogger audit = BlockProt.getAuditLogger();
+                    if (audit != null) {
+                        audit.log(player.getUniqueId(), player.getName(), event.getClickedBlock().getLocation(),
+                            de.sean.blockprot.bukkit.audit.AuditLogger.Action.ACCESS_DENIED);
+                    }
                 } else if (event.getClickedBlock().getType() == Material.LECTERN && !handler.isOwner(player.getUniqueId())) {
                     // With Lecterns you place the books by interacting with the block. canAccess will return true because the
                     // player has the READ permission, but this should not be allowed in this case. In the case that the player
@@ -89,7 +94,7 @@ public class InteractEventListener implements Listener {
                         if (!message.isEmpty()) {
                             LockHintMessageCooldown.setTimestamp(player);
                             var tooltip = Translator.get(TranslationKey.MESSAGES__HINT_HOVER_TEXT);
-                            sendEventsMessage(player, message, ChatMessageType.CHAT,
+                            sendEventsMessage(player, message, true,
                                 "/blockprot disablehints", tooltip.isEmpty() ? null : tooltip);
                         }
                     }
@@ -114,19 +119,22 @@ public class InteractEventListener implements Listener {
         }
     }
 
-    private void sendMessage(@NotNull Player player, @NotNull String component) {
-        sendMessage(player, component, ChatMessageType.ACTION_BAR);
+    private void sendMessage(@NotNull Player player, @NotNull String text) {
+        player.sendActionBar(LegacyComponentSerializer.legacySection().deserialize(text));
     }
 
-    private void sendMessage(@NotNull Player player, @NotNull String component, @NotNull ChatMessageType type) {
-        player.spigot().sendMessage(type, TextComponent.fromLegacyText(component));
+    private void sendMessage(@NotNull Player player, @NotNull String text, boolean asChat) {
+        var comp = LegacyComponentSerializer.legacySection().deserialize(text);
+        if (asChat) player.sendMessage(comp);
+        else player.sendActionBar(comp);
     }
 
-    private void sendEventsMessage(@NotNull Player player, @NotNull String component, @NotNull ChatMessageType type, @Nullable String command, @Nullable String tooltip) {
-        final var message = new TextComponent(component);
-        if (command != null) message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
-        if (tooltip != null) message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(tooltip)));
-        player.spigot().sendMessage(type, message);
+    private void sendEventsMessage(@NotNull Player player, @NotNull String text, boolean asChat, @Nullable String command, @Nullable String tooltip) {
+        var comp = Component.text(text);
+        if (command != null) comp = comp.clickEvent(ClickEvent.runCommand(command));
+        if (tooltip != null) comp = comp.hoverEvent(HoverEvent.showText(Component.text(tooltip)));
+        if (asChat) player.sendMessage(comp);
+        else player.sendActionBar(comp);
     }
 
     private static class LockHintMessageCooldown {

@@ -22,7 +22,6 @@ import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.RedstoneSettingsHandler;
-import de.sean.blockprot.nbt.LockReturnValue;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -88,18 +87,15 @@ public class RedstoneSettingsInventory extends BlockProtInventory {
     @Override
     public void onClose(@NotNull InventoryCloseEvent event, @NotNull InventoryState state) {
         if (state.friendSearchState == InventoryState.FriendSearchState.FRIEND_SEARCH && state.getBlock() != null) {
-            applyChanges(
-                (Player) event.getPlayer(),
-                (handler) -> {
-                    // Apply new redstone values
-                    RedstoneSettingsHandler redstoneHandler = handler.getRedstoneHandler();
-                    redstoneHandler.setCurrentProtection(currentProtection);
-                    redstoneHandler.setHopperProtection(hopperProtection);
-                    redstoneHandler.setPistonProtection(pistonProtection);
-                    return new LockReturnValue(true, null);
-                },
-                null
-            );
+            // Save directly via handler — works for both owner and manager friends.
+            try {
+                BlockNBTHandler handler = new BlockNBTHandler(state.getBlock());
+                RedstoneSettingsHandler redstoneHandler = handler.getRedstoneHandler();
+                redstoneHandler.setCurrentProtection(currentProtection);
+                redstoneHandler.setHopperProtection(hopperProtection);
+                redstoneHandler.setPistonProtection(pistonProtection);
+                handler.applyToOtherContainer();
+            } catch (RuntimeException ignored) {}
         }
     }
 
@@ -120,8 +116,13 @@ public class RedstoneSettingsInventory extends BlockProtInventory {
         BlockNBTHandler nbtHandler = getNbtHandlerOrNull(state.getBlock());
         if (nbtHandler == null) return inventory;
 
-        // Make sure the player owns this
-        if (!nbtHandler.isOwner(player.getUniqueId().toString())) return inventory;
+        // Allow owner AND manager friends to access redstone settings.
+        boolean isManager = false;
+        if (!nbtHandler.isOwner(player.getUniqueId().toString())) {
+            var friend = nbtHandler.getFriend(player.getUniqueId().toString());
+            if (friend.isEmpty() || !friend.get().isManager()) return inventory;
+            isManager = true;
+        }
 
         RedstoneSettingsHandler redstoneHandler = nbtHandler.getRedstoneHandler();
         currentProtection = redstoneHandler.getCurrentProtection();

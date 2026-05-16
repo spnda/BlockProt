@@ -22,11 +22,10 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.util.SemanticVersion;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -48,6 +47,9 @@ public final class UpdateChecker implements Runnable {
 
     @NotNull
     private final PluginDescriptionFile description;
+    
+    @NotNull
+    private final SemanticVersion currentVersion; // Cache current version at creation time
 
     /**
      * Creates a new update checker. This uses a empty list of players and
@@ -59,6 +61,7 @@ public final class UpdateChecker implements Runnable {
     public UpdateChecker(@NotNull final PluginDescriptionFile description) {
         this.description = description;
         this.recipients = null;
+        this.currentVersion = new SemanticVersion(description.getVersion()); // Cache at creation
     }
 
     /**
@@ -66,24 +69,22 @@ public final class UpdateChecker implements Runnable {
      * that were passed in the list.
      *
      * @param description The plugin.yml file of the plugin. See
-     *                    {@link JavaPlugin#getDescription()}.+
+     *                    {@link JavaPlugin#getDescription()}.
      * @param recipients  The list of players to message.
      */
     public UpdateChecker(@NotNull final PluginDescriptionFile description, @Nullable final List<Player> recipients) {
         this.recipients = recipients;
         this.description = description;
+        this.currentVersion = new SemanticVersion(description.getVersion()); // Cache at creation
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void run() {
         if (latestVersion != null) {
             // Use the cached result.
-            this.sendMessage(new SemanticVersion(description.getVersion()), latestVersion);
+            this.sendMessage(currentVersion, latestVersion);
         } else {
-            // Fetch the newest version.
+            // Fetch the newest version from Spigot API.
             try {
                 // Documentation for API at https://github.com/SpigotMC/XenforoResourceManagerAPI
                 URL url = new URL("https://api.spigotmc.org/simple/0.2/index.php?action=getResource&id=87829");
@@ -95,13 +96,12 @@ public final class UpdateChecker implements Runnable {
                 SpigotResource latest = new Gson().fromJson(reader, SpigotResource.class);
                 SemanticVersion latestVersion = latest.asSemantic();
                 UpdateChecker.latestVersion = latestVersion;
-                SemanticVersion ourVersion = new SemanticVersion(description.getVersion());
 
-                this.sendMessage(ourVersion, latestVersion);
+                this.sendMessage(currentVersion, latestVersion);
 
                 inputStream.close();
             } catch (IOException ignored) {
-
+                // Network error — silently ignore.
             }
         }
     }
@@ -111,22 +111,22 @@ public final class UpdateChecker implements Runnable {
         boolean isOutdated = false;
         if (latestVersion.compareTo(currentVersion) > 0) {
             isOutdated = true;
-            message = description.getName() + " is outdated. Current: " + currentVersion + " / Newest: " + latestVersion;
+            message = description.getName() + " v" + currentVersion + " detected, but v" + latestVersion + " is available.";
         } else if (latestVersion.compareTo(currentVersion) < 0) {
-            message = description.getName() + " is on Version " + currentVersion + ", even though latest is " + latestVersion;
+            message = description.getName() + " is running v" + currentVersion + " (newer than the latest public release v" + latestVersion + ")";
         } else {
-            message = description.getName() + " is up to date. (" + currentVersion + ")";
+            message = description.getName() + " is up to date (v" + currentVersion + ")";
         }
 
         if (this.recipients != null && !this.recipients.isEmpty()) {
-            TextComponent component = new TextComponent(message);
+            var comp = Component.text(message);
             if (isOutdated) {
-                component.setColor(ChatColor.YELLOW);
-                component.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.spigotmc.org/resources/blockprot.87829/"));
-                component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Visit the website to update!")));
+                comp = comp.color(NamedTextColor.YELLOW)
+                    .clickEvent(ClickEvent.openUrl("https://www.spigotmc.org/resources/blockprot.87829/"))
+                    .hoverEvent(HoverEvent.showText(Component.text("Click to visit the SpigotMC resource page")));
             }
             for (Player player : recipients) {
-                player.spigot().sendMessage(component);
+                player.sendMessage(comp);
             }
         } else {
             if (isOutdated) {

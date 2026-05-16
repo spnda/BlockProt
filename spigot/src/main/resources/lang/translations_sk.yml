@@ -1,79 +1,143 @@
-# Slovak translation file
-# All colour codes can be used, as found here: https://www.spigotmc.org/wiki/textcosmetics-colors-and-formats/
-# We would be very happy if you submit your translations onto the
-# GitHub repository: https://github.com/spnda/BlockProt/pulls
-
-# We use ISO 639-1 or 639-2 codes for internationalization, it
-# is however safer to use the ISO 639-1 codes for backwards compatibility.
-# See this link for a good list of all codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes.
 locale: sk
-
 enabled: Povolené
 disabled: Zakázané
+about:
+  title: §x§a§3§c§6§e§bBlockProt {version} - Spigot Plugin
+  original_author: '§7Pôvodný autor: §fspnda'
+  fork_maintainers: '§7Správcovia forku: §fVickey & Reim §8(alias ZarZey)'
+  report_original: §x§c§3§e§e§a§7Nahlásiť problémy (pôvodný plugin)
+  report_fork: §x§6§6§c§6§6§6Nahlásiť problémy (SP26 fork)
 inventories:
-  back: "Späť"
-  last_page: "Posledná strana"
-  next_page: "Ďalšia strana"
-  block_lock: "Uzamknutie bloku"
-  user_settings: "Užívateľské nastavenia"
-  block_info: "Informácie o bloku"
-  lock: "Uzamknúť"
-  unlock: "Odomknúť"
-  lock_on_place: "Automaticky uzamykať"
-  copy_configuration: "Kopírovať nastavenie"
-  paste_configuration: "Použiť skopírované nastavenie"
-  set_block_name: "Nastav meno bloku"
-  inspect_contents: "Skontroluj obsah"
+  back: Späť
+  last_page: Posledná strana
+  next_page: Ďalšia strana
+  block_lock: Uzamknutie bloku
+  user_settings: Užívateľské nastavenia
+  block_info: Informácie o bloku
+  lock: Uzamknúť
+  unlock: Odomknúť
+  lock_on_place: Automaticky uzamykať
+  copy_configuration: Kopírovať nastavenie
+  paste_configuration: Použiť skopírované nastavenie
+  set_block_name: Nastav meno bloku
+  inspect_contents: Skontroluj obsah
   redstone:
-    settings: "Nastavenie pre Redstone"
-    redstone_protection: "Redstonová ochrana"
-    piston_protection: "Ochrana pred piestami"
-    hopper_protection: "Ochrana pred násypníkmi"
-    enable_all: "Povoliť všetko"
-    disable_all: "Zakázať všetko"
+    settings: Nastavenie pre Redstone
+    redstone_protection: Redstonová ochrana
+    piston_protection: Ochrana pred piestami
+    hopper_protection: Ochrana pred násypníkmi
+    enable_all: Povoliť všetko
+    disable_all: Zakázať všetko
   friends:
-    manage: "Správa priateľov"
-    edit: "Uprav priateľa"
-    remove: "Odstráň priateľa"
-    search: "Hľadaj hráčov"
-    search_history: "Hľadaj v histórií"
-    result: "Hráč bol nájdený"
-    the_public: "Verejnosť"
-    the_public_desc: "Reprezantuje všetkých hráčov na tomto serveri."
-    make_public: "Povoľ pre všetkých"
-    permissions: "Oprávnenia"
+    manage: Správa priateľov
+    edit: Uprav priateľa
+    remove: Odstráň priateľa
+    search: Hľadaj hráčov
+    search_history: Hľadaj v histórií
+    result: Hráč bol nájdený
+    the_public: Verejnosť
+    the_public_desc: Reprezantuje všetkých hráčov na tomto serveri.
+    make_public: Povoľ pre všetkých
+    permissions: Oprávnenia
     permission:
-      read: "Čítanie/prezeranie"
-      write: "Zapisovanie/Zmena"
-      manager: "Správca"
+      read: Čítanie/prezeranie
+      write: Zapisovanie/Zmena
+      manager: Správca
   statistics:
-    statistics: "Štatistiky"
-    player_statistics: "Štatistiky hráča"
-    global_statistics: "Server statistics"
-    container_count: "Počet blokov"
-    your_blocks: "Tvoje bloky"
-
+    statistics: Štatistiky
+    player_statistics: Štatistiky hráča
+    global_statistics: Štatistiky servera
+    container_count: Počet blokov
+    your_blocks: Tvoje bloky
+  audit:
+    title: Prístupový denník
+    no_entries: Žiadne záznamy.
+    teleport: Teleportovať sa k bloku
+    open: Prístupový denník
 messages:
-  permission_granted: "Oprávnenie bolo udelené."
-  unlocked: "Odomknuté."
-  no_permission: "Nemáš oprávnenie."
-  friend_added: "Priateľ bol pridaný."
-  friend_removed: "Priateľ bol odstránený."
-  friend_already_added: "Priateľ už bol pridaný."
-  friend_cant_be_removed: "Priateľa nie je možné odstrániť."
-  redstone_added: "Ochrana pred Redstonom bola aktivovaná."
-  redstone_removed: "Ochrana pred Redstonom bola de-aktivovaná."
-  exceeded_max_block_count: "Dosiahol si maximálneho počtu uzamknutých blokov."
-  lock_hint: >
-    §6Bloky môžeš ochrániť prikrčením a kliknutím pravým tlačidlom myši na svoju truhlicu, pec, alebo iné!
-    Pozri si aj príkaz /blockprot settings pre nastavenie podľa svojej chuti.
-    (Klikni sem pre zrušenie tejto nápovedy.)
-  hint_hover_text: "Otvor menu pre plugin BlockProt, alebo klikni sem pre zrušenie nápovedy."
-  disabled_hints: "§6Zrušené nápovedy!"
+  permission_granted: Oprávnenie bolo udelené.
+  unlocked: Odomknuté.
+  no_permission: Nemáš oprávnenie.
+  friend_added: Priateľ bol pridaný.
+  friend_removed: Priateľ bol odstránený.
+  friend_already_added: Priateľ už bol pridaný.
+  friend_cant_be_removed: Priateľa nie je možné odstrániť.
+  redstone_added: Ochrana pred Redstonom bola aktivovaná.
+  redstone_removed: Ochrana pred Redstonom bola deaktivovaná.
+  exceeded_max_block_count: Dosiahol si maximálneho počtu uzamknutých blokov.
+  lock_hint: '§6Bloky môžeš ochrániť prikrčením a kliknutím pravým tlačidlom myši na svoju truhlicu, pec, alebo iné! Pozri
+    si aj príkaz /blockprot settings pre nastavenie podľa svojej chuti. (Klikni sem pre zrušenie tejto nápovedy.)
 
+    '
+  hint_hover_text: Otvor menu pre plugin BlockProt, alebo klikni sem pre zrušenie nápovedy.
+  disabled_hints: §6Zrušené nápovedy!
+  chat_input_prompt: '§eZadaj meno hráča §7(§bTab§7 návrhy · §aEnter§7 potvrdiť · §c{cancel}§7 zrušiť):'
+  chat_input_cancel_word: zrusit
+  chat_input_cancelled: §cHľadanie zrušené.
+  lock_on_place_success: §aBlok uzamknutý!
+  friends_searching: §eHľadám §f{player}§e...
+  friends_addall_success: §a§f{player}§a pridaný ako priateľ do §f{count}§a bloku/blokov.
+  friends_addall_usage: '§cPoužitie: /blockprot friends addall <hráč>'
+  inactivity_cleanup_done: '§e[BlockProt] Čistenie neaktivity: §f{count}§e blok/blokov uvoľnených.'
+  friends_list_title: §6Tvoji priatelia
+worlds:
+  scan_start: '[BlockProt] Skenovanie svetov... ({count} načítaných)'
+  scan_world_added: '[BlockProt] Svet ''{world}'' pridaný do worlds.yml — ochrana VYPNUTÁ predvolene. Zapni ručne.'
+  scan_complete: '[BlockProt] Skenovanie dokončené. {added} nový/nové svety zaregistrované.'
+claims:
+  wand_pos_a: §bRoh A nastavený na §f({x}, {y}, {z})§b. Teraz klikni pravým tlačidlom na roh B.
+  wand_pos_b: §bRoh B nastavený na §f({x}, {y}, {z})§b. Napíš názov do chatu pre vytvorenie parcely.
+  created: '§aParcela §6{name} §avytvorená! Oblasť: §f{x1},{y1},{z1} §a→ §f{x2},{y2},{z2} §7(svet: {world}).'
+  deleted: §aParcela §6{name} §aodstránená.
+  no_claim_here: §cNa tvojej aktuálnej pozícii nie je žiadna parcela.
+  overlap: §cTáto oblasť sa prekrýva s parcelou iného hráča.
+  no_permission: §cNemáš oprávnenie upravovať túto parcelu.
+  list_header: '§6Tvoje aktívne parcely:'
+  name_prompt: '§eNapíš názov pre svoju parcelu do chatu. §7(Napíš §c{cancel}§7 pre zrušenie):'
+  name_cancel_word: zrusit
+  name_cancelled: §cVytváranie parcely zrušené.
+  name_too_long: §cNázov je príliš dlhý. Maximum {max} znakov.
+  name_invalid: §cNeplatný názov. Používaj iba písmená, číslice, medzery, podčiarkovníky alebo pomlčky.
+  wand_removed: §7Palica parcely odstránená.
+  timeout: §cČasový limit vypršal. Použi palicu znova.
+  flags:
+    title: Nastavenia parcely
+    fire: Šírenie ohňa
+    tnt: TNT / Výbuchy
+    redstone: Redstone (ostatnými)
+    pvp: PvP
+    flow: Water & Lava flow
+    leaf_decay: Leaf decay
+    mob_spawning: Mob spawning
+    chest: Container access (non-members)
+    door: Door / Trapdoor use (non-members)
+    lever_button: Lever & Button use (non-members)
+    use_bucket: Bucket use (non-members)
+    pet_spawning: Pet taming (non-members)
+    pet_riding: Pet riding (non-members)
+    pet_moving: Lead animals in (non-members)
+    invincible: Invincible zone (no damage)
+    deny_enderpearl: Allow ender pearl entry
+  welcome_set: §aWelcome message set for claim §6{name}§a.
+  welcome_cleared: §7Welcome message cleared for claim §6{name}§7.
+  welcome_prompt: '§eType the welcome message in chat (supports §r&§e colour codes). §7Type §c{cancel}§7 to abort:'
+  delete_confirm_title: §cConfirm deletion
+  delete_yes: §c§lDelete claim
+  delete_cancel: §a§lKeep claim
+  hub:
+    title: Claim Management
+    info: §6Claim Info
+    flags: §6Flags
+    delete: §cDelete Claim
+    wand: §eGet Wand
+    my_claims: §eMy Claims
+    welcome: §eWelcome Message
 integrations:
   lands:
     protect_containers_flag_name: Ochráň kontajnery (BlockProt)
-    protect_containers_desc: Povolí hráčom chrániť truhlice, prece, ...
-    require_protect_for_friends_flag_name: Pre priateľov sa vyžaduje oprávnenie "Protect containers" (BlockProt)
-    require_protect_for_friends_desc: Len hráči s označením "Protect containers" môžu byť pridaný ako priatelia.
+    protect_containers_desc: Povolí hráčom chrániť truhlice, pece, ...
+    require_protect_for_friends_flag_name: Pre priateľov sa vyžaduje "Ochrana kontajnerov" (BlockProt)
+    require_protect_for_friends_desc: Len hráči s označením "Ochrana kontajnerov" môžu byť pridaní ako priatelia.
+help:
+  header: §6=== Pomocník BlockProt ===
+  footer: §6==================

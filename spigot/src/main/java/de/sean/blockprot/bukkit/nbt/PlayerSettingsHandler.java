@@ -20,6 +20,7 @@ package de.sean.blockprot.bukkit.nbt;
 
 import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.inventories.InventoryConstants;
+import de.sean.blockprot.bukkit.storage.HybridDatabase;
 import de.sean.blockprot.util.BlockProtUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
@@ -203,6 +204,30 @@ public final class PlayerSettingsHandler extends FriendSupportingHandler<NBTComp
      */
     public void setHasPlayerInteractedWithMenu(boolean bool) {
         container.setBoolean(PLAYER_HAS_INTERACTED_WITH_MENU, bool);
+    }
+
+    @Override
+    public void addFriend(@NotNull final String friend) {
+        super.addFriend(friend);
+        try {
+            HybridDatabase hybridDatabase = BlockProt.getHybridDatabase();
+            if (hybridDatabase != null) {
+                hybridDatabase.addGlobalTrust(player.getUniqueId(), UUID.fromString(friend));
+            }
+        } catch (IllegalArgumentException ignored) {
+        }
+    }
+
+    @Override
+    public void removeFriend(@NotNull final String friend) {
+        super.removeFriend(friend);
+        try {
+            HybridDatabase hybridDatabase = BlockProt.getHybridDatabase();
+            if (hybridDatabase != null) {
+                hybridDatabase.removeGlobalTrust(player.getUniqueId(), UUID.fromString(friend));
+            }
+        } catch (IllegalArgumentException ignored) {
+        }
     }
 
     /**

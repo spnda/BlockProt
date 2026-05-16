@@ -122,7 +122,7 @@ public final class FriendManageInventory extends BlockProtInventory {
                     closeAndOpen(player, inv);
                 }
             }
-            case MAP -> FriendSearchInventory.openAnvilInventory(player);
+            case MAP -> FriendSearchInventory.openChatInput(player);
             case BOOK -> closeAndOpen(player, new FriendSearchHistoryInventory().fill(player));
             case WITHER_SKELETON_SKULL -> {
                 applyChanges(

@@ -20,29 +20,40 @@ package de.sean.blockprot.bukkit;
 
 import com.google.common.collect.Sets;
 import de.sean.blockprot.nbt.LockReturnValue;
-import de.sean.blockprot.util.BlockProtUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 
 /**
  * Helper to quickly obtain translations from a config by a enum key.
  *
+ * <h3>Auto-reparación SP26</h3>
+ * <p>Cuando una clave falta en el archivo de idioma activo pero existe en el inglés por defecto,
+ * se usa silenciosamente el valor en inglés. Sólo se emite <em>una única línea de resumen</em>
+ * en la consola (nivel INFO); todos los detalles se envían al log de sesión de
+ * {@link BlockProtLogger} para no saturar la consola del servidor.</p>
+ *
  * @since 0.1.10
  */
 public final class Translator {
     /**
-     * The list of all included translation files. This is updated at compile
-     * time from our gradle buildscript.
+     * The list of all included translation files.
      */
-    public static final HashSet<String> DEFAULT_TRANSLATION_FILES = Sets.newHashSet(BlockProtUtil.parseStringList("$TRANSLATION_FILES"));
+    public static final HashSet<String> DEFAULT_TRANSLATION_FILES = Sets.newHashSet(
+        "translations_cs.yml", "translations_de.yml", "translations_en.yml",
+        "translations_es.yml", "translations_fr.yml", "translations_it.yml",
+        "translations_ja.yml", "translations_ko.yml", "translations_pl.yml",
+        "translations_pt-br.yml", "translations_ru.yml", "translations_sk.yml",
+        "translations_tr.yml", "translations_zh-CN.yml", "translations_zh-TW.yml"
+    );
 
     /**
-     * The default locale we use for default translation
-     * values.
+     * The default locale we use for default translation values.
      *
      * @since 0.4.6
      */
@@ -59,8 +70,7 @@ public final class Translator {
     private static final HashMap<TranslationKey, TranslationValue> values = new HashMap<>();
 
     /**
-     * Represents the locale of the translated values. Defaults
-     * to being {@link #defaultLocale}.
+     * Represents the locale of the translated values. Defaults to {@link #defaultLocale}.
      *
      * @since 0.4.6
      */
@@ -76,61 +86,79 @@ public final class Translator {
     }
 
     /**
-     * Initialize the translations from given configuration and sets the
-     * internal locale to a locale, which is read from the configs themselves.
-     * If the configurations do not provide a locale, we instead use
-     * {@link Locale#ROOT}.
+     * Initialize the translations from given configuration and sets the internal locale.
      *
-     * @param defaultConfig The default configuration we use to get the default
-     *                      translation values.
-     * @param config        the configuration to load translations from. See
-     *                      <a href="https://github.com/spnda/BlockProt/blob/master/src/main/resources/translations_en.yml">translations_en.yml</a> for
-     *                      an example.
+     * <p><b>Auto-reparación (SP26):</b> Las claves que falten en {@code config} pero existan
+     * en {@code defaultConfig} se rellenan silenciosamente con el valor en inglés. Sólo se
+     * muestra <em>una línea de resumen</em> en la consola; los detalles van al log de sesión.</p>
+     *
+     * @param defaultConfig La configuración inglesa de referencia (translations_en.yml).
+     * @param config        La configuración del idioma activo.
      * @since 0.4.6
      */
-    public static void loadFromConfigs(@NotNull final YamlConfiguration defaultConfig, @NotNull final YamlConfiguration config) {
-        String locale = config.getString("locale");
-        Translator.locale = (locale == null)
-            ? Locale.ROOT
-            : new Locale(locale);
+    public static void loadFromConfigs(@NotNull final YamlConfiguration defaultConfig,
+                                       @NotNull final YamlConfiguration config) {
+        String localeStr = config.getString("locale");
+        Translator.locale = (localeStr == null) ? Locale.ROOT : new Locale(localeStr);
 
-        long missingValues = 0, totallyMissingValues = 0;
+        final String langFile = BlockProt.getDefaultConfig().getLanguageFile();
         TranslationKey[] translations = TranslationKey.values();
+
+        // Listas para el resumen — sin emit individual por clave
+        List<String> missingInBoth   = new ArrayList<>();
+        List<String> missingInActive = new ArrayList<>();
+
         for (TranslationKey translation : translations) {
             String translationKey = translation.toString();
 
-            // Directly set keys to unknown values when both configs don't
-            if (!defaultConfig.contains(translationKey, true) &&
-                !config.contains(translationKey, true)) {
+            // Clave ausente en AMBOS archivos → valor desconocido
+            if (!defaultConfig.contains(translationKey, true)
+                    && !config.contains(translationKey, true)) {
                 values.put(translation, TranslationValue.UNKNOWN_TRANSLATION_VALUE);
-                ++totallyMissingValues;
+                missingInBoth.add(translationKey);
                 continue;
             }
 
-            // Get the default config value. Set it to
-            // UNKNOWN_TRANSLATION if we don't have it.
+            // Valor del archivo inglés (fallback)
             Object defaultValue = defaultConfig.get(translationKey);
             TranslationValue translatedValue =
                 (defaultValue instanceof String)
                     ? new TranslationValue((String) defaultValue)
                     : TranslationValue.UNKNOWN_TRANSLATION_VALUE;
 
-            Object newTranslatedValue = config.get(translationKey);
-            if (newTranslatedValue instanceof String) {
-                translatedValue.setTranslatedValue((String) newTranslatedValue);
+            // Valor del archivo del idioma activo
+            Object activeValue = config.get(translationKey);
+            if (activeValue instanceof String) {
+                translatedValue.setTranslatedValue((String) activeValue);
             } else {
-                ++missingValues;
+                // Falta en el idioma activo → se usa el inglés silenciosamente
+                missingInActive.add(translationKey);
             }
 
             values.put(translation, translatedValue);
         }
 
-        if (missingValues > 0)
-            BlockProt.getInstance().getLogger().warning("At least " + missingValues
-                + " translations have not been found in config: " + BlockProt.getDefaultConfig().getLanguageFile());
-        if (totallyMissingValues > 0)
-            BlockProt.getInstance().getLogger().warning("At least " + totallyMissingValues
-                + " translations have not been found in any config.");
+        // ── Enviar detalles al log de sesión (NO a la consola) ───────────────
+        if (!missingInBoth.isEmpty()) {
+            BlockProtLogger.log("Translator",
+                "Claves ausentes en EN + " + langFile + " (" + missingInBoth.size() + "): "
+                + String.join(", ", missingInBoth));
+        }
+        if (!missingInActive.isEmpty()) {
+            BlockProtLogger.log("Translator",
+                "Claves en inglés usadas como fallback en " + langFile
+                + " (" + missingInActive.size() + "): "
+                + String.join(", ", missingInActive));
+        }
+
+        // ── Una sola línea de resumen en consola si hay algo que reportar ─────
+        int total = missingInBoth.size() + missingInActive.size();
+        if (total > 0) {
+            BlockProt.getInstance().getLogger().info(
+                "Translations: " + total + " incomplete key(s) in "
+                + langFile + "; " + missingInActive.size() + " using English fallback, "
+                + missingInBoth.size() + " missing in both files. Details are in the session log.");
+        }
     }
 
     /**
@@ -145,9 +173,7 @@ public final class Translator {
     @NotNull
     public static String get(@NotNull final TranslationKey key) {
         TranslationValue value = values.get(key);
-        return value == null
-            ? DEFAULT_FALLBACK
-            : value.getValue();
+        return value == null ? DEFAULT_FALLBACK : value.getValue();
     }
 
     /**
@@ -165,9 +191,7 @@ public final class Translator {
     }
 
     /**
-     * Get the currently used for the current translator. This value
-     * is used to identify the translation file and might be useful
-     * for knowing the language used by this plugin.
+     * Get the currently used locale for the current translator.
      *
      * @return The locale of translations.
      * @since 0.4.6
@@ -179,7 +203,7 @@ public final class Translator {
 
     /**
      * Clears all translations.
-     * 
+     *
      * @since 1.0.0
      */
     public static void resetTranslations() {

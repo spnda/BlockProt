@@ -1,7 +1,12 @@
----
 locale: ko
 enabled: 활성화
 disabled: 비활성화
+about:
+  title: §x§a§3§c§6§e§bBlockProt {version} - Spigot Plugin
+  original_author: '§7원래 작성자: §fspnda'
+  fork_maintainers: '§7포크 관리자: §fVickey & Reim §8(별칭 ZarZey)'
+  report_original: §x§c§3§e§e§a§7문제 보고 (원본 플러그인)
+  report_fork: §x§6§6§c§6§6§6문제 보고 (SP26 포크)
 inventories:
   back: 뒤로
   last_page: 마지막 페이지
@@ -43,7 +48,12 @@ inventories:
     player_statistics: 플레이어 통계
     global_statistics: 서버 통계
     container_count: 개수
-    your_blocks: '당신의 블록 '
+    your_blocks: 당신의 블록
+  audit:
+    title: 접근 로그
+    no_entries: 항목이 없습니다.
+    teleport: 블록으로 이동
+    open: 접근 로그
 messages:
   permission_granted: 권한이 생성되었습니다.
   unlocked: 잠금이 해제되었습니다.
@@ -55,13 +65,78 @@ messages:
   redstone_added: 레드스톤 보호가 추가되었습니다.
   redstone_removed: 레드스톤 보호가 삭제되었습니다.
   exceeded_max_block_count: 잠글 수 있는 최대 블록 수를 초과했습니다.
-  lock_hint: "§6상자, 용광로 등을 웅크리고 오른쪽 클릭하여 블록을 보호할 수 있습니다! 또한 /blockprot 설정을 확인하여 원하는
-    대로 구성하십시오. (이 힌트를 비활성화하려면 여기를 클릭하십시오.)\n"
+  lock_hint: '§6상자, 용광로 등을 웅크리고 오른쪽 클릭하여 블록을 보호할 수 있습니다! 또한 /blockprot 설정을 확인하여 원하는 대로 구성하십시오. (이 힌트를 비활성화하려면 여기를 클릭하십시오.)
+
+    '
   hint_hover_text: 힌트를 비활성화하려면 BlockProt에서 메뉴를 열거나 여기를 클릭하십시오.
-  disabled_hints: "§6힌트 비활성화!"
+  disabled_hints: §6힌트 비활성화!
+  chat_input_prompt: '§e플레이어 이름을 입력하세요 §7(§bTab§7 제안 · §aEnter§7 확인 · §c{cancel}§7 취소):'
+  chat_input_cancel_word: 취소
+  chat_input_cancelled: §c검색이 취소되었습니다.
+  lock_on_place_success: §a블록이 잠겼습니다!
+  friends_searching: §e§f{player}§e 검색 중...
+  friends_addall_success: §a§f{player}§a을(를) §f{count}§a 블록에 친구로 추가했습니다.
+  friends_addall_usage: '§c사용법: /blockprot friends addall <플레이어>'
+  inactivity_cleanup_done: '§e[BlockProt] 비활성 정리: §f{count}§e 블록이 해제되었습니다.'
+  friends_list_title: §6당신의 친구들
+worlds:
+  scan_start: '[BlockProt] 세계 검색 중... ({count} 로드됨)'
+  scan_world_added: '[BlockProt] 세계 ''{world}''가 worlds.yml에 추가되었습니다 — 보호가 기본적으로 비활성화되어 있습니다. 수동으로 활성화하세요.'
+  scan_complete: '[BlockProt] 검색 완료. {added}개의 새로운 세계가 등록되었습니다.'
+claims:
+  wand_pos_a: §b코너 A가 §f({x}, {y}, {z})§b에 설정되었습니다. 이제 코너 B를 우클릭하세요.
+  wand_pos_b: §b코너 B가 §f({x}, {y}, {z})§b에 설정되었습니다. 채팅에 이름을 입력하여 구역을 생성하세요.
+  created: '§a구역 §6{name}§a이 생성되었습니다! 영역: §f{x1},{y1},{z1} §a→ §f{x2},{y2},{z2} §7(세계: {world}).'
+  deleted: §a구역 §6{name}§a이 삭제되었습니다.
+  no_claim_here: §c현재 위치에 구역이 없습니다.
+  overlap: §c이 영역은 다른 플레이어의 구역과 겹칩니다.
+  no_permission: §c이 구역을 수정할 권한이 없습니다.
+  list_header: '§6활성 구역 목록:'
+  name_prompt: '§e채팅에 구역 이름을 입력하세요. §7(§c{cancel}§7 입력으로 취소):'
+  name_cancel_word: 취소
+  name_cancelled: §c구역 생성이 취소되었습니다.
+  name_too_long: §c이름이 너무 깁니다. 최대 {max}자입니다.
+  name_invalid: §c잘못된 이름입니다. 문자, 숫자, 공백, 밑줄 또는 하이픈만 사용하세요.
+  wand_removed: §7구역 완드가 제거되었습니다.
+  timeout: §c시간이 초과되었습니다. 완드를 다시 사용하세요.
+  flags:
+    title: 구역 설정
+    fire: 불 확산
+    tnt: TNT / 폭발
+    redstone: 레드스톤 (다른 사람에 의해)
+    pvp: PvP
+    flow: Water & Lava flow
+    leaf_decay: Leaf decay
+    mob_spawning: Mob spawning
+    chest: Container access (non-members)
+    door: Door / Trapdoor use (non-members)
+    lever_button: Lever & Button use (non-members)
+    use_bucket: Bucket use (non-members)
+    pet_spawning: Pet taming (non-members)
+    pet_riding: Pet riding (non-members)
+    pet_moving: Lead animals in (non-members)
+    invincible: Invincible zone (no damage)
+    deny_enderpearl: Allow ender pearl entry
+  welcome_set: §aWelcome message set for claim §6{name}§a.
+  welcome_cleared: §7Welcome message cleared for claim §6{name}§7.
+  welcome_prompt: '§eType the welcome message in chat (supports §r&§e colour codes). §7Type §c{cancel}§7 to abort:'
+  delete_confirm_title: §cConfirm deletion
+  delete_yes: §c§lDelete claim
+  delete_cancel: §a§lKeep claim
+  hub:
+    title: Claim Management
+    info: §6Claim Info
+    flags: §6Flags
+    delete: §cDelete Claim
+    wand: §eGet Wand
+    my_claims: §eMy Claims
+    welcome: §eWelcome Message
 integrations:
   lands:
-    protect_containers_flag_name: 보호받고 있는 보관함입니다. (BlockProt)
+    protect_containers_flag_name: 보관함 보호 (BlockProt)
     protect_containers_desc: 플레이어가 상자, 용광로 등을 보호할 수 있습니다.
     require_protect_for_friends_flag_name: 친구를 위해 "보관함 보호"가 필요합니다. (BlockProt)
     require_protect_for_friends_desc: '"보관함 보호" 권한이 있는 플레이어만 친구로 추가할 수 있습니다.'
+help:
+  header: §6=== BlockProt 도움말 ===
+  footer: §6==================

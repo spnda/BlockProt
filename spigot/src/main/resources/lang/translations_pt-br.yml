@@ -1,21 +1,26 @@
----
 locale: pt-BR
 enabled: Habilitado
 disabled: Desabilitado
+about:
+  title: §x§a§3§c§6§e§bBlockProt {version} - Spigot Plugin
+  original_author: '§7Autor original: §fspnda'
+  fork_maintainers: '§7Mantenedores do fork: §fVickey & Reim §8(alias ZarZey)'
+  report_original: §x§c§3§e§e§a§7Reportar problemas (plugin original)
+  report_fork: §x§6§6§c§6§6§6Reportar problemas (fork SP26)
 inventories:
   back: Voltar
   last_page: Última página
   next_page: Próxima página
   block_lock: Bloco Trancado
   user_settings: Configurações do Usuário
-  block_info: Bloquear informações
+  block_info: Informações do Bloco
   lock: Trancar
   unlock: Destrancar
   lock_on_place: Trancar automaticamente
   copy_configuration: Copiar configuração
   paste_configuration: Colar configuração
   set_block_name: Definir nome do bloco
-  inspect_contents: Inspecione o conteúdo
+  inspect_contents: Inspecionar conteúdo
   redstone:
     settings: Configurações de Redstone
     redstone_protection: Proteção de redstone
@@ -25,8 +30,8 @@ inventories:
     disable_all: Desativar tudo
   friends:
     manage: Gerenciar amigos
-    edit: Editar amigos
-    remove: Remover amigos
+    edit: Editar amigo
+    remove: Remover amigo
     search: Pesquisar jogadores
     search_history: Histórico de busca
     result: Jogadores encontrados
@@ -39,11 +44,16 @@ inventories:
       write: Escrever
       manager: Gerenciar
   statistics:
-    statistics: Estatisticas
+    statistics: Estatísticas
     player_statistics: Estatísticas do jogador
     global_statistics: Estatísticas do servidor
     container_count: Contagem de blocos
     your_blocks: Seus blocos
+  audit:
+    title: Registro de acesso
+    no_entries: Nenhuma entrada encontrada.
+    teleport: Teleportar para o bloco
+    open: Registro de acesso
 messages:
   permission_granted: Permissão garantida.
   unlocked: Desbloqueado.
@@ -55,17 +65,80 @@ messages:
   redstone_added: Proteção Redstone adicionada.
   redstone_removed: Proteção Redstone removida.
   exceeded_max_block_count: Você excedeu a contagem máxima de blocos bloqueáveis.
-  lock_hint: "§6Você pode proteger seus blocos agachando-se e clicando com o botão
-    direito do mouse em seus baús, fornalhas e muito mais! Além disso, verifique as
-    configurações de /blockprot para configurá-lo ao seu gosto. (Clique aqui para
-    desativar essas dicas.)\n"
+  lock_hint: '§6Você pode proteger seus blocos agachando-se e clicando com o botão direito do mouse em seus baús, fornalhas
+    e muito mais! Além disso, verifique as configurações de /blockprot para configurá-lo ao seu gosto. (Clique aqui para desativar
+    essas dicas.)
+
+    '
   hint_hover_text: Abra um menu do BlockProt ou clique aqui para desativar as dicas.
-  disabled_hints: "§6Dicas desativadas!"
+  disabled_hints: §6Dicas desativadas!
+  chat_input_prompt: '§eDigite o nome do jogador §7(§bTab§7 sugestões · §aEnter§7 confirmar · §c{cancel}§7 cancelar):'
+  chat_input_cancel_word: cancelar
+  chat_input_cancelled: §cBusca cancelada.
+  lock_on_place_success: §aBloco trancado!
+  friends_searching: §eProcurando §f{player}§e...
+  friends_addall_success: §a§f{player}§a adicionado como amigo em §f{count}§a bloco(s).
+  friends_addall_usage: '§cUso: /blockprot friends addall <jogador>'
+  inactivity_cleanup_done: '§e[BlockProt] Limpeza de inatividade: §f{count}§e bloco(s) liberado(s).'
+  friends_list_title: §6Seus amigos
+worlds:
+  scan_start: '[BlockProt] Verificando mundos... ({count} carregados)'
+  scan_world_added: '[BlockProt] Mundo ''{world}'' adicionado ao worlds.yml — proteção DESATIVADA por padrão. Ative manualmente.'
+  scan_complete: '[BlockProt] Verificação concluída. {added} novo(s) mundo(s) registrado(s).'
+claims:
+  wand_pos_a: §bCanto A definido em §f({x}, {y}, {z})§b. Agora clique com o botão direito no canto B.
+  wand_pos_b: §bCanto B definido em §f({x}, {y}, {z})§b. Digite um nome no chat para criar a área.
+  created: '§aÁrea §6{name} §acriada! Região: §f{x1},{y1},{z1} §a→ §f{x2},{y2},{z2} §7(mundo: {world}).'
+  deleted: §aÁrea §6{name} §aexcluída.
+  no_claim_here: §cNão há nenhuma área na sua localização atual.
+  overlap: §cEsta área se sobrepõe à área de outro jogador.
+  no_permission: §cVocê não tem permissão para modificar esta área.
+  list_header: '§6Suas áreas ativas:'
+  name_prompt: '§eDigite um nome para sua área no chat. §7(Digite §c{cancel}§7 para cancelar):'
+  name_cancel_word: cancelar
+  name_cancelled: §cCriação de área cancelada.
+  name_too_long: §cNome muito longo. Máximo {max} caracteres.
+  name_invalid: §cNome inválido. Use apenas letras, números, espaços, sublinhados ou hífens.
+  wand_removed: §7Varinha de área removida.
+  timeout: §cTempo esgotado. Por favor, use a varinha novamente.
+  flags:
+    title: Opções da área
+    fire: Propagação de fogo
+    tnt: TNT / Explosões
+    redstone: Redstone (por outros)
+    pvp: PvP
+    flow: Water & Lava flow
+    leaf_decay: Leaf decay
+    mob_spawning: Mob spawning
+    chest: Container access (non-members)
+    door: Door / Trapdoor use (non-members)
+    lever_button: Lever & Button use (non-members)
+    use_bucket: Bucket use (non-members)
+    pet_spawning: Pet taming (non-members)
+    pet_riding: Pet riding (non-members)
+    pet_moving: Lead animals in (non-members)
+    invincible: Invincible zone (no damage)
+    deny_enderpearl: Allow ender pearl entry
+  welcome_set: §aWelcome message set for claim §6{name}§a.
+  welcome_cleared: §7Welcome message cleared for claim §6{name}§7.
+  welcome_prompt: '§eType the welcome message in chat (supports §r&§e colour codes). §7Type §c{cancel}§7 to abort:'
+  delete_confirm_title: §cConfirm deletion
+  delete_yes: §c§lDelete claim
+  delete_cancel: §a§lKeep claim
+  hub:
+    title: Claim Management
+    info: §6Claim Info
+    flags: §6Flags
+    delete: §cDelete Claim
+    wand: §eGet Wand
+    my_claims: §eMy Claims
+    welcome: §eWelcome Message
 integrations:
   lands:
     protect_containers_flag_name: Proteger contêineres (BlockProt)
     protect_containers_desc: Permite que um jogador proteja baús, fornos, ...
-    require_protect_for_friends_flag_name: Exigir "Proteger contêineres" para amigos
-      (BlockProt)
-    require_protect_for_friends_desc: Apenas jogadores com a permissão "Proteger contêineres"
-      podem ser adicionados como amigos.
+    require_protect_for_friends_flag_name: Exigir "Proteger contêineres" para amigos (BlockProt)
+    require_protect_for_friends_desc: Apenas jogadores com a permissão "Proteger contêineres" podem ser adicionados como amigos.
+help:
+  header: §6=== Ajuda BlockProt ===
+  footer: §6==================

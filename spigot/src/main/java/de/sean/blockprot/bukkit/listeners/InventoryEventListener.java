@@ -27,8 +27,7 @@ import de.sean.blockprot.bukkit.inventories.BlockProtInventory;
 import de.sean.blockprot.bukkit.inventories.InventoryState;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.FriendHandler;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.Container;
@@ -194,11 +193,8 @@ public class InventoryEventListener implements Listener {
         }
     }
 
-    private void sendMessage(@NotNull HumanEntity player, @NotNull String component) {
-        if (!(player instanceof Player)) return;
-        ((Player) player).spigot().sendMessage(
-            ChatMessageType.ACTION_BAR,
-            TextComponent.fromLegacyText(component)
-        );
+    private void sendMessage(@NotNull HumanEntity player, @NotNull String text) {
+        if (!(player instanceof Player p)) return;
+        p.sendActionBar(LegacyComponentSerializer.legacySection().deserialize(text));
     }
 }

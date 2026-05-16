@@ -2,6 +2,12 @@
 locale: es
 enabled: Activado
 disabled: Desactivado
+about:
+  title: "§x§a§3§c§6§e§bBlockProt {version} - Spigot Plugin"
+  original_author: "§7Autor original: §fspnda"
+  fork_maintainers: "§7Mantenedores del fork: §fVickey & Reim §8(alias ZarZey)"
+  report_original: "§x§c§3§e§e§a§7Reportar problemas (plugin original)"
+  report_fork: "§x§6§6§c§6§6§6Reportar problemas (fork SP26)"
 inventories:
   back: Atrás
   last_page: Última página
@@ -44,6 +50,11 @@ inventories:
     global_statistics: Estadísticas del servidor
     container_count: Número de bloques
     your_blocks: Tus bloques
+  audit:
+    title: "Registro de Accesos"
+    no_entries: "Sin registros."
+    teleport: "Teletransportarse al bloque"
+    open: "Registro de Accesos"
 messages:
   permission_granted: Protegido.
   unlocked: Desprotegido.
@@ -52,20 +63,94 @@ messages:
   friend_removed: Permiso eliminado.
   friend_already_added: Ya tiene permiso.
   friend_cant_be_removed: No se puede retirar el permiso.
-  redstone_added: Se ha añadido protección contra Redstone.
-  redstone_removed: Se ha eliminado la protección contra Redstone.
+  redstone_added: "Se ha añadido protección contra Redstone."
+  redstone_removed: "Se ha eliminado la protección contra Redstone."
   exceeded_max_block_count: Has excedido el número máximo de bloques bloqueables.
-  lock_hint: "§6Puedes proteger tus bloques agachándote y haciendo clic derecho en
-    tus cofres, hornos, ¡y mucho más! Además, echa un vistazo a los ajustes con /blockprot
-    settings para configurarlo a tu gusto. (Haz clic aquí para desactivar estas sugerencias).\n"
-  hint_hover_text: Abra un menú desde blockport o haga clic aquí para desactivar las
-    sugerencias
-  disabled_hints: "§6Desactivar sugerencias!"
+  lock_hint: "§6Puedes proteger tus bloques agachándote y haciendo clic derecho en tus cofres, hornos, ¡y mucho más! Además, echa un vistazo a los ajustes con /blockprot settings para configurarlo a tu gusto. (Haz clic aquí para desactivar estas sugerencias).\n"
+  hint_hover_text: "Abra un menú desde blockprot o haga clic aquí para desactivar las sugerencias"
+  disabled_hints: "§6¡Sugerencias desactivadas!"
+  chat_input_prompt: "§eEscribe el nombre del jugador §7(§bTab§7 sugerencias · §aEnter§7 confirmar · §c{cancel}§7 cancelar):"
+  chat_input_cancel_word: "cancelar"
+  chat_input_cancelled: "§cBúsqueda cancelada."
+  lock_on_place_success: "§aBloque protegido!"
+  # Mensaje temporal en action-bar mientras se busca un jugador. {player} = nombre buscado.
+  friends_searching: "§eBuscando a §f{player}§e..."
+  friends_addall_success: "§a§f{player}§a añadido como amigo en §f{count}§a bloque(s)."
+  friends_addall_usage: "§cUso: /blockprot friends addall <jugador>"
+  inactivity_cleanup_done: "§eLimpieza de inactividad: §f{count}§e bloque(s) liberado(s)."
+  friends_list_title: "§6Tus amigos"
+console:
+  config_change_detected: "Cambio detectado en configuracion; recargando..."
+  config_reloaded: "Configuracion recargada automaticamente."
+  filewatcher_error: "Error del monitor de archivos: {error}"
+  audit_logger_started: "Registro de auditoria iniciado."
+  audit_logger_failed: "No se pudo iniciar el registro de auditoria: {error}"
+  worldedit_listener_enabled: "Listener de auto-proteccion de pegados WorldEdit activado."
+  claims_system_enabled: "Sistema de parcelas activado."
+  claims_system_disabled: "Sistema de parcelas desactivado (claims_enabled=false)."
+  worlds_yml_syntax_error: "worlds.yml tiene un error de sintaxis YAML; restaurando valores por defecto: {error}"
+  worlds_yml_restored: "worlds.yml restaurado desde los valores internos."
+  worlds_yml_restore_failed: "No se pudo restaurar worlds.yml: {error}"
+  worlds_yml_save_failed: "No se pudo guardar worlds.yml: {error}"
+
+worlds:
+  scan_start: "Escaneando mundos... ({count} cargados)"
+  scan_world_added: "Mundo '{world}' agregado a worlds.yml con proteccion activada."
+  scan_complete: "Escaneo de mundos completado: {count} mundo(s) detectado(s), {added} agregado(s) a worlds.yml. Detalles en el log de sesion."
+claims:
+  wand_pos_a: "§bEsquina A establecida en §f({x}, {y}, {z})§b. Ahora haz clic derecho en la esquina B."
+  wand_pos_b: "§bEsquina B establecida en §f({x}, {y}, {z})§b. Escribe un nombre en el chat para crear la parcela."
+  created: "§aParcela §6{name} §acreada. Región: §f{x1},{y1},{z1} §a→ §f{x2},{y2},{z2} §7(mundo: {world})."
+  deleted: "§aParcela §6{name} §aeliminada."
+  no_claim_here: "§cNo hay ninguna parcela en tu ubicación actual."
+  overlap: "§cEsta área se superpone con la parcela de otro jugador."
+  no_permission: "§cNo tienes permiso para modificar esta parcela."
+  list_header: "§6Tus parcelas activas:"
+  name_prompt: "§eEscribe un nombre para tu parcela en el chat. §7(Escribe §c{cancel}§7 para cancelar):"
+  name_cancel_word: "cancelar"
+  name_cancelled: "§cCreación de parcela cancelada."
+  name_too_long: "§cEl nombre es demasiado largo. Máximo {max} caracteres."
+  name_invalid: "§cNombre inválido. Usa solo letras, números, espacios, guiones bajos o guiones."
+  wand_removed: "§7Varita de parcela eliminada."
+  timeout: "§cTiempo de espera agotado. Por favor usa la varita de nuevo."
+  welcome_set: "§aMensaje de bienvenida establecido para la parcela §6{name}§a."
+  welcome_cleared: "§7Mensaje de bienvenida eliminado para la parcela §6{name}§7."
+  welcome_prompt: "§eEscribe el mensaje de bienvenida en el chat (soporta códigos de color &). §7Escribe §c{cancel}§7 para cancelar:"
+  delete_confirm_title: "§cConfirmar eliminación"
+  delete_yes: "§c§lEliminar parcela"
+  delete_cancel: "§a§lConservar parcela"
+  flags:
+    title: "Opciones de la parcela"
+    fire: "Propagación de fuego"
+    tnt: "TNT / Explosiones"
+    redstone: "Redstone (por otros)"
+    pvp: "PvP"
+    flow: "Flujo de agua y lava"
+    leaf_decay: "Caída de hojas"
+    mob_spawning: "Aparición de monstruos"
+    chest: "Acceso a contenedores (no miembros)"
+    door: "Uso de puertas (no miembros)"
+    lever_button: "Palancas y botones (no miembros)"
+    use_bucket: "Uso de cubos (no miembros)"
+    pet_spawning: "Domar mascotas (no miembros)"
+    pet_riding: "Montar mascotas (no miembros)"
+    pet_moving: "Llevar animales con cuerda (no miembros)"
+    invincible: "Zona invencible (sin daño)"
+    deny_enderpearl: "Permitir entrada con perla de énder"
+  hub:
+    title: "Gestión de parcela"
+    info: "§6Información"
+    flags: "§6Banderas"
+    delete: "§cEliminar parcela"
+    wand: "§eObtener varita"
+    my_claims: "§eMis parcelas"
+    welcome: "§eMensaje de bienvenida"
 integrations:
   lands:
     protect_containers_flag_name: Proteger contenedores (BlockProt)
     protect_containers_desc: Permitir a los jugadores a proteger cofres, hornos, ...
-    require_protect_for_friends_flag_name: Requiere "Proteger contenedores" para amigos
-      (BlockProt)
-    require_protect_for_friends_desc: Solo los jugadores que tienen el "Proteger contenedores"
-      son elegibles para ser agregados a amigos.
+    require_protect_for_friends_flag_name: "Requiere \"Proteger contenedores\" para amigos (BlockProt)"
+    require_protect_for_friends_desc: "Solo los jugadores que tienen el \"Proteger contenedores\" son elegibles para ser agregados a amigos."
+help:
+  header: "§6=== Ayuda de BlockProt ==="
+  footer: "§6=================="

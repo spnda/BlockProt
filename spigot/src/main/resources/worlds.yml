@@ -1,0 +1,65 @@
+# worlds.yml - Advanced per-world lockable-block configuration.
+#
+# This file is only used when config.yml has:
+#   worlds_config_enabled: true
+#
+# It is disabled by default so generated world entries cannot turn off the
+# original BlockProt chest/container protection by accident.
+#
+# Resolution when worlds_config_enabled is true:
+#   enabled: false  -> no BlockProt protection in this world
+#   enabled: true   -> use the lists defined here for this world
+#   world not listed -> use the global lists from config.yml
+#
+# Example survival world:
+#
+# world:
+#   enabled: true
+#   lockable_tile_entities:
+#     - CHEST
+#     - TRAPPED_CHEST
+#     - FURNACE
+#     - SMOKER
+#     - BLAST_FURNACE
+#     - HOPPER
+#     - BARREL
+#     - BREWING_STAND
+#     - DISPENSER
+#     - DROPPER
+#     - LECTERN
+#   lockable_shulker_boxes:
+#     - SHULKER_BOX
+#     - WHITE_SHULKER_BOX
+#     - ORANGE_SHULKER_BOX
+#     - MAGENTA_SHULKER_BOX
+#     - LIGHT_BLUE_SHULKER_BOX
+#     - YELLOW_SHULKER_BOX
+#     - LIME_SHULKER_BOX
+#     - PINK_SHULKER_BOX
+#     - GRAY_SHULKER_BOX
+#     - LIGHT_GRAY_SHULKER_BOX
+#     - CYAN_SHULKER_BOX
+#     - PURPLE_SHULKER_BOX
+#     - BLUE_SHULKER_BOX
+#     - BROWN_SHULKER_BOX
+#     - GREEN_SHULKER_BOX
+#     - RED_SHULKER_BOX
+#     - BLACK_SHULKER_BOX
+#   lockable_blocks:
+#     - ANVIL
+#     - CHIPPED_ANVIL
+#     - DAMAGED_ANVIL
+#   lockable_doors:
+#     - OAK_DOOR
+#     - SPRUCE_DOOR
+#
+# Example lobby without protection:
+#
+# lobby:
+#   enabled: false
+#   lockable_tile_entities: []
+#   lockable_shulker_boxes: []
+#   lockable_blocks: []
+#   lockable_doors: []
+
+worlds:

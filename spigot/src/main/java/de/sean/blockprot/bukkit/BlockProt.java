@@ -18,15 +18,20 @@
 
 package de.sean.blockprot.bukkit;
 
+import de.sean.blockprot.bukkit.audit.AuditLogger;
 import de.sean.blockprot.bukkit.commands.BlockProtCommand;
 import de.sean.blockprot.bukkit.config.DefaultConfig;
+import de.sean.blockprot.bukkit.config.WorldsConfig;
 import de.sean.blockprot.bukkit.integrations.*;
 import de.sean.blockprot.bukkit.listeners.*;
 import de.sean.blockprot.bukkit.metrics.IntegrationBarChart;
 import de.sean.blockprot.bukkit.nbt.StatHandler;
+import de.sean.blockprot.bukkit.storage.HybridDatabase;
+import de.sean.blockprot.bukkit.tasks.ConfigFileWatcher;
+import de.sean.blockprot.bukkit.tasks.BackupTask;
+import de.sean.blockprot.bukkit.tasks.InactivityCleanupTask;
 import de.sean.blockprot.bukkit.tasks.UpdateChecker;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
-import net.wesjd.anvilgui.version.VersionMatcher;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -74,6 +79,15 @@ public final class BlockProt extends JavaPlugin {
     private static SQLiteCache playerProfileCache = null;
     @Nullable
     private static ProfileService playerProfileService = null;
+
+    @Nullable
+    private static WorldsConfig worldsConfig = null;
+    @Nullable
+    private static AuditLogger auditLogger = null;
+    @Nullable
+    private static HybridDatabase hybridDatabase = null;
+    @Nullable
+    private ConfigFileWatcher fileWatcher = null;
 
     private Metrics metrics;
 
@@ -126,6 +140,21 @@ public final class BlockProt extends JavaPlugin {
         return playerProfileService;
     }
 
+    @Nullable
+    public static WorldsConfig getWorldsConfig() {
+        return worldsConfig;
+    }
+
+    @Nullable
+    public static AuditLogger getAuditLogger() {
+        return auditLogger;
+    }
+
+    @Nullable
+    public static HybridDatabase getHybridDatabase() {
+        return hybridDatabase;
+    }
+
     @Override
     public void onLoad() {
         instance = this;
@@ -161,23 +190,55 @@ public final class BlockProt extends JavaPlugin {
         /* Check for updates */
         Bukkit.getScheduler().runTaskAsynchronously(this, new UpdateChecker(this.getDescription()));
 
-        // We'll try and get the AnvilGUI API to select the version wrapper. Should it fail, we display an error that
-        // we do not support the current Minecraft version.
-        try {
-            new VersionMatcher().match();
-        } catch (IllegalStateException e) {
-            final var message = "This plugin does not support the current Minecraft version! Please check if there is a new update available.";
-            getLogger().severe(message);
-            getServer().getPluginManager().registerEvents(new ErrorEventListener(message), this);
-            return;
-        }
+        // We no longer use AnvilGUI's VersionMatcher as newer versions
+        // automatically handle version compatibility or throw during open().
 
         MinecraftVersion.disableUpdateCheck();
 
         new BlockProtAPI(this); // Init the API.
+        BlockProtLogger.init(this.getDataFolder()); // Init session logger.
+        BlockProtLogger.log("Plugin version: " + this.getDescription().getVersion());
+        BlockProtLogger.log("Server: " + Bukkit.getVersion());
+        BlockProtLogger.log("Runtime: " + VersionCompat.getDiagnosticString());
+        if (VersionCompat.is26Family()) {
+            BlockProtLogger.log("Detected 26.x year-based version scheme.");
+        }
+        
+        // Run startup compatibility checks
+        VersionValidator.validateStartup();
         StatHandler.enable();
         this.saveDefaultConfig();
+        boolean hasUpgradeData = BackupTask.hasPriorData(this.getDataFolder());
+        if (hasUpgradeData) {
+            new BackupTask(this.getDataFolder()).run();
+        }
+        this.mergeMissingConfigKeys();
+        this.saveResource("worlds.yml", false);
         this.reloadConfigAndTranslations();
+
+        hybridDatabase = new HybridDatabase(this);
+        hybridDatabase.start(defaultConfig);
+
+        // Audit logger (SQLite, no requiere dependencias externas)
+        try {
+            auditLogger = new AuditLogger(this.getDataFolder());
+            getLogger().info(Translator.get(TranslationKey.CONSOLE__AUDIT_LOGGER_STARTED));
+        } catch (Exception e) {
+            getLogger().warning(Translator.get(TranslationKey.CONSOLE__AUDIT_LOGGER_FAILED)
+                .replace("{error}", e.getMessage()));
+        }
+
+        // File watcher — recarga config automáticamente al detectar cambios en disco
+        fileWatcher = new ConfigFileWatcher(this);
+        fileWatcher.start();
+
+        // Backup automático al arrancar
+
+        // Limpieza de inactividad si está configurada
+        int inactivityDays = this.getConfig().getInt("inactivity_cleanup_days", -1);
+        if (inactivityDays > 0) {
+            Bukkit.getScheduler().runTaskAsynchronously(this, new InactivityCleanupTask(inactivityDays));
+        }
 
         /* bStats Metrics */
         metrics = new Metrics(this, pluginId);
@@ -194,6 +255,10 @@ public final class BlockProt extends JavaPlugin {
         registerEvent(pm, new JoinEventListener());
         registerEvent(pm, new PistonEventListener());
         registerEvent(pm, new RedstoneEventListener());
+        if (defaultConfig.isWorldEditPasteAutolockEnabled()) {
+            registerEvent(pm, new WorldEditPasteListener(this));
+            getLogger().info(Translator.get(TranslationKey.CONSOLE__WORLDEDIT_LISTENER_ENABLED));
+        }
 
         Objects.requireNonNull(this.getCommand("blockprot"))
             .setExecutor(new BlockProtCommand());
@@ -218,6 +283,10 @@ public final class BlockProt extends JavaPlugin {
             StatHandler.disable();
             getServer().getOnlinePlayers().forEach(HumanEntity::closeInventory);
         }
+        if (fileWatcher != null) fileWatcher.stop();
+        if (auditLogger != null) auditLogger.close();
+        if (hybridDatabase != null) hybridDatabase.close();
+        BlockProtLogger.close();
         super.onDisable();
     }
 
@@ -227,6 +296,7 @@ public final class BlockProt extends JavaPlugin {
      * @since 1.0.0
      */
     public void reloadConfigAndTranslations() {
+        this.mergeMissingConfigKeys();
         this.reloadConfig();
         defaultConfig = new DefaultConfig(this.getConfig());
 
@@ -237,8 +307,13 @@ public final class BlockProt extends JavaPlugin {
 
         // Ensure that all translation files have been saved properly.
         for (String resource : Translator.DEFAULT_TRANSLATION_FILES) {
-            if ((new File(this.getDataFolder(), langFolder + resource)).exists()) continue;
-            this.saveResource(langFolder + resource, defaultConfig.shouldReplaceTranslations());
+            File diskFile = new File(this.getDataFolder(), langFolder + resource);
+            if (!diskFile.exists()) {
+                this.saveResource(langFolder + resource, false);
+            } else {
+                // File exists — merge any missing keys from the JAR version into it.
+                mergeMissingLangKeys(langFolder, resource, diskFile);
+            }
         }
 
         // Get the default language file. We do not use the English translation in the plugin's
@@ -259,6 +334,16 @@ public final class BlockProt extends JavaPlugin {
             : defaultConfig.getLanguageFile();
         YamlConfiguration wantedConfig = saveAndLoadConfigFile(langFolder, fileName, BlockProt.defaultConfig.shouldReplaceTranslations());
         Translator.loadFromConfigs(defaultLanguageConfig, wantedConfig);
+
+        // Scan de mundos DESPUÉS de cargar traducciones — los mensajes ya están disponibles
+        if (defaultConfig.isWorldsConfigEnabled()) {
+            File worldsFile = new File(this.getDataFolder(), "worlds.yml");
+            YamlConfiguration worldsDisk = WorldsConfig.scanAndPopulate(worldsFile, this.getConfig(), this.getLogger());
+            worldsConfig = new WorldsConfig(worldsDisk);
+        } else {
+            worldsConfig = null;
+            BlockProtLogger.log("worlds-scan", "worlds_config_enabled=false; using global config.yml lockable lists.");
+        }
 
         for (PluginIntegration integration : integrations) {
             integration.reload();
@@ -312,9 +397,82 @@ public final class BlockProt extends JavaPlugin {
         return YamlConfiguration.loadConfiguration(file);
     }
 
+    /**
+     * Merges missing keys from the JAR's version of a lang file into the disk copy.
+     * Keys already present in the disk file are never overwritten.
+     * Operates on deep (leaf) keys only, so nested structure is preserved.
+     *
+     * @param langFolder Folder path inside the plugin data dir, e.g. "lang/"
+     * @param resource   File name, e.g. "translations_es.yml"
+     * @param diskFile   The actual file on disk.
+     */
+    private void mergeMissingLangKeys(@NotNull String langFolder, @NotNull String resource, @NotNull File diskFile) {
+        InputStream jarStream = this.getResource(langFolder + resource);
+        if (jarStream == null) return; // Not in JAR (custom lang file), skip.
+
+        YamlConfiguration jarConfig  = YamlConfiguration.loadConfiguration(new BufferedReader(new InputStreamReader(jarStream)));
+        YamlConfiguration diskConfig = YamlConfiguration.loadConfiguration(diskFile);
+
+        boolean changed = false;
+        for (String key : jarConfig.getKeys(true)) {
+            // Only copy leaf values (not section headers).
+            if (jarConfig.isConfigurationSection(key)) continue;
+            if (!diskConfig.contains(key)) {
+                diskConfig.set(key, jarConfig.get(key));
+                changed = true;
+                BlockProtLogger.log("lang-merge", resource + " added missing key: " + key);
+            }
+        }
+
+        if (changed) {
+            try {
+                diskConfig.save(diskFile);
+            getLogger().info("Updated " + resource + " with missing translation keys.");
+        } catch (IOException e) {
+                getLogger().warning("Failed to save merged lang file " + resource + ": " + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Merges missing keys from the bundled config.yml into the disk config.
+     * Existing administrator values are never overwritten.
+     */
+    private void mergeMissingConfigKeys() {
+        File diskFile = new File(this.getDataFolder(), "config.yml");
+        if (!diskFile.exists()) return;
+
+        InputStream jarStream = this.getResource("config.yml");
+        if (jarStream == null) return;
+
+        YamlConfiguration jarConfig = YamlConfiguration.loadConfiguration(new BufferedReader(new InputStreamReader(jarStream)));
+        YamlConfiguration diskConfig = YamlConfiguration.loadConfiguration(diskFile);
+
+        int added = 0;
+        for (String key : jarConfig.getKeys(true)) {
+            if (jarConfig.isConfigurationSection(key)) continue;
+            if (!diskConfig.contains(key)) {
+                diskConfig.set(key, jarConfig.get(key));
+                added++;
+                BlockProtLogger.log("config-merge", "config.yml added missing key: " + key);
+            }
+        }
+
+        if (added == 0) return;
+
+        try {
+            diskConfig.save(diskFile);
+            getLogger().info("config.yml updated with " + added + " missing option(s). Review it before enabling SP26 features.");
+            BlockProtLogger.log("config-merge", "config.yml merge completed; added " + added + " missing option(s).");
+        } catch (IOException e) {
+            getLogger().warning("Failed to save merged config.yml: " + e.getMessage());
+            BlockProtLogger.log("config-merge", "Failed to save config.yml after merge: " + e.getMessage());
+        }
+    }
+
     private boolean isRunningCraftBukkit() {
         try {
-            Class<?> clazz = Class.forName("net.md_5.bungee.api.chat.BaseComponent");
+            Class.forName("org.spigotmc.SpigotConfig");
             return false;
         } catch (ClassNotFoundException e) {
             return true;

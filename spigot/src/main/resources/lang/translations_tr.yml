@@ -1,7 +1,12 @@
----
 locale: tr
 enabled: Aktif
 disabled: Aktif değil
+about:
+  title: §x§a§3§c§6§e§bBlockProt {version} - Spigot Plugin
+  original_author: '§7Orijinal yazar: §fspnda'
+  fork_maintainers: '§7Fork sorumluları: §fVickey & Reim §8(takma ad ZarZey)'
+  report_original: §x§c§3§e§e§a§7Sorun bildir (orijinal eklenti)
+  report_fork: §x§6§6§c§6§6§6Sorun bildir (SP26 fork)
 inventories:
   back: Geri
   last_page: Önceki Sayfa
@@ -33,7 +38,7 @@ inventories:
     the_public: Genel
     the_public_desc: Bu sunucudaki her oyuncuyu temsil eder.
     make_public: Herkese açık yap
-    permissions: izinler
+    permissions: İzinler
     permission:
       read: Oku
       write: Yaz
@@ -44,6 +49,11 @@ inventories:
     global_statistics: Sunucu istatistikleri
     container_count: Blok sayısı
     your_blocks: Sendeki bloklar
+  audit:
+    title: Erişim günlüğü
+    no_entries: Giriş bulunamadı.
+    teleport: Bloğa ışınlan
+    open: Erişim günlüğü
 messages:
   permission_granted: İzin verildi.
   unlocked: Kilidi açıldı.
@@ -55,15 +65,78 @@ messages:
   redstone_added: Kızıltaş koruması eklendi.
   redstone_removed: Kızıltaş koruması kaldırıldı.
   exceeded_max_block_count: Kilitlenebilen maksimum blok sayısına ulaştın.
-  lock_hint: "§6Sandıklar, fırınlar ve daha birçok bloku eğilip ve sağ tıklayarak
-    koruyabilirsiniz! Aynı zamanda /blockprot yazarak kendi isteklerinize göre ayarları
-    değiştirebilirsiniz."
+  lock_hint: §6Sandıklar, fırınlar ve daha birçok bloku eğilip ve sağ tıklayarak koruyabilirsiniz! Aynı zamanda /blockprot
+    yazarak kendi isteklerinize göre ayarları değiştirebilirsiniz. (Bu ipuçlarını devre dışı bırakmak için tıklayın)
+  hint_hover_text: BlockProt menüsünü aç veya ipuçlarını devre dışı bırakmak için buraya tıkla.
+  disabled_hints: §6İpuçları devre dışı bırakıldı!
+  chat_input_prompt: '§eOyuncu adını gir §7(§bTab§7 öneriler · §aEnter§7 onayla · §c{cancel}§7 iptal):'
+  chat_input_cancel_word: iptal
+  chat_input_cancelled: §cArama iptal edildi.
+  lock_on_place_success: §aBlok kilitlendi!
+  friends_searching: §e§f{player}§e aranıyor...
+  friends_addall_success: §a§f{player}§a, §f{count}§a blok/blokta arkadaş olarak eklendi.
+  friends_addall_usage: '§cKullanım: /blockprot friends addall <oyuncu>'
+  inactivity_cleanup_done: '§e[BlockProt] Hareketsizlik temizliği: §f{count}§e blok/blok serbest bırakıldı.'
+  friends_list_title: §6Arkadaşların
+worlds:
+  scan_start: '[BlockProt] Dünyalar taranıyor... ({count} yüklendi)'
+  scan_world_added: '[BlockProt] ''{world}'' dünyası worlds.yml''ye eklendi — koruma varsayılan olarak KAPALI. Manuel olarak
+    etkinleştir.'
+  scan_complete: '[BlockProt] Tarama tamamlandı. {added} yeni dünya kaydedildi.'
+claims:
+  wand_pos_a: §bA köşesi §f({x}, {y}, {z})§b konumuna ayarlandı. Şimdi B köşesine sağ tıkla.
+  wand_pos_b: §bB köşesi §f({x}, {y}, {z})§b konumuna ayarlandı. Parsel oluşturmak için sohbete bir isim yaz.
+  created: '§a§6{name} §aparseli oluşturuldu! Bölge: §f{x1},{y1},{z1} §a→ §f{x2},{y2},{z2} §7(dünya: {world}).'
+  deleted: §a§6{name} §aparseli silindi.
+  no_claim_here: §cBulunduğun konumda herhangi bir parsel yok.
+  overlap: §cBu alan başka bir oyuncunun parseli ile çakışıyor.
+  no_permission: §cBu parseli değiştirme iznin yok.
+  list_header: '§6Aktif parsellerin:'
+  name_prompt: '§eParselin için sohbete bir isim yaz. §7(İptal için §c{cancel}§7 yaz):'
+  name_cancel_word: iptal
+  name_cancelled: §cParsel oluşturma iptal edildi.
+  name_too_long: §cİsim çok uzun. Maksimum {max} karakter.
+  name_invalid: §cGeçersiz isim. Yalnızca harf, rakam, boşluk, alt çizgi veya tire kullan.
+  wand_removed: §7Parsel asası kaldırıldı.
+  timeout: §cSüre doldu. Lütfen asayı tekrar kullan.
+  flags:
+    title: Parsel Seçenekleri
+    fire: Ateş yayılması
+    tnt: TNT / Patlamalar
+    redstone: Kızıltaş (diğerleri tarafından)
+    pvp: PvP
+    flow: Water & Lava flow
+    leaf_decay: Leaf decay
+    mob_spawning: Mob spawning
+    chest: Container access (non-members)
+    door: Door / Trapdoor use (non-members)
+    lever_button: Lever & Button use (non-members)
+    use_bucket: Bucket use (non-members)
+    pet_spawning: Pet taming (non-members)
+    pet_riding: Pet riding (non-members)
+    pet_moving: Lead animals in (non-members)
+    invincible: Invincible zone (no damage)
+    deny_enderpearl: Allow ender pearl entry
+  welcome_set: §aWelcome message set for claim §6{name}§a.
+  welcome_cleared: §7Welcome message cleared for claim §6{name}§7.
+  welcome_prompt: '§eType the welcome message in chat (supports §r&§e colour codes). §7Type §c{cancel}§7 to abort:'
+  delete_confirm_title: §cConfirm deletion
+  delete_yes: §c§lDelete claim
+  delete_cancel: §a§lKeep claim
+  hub:
+    title: Claim Management
+    info: §6Claim Info
+    flags: §6Flags
+    delete: §cDelete Claim
+    wand: §eGet Wand
+    my_claims: §eMy Claims
+    welcome: §eWelcome Message
 integrations:
   lands:
-    protect_containers_flag_name: Konteynerleri (sandık, fırın vb.) koru. (BlockProt)
-    protect_containers_desc: Bir oyuncuya sandıklar, fırınlar gibi şeyleri korumaya
-      izin verir.
-    require_protect_for_friends_flag_name: Arkadaşlarınız için "Konteynerleri Koru"
-      izni gerekmektedir. (BlockProt)
-    require_protect_for_friends_desc: Yalnızca "Konteynerleri koru" etiketine sahip
-      olan oyuncular arkadaş olarak eklenebilir.
+    protect_containers_flag_name: Konteynerleri (sandık, fırın vb.) koru (BlockProt)
+    protect_containers_desc: Bir oyuncuya sandıklar, fırınlar gibi şeyleri korumaya izin verir.
+    require_protect_for_friends_flag_name: Arkadaşlarınız için "Konteynerleri Koru" izni gerekmektedir (BlockProt)
+    require_protect_for_friends_desc: Yalnızca "Konteynerleri koru" etiketine sahip olan oyuncular arkadaş olarak eklenebilir.
+help:
+  header: §6=== BlockProt Yardım ===
+  footer: §6==================

@@ -1,72 +1,142 @@
-# 日本語翻訳ファイル Japanese translation file
 locale: ja
-
 enabled: 有効
 disabled: 無効
+about:
+  title: §x§a§3§c§6§e§bBlockProt {version} - Spigot Plugin
+  original_author: '§7オリジナル作者: §fspnda'
+  fork_maintainers: '§7フォーク管理者: §fVickey & Reim §8(別名 ZarZey)'
+  report_original: §x§c§3§e§e§a§7問題を報告 (オリジナルプラグイン)
+  report_fork: §x§6§6§c§6§6§6問題を報告 (SP26フォーク)
 inventories:
-  back: "戻る"
-  last_page: "最後のページ"
-  next_page: "次のページ"
-  block_lock: "ブロックをロック"
-  user_settings: "ユーザー設定"
-  block_info: "ブロック情報"
-  lock: "ロック"
-  unlock: "ロック解除"
-  lock_on_place: "自動的にロックする"
-  copy_configuration: "設定をコピー"
-  paste_configuration: "設定を貼り付け"
-  set_block_name: "ブロック名を設定"
-  inspect_contents: "内容を確認する"
+  back: 戻る
+  last_page: 最後のページ
+  next_page: 次のページ
+  block_lock: ブロックをロック
+  user_settings: ユーザー設定
+  block_info: ブロック情報
+  lock: ロック
+  unlock: ロック解除
+  lock_on_place: 自動的にロックする
+  copy_configuration: 設定をコピー
+  paste_configuration: 設定を貼り付け
+  set_block_name: ブロック名を設定
+  inspect_contents: 内容を確認する
   redstone:
-    settings: "レットストーン設定"
-    redstone_protection: "レットストーン保護"
-    piston_protection: "ピストン保護"
-    hopper_protection: "ポッパー保護"
-    enable_all: "すべてを有効"
-    disable_all: "すべてを無効"
+    settings: レッドストーン設定
+    redstone_protection: レッドストーン保護
+    piston_protection: ピストン保護
+    hopper_protection: ホッパー保護
+    enable_all: すべてを有効
+    disable_all: すべてを無効
   friends:
-    manage: "フレンドを管理"
-    edit: "フレンドを編集"
-    remove: "フレンドを削除"
-    search: "プレイヤーを検索"
-    search_history: "検索履歴"
-    result: "見つかったプレイヤー"
-    the_public: "パクリック"
-    the_public_desc: "このサーバー上のすべてのプレイヤーを表示します。"
-    make_public: "公開する"
-    permissions: "権限"
+    manage: フレンドを管理
+    edit: フレンドを編集
+    remove: フレンドを削除
+    search: プレイヤーを検索
+    search_history: 検索履歴
+    result: 見つかったプレイヤー
+    the_public: パブリック
+    the_public_desc: このサーバー上のすべてのプレイヤーを表します。
+    make_public: 公開する
+    permissions: 権限
     permission:
-      read: "読む"
-      write: "書く"
-      manager: "マネージャー"
+      read: 読む
+      write: 書く
+      manager: マネージャー
   statistics:
-    statistics: "統計"
-    player_statistics: "プレイヤー統計"
-    global_statistics: "サーバー統計"
-    container_count: "ブロック数"
-    your_blocks: "あなたのブロック"
-
+    statistics: 統計
+    player_statistics: プレイヤー統計
+    global_statistics: サーバー統計
+    container_count: ブロック数
+    your_blocks: あなたのブロック
+  audit:
+    title: アクセスログ
+    no_entries: エントリが見つかりません。
+    teleport: ブロックへテレポート
+    open: アクセスログ
 messages:
-  permission_granted: "許可されました"
-  unlocked: "ロックが解除されました。"
-  no_permission: "権限がありません"
-  friend_added: "フレンドを追加しました"
-  friend_removed: "フレンドを削除しました"
-  friend_already_added: "すでにフレンドに追加されています"
-  friend_cant_be_removed: "フレンドを削除することができません。"
-  redstone_added: "レッドストーン保護が追加されました"
-  redstone_removed: "レッドストーン保護が削除されました"
-  exceeded_max_block_count: "ロック可能なブロックの最大値を超えました"
-  lock_hint: >
-    §6しゃがんでチェストやかまどなどを右クリックすることで、ブロックを保護することができます。
-    また、 /blockprot で設定を確認して、好みに合わせて設定してください。
-    (これらのヒントを無効にするにはここをクリックしてください)
-  hint_hover_text: "ヒントを無効にするには、BlockProt からメニューを開くかここをクリックします。"
-  disabled_hints: "§6ヒントが無効になりました"
+  permission_granted: 許可されました。
+  unlocked: ロックが解除されました。
+  no_permission: 権限がありません。
+  friend_added: フレンドを追加しました。
+  friend_removed: フレンドを削除しました。
+  friend_already_added: すでにフレンドに追加されています。
+  friend_cant_be_removed: フレンドを削除することができません。
+  redstone_added: レッドストーン保護が追加されました。
+  redstone_removed: レッドストーン保護が削除されました。
+  exceeded_max_block_count: ロック可能なブロックの最大値を超えました。
+  lock_hint: '§6しゃがんでチェストやかまどなどを右クリックすることで、ブロックを保護することができます。 また、 /blockprot settings で設定を確認して、好みに合わせて設定してください。 (これらのヒントを無効にするにはここをクリックしてください)
 
+    '
+  hint_hover_text: ヒントを無効にするには、BlockProt からメニューを開くかここをクリックします。
+  disabled_hints: §6ヒントが無効になりました。
+  chat_input_prompt: '§eプレイヤー名を入力してください §7(§bTab§7 候補 · §aEnter§7 確認 · §c{cancel}§7 キャンセル):'
+  chat_input_cancel_word: cancel
+  chat_input_cancelled: §c検索をキャンセルしました。
+  lock_on_place_success: §aブロックをロックしました！
+  friends_searching: §e§f{player}§eを検索中...
+  friends_addall_success: §a§f{player}§aを§f{count}§aブロックにフレンドとして追加しました。
+  friends_addall_usage: '§c使用法: /blockprot friends addall <プレイヤー>'
+  inactivity_cleanup_done: '§e[BlockProt] 非アクティブ整理: §f{count}§eブロックを解放しました。'
+  friends_list_title: §6あなたのフレンド
+worlds:
+  scan_start: '[BlockProt] ワールドをスキャン中... ({count} 読み込み済み)'
+  scan_world_added: '[BlockProt] ワールド ''{world}'' を worlds.yml に追加しました — 保護はデフォルトで無効です。手動で有効化してください。'
+  scan_complete: '[BlockProt] スキャン完了。{added} 件の新しいワールドが登録されました。'
+claims:
+  wand_pos_a: §bコーナーAを§f({x}, {y}, {z})§bに設定しました。次にコーナーBを右クリックしてください。
+  wand_pos_b: §bコーナーBを§f({x}, {y}, {z})§bに設定しました。チャットに名前を入力してクレームを作成してください。
+  created: '§aクレーム§6{name}§aを作成しました！エリア: §f{x1},{y1},{z1} §a→ §f{x2},{y2},{z2} §7(ワールド: {world})。'
+  deleted: §aクレーム§6{name}§aを削除しました。
+  no_claim_here: §c現在の位置にクレームはありません。
+  overlap: §cこのエリアは他のプレイヤーのクレームと重なっています。
+  no_permission: §cこのクレームを変更する権限がありません。
+  list_header: '§6あなたのアクティブなクレーム:'
+  name_prompt: '§eチャットにクレームの名前を入力してください。§7(§c{cancel}§7 と入力してキャンセル):'
+  name_cancel_word: cancel
+  name_cancelled: §cクレーム作成をキャンセルしました。
+  name_too_long: §c名前が長すぎます。最大 {max} 文字です。
+  name_invalid: §c無効な名前です。文字、数字、スペース、アンダースコア、ハイフンのみ使用してください。
+  wand_removed: §7クレームワンドを削除しました。
+  timeout: §cタイムアウトしました。ワンドを再度使用してください。
+  flags:
+    title: クレーム設定
+    fire: 火の燃え広がり
+    tnt: TNT / 爆発
+    redstone: レッドストーン (他のプレイヤーによる)
+    pvp: PvP
+    flow: Water & Lava flow
+    leaf_decay: Leaf decay
+    mob_spawning: Mob spawning
+    chest: Container access (non-members)
+    door: Door / Trapdoor use (non-members)
+    lever_button: Lever & Button use (non-members)
+    use_bucket: Bucket use (non-members)
+    pet_spawning: Pet taming (non-members)
+    pet_riding: Pet riding (non-members)
+    pet_moving: Lead animals in (non-members)
+    invincible: Invincible zone (no damage)
+    deny_enderpearl: Allow ender pearl entry
+  welcome_set: §aWelcome message set for claim §6{name}§a.
+  welcome_cleared: §7Welcome message cleared for claim §6{name}§7.
+  welcome_prompt: '§eType the welcome message in chat (supports §r&§e colour codes). §7Type §c{cancel}§7 to abort:'
+  delete_confirm_title: §cConfirm deletion
+  delete_yes: §c§lDelete claim
+  delete_cancel: §a§lKeep claim
+  hub:
+    title: Claim Management
+    info: §6Claim Info
+    flags: §6Flags
+    delete: §cDelete Claim
+    wand: §eGet Wand
+    my_claims: §eMy Claims
+    welcome: §eWelcome Message
 integrations:
   lands:
     protect_containers_flag_name: コンテナを保護する (BlockProt)
-    protect_containers_desc: プレイヤーがチェスト、かまどなどを保護できるようにします
+    protect_containers_desc: プレイヤーがチェスト、かまどなどを保護できるようにします。
     require_protect_for_friends_flag_name: フレンドに「コンテナの保護」を要求する (BlockProt)
-    require_protect_for_friends_desc: フレンドとして追加できるのは、「コンテナを保護する」フラグを持つプレイヤーのみです。
+    require_protect_for_friends_desc: 「コンテナを保護する」フラグを持つプレイヤーのみフレンドとして追加できます。
+help:
+  header: §6=== BlockProt ヘルプ ===
+  footer: §6==================

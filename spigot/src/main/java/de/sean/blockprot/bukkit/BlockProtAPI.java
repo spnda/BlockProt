@@ -19,12 +19,16 @@
 package de.sean.blockprot.bukkit;
 
 import de.sean.blockprot.bukkit.events.BlockAccessMenuEvent;
+import de.sean.blockprot.bukkit.events.BlockProtLockEvent;
+import de.sean.blockprot.bukkit.events.BlockProtUnlockEvent;
 import de.sean.blockprot.bukkit.integrations.PluginIntegration;
 import de.sean.blockprot.bukkit.inventories.BlockLockInventory;
 import de.sean.blockprot.bukkit.inventories.InventoryState;
 import de.sean.blockprot.bukkit.nbt.BlockNBTHandler;
 import de.sean.blockprot.bukkit.nbt.FriendHandler;
 import de.sean.blockprot.bukkit.nbt.PlayerSettingsHandler;
+import de.sean.blockprot.bukkit.nbt.StatHandler;
+import de.sean.blockprot.nbt.LockReturnValue;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -118,6 +122,35 @@ public final class BlockProtAPI {
     @NotNull
     public PlayerSettingsHandler getPlayerSettings(@NotNull final Player player) {
         return new PlayerSettingsHandler(player);
+    }
+
+    /**
+     * Locks a block through the public API and fires {@link BlockProtLockEvent}.
+     *
+     * @since SP26
+     */
+    @NotNull
+    public LockReturnValue lockBlock(@NotNull final Block block, @NotNull final Player player) {
+        return new BlockNBTHandler(block).lockBlock(player, BlockProtLockEvent.Cause.API);
+    }
+
+    /**
+     * Unlocks a block through the public API and fires {@link BlockProtUnlockEvent}.
+     *
+     * @since SP26
+     */
+    public boolean unlockBlock(@NotNull final Block block, @NotNull final Player player) {
+        BlockNBTHandler handler = new BlockNBTHandler(block);
+        if (handler.isNotProtected()) return true;
+
+        BlockProtUnlockEvent event = new BlockProtUnlockEvent(block, player, BlockProtUnlockEvent.Cause.API);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) return false;
+
+        StatHandler.removeContainer(player, block);
+        handler.clear();
+        handler.applyToOtherContainer();
+        return true;
     }
 
     /**

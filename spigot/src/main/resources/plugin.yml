@@ -1,7 +1,7 @@
 name: BlockProt
 version: ${version}
 main: de.sean.blockprot.bukkit.BlockProt
-api-version: 1.14
+api-version: '1.21'
 authors: [ spnda ]
 description: A simple block protection plugin
 prefix: BlockProt
@@ -31,7 +31,7 @@ permissions:
 commands:
   blockprot:
     description: The main blockprot command
-    usage: "§c/blockprot [update|settings|stats|reload|about]" # Red error message
+    usage: "/blockprot [update|settings|stats|reload|about]"
     aliases: ["bp"]
 softdepend:
   - Towny

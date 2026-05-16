@@ -43,6 +43,7 @@ public class ExplodeEventListener implements Listener {
     }
 
     private void checkBlocks(ListIterator<Block> it) {
+        if (!BlockProt.getDefaultConfig().shouldProtectLockedBlocksFromExplosions()) return;
         while (it.hasNext()) {
             Block b = it.next();
             if (BlockProt.getDefaultConfig().isLockableTileEntity(b.getType()) ||

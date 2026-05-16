@@ -1,5 +1,6 @@
 import org.kohsuke.github.GHReleaseBuilder
 import org.kohsuke.github.GitHub
+import org.gradle.jvm.toolchain.JavaLanguageVersion
 
 buildscript {
     repositories {
@@ -14,7 +15,6 @@ buildscript {
 plugins {
     id("org.gradle.java-library")
     id("org.ajoberstar.grgit") version "5.2.1"
-    id("org.cadixdev.licenser") version "0.6.1"
 }
 
 fun gitBranchName(): String {
@@ -24,16 +24,20 @@ fun gitBranchName(): String {
         return branch.substring(branch.lastIndexOf("/") + 1)
     }
 
-    val branch = grgit.branch.current().name
-    return branch.substring(branch.lastIndexOf("/") + 1)
+    return try {
+        val branch = grgit.branch.current().name
+        branch.substring(branch.lastIndexOf("/") + 1)
+    } catch (e: Exception) {
+        "master"
+    }
 }
 
 val env: MutableMap<String, String> = System.getenv()
 val blockProtVersion: String by project
+val targetJavaVersion: String by project
 
 allprojects {
     apply(plugin = "org.gradle.java-library")
-    apply(plugin = "org.cadixdev.licenser")
 
     group = "de.sean.blockprot"
     version = blockProtVersion
@@ -46,33 +50,23 @@ allprojects {
         mavenCentral()
     }
 
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(targetJavaVersion.toInt()))
+        }
+    }
+
     tasks.compileJava {
-        options.release.set(17)
-        java.sourceCompatibility = JavaVersion.VERSION_17
-        java.targetCompatibility = JavaVersion.VERSION_17
+        options.release.set(targetJavaVersion.toInt())
     }
 
     ext["gitBranchName"] = gitBranchName()
 
     tasks.jar {
-        // The default configuration for the archivesName is
-        // [baseName]-[appendix]-[version]-[classifier].[extension]
         archiveClassifier.set(
             if (ext["gitBranchName"] == "master" || ext["gitBranchName"] == "HEAD") null
             else (ext["gitBranchName"] as String)
         )
-    }
-
-    afterEvaluate {
-        // We use license instead of spotless now, as spotless'
-        // java formatter had too many issues.
-        license {
-            header(rootProject.file("HEADER.txt"))
-            include("**/*.java")
-            properties {
-                this["year"] = "2021 - 2025"
-            }
-        }
     }
 }
 
@@ -90,11 +84,10 @@ tasks.register("github") {
         releaseBuilder.body(env["CHANGELOG"] ?: "No changelog.")
         releaseBuilder.commitish(gitBranchName())
 
-        // Get the output JARs for each subproject.
         val files = mutableListOf<File?>()
         subprojects.filter { it.name != "common" }.forEach {
-            val dir = "${it.buildDir}/libs/"
-            files.add(file(dir).listFiles()?.last { file ->
+            val dir = it.layout.buildDirectory.dir("libs").get().asFile
+            files.add(dir.listFiles()?.last { file ->
                 file.nameWithoutExtension.endsWith("all")
             })
         }
@@ -103,7 +96,6 @@ tasks.register("github") {
         files.forEach {
             ghRelease.uploadAsset(it, "application/java-archive")
         }
-        // We set the proper name here, as "releaseBuilder.name" is also used for the tag name.
         ghRelease.update().name("BlockProt $version").update()
     }
 }

@@ -102,6 +102,13 @@ public final class DefaultConfig extends BlockProtConfig {
         this.loadBlocksFromConfig();
     }
 
+    private void addMaterialIfExists(Collection<Material> set, String... names) {
+        for (String name : names) {
+            Material m = Material.matchMaterial(name);
+            if (m != null) set.add(m);
+        }
+    }
+
     private <T extends Enum<?>> void loadBlockListFromConfig(
             @NotNull String key, @NotNull final ArrayList<T> list, @NotNull final T[] enumValues, Function<T, Boolean> validateCallback) {
         List<?> configList = config.getList(key);
@@ -133,21 +140,21 @@ public final class DefaultConfig extends BlockProtConfig {
     private void loadBlocksFromConfig() {
         // Add some materials which are not valid in some versions
         if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_19_R1)) {
-            this.knownGoodTileEntities.addAll(List.of(Material.MANGROVE_SIGN, Material.MANGROVE_WALL_SIGN));
+            addMaterialIfExists(knownGoodTileEntities, "MANGROVE_SIGN", "MANGROVE_WALL_SIGN");
         }
         if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R1)) {
-            this.knownGoodTileEntities.add(Material.CHISELED_BOOKSHELF);
-            this.knownGoodTileEntities.addAll(List.of(Material.OAK_WALL_HANGING_SIGN, Material.OAK_HANGING_SIGN));
-            this.knownGoodTileEntities.addAll(List.of(Material.SPRUCE_WALL_HANGING_SIGN, Material.SPRUCE_HANGING_SIGN));
-            this.knownGoodTileEntities.addAll(List.of(Material.BIRCH_WALL_HANGING_SIGN, Material.BIRCH_HANGING_SIGN));
-            this.knownGoodTileEntities.addAll(List.of(Material.JUNGLE_WALL_HANGING_SIGN, Material.JUNGLE_HANGING_SIGN));
-            this.knownGoodTileEntities.addAll(List.of(Material.ACACIA_WALL_HANGING_SIGN, Material.ACACIA_HANGING_SIGN));
-            this.knownGoodTileEntities.addAll(List.of(Material.DARK_OAK_WALL_HANGING_SIGN, Material.DARK_OAK_HANGING_SIGN));
-            this.knownGoodTileEntities.addAll(List.of(Material.CRIMSON_WALL_HANGING_SIGN, Material.CRIMSON_HANGING_SIGN));
-            this.knownGoodTileEntities.addAll(List.of(Material.WARPED_WALL_HANGING_SIGN, Material.WARPED_HANGING_SIGN));
-            this.knownGoodTileEntities.addAll(List.of(Material.MANGROVE_HANGING_SIGN, Material.MANGROVE_WALL_HANGING_SIGN));
-            this.knownGoodTileEntities.addAll(List.of(Material.CHERRY_SIGN, Material.CHERRY_WALL_SIGN, Material.CHERRY_HANGING_SIGN, Material.CHERRY_WALL_HANGING_SIGN));
-            this.knownGoodTileEntities.addAll(List.of(Material.BAMBOO_SIGN, Material.BAMBOO_WALL_SIGN, Material.BAMBOO_HANGING_SIGN, Material.BAMBOO_WALL_HANGING_SIGN));
+            addMaterialIfExists(knownGoodTileEntities, "CHISELED_BOOKSHELF");
+            addMaterialIfExists(knownGoodTileEntities, "OAK_WALL_HANGING_SIGN", "OAK_HANGING_SIGN");
+            addMaterialIfExists(knownGoodTileEntities, "SPRUCE_WALL_HANGING_SIGN", "SPRUCE_HANGING_SIGN");
+            addMaterialIfExists(knownGoodTileEntities, "BIRCH_WALL_HANGING_SIGN", "BIRCH_HANGING_SIGN");
+            addMaterialIfExists(knownGoodTileEntities, "JUNGLE_WALL_HANGING_SIGN", "JUNGLE_HANGING_SIGN");
+            addMaterialIfExists(knownGoodTileEntities, "ACACIA_WALL_HANGING_SIGN", "ACACIA_HANGING_SIGN");
+            addMaterialIfExists(knownGoodTileEntities, "DARK_OAK_WALL_HANGING_SIGN", "DARK_OAK_HANGING_SIGN");
+            addMaterialIfExists(knownGoodTileEntities, "CRIMSON_WALL_HANGING_SIGN", "CRIMSON_HANGING_SIGN");
+            addMaterialIfExists(knownGoodTileEntities, "WARPED_WALL_HANGING_SIGN", "WARPED_HANGING_SIGN");
+            addMaterialIfExists(knownGoodTileEntities, "MANGROVE_HANGING_SIGN", "MANGROVE_WALL_HANGING_SIGN");
+            addMaterialIfExists(knownGoodTileEntities, "CHERRY_SIGN", "CHERRY_WALL_SIGN", "CHERRY_HANGING_SIGN", "CHERRY_WALL_HANGING_SIGN");
+            addMaterialIfExists(knownGoodTileEntities, "BAMBOO_SIGN", "BAMBOO_WALL_SIGN", "BAMBOO_HANGING_SIGN", "BAMBOO_WALL_HANGING_SIGN");
         }
 
         loadBlockListFromConfig("lockable_tile_entities", this.lockableTileEntities, Material.values(),
@@ -227,7 +234,19 @@ public final class DefaultConfig extends BlockProtConfig {
      * @since 0.4.4
      */
     public boolean isWorldExcluded(World world) {
+        if (isWorldsConfigEnabled()) {
+            WorldsConfig wc = BlockProt.getWorldsConfig();
+            if (wc != null && wc.isWorldDisabled(world)) return true;
+        }
         return listContainsIgnoreCase(excludedWorlds, world.getName());
+    }
+
+    /**
+     * Advanced per-world lockable lists are opt-in so generated worlds.yml
+     * entries cannot disable the core protection system by accident.
+     */
+    public boolean isWorldsConfigEnabled() {
+        return config.getBoolean("worlds_config_enabled", false);
     }
 
     /**
@@ -248,7 +267,7 @@ public final class DefaultConfig extends BlockProtConfig {
             if (holder instanceof DoubleChest) {
                 @Nullable World world = ((DoubleChest) holder).getWorld();
                 if (world == null) return true;
-                return listContainsIgnoreCase(excludedWorlds, world.getName());
+                return isWorldExcluded(world);
             }
             return isWorldExcluded(((BlockInventoryHolder) holder).getBlock().getWorld());
         } catch (ClassCastException e) {
@@ -328,6 +347,92 @@ public final class DefaultConfig extends BlockProtConfig {
     }
 
     /**
+     * Enables optional SP26 modules that are safe to activate without external
+     * credentials. MySQL and cleanup jobs remain controlled by their own keys.
+     */
+    public boolean shouldEnableAllOptionalFeatures() {
+        return config.getBoolean("optional_features_enable_all", false);
+    }
+
+    public boolean isMysqlEnabled() {
+        if (!config.contains("mysql.enabled")) return false;
+        return config.getBoolean("mysql.enabled");
+    }
+
+    @NotNull
+    public String getMysqlJdbcUrl() {
+        String configured = config.getString("mysql.jdbc_url", "");
+        if (configured != null && !configured.isBlank()) return configured;
+
+        String host = config.getString("mysql.host", "127.0.0.1");
+        int port = config.getInt("mysql.port", 3306);
+        String database = config.getString("mysql.database", "blockprot");
+        return "jdbc:mysql://" + host + ":" + port + "/" + database
+            + "?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8";
+    }
+
+    @NotNull
+    public String getMysqlUsername() {
+        return config.getString("mysql.username", "blockprot");
+    }
+
+    @NotNull
+    public String getMysqlPassword() {
+        return config.getString("mysql.password", "");
+    }
+
+    public int getMysqlPoolSize() {
+        return Math.max(1, config.getInt("mysql.pool.maximum_pool_size", 10));
+    }
+
+    public int getMysqlMinimumIdle() {
+        return Math.max(0, config.getInt("mysql.pool.minimum_idle", 2));
+    }
+
+    public long getMysqlConnectionTimeoutMillis() {
+        return Math.max(1000L, config.getLong("mysql.pool.connection_timeout_ms", 10000L));
+    }
+
+    public boolean shouldProtectLockedBlocksFromExplosions() {
+        if (!config.contains("protect_locked_blocks_from_explosions")) return true;
+        return config.getBoolean("protect_locked_blocks_from_explosions");
+    }
+
+    public boolean shouldBlockProtectedBlockPistonMovement() {
+        if (!config.contains("block_protected_block_piston_movement")) return true;
+        return config.getBoolean("block_protected_block_piston_movement");
+    }
+
+    public boolean isWorldEditPasteAutolockEnabled() {
+        return shouldEnableAllOptionalFeatures() || config.getBoolean("worldedit_paste_autolock.enabled", false);
+    }
+
+    public int getWorldEditPasteAutolockRadius() {
+        return Math.max(1, config.getInt("worldedit_paste_autolock.radius", 24));
+    }
+
+    public int getWorldEditPasteAutolockMaxBlocks() {
+        return Math.max(1, config.getInt("worldedit_paste_autolock.max_blocks_per_paste", 5000));
+    }
+
+    public long getWorldEditPasteAutolockDelayTicks() {
+        return Math.max(1L, config.getLong("worldedit_paste_autolock.delay_ticks", 20L));
+    }
+
+    public boolean shouldWorldEditPasteAutolockRequireClaim() {
+        if (!config.contains("worldedit_paste_autolock.require_claim_owner")) return true;
+        return config.getBoolean("worldedit_paste_autolock.require_claim_owner");
+    }
+
+    @NotNull
+    public List<String> getBedrockUsernamePrefixes() {
+        if (!config.contains("bedrock_username_prefixes")) {
+            return List.of(".", "*", "_");
+        }
+        return config.getStringList("bedrock_username_prefixes");
+    }
+
+    /**
      * Gets the minimum percentage friend names have to match by the levenshtein distance.
      * @since 1.1.6
      */
@@ -352,7 +457,7 @@ public final class DefaultConfig extends BlockProtConfig {
     }
 
     /**
-     * <p> Whether the given {@code type} is either a lockable block or a lockable tile entity.
+     * Whether the given {@code type} is either a lockable block or a lockable tile entity.
      *
      * <p> Keep in mind, that only tile entities are lockable through this plugin after Spigot 1.16_R3.
      *
@@ -365,6 +470,23 @@ public final class DefaultConfig extends BlockProtConfig {
      */
     public boolean isLockable(Material type) {
         return isLockableBlock(type) || isLockableTileEntity(type);
+    }
+
+    // Uses a world-specific lockable list when optional worlds.yml support is enabled.
+    public boolean isLockable(@NotNull Material type, @NotNull org.bukkit.World world) {
+        WorldsConfig wc = BlockProt.getWorldsConfig();
+        if (isWorldsConfigEnabled() && wc != null && wc.hasWorldConfig(world)) {
+            return wc.isLockable(world, type);
+        }
+        return isLockable(type);
+    }
+
+    public boolean isLockableShulkerBox(@NotNull Material type, @NotNull org.bukkit.World world) {
+        WorldsConfig wc = BlockProt.getWorldsConfig();
+        if (isWorldsConfigEnabled() && wc != null && wc.hasWorldConfig(world)) {
+            return wc.isLockableShulkerBox(world, type);
+        }
+        return isLockableShulkerBox(type);
     }
 
     /**

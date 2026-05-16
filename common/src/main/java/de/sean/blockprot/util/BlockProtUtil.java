@@ -27,14 +27,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class BlockProtUtil {
-    /**
-     * Parse a comma-separated list from a {@link String}. For example {@code "entry, entry"}
-     * would be valid and would return a {@link List} of {@link String}s with two entries,
-     * both "entry".
-     *
-     * @param stringList The String we want to parse from.
-     * @return The split up and parsed List.
-     */
     @NotNull
     public static List<String> parseStringList(@Nullable final String stringList) {
         if (stringList == null) return Collections.emptyList();

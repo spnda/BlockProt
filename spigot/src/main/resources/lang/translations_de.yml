@@ -1,71 +1,144 @@
-# German translation file
 locale: de
-
 enabled: Aktiviert
 disabled: Deaktiviert
+about:
+  title: §x§a§3§c§6§e§bBlockProt {version} - Spigot Plugin
+  original_author: '§7Ursprünglicher Autor: §fspnda'
+  fork_maintainers: '§7Fork-Maintainer: §fVickey & Reim §8(alias ZarZey)'
+  report_original: §x§c§3§e§e§a§7Probleme melden (Original-Plugin)
+  report_fork: §x§6§6§c§6§6§6Probleme melden (SP26-Fork)
 inventories:
-  back: "Zurück"
-  last_page: "Vorherige Seite"
-  next_page: "Nächste Seite"
-  block_lock: "Block Sperren"
-  user_settings: "Nutzereinstellungen"
-  block_info: "Informationen"
-  lock: "Sperren"
-  unlock: "Entsperren"
-  lock_on_place: "Automatisch sperren"
-  copy_configuration: "Konfiguration kopieren"
-  paste_configuration: "Konfiguration übertragen"
-  set_block_name: "Namen ändern"
-  inspect_contents: "Inhalte einsehen"
+  back: Zurück
+  last_page: Vorherige Seite
+  next_page: Nächste Seite
+  block_lock: Block Sperren
+  user_settings: Nutzereinstellungen
+  block_info: Informationen
+  lock: Sperren
+  unlock: Entsperren
+  lock_on_place: Automatisch sperren
+  copy_configuration: Konfiguration kopieren
+  paste_configuration: Konfiguration übertragen
+  set_block_name: Namen ändern
+  inspect_contents: Inhalte einsehen
   redstone:
-    settings: "Redstone Einstellungen"
-    redstone_protection: "Redstone-Schutz"
-    piston_protection: "Kolben-Schutz"
-    hopper_protection: "Trichter-Schutz"
-    enable_all: "Alles aktivieren"
-    disable_all: "Alles deaktivieren"
+    settings: Redstone Einstellungen
+    redstone_protection: Redstone-Schutz
+    piston_protection: Kolben-Schutz
+    hopper_protection: Trichter-Schutz
+    enable_all: Alles aktivieren
+    disable_all: Alles deaktivieren
   friends:
-    manage: "Freunde verwalten"
-    edit: "Freund editieren"
-    remove: "Freund entfernen"
-    search: "Spieler suchen"
-    search_history: "Suchverlauf"
-    result: "Spieler gefunden"
-    the_public: "Die Öffentlichkeit"
-    the_public_desc: "Repräsentiert jeden Spieler auf dem Server."
-    make_public: "Öffentlich machen"
-    permissions: "Berechtigungen"
+    manage: Freunde verwalten
+    edit: Freund editieren
+    remove: Freund entfernen
+    search: Spieler suchen
+    search_history: Suchverlauf
+    result: Spieler gefunden
+    the_public: Die Öffentlichkeit
+    the_public_desc: Repräsentiert jeden Spieler auf dem Server.
+    make_public: Öffentlich machen
+    permissions: Berechtigungen
     permission:
-      read: "Inhalt einsehen"
-      write: "Editieren"
-      manager: "Manager"
+      read: Inhalt einsehen
+      write: Editieren
+      manager: Manager
   statistics:
-    statistics: "Statistik"
-    player_statistics: "Spieler Statistiken"
-    global_statistics: "Server Statistiken"
-    container_count: "Anzahl Blöcke"
-    your_blocks: "Deine Blöcke"
-
+    statistics: Statistik
+    player_statistics: Spieler Statistiken
+    global_statistics: Server Statistiken
+    container_count: Anzahl Blöcke
+    your_blocks: Deine Blöcke
+  audit:
+    title: Zugriffsprotokoll
+    no_entries: Keine Einträge gefunden.
+    teleport: Zum Block teleportieren
+    open: Zugriffsprotokoll
 messages:
-  permission_granted: "Erlaubnis erteilt."
-  unlocked: "Entsperrt."
-  no_permission: "Fehlende Berechtigung."
-  friend_added: "Freund hinzugefügt."
-  friend_removed: "Freund entfernt."
-  friend_already_added: "Freund bereits hinzugefügt."
-  friend_cant_be_removed: "Freund kann nicht entfernt werden."
-  redstone_added: "Redstone-Schutz hinzugefügt."
-  redstone_removed: "Redstone-Schutz entfernt."
-  exceeded_max_block_count: "Du hast die maximale Anzahl an Blöcken überschritten."
-  lock_hint: >
-    §6Du kannst deine Truhen, Öfen, und mehr jetzt beschützen! Einfach sneaken und rechts
-    klicken auf deine Blöcke, um auf das Menü zuzugreifen.
-  hint_hover_text: "Öffne ein Menü von BlockProt oder klick hier um Hinweise zu deaktivieren."
-  disabled_hints: "§6Hinweise deaktiviert!"
+  permission_granted: Erlaubnis erteilt.
+  unlocked: Entsperrt.
+  no_permission: Fehlende Berechtigung.
+  friend_added: Freund hinzugefügt.
+  friend_removed: Freund entfernt.
+  friend_already_added: Freund bereits hinzugefügt.
+  friend_cant_be_removed: Freund kann nicht entfernt werden.
+  redstone_added: Redstone-Schutz hinzugefügt.
+  redstone_removed: Redstone-Schutz entfernt.
+  exceeded_max_block_count: Du hast die maximale Anzahl an Blöcken überschritten.
+  lock_hint: '§6Du kannst deine Truhen, Öfen, und mehr jetzt beschützen! Einfach sneaken und rechts klicken auf deine Blöcke,
+    um auf das Menü zuzugreifen.
 
+    '
+  hint_hover_text: Öffne ein Menü von BlockProt oder klick hier um Hinweise zu deaktivieren.
+  disabled_hints: §6Hinweise deaktiviert!
+  chat_input_prompt: '§eGib den Spielernamen ein §7(§bTab§7 Vorschläge · §aEnter§7 bestätigen · §c{cancel}§7 abbrechen):'
+  chat_input_cancel_word: abbrechen
+  chat_input_cancelled: §cSuche abgebrochen.
+  lock_on_place_success: §aBlock gesperrt!
+  friends_searching: §eSuche §f{player}§e...
+  friends_addall_success: §a§f{player}§a als Freund in §f{count}§a Block/Blöcken hinzugefügt.
+  friends_addall_usage: '§cVerwendung: /blockprot friends addall <Spieler>'
+  inactivity_cleanup_done: '§e[BlockProt] Inaktivitätsbereinigung: §f{count}§e Block/Blöcke freigegeben.'
+  friends_list_title: §6Deine Freunde
+worlds:
+  scan_start: '[BlockProt] Welten werden gescannt... ({count} geladen)'
+  scan_world_added: '[BlockProt] Welt ''{world}'' zu worlds.yml hinzugefügt — Schutz standardmäßig DEAKTIVIERT. Manuell aktivieren.'
+  scan_complete: '[BlockProt] Welten-Scan abgeschlossen. {added} neue Welt/Welten registriert.'
+claims:
+  wand_pos_a: §bEcke A gesetzt bei §f({x}, {y}, {z})§b. Jetzt Rechtsklick auf Ecke B.
+  wand_pos_b: §bEcke B gesetzt bei §f({x}, {y}, {z})§b. Gib einen Namen im Chat ein, um den Claim zu erstellen.
+  created: '§aClaim §6{name} §aerstellt! Region: §f{x1},{y1},{z1} §a→ §f{x2},{y2},{z2} §7(Welt: {world}).'
+  deleted: §aClaim §6{name} §agelöscht.
+  no_claim_here: §cAn deiner Position gibt es keinen Claim.
+  overlap: §cDieses Gebiet überschneidet sich mit dem Claim eines anderen Spielers.
+  no_permission: §cDu hast keine Berechtigung, diesen Claim zu ändern.
+  list_header: '§6Deine aktiven Claims:'
+  name_prompt: '§eTippe einen Namen für deinen Claim in den Chat. §7(Tippe §c{cancel}§7 zum Abbrechen):'
+  name_cancel_word: abbrechen
+  name_cancelled: §cClaim-Erstellung abgebrochen.
+  name_too_long: §cName zu lang. Maximum {max} Zeichen.
+  name_invalid: §cUngültiger Name. Nur Buchstaben, Zahlen, Leerzeichen, Unterstriche oder Bindestriche.
+  wand_removed: §7Claim-Wand entfernt.
+  timeout: §cZeit abgelaufen. Bitte benutze den Zauberstab erneut.
+  flags:
+    title: Claim-Optionen
+    fire: Feuerausbreitung
+    tnt: TNT / Explosionen
+    redstone: Redstone (durch andere)
+    pvp: PvP
+    flow: Water & Lava flow
+    leaf_decay: Leaf decay
+    mob_spawning: Mob spawning
+    chest: Container access (non-members)
+    door: Door / Trapdoor use (non-members)
+    lever_button: Lever & Button use (non-members)
+    use_bucket: Bucket use (non-members)
+    pet_spawning: Pet taming (non-members)
+    pet_riding: Pet riding (non-members)
+    pet_moving: Lead animals in (non-members)
+    invincible: Invincible zone (no damage)
+    deny_enderpearl: Allow ender pearl entry
+  welcome_set: §aWelcome message set for claim §6{name}§a.
+  welcome_cleared: §7Welcome message cleared for claim §6{name}§7.
+  welcome_prompt: '§eType the welcome message in chat (supports §r&§e colour codes). §7Type §c{cancel}§7 to abort:'
+  delete_confirm_title: §cConfirm deletion
+  delete_yes: §c§lDelete claim
+  delete_cancel: §a§lKeep claim
+  hub:
+    title: Claim Management
+    info: §6Claim Info
+    flags: §6Flags
+    delete: §cDelete Claim
+    wand: §eGet Wand
+    my_claims: §eMy Claims
+    welcome: §eWelcome Message
 integrations:
   lands:
     protect_containers_flag_name: Kontainer schützen (BlockProt)
     protect_containers_desc: Erlaubt einem Spieler Truhen, Öfen, ... zu sperren
-    require_protect_for_friends_flag_name: \"Kontainer schützen\" für Freund erfordern (BlockProt)
-    require_protect_for_friends_desc: Nur Spieler, die die Flagge \"Kontainer schützen\" haben, können als Freund hinzugefügt werden.
+    require_protect_for_friends_flag_name: '"Kontainer schützen" für Freund erfordern (BlockProt)'
+    require_protect_for_friends_desc: Nur Spieler, die die Flagge "Kontainer schützen" haben, können als Freund hinzugefügt
+      werden.
+help:
+  header: §6=== BlockProt Hilfe ===
+  footer: §6==================

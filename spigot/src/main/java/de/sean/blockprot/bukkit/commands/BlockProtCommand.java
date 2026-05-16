@@ -26,34 +26,37 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 /**
- * Wrapper around all commands for BlockProt. It implements the tap completion and command
- * functions for ease of use, based on a public map of command executors.
+ * Wrapper around all commands for BlockProt. Implements tab-completion and dispatch
+ * for all registered sub-command executors.
  *
  * @since 1.1.2
  */
 public final class BlockProtCommand implements TabExecutor {
-    static Map<String, CommandExecutor> tabExecutors = new HashMap<>();
+
+    private static final Map<String, CommandExecutor> canonicalExecutors = new LinkedHashMap<>();
+    private static final Map<String, List<String>> englishAliases = new LinkedHashMap<>();
 
     static {
         var statsCommand = new StatisticsCommand();
-        tabExecutors.put("stats", statsCommand);
-        tabExecutors.put("statistics", statsCommand);
-        tabExecutors.put("settings", new SettingsCommand());
-        tabExecutors.put("about", new AboutCommand());
-        tabExecutors.put("update", new UpdateCommand());
-        tabExecutors.put("reload", new ReloadCommand());
-        tabExecutors.put("integrations", new IntegrationsCommand());
-        tabExecutors.put("debug", new DebugCommand());
-        tabExecutors.put("disablehints", new HintsCommand());
+        register("stats",        statsCommand, "statistics");
+        register("settings",     new SettingsCommand());
+        register("about",        new AboutCommand());
+        register("update",       new UpdateCommand());
+        register("reload",       new ReloadCommand());
+        register("integrations", new IntegrationsCommand());
+        register("debug",        new DebugCommand());
+        register("disablehints", new HintsCommand());
+        register("friends",      new FriendsAddAllCommand());
+        var helpCommand = new HelpCommand();
+        register("help",         helpCommand);
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (args.length == 0) {
-            return false;
-        }
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
+                             @NotNull String label, @NotNull String[] args) {
+        if (args.length == 0) return false;
 
-        var executor = tabExecutors.get(args[0]);
+        var executor = buildExecutorMap().get(args[0].toLowerCase(Locale.ROOT));
         if (executor != null) {
             return executor.onCommand(sender, command, label, args);
         }
@@ -61,24 +64,40 @@ public final class BlockProtCommand implements TabExecutor {
     }
 
     @Override
-    public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+    public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
+                                               @NotNull String alias, @NotNull String[] args) {
         if (args.length <= 1) {
             final var list = new ArrayList<String>();
-            for (var entry : tabExecutors.entrySet()) {
+            for (var entry : buildExecutorMap().entrySet()) {
                 if (entry.getValue().canUseCommand(sender))
                     list.add(entry.getKey());
             }
             return list;
-        } else {
-            var executor = tabExecutors.get(args[0]);
-            if (executor != null) {
-                final var completions = executor.onTabComplete(sender, command, alias, args);
-                if (completions != null) {
-                    return completions;
-                }
-            }
+        }
+
+        var executor = buildExecutorMap().get(args[0].toLowerCase(Locale.ROOT));
+        if (executor != null) {
+            final var completions = executor.onTabComplete(sender, command, alias, args);
+            if (completions != null) return completions;
         }
 
         return Collections.emptyList();
+    }
+
+    private static void register(@NotNull String canonical, @NotNull CommandExecutor executor, String... aliases) {
+        canonicalExecutors.put(canonical, executor);
+        englishAliases.put(canonical, List.of(aliases));
+    }
+
+    @NotNull
+    private static Map<String, CommandExecutor> buildExecutorMap() {
+        Map<String, CommandExecutor> result = new LinkedHashMap<>();
+        for (var entry : canonicalExecutors.entrySet()) {
+            result.put(entry.getKey(), entry.getValue());
+            for (String alias : englishAliases.getOrDefault(entry.getKey(), Collections.emptyList())) {
+                result.put(alias.toLowerCase(Locale.ROOT), entry.getValue());
+            }
+        }
+        return result;
     }
 }

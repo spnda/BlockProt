@@ -36,6 +36,11 @@ redstone_disallowed_by_default: false
 #   - world_end
 excluded_worlds: [ ]
 
+# Advanced per-world lockable lists in worlds.yml.
+# Disabled by default so a generated worlds.yml cannot disable the core
+# BlockProt chest/container protection. Enable only after reviewing worlds.yml.
+worlds_config_enabled: false
+
 # Setting this to 'false' will make every new player have
 # their "lock on place" setting disabled. This will be by
 # default set to 'true'.
@@ -67,6 +72,55 @@ friend_search_similarity: 0.5
 # no longer allow players to give other players access to their blocks, and
 # current settings are ignored until re-activated.
 disable_friend_functionality: false
+
+# Optional SP26 feature preset.
+# Disabled by default. When true, BlockProt enables safe optional modules that
+# do not require external credentials. It does NOT enable MySQL or inactivity
+# cleanup because those need administrator-specific setup.
+optional_features_enable_all: false
+
+# Optional MySQL/MariaDB index. NBT remains the source of truth for block
+# protection. SQL is only used for fast audits and global trust lookup.
+mysql:
+  enabled: false
+  host: "127.0.0.1"
+  port: 3306
+  database: "blockprot"
+  username: "blockprot"
+  password: ""
+  # Leave empty to build the URL from host/port/database.
+  jdbc_url: ""
+  pool:
+    maximum_pool_size: 10
+    minimum_idle: 2
+    connection_timeout_ms: 10000
+
+# Keep locked NBT blocks out of TNT/Wither explosion block lists.
+protect_locked_blocks_from_explosions: true
+
+# Absolute immovable protection for locked NBT blocks.
+block_protected_block_piston_movement: true
+
+# WorldEdit/FAWE paste watcher. Disabled by default.
+# When enabled, BlockProt watches //paste commands and performs a bounded scan
+# near the player after the paste finishes, locking lockable blocks with NBT.
+worldedit_paste_autolock:
+  enabled: false
+  radius: 24
+  max_blocks_per_paste: 5000
+  delay_ticks: 20
+  require_claim_owner: false
+
+# Floodgate/Geyser Bedrock username prefixes to try when resolving friend names.
+# Floodgate defaults vary by server; keep all prefixes used by your network here.
+bedrock_username_prefixes:
+  - "."
+  - "*"
+  - "_"
+
+# Inactivity cleanup: automatically expire block protections from players
+# who have not connected for this many days. Set to -1 to disable.
+inactivity_cleanup_days: -1
 
 # Tile entities that should be locked. Tile entities are blocks
 # that can contain items. You can find a detailed list of all

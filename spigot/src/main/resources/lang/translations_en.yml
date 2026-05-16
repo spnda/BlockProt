@@ -2,14 +2,18 @@
 # All colour codes can be used, as found here: https://www.spigotmc.org/wiki/textcosmetics-colors-and-formats/
 # We would be very happy if you submit your translations onto the
 # GitHub repository: https://github.com/spnda/BlockProt/pulls
-
-# We use ISO 639-1 or 639-2 codes for internationalization, it
-# is however safer to use the ISO 639-1 codes for backwards compatibility.
-# See this link for a good list of all codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes.
 locale: en
 
 enabled: Enabled
 disabled: Disabled
+
+about:
+  title: "§x§a§3§c§6§e§bBlockProt {version} - Spigot Plugin"
+  original_author: "§7Original author: §fspnda"
+  fork_maintainers: "§7Fork maintainers: §fVickey & Reim §8(alias ZarZey)"
+  report_original: "§x§c§3§e§e§a§7Report issues (original plugin)"
+  report_fork: "§x§6§6§c§6§6§6Report issues (SP26 fork)"
+
 inventories:
   back: "Back"
   last_page: "Last page"
@@ -52,6 +56,11 @@ inventories:
     global_statistics: "Server statistics"
     container_count: "Block count"
     your_blocks: "Your blocks"
+  audit:
+    title: "Access Log"
+    no_entries: "No entries found."
+    teleport: "Teleport to block"
+    open: "Access Log"
 
 messages:
   permission_granted: "Permission granted."
@@ -70,6 +79,84 @@ messages:
     (Click here to disable these hints.)
   hint_hover_text: "Open a menu from BlockProt or click here to disable hints."
   disabled_hints: "§6Disabled hints!"
+  chat_input_prompt: "§eType the player name §7(§bTab§7 suggestions · §aEnter§7 confirm · §c{cancel}§7 cancel):"
+  chat_input_cancel_word: "cancel"
+  chat_input_cancelled: "§cSearch cancelled."
+  lock_on_place_success: "§aBlock protected!"
+  # Mensaje temporal en action-bar mientras se busca un jugador. {player} = nombre buscado.
+  friends_searching: "§eSearching for §f{player}§e..."
+  friends_addall_success: "§aAdded §f{player}§a as friend in §f{count}§a block(s)."
+  friends_addall_usage: "§cUsage: /blockprot friends addall <player>"
+  inactivity_cleanup_done: "§eInactivity cleanup: §f{count}§e block(s) freed."
+  friends_list_title: "§6Your Friends"
+
+console:
+  config_change_detected: "Configuration change detected; reloading..."
+  config_reloaded: "Configuration reloaded automatically."
+  filewatcher_error: "File watcher error: {error}"
+  audit_logger_started: "Audit logger started."
+  audit_logger_failed: "Could not start audit logger: {error}"
+  worldedit_listener_enabled: "WorldEdit paste auto-lock listener enabled."
+  claims_system_enabled: "Claims system enabled."
+  claims_system_disabled: "Claims system disabled (claims_enabled=false)."
+  worlds_yml_syntax_error: "worlds.yml has a YAML syntax error; restoring from defaults: {error}"
+  worlds_yml_restored: "worlds.yml restored from internal defaults."
+  worlds_yml_restore_failed: "Could not restore worlds.yml: {error}"
+  worlds_yml_save_failed: "Could not save worlds.yml: {error}"
+
+worlds:
+  scan_start: "Scanning worlds... ({count} loaded)"
+  scan_world_added: "World '{world}' added to worlds.yml with protection enabled."
+  scan_complete: "World scan complete: {count} world(s) detected, {added} added to worlds.yml. Check session log for details."
+
+claims:
+  wand_pos_a: "§bCorner A set at §f({x}, {y}, {z})§b. Now right-click corner B."
+  wand_pos_b: "§bCorner B set at §f({x}, {y}, {z})§b. Type a name in chat to create the claim."
+  created: "§aClaim §6{name} §acreated! Region: §f{x1},{y1},{z1} §a→ §f{x2},{y2},{z2} §7(world: {world})."
+  deleted: "§aClaim §6{name} §adeleted."
+  no_claim_here: "§cThere is no claim at your current location."
+  overlap: "§cThis area overlaps with another player's claim."
+  no_permission: "§cYou do not have permission to modify this claim."
+  list_header: "§6Your active claims:"
+  name_prompt: "§eType a name for your claim in chat. §7(Type §c{cancel}§7 to abort):"
+  name_cancel_word: "cancel"
+  name_cancelled: "§cClaim creation cancelled."
+  name_too_long: "§cName is too long. Maximum {max} characters."
+  name_invalid: "§cInvalid name. Use only letters, numbers, spaces, underscores, or hyphens."
+  wand_removed: "§7Claim wand removed."
+  timeout: "§cClaim creation timed out. Please use the wand again."
+  welcome_set: "§aWelcome message set for claim §6{name}§a."
+  welcome_cleared: "§7Welcome message cleared for claim §6{name}§7."
+  welcome_prompt: "§eType the welcome message in chat (supports §r&§e colour codes). §7Type §c{cancel}§7 to abort:"
+  delete_confirm_title: "§cConfirm deletion"
+  delete_yes: "§c§lDelete claim"
+  delete_cancel: "§a§lKeep claim"
+  flags:
+    title: "Claim Flags"
+    fire: "Fire spread"
+    tnt: "TNT / Explosions"
+    redstone: "Redstone (by others)"
+    pvp: "PvP"
+    flow: "Water & Lava flow"
+    leaf_decay: "Leaf decay"
+    mob_spawning: "Mob spawning"
+    chest: "Container access (non-members)"
+    door: "Door / Trapdoor use (non-members)"
+    lever_button: "Lever & Button use (non-members)"
+    use_bucket: "Bucket use (non-members)"
+    pet_spawning: "Pet taming (non-members)"
+    pet_riding: "Pet riding (non-members)"
+    pet_moving: "Lead animals in (non-members)"
+    invincible: "Invincible zone (no damage)"
+    deny_enderpearl: "Allow ender pearl entry"
+  hub:
+    title: "Claim Management"
+    info: "§6Claim Info"
+    flags: "§6Flags"
+    delete: "§cDelete Claim"
+    wand: "§eGet Wand"
+    my_claims: "§eMy Claims"
+    welcome: "§eWelcome Message"
 
 integrations:
   lands:
@@ -77,3 +164,7 @@ integrations:
     protect_containers_desc: Allows a player to protect chests, furnaces, ...
     require_protect_for_friends_flag_name: Require "Protect containers" for friends (BlockProt)
     require_protect_for_friends_desc: Only players that have the "Protect containers" flag are eligible to be added as a friend.
+
+help:
+  header: "§6=== BlockProt Help ==="
+  footer: "§6=================="

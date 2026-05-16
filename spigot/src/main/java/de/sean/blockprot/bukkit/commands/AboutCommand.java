@@ -19,6 +19,8 @@
 package de.sean.blockprot.bukkit.commands;
 
 import de.sean.blockprot.bukkit.BlockProt;
+import de.sean.blockprot.bukkit.TranslationKey;
+import de.sean.blockprot.bukkit.Translator;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -31,19 +33,28 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class AboutCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         final ComponentBuilder builder = new ComponentBuilder();
         final PluginDescriptionFile description = BlockProt.getInstance().getDescription();
-        builder.append("§x§a§3§c§6§e§bBlockProt v" + description.getVersion() + " - Spigot Plugin\n");
-        builder.append("Author: " +
-            Pattern.compile("[\\[\\]]")
-                .matcher(description.getAuthors().toString()).replaceAll("") + "\n"
-        );
-        builder.append(createUrlComponent("§x§c§3§e§e§a§7Click here to report issues or for suggestions", "https://github.com/spnda/BlockProt/issues", "You can report issues to me here!"));
+
+        builder.append(Translator.get(TranslationKey.ABOUT__TITLE).replace("{version}", "v" + description.getVersion()) + "\n");
+        builder.append(Translator.get(TranslationKey.ABOUT__ORIGINAL_AUTHOR) + "\n");
+        builder.append(Translator.get(TranslationKey.ABOUT__FORK_MAINTAINERS) + "\n");
+        builder.append(createUrlComponent(
+            Translator.get(TranslationKey.ABOUT__REPORT_ORIGINAL),
+            "https://github.com/spnda/BlockProt/issues",
+            "Report bugs or suggestions for the original plugin"
+        ));
+        builder.append("\n");
+        builder.append(createUrlComponent(
+            Translator.get(TranslationKey.ABOUT__REPORT_FORK),
+            "https://github.com/VictorGugug/BlockProt-SP26/issues",
+            "Report bugs specific to this fork here"
+        ));
+
         sender.spigot().sendMessage(builder.create());
         return true;
     }

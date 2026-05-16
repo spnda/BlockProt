@@ -72,7 +72,7 @@ public final class InventoryState {
     public int currentPageIndex = 0;
 
     /**
-     * The friend we currently want to modify with {@link FriendDetailInventory}.
+     * The current friend we currently want to modify with {@link FriendDetailInventory}.
      *
      * @since 1.1.16
      */

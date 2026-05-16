@@ -21,32 +21,38 @@ package de.sean.blockprot.bukkit.inventories;
 import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
-import net.wesjd.anvilgui.AnvilGUI;
+import de.sean.blockprot.bukkit.VersionCompat;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
-
-import java.util.Collections;
-import java.util.List;
 
 public class FriendSearchInventory {
-    public static void openAnvilInventory(@NotNull final Player requestingPlayer) {
-        (new AnvilGUI.Builder())
-            .onClick(FriendSearchInventory::onCompleteCallback)
-            .text("Name")
-            .title(Translator.get(TranslationKey.INVENTORIES__FRIENDS__SEARCH))
-            .plugin(BlockProt.getInstance())
-            .open(requestingPlayer);
+    public static void openChatInput(@NotNull final Player requestingPlayer) {
+        if (VersionCompat.isPaper()) {
+            // Paper 1.19+ — native chat input with Tab auto-complete.
+            ChatInput.open(
+                requestingPlayer,
+                BlockProt.getInstance(),
+                text -> handleResult(requestingPlayer, text)
+            );
+        } else {
+            // Spigot fallback — server-side anvil GUI.
+            String prompt = Translator.get(TranslationKey.INVENTORIES__FRIENDS__SEARCH);
+            AnvilInput.open(
+                requestingPlayer,
+                BlockProt.getInstance(),
+                prompt,
+                prompt,
+                text -> handleResult(requestingPlayer, text)
+            );
+        }
     }
 
-    private static @NotNull @Unmodifiable List<AnvilGUI.ResponseAction> onCompleteCallback(@NotNull final Integer slot, @NotNull AnvilGUI.StateSnapshot snapshot) {
-        if (slot != AnvilGUI.Slot.OUTPUT) {
-            return Collections.emptyList();
+    private static void handleResult(@NotNull Player player, String text) {
+        if (text == null || text.isBlank()) return;
+        Inventory inventory = new FriendSearchResultInventory().fill(player, text);
+        if (inventory != null) {
+            player.openInventory(inventory);
         }
-
-        Inventory inventory = new FriendSearchResultInventory().fill(snapshot.getPlayer(), snapshot.getText());
-        if (inventory == null) return List.of(AnvilGUI.ResponseAction.close());
-        return List.of(AnvilGUI.ResponseAction.openInventory(inventory));
     }
 }

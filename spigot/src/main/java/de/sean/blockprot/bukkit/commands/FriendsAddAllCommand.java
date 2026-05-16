@@ -45,13 +45,8 @@ public final class FriendsAddAllCommand implements CommandExecutor {
                 Translator.get(TranslationKey.MESSAGES__ONLY_PLAYERS)));
             return true;
         }
-
         if (args.length == 1) {
-            InventoryState state = new InventoryState(null);
-            state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH;
-            InventoryState.set(player.getUniqueId(), state);
-            var inv = new FriendManageInventory().fill(player);
-            if (inv != null) player.openInventory(inv);
+            openFriendManageGui(player);
             return true;
         }
 
@@ -60,22 +55,28 @@ public final class FriendsAddAllCommand implements CommandExecutor {
             return true;
         }
 
-        final String targetName = args[2];
+        handleAddAllCommand(player, args[2]);
+        return true;
+    }
 
+    private void openFriendManageGui(@NotNull Player player) {
+        InventoryState state = new InventoryState(null);
+        state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH;
+        InventoryState.set(player.getUniqueId(), state);
+        var inv = new FriendManageInventory().fill(player);
+        if (inv != null) player.openInventory(inv);
+    }
+
+    private void handleAddAllCommand(@NotNull Player player, @NotNull String targetName) {
         sendAction(player, Translator.get(TranslationKey.MESSAGES__FRIENDS_SEARCHING)
             .replace("{player}", targetName));
+
         final BukkitTask[] clearTask = {null};
         clearTask[0] = Bukkit.getScheduler().runTaskLater(BlockProt.getInstance(),
             () -> player.sendActionBar(Component.empty()), SEARCH_MSG_TIMEOUT_TICKS);
 
         Bukkit.getScheduler().runTaskAsynchronously(BlockProt.getInstance(), () -> {
-
-            OfflinePlayer target = PlayerNameResolver.findOfflinePlayer(targetName);
-            if (target == null) {
-                @SuppressWarnings("deprecation")
-                OfflinePlayer fallback = Bukkit.getOfflinePlayer(targetName);
-                if (fallback.hasPlayedBefore()) target = fallback;
-            }
+            OfflinePlayer target = resolveOfflinePlayer(targetName);
 
             if (clearTask[0] != null) {
                 clearTask[0].cancel();
@@ -95,26 +96,7 @@ public final class FriendsAddAllCommand implements CommandExecutor {
 
             Bukkit.getScheduler().runTask(BlockProt.getInstance(), () -> {
                 player.sendActionBar(Component.empty());
-
-                final PlayerBlocksStatistic stat = new PlayerBlocksStatistic();
-                StatHandler.getStatistic(stat, player);
-
-                int modified = 0;
-                for (var entry : stat.get()) {
-                    var loc = entry.get();
-                    if (loc.getWorld() == null) continue;
-                    try {
-                        var block = loc.getWorld().getBlockAt(loc);
-                        if (!BlockProt.getDefaultConfig().isLockable(block.getType())) continue;
-                        var handler = new BlockNBTHandler(block);
-                        if (!handler.isOwner(player.getUniqueId())) continue;
-                        if (!handler.containsFriend(targetUuid)) {
-                            handler.addFriend(targetUuid);
-                            handler.applyToOtherContainer();
-                            modified++;
-                        }
-                    } catch (Exception ignored) {}
-                }
+                int modified = applyAddAllToOwnedBlocks(player, targetUuid);
 
                 PlayerSettingsHandler settings = new PlayerSettingsHandler(player);
                 if (!settings.containsFriend(targetUuid)) {
@@ -128,8 +110,40 @@ public final class FriendsAddAllCommand implements CommandExecutor {
                         .replace("{count}", String.valueOf(count))));
             });
         });
+    }
 
-        return true;
+    @Nullable
+    private OfflinePlayer resolveOfflinePlayer(@NotNull String name) {
+        OfflinePlayer target = PlayerNameResolver.findOfflinePlayer(name);
+        if (target == null) {
+            @SuppressWarnings("deprecation")
+            OfflinePlayer fallback = Bukkit.getOfflinePlayer(name);
+            if (fallback.hasPlayedBefore()) target = fallback;
+        }
+        return target;
+    }
+
+    private int applyAddAllToOwnedBlocks(@NotNull Player player, @NotNull String targetUuid) {
+        final PlayerBlocksStatistic stat = new PlayerBlocksStatistic();
+        StatHandler.getStatistic(stat, player);
+
+        int modified = 0;
+        for (var entry : stat.get()) {
+            var loc = entry.get();
+            if (loc.getWorld() == null) continue;
+            try {
+                var block = loc.getWorld().getBlockAt(loc);
+                if (!BlockProt.getDefaultConfig().isLockable(block.getType())) continue;
+                var handler = new BlockNBTHandler(block);
+                if (!handler.isOwner(player.getUniqueId())) continue;
+                if (!handler.containsFriend(targetUuid)) {
+                    handler.addFriend(targetUuid);
+                    handler.applyToOtherContainer();
+                    modified++;
+                }
+            } catch (Exception ignored) {}
+        }
+        return modified;
     }
 
     @Override

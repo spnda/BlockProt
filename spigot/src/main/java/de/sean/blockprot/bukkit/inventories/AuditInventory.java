@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-// GUI que muestra el historial de accesos denegados de un bloque protegido.
-// El dueño ve los intentos fallidos. Los admins también ven un botón de teletransporte.
+// GUI that shows the access history for a protected block.
+// Owners see denied attempts. Admins also get a teleport button.
 public final class AuditInventory extends BlockProtInventory {
 
     private static final int PAGE_SIZE = 45; // 5 filas para entradas, última fila para controles
@@ -52,7 +52,7 @@ public final class AuditInventory extends BlockProtInventory {
 
         switch (item.getType()) {
             case BLACK_STAINED_GLASS_PANE -> {
-                // Volver al menú del bloque
+                // Return to the block menu.
                 if (state.getBlock() != null) {
                     var handler = getNbtHandlerOrNull(state.getBlock());
                     closeAndOpen(player, handler == null ? null
@@ -75,7 +75,7 @@ public final class AuditInventory extends BlockProtInventory {
                 }
             }
             case COMPASS -> {
-                // Teletransporte al bloque (solo admins)
+                // Teleport to the block. Admins only.
                 if (player.hasPermission(Permissions.ADMIN.key())) {
                     var world = Bukkit.getWorld(blockWorld);
                     if (world != null) {

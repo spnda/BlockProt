@@ -175,7 +175,7 @@ public class BlockEventListener implements Listener {
                         .filter(fh -> PluginIntegration.filterFriendByUuidForAll(UUID.fromString(fh.getName()), event.getPlayer(), block))
                         .forEach(handler::addFriend);
 
-                    // Confirmar proteccion en la action bar
+                    // Confirm protection in the action bar.
                     event.getPlayer().sendActionBar(
                         LegacyComponentSerializer.legacySection().deserialize(
                             Translator.get(TranslationKey.MESSAGES__LOCK_ON_PLACE_SUCCESS)

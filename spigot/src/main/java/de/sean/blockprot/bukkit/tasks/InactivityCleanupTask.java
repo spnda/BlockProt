@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-// Tarea que libera bloques protegidos de jugadores inactivos.
+// Task that releases protected blocks owned by inactive players.
 // Solo se activa si inactivity_cleanup_days > 0 en config.yml.
 // Se ejecuta una vez al arrancar el servidor, en hilo async.
 public final class InactivityCleanupTask implements Runnable {
@@ -30,7 +30,7 @@ public final class InactivityCleanupTask implements Runnable {
         long cutoff = System.currentTimeMillis() - thresholdMs;
         int total = 0;
 
-        // Iterar todos los jugadores conocidos en el caché de estadísticas
+        // Iterate every player known by the statistics cache.
         for (OfflinePlayer offline : Bukkit.getOfflinePlayers()) {
             if (offline.isOnline()) continue;
             if (offline.getLastSeen() > cutoff) continue; // Jugador activo, saltar
@@ -40,7 +40,7 @@ public final class InactivityCleanupTask implements Runnable {
                 if (offline.getPlayer() != null) {
                     StatHandler.getStatistic(stat, offline.getPlayer());
                 } else {
-                    // Jugador offline — intentamos cargar NBT desde disco
+                    // Offline player: try to load NBT data from disk.
                     // Si no está disponible, saltamos silenciosamente
                     continue;
                 }

@@ -1,7 +1,6 @@
 package de.sean.blockprot.bukkit.config;
 
 import de.sean.blockprot.bukkit.BlockProtLogger;
-import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.TranslationKey;
 import org.bukkit.Bukkit;
@@ -20,15 +19,16 @@ import java.util.*;
 import java.util.logging.Logger;
 
 /**
- * Configuracion granular por mundo leida de worlds.yml.
+ * Granular per-world lockable-block configuration loaded from worlds.yml.
  *
- * Jerarquia de resolucion para un mundo dado cuando worlds_config_enabled=true:
- *   1. Si el mundo aparece en worlds.yml con enabled: false, no hay proteccion.
- *   2. Si el mundo aparece en worlds.yml con enabled: true, usa las listas de worlds.yml exclusivamente.
- *   3. Si el mundo no aparece en worlds.yml, usa las listas globales de config.yml.
+ * Resolution order for a world when worlds_config_enabled=true:
+ *   1. If the world appears in worlds.yml with enabled: false, protection is disabled.
+ *   2. If the world appears in worlds.yml with enabled: true, its worlds.yml lists are used.
+ *   3. If the world is not listed, global config.yml lists are used.
  *
- * El metodo scanAndPopulate() escanea los mundos cargados al arrancar y anade entradas faltantes
- * con enabled: true y las listas heredadas del config.yml global. Nunca sobrescribe entradas existentes.
+ * scanAndPopulate() scans loaded worlds at startup and adds missing entries
+ * with enabled: true and lists inherited from global config.yml. Existing
+ * entries are never overwritten.
  */
 public final class WorldsConfig {
 
@@ -38,7 +38,7 @@ public final class WorldsConfig {
     private final Map<String, WorldEntry> worlds = new HashMap<>();
 
     // -------------------------------------------------------------------------
-    // Construcción desde YamlConfiguration (ya cargada del disco)
+    // Construction from the already-loaded worlds.yml configuration.
     // -------------------------------------------------------------------------
 
     public WorldsConfig(@NotNull YamlConfiguration config) {
@@ -61,18 +61,18 @@ public final class WorldsConfig {
     }
 
     // -------------------------------------------------------------------------
-    // Escaneo y auto-población (no-destructivo)
+    // Non-destructive world scanning and population.
     // -------------------------------------------------------------------------
 
     /**
-     * Escanea los mundos cargados en el servidor y anade en worlds.yml los que falten.
-     * Cada mundo nuevo se crea con enabled: true y las listas heredadas del config.yml global.
-     * No sobreescribe entradas existentes.
+     * Scans loaded server worlds and adds missing entries to worlds.yml.
+     * Each new world is created with enabled: true and lists inherited from
+     * the global config.yml. Existing entries are never overwritten.
      *
-     * @param file         El archivo worlds.yml en disco.
-     * @param globalConfig El config.yml global, para heredar las listas de bloques por defecto.
-     * @param logger       Logger del plugin para mensajes de consola.
-     * @return             La configuración actualizada (para que BlockProt pueda recargar el objeto).
+     * @param file         The worlds.yml file on disk.
+     * @param globalConfig Global config.yml, used to inherit default block lists.
+     * @param logger       Plugin logger used for console messages.
+     * @return             The updated configuration.
      */
     @NotNull
     public static YamlConfiguration scanAndPopulate(
@@ -112,19 +112,19 @@ public final class WorldsConfig {
         List<World> serverWorlds = Bukkit.getWorlds();
         int added = 0;
 
-        // Log scan start only to session log — keeps console clean
+        // Log scan start only to the session log to keep console clean.
         BlockProtLogger.log("worlds-scan", Translator.get(TranslationKey.WORLDS__SCAN_START)
             .replace("{count}", String.valueOf(serverWorlds.size())));
 
         for (World world : serverWorlds) {
             String key = "worlds." + world.getName();
 
-            if (disk.contains(key)) continue; // Ya existe — respetar configuración del admin
+            if (disk.contains(key)) continue; // Existing entries are administrator-owned.
 
-            // Crear la entrada como activa para no romper la proteccion base.
+            // New entries stay active so the core protection system cannot be disabled by accident.
             disk.set(key + ".enabled", true);
 
-            // Heredar listas del config.yml global como punto de partida
+            // Inherit the global config.yml lists as the starting point.
             copyList(disk, globalConfig, key, "lockable_tile_entities");
             copyList(disk, globalConfig, key, "lockable_shulker_boxes");
             copyList(disk, globalConfig, key, "lockable_blocks");
@@ -166,7 +166,7 @@ public final class WorldsConfig {
     }
 
     // -------------------------------------------------------------------------
-    // Materiales
+    // Materials.
     // -------------------------------------------------------------------------
 
     private Set<Material> loadMaterials(@NotNull ConfigurationSection section, @NotNull String key) {
@@ -179,16 +179,16 @@ public final class WorldsConfig {
     }
 
     // -------------------------------------------------------------------------
-    // Consultas públicas
+    // Public queries.
     // -------------------------------------------------------------------------
 
-    /** True si el mundo tiene entrada en worlds.yml con enabled: true. */
+    /** Returns true when the world has an enabled worlds.yml entry. */
     public boolean hasWorldConfig(@NotNull World world) {
         WorldEntry e = worlds.get(world.getName().toLowerCase());
         return e != null && e.enabled();
     }
 
-    /** True si el mundo tiene entrada en worlds.yml con enabled: false (sin protección). */
+    /** Returns true when the world has a disabled worlds.yml entry. */
     public boolean isWorldDisabled(@NotNull World world) {
         WorldEntry e = worlds.get(world.getName().toLowerCase());
         return e != null && !e.enabled();

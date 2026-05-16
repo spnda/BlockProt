@@ -228,13 +228,13 @@ public final class BlockProt extends JavaPlugin {
                 .replace("{error}", e.getMessage()));
         }
 
-        // File watcher — recarga config automáticamente al detectar cambios en disco
+        // Reload configuration automatically when relevant files change on disk.
         fileWatcher = new ConfigFileWatcher(this);
         fileWatcher.start();
 
-        // Backup automático al arrancar
+        // Startup backup runs only when previous plugin data is detected.
 
-        // Limpieza de inactividad si está configurada
+        // Optional inactivity cleanup.
         int inactivityDays = this.getConfig().getInt("inactivity_cleanup_days", -1);
         if (inactivityDays > 0) {
             Bukkit.getScheduler().runTaskAsynchronously(this, new InactivityCleanupTask(inactivityDays));
@@ -335,7 +335,7 @@ public final class BlockProt extends JavaPlugin {
         YamlConfiguration wantedConfig = saveAndLoadConfigFile(langFolder, fileName, BlockProt.defaultConfig.shouldReplaceTranslations());
         Translator.loadFromConfigs(defaultLanguageConfig, wantedConfig);
 
-        // Scan de mundos DESPUÉS de cargar traducciones — los mensajes ya están disponibles
+        // Worlds are scanned after translations are loaded so console messages are localized.
         if (defaultConfig.isWorldsConfigEnabled()) {
             File worldsFile = new File(this.getDataFolder(), "worlds.yml");
             YamlConfiguration worldsDisk = WorldsConfig.scanAndPopulate(worldsFile, this.getConfig(), this.getLogger());

@@ -210,7 +210,7 @@ public class BlockLockInventory extends BlockProtInventory {
             );
         }
 
-        // Botón de auditoría: dueño o admin, y solo si el audit logger está activo
+        // Audit button: owner or admin only, and only when the audit logger is active.
         boolean isOwnerOrAdmin = handler.isOwner(player.getUniqueId()) || player.hasPermission(Permissions.ADMIN.key());
         if (!isNotProtected && isOwnerOrAdmin && BlockProt.getAuditLogger() != null) {
             setItemStack(

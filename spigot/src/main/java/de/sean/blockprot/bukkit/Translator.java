@@ -32,11 +32,10 @@ import java.util.Locale;
 /**
  * Helper to quickly obtain translations from a config by a enum key.
  *
- * <h3>Auto-reparación SP26</h3>
- * <p>Cuando una clave falta en el archivo de idioma activo pero existe en el inglés por defecto,
- * se usa silenciosamente el valor en inglés. Sólo se emite <em>una única línea de resumen</em>
- * en la consola (nivel INFO); todos los detalles se envían al log de sesión de
- * {@link BlockProtLogger} para no saturar la consola del servidor.</p>
+ * <h3>SP26 self-repair</h3>
+ * <p>When a key is missing from the active language file but exists in the
+ * bundled English file, the English value is used silently. Only one summary
+ * line is sent to console; details are written to the session log.</p>
  *
  * @since 0.1.10
  */
@@ -88,12 +87,12 @@ public final class Translator {
     /**
      * Initialize the translations from given configuration and sets the internal locale.
      *
-     * <p><b>Auto-reparación (SP26):</b> Las claves que falten en {@code config} pero existan
-     * en {@code defaultConfig} se rellenan silenciosamente con el valor en inglés. Sólo se
-     * muestra <em>una línea de resumen</em> en la consola; los detalles van al log de sesión.</p>
+     * <p><b>SP26 self-repair:</b> keys missing from {@code config} but present
+     * in {@code defaultConfig} are filled from English. One summary is printed
+     * to console and the full list goes to the session log.</p>
      *
-     * @param defaultConfig La configuración inglesa de referencia (translations_en.yml).
-     * @param config        La configuración del idioma activo.
+     * @param defaultConfig The English reference configuration.
+     * @param config        The active language configuration.
      * @since 0.4.6
      */
     public static void loadFromConfigs(@NotNull final YamlConfiguration defaultConfig,
@@ -104,14 +103,14 @@ public final class Translator {
         final String langFile = BlockProt.getDefaultConfig().getLanguageFile();
         TranslationKey[] translations = TranslationKey.values();
 
-        // Listas para el resumen — sin emit individual por clave
+        // Summary lists; individual keys are written only to the session log.
         List<String> missingInBoth   = new ArrayList<>();
         List<String> missingInActive = new ArrayList<>();
 
         for (TranslationKey translation : translations) {
             String translationKey = translation.toString();
 
-            // Clave ausente en AMBOS archivos → valor desconocido
+            // Missing in both files: unknown value.
             if (!defaultConfig.contains(translationKey, true)
                     && !config.contains(translationKey, true)) {
                 values.put(translation, TranslationValue.UNKNOWN_TRANSLATION_VALUE);
@@ -119,39 +118,37 @@ public final class Translator {
                 continue;
             }
 
-            // Valor del archivo inglés (fallback)
+            // Bundled English fallback value.
             Object defaultValue = defaultConfig.get(translationKey);
             TranslationValue translatedValue =
                 (defaultValue instanceof String)
                     ? new TranslationValue((String) defaultValue)
                     : TranslationValue.UNKNOWN_TRANSLATION_VALUE;
 
-            // Valor del archivo del idioma activo
+            // Active language value.
             Object activeValue = config.get(translationKey);
             if (activeValue instanceof String) {
                 translatedValue.setTranslatedValue((String) activeValue);
             } else {
-                // Falta en el idioma activo → se usa el inglés silenciosamente
+                // Missing in active language: use English silently.
                 missingInActive.add(translationKey);
             }
 
             values.put(translation, translatedValue);
         }
 
-        // ── Enviar detalles al log de sesión (NO a la consola) ───────────────
         if (!missingInBoth.isEmpty()) {
             BlockProtLogger.log("Translator",
-                "Claves ausentes en EN + " + langFile + " (" + missingInBoth.size() + "): "
+                "Keys missing in EN + " + langFile + " (" + missingInBoth.size() + "): "
                 + String.join(", ", missingInBoth));
         }
         if (!missingInActive.isEmpty()) {
             BlockProtLogger.log("Translator",
-                "Claves en inglés usadas como fallback en " + langFile
+                "English fallback keys used in " + langFile
                 + " (" + missingInActive.size() + "): "
                 + String.join(", ", missingInActive));
         }
 
-        // ── Una sola línea de resumen en consola si hay algo que reportar ─────
         int total = missingInBoth.size() + missingInActive.size();
         if (total > 0) {
             BlockProt.getInstance().getLogger().info(

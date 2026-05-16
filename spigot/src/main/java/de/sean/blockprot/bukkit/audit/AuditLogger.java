@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-// Registro de auditoría en SQLite. Guarda quién intentó acceder a qué bloque y cuándo.
+// SQLite audit log. Stores who tried to access which block and when.
 // Las escrituras son siempre async. Las lecturas pueden ser sync o async según el contexto.
 public final class AuditLogger {
 
     public enum Action {
-        ACCESS_DENIED,   // Jugador sin permiso intentó abrir un bloque protegido
+        ACCESS_DENIED,   // A player without permission tried to open a protected block.
         ACCESS_GRANTED   // Jugador con permiso accedió (logging opcional, desactivado por defecto)
     }
 

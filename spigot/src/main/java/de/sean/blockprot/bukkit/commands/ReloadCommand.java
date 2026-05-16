@@ -32,7 +32,7 @@ public class ReloadCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (canUseCommand(sender)) {
-            // Backup antes de recargar por si acaso
+            // Create a safety backup before reloading.
             Bukkit.getScheduler().runTaskAsynchronously(BlockProt.getInstance(),
                 new de.sean.blockprot.bukkit.tasks.BackupTask(BlockProt.getInstance().getDataFolder()));
             BlockProt.getInstance().reloadConfigAndTranslations();

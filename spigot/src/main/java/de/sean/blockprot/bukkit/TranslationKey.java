@@ -86,7 +86,7 @@ public enum TranslationKey {
     MESSAGES__CHAT_INPUT_CANCELLED,
     MESSAGES__LOCK_ON_PLACE_SUCCESS,
 
-    /** Mensaje temporal en action-bar mientras se busca un jugador ({player}). */
+    /** Temporary action-bar message shown while a player lookup is running. */
     MESSAGES__FRIENDS_SEARCHING,
 
     MESSAGES__FRIENDS_ADDALL_SUCCESS,

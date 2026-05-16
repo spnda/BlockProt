@@ -111,10 +111,11 @@ public final class Translator {
         for (TranslationKey translation : translations) {
             String translationKey = translation.toString();
 
-            // Missing in both files: unknown value.
+            // Missing in both files: use the YAML key as fallback instead of a
+            // generic 'Unknown Translation' placeholder, so the log is actionable.
             if (!defaultConfig.contains(translationKey, true)
                     && !config.contains(translationKey, true)) {
-                values.put(translation, TranslationValue.UNKNOWN_TRANSLATION_VALUE);
+                values.put(translation, new TranslationValue(translationKey));
                 missingInBoth.add(translationKey);
                 continue;
             }
@@ -173,7 +174,7 @@ public final class Translator {
     @NotNull
     public static String get(@NotNull final TranslationKey key) {
         TranslationValue value = values.get(key);
-        return value == null ? DEFAULT_FALLBACK : value.getValue();
+        return value == null ? key.toString() : value.getValue();
     }
 
     /**

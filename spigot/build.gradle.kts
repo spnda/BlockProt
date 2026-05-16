@@ -41,10 +41,9 @@ repositories {
 dependencies {
     implementation(project(":common"))
 
-    // Paper API — compilar contra el mínimo soportado (1.21) garantiza que el JAR
-    // funciona en cualquier versión desde 1.21 hasta 26.x y futuros 27.x+.
-    // Paper mantiene compatibilidad hacia atrás; APIs específicas de versiones
-    // más nuevas se guardan detrás de VersionCompat/MinecraftVersion checks.
+    // Compile against the minimum supported Paper API (1.21) so the same JAR
+    // can run on 1.21, 26.x, and future 27.x+ servers. Newer APIs must stay
+    // guarded behind VersionCompat/MinecraftVersion checks.
     compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
     compileOnly("org.apache.commons:commons-lang3:3.13.0")
 

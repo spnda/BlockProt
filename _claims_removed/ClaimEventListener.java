@@ -565,7 +565,7 @@ public class ClaimEventListener implements Listener {
         if (t != null) t.cancel();
     }
 
-    // ─── Block protection inside archived claims ──────────────────────────────
+    // ─── Protección de bloques dentro de parcela ──────────────────────────────
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBlockPlaceInClaim(@NotNull BlockPlaceEvent event) {

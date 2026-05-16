@@ -14,9 +14,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-// Task that releases protected blocks owned by inactive players.
-// Solo se activa si inactivity_cleanup_days > 0 en config.yml.
-// Se ejecuta una vez al arrancar el servidor, en hilo async.
+// Task that releases protected blocks from inactive players.
+// Only activated if inactivity_cleanup_days > 0 in config.yml.
+// Runs once at server startup on an async thread.
 public final class InactivityCleanupTask implements Runnable {
 
     private final long thresholdMs;
@@ -30,18 +30,18 @@ public final class InactivityCleanupTask implements Runnable {
         long cutoff = System.currentTimeMillis() - thresholdMs;
         int total = 0;
 
-        // Iterate every player known by the statistics cache.
+        // Iterate all known players from the statistics cache
         for (OfflinePlayer offline : Bukkit.getOfflinePlayers()) {
             if (offline.isOnline()) continue;
-            if (offline.getLastSeen() > cutoff) continue; // Jugador activo, saltar
+            if (offline.getLastSeen() > cutoff) continue; // Active player, skip
 
             try {
                 var stat = new PlayerBlocksStatistic();
                 if (offline.getPlayer() != null) {
                     StatHandler.getStatistic(stat, offline.getPlayer());
                 } else {
-                    // Offline player: try to load NBT data from disk.
-                    // Si no está disponible, saltamos silenciosamente
+                    // Offline player: attempt to load NBT from disk.
+                    // If not available, skip silently.
                     continue;
                 }
 
@@ -67,7 +67,7 @@ public final class InactivityCleanupTask implements Runnable {
             if (freed > 0) {
                 String msg = Translator.get(TranslationKey.MESSAGES__INACTIVITY_CLEANUP_DONE)
                     .replace("{count}", String.valueOf(freed));
-                BlockProt.getInstance().getLogger().info(msg.replaceAll("§.", ""));
+                BlockProt.getInstance().getLogger().info(msg.replaceAll("(?i)§[0-9A-FK-ORX]", ""));
                 Bukkit.getOnlinePlayers().stream()
                     .filter(p -> p.hasPermission("blockprot.admin"))
                     .forEach(p -> p.sendMessage(LegacyComponentSerializer.legacySection().deserialize(msg)));

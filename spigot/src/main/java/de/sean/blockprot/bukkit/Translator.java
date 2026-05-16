@@ -34,8 +34,9 @@ import java.util.Locale;
  *
  * <h3>SP26 self-repair</h3>
  * <p>When a key is missing from the active language file but exists in the
- * bundled English file, the English value is used silently. Only one summary
- * line is sent to console; details are written to the session log.</p>
+ * bundled English file, the English value is used silently. Console output is
+ * limited to one localized summary line; the full details go to the session
+ * log to avoid flooding the server console.</p>
  *
  * @since 0.1.10
  */
@@ -88,8 +89,8 @@ public final class Translator {
      * Initialize the translations from given configuration and sets the internal locale.
      *
      * <p><b>SP26 self-repair:</b> keys missing from {@code config} but present
-     * in {@code defaultConfig} are filled from English. One summary is printed
-     * to console and the full list goes to the session log.</p>
+     * in {@code defaultConfig} are filled from English. Only one summary is
+     * printed to console; details are written to the session log.</p>
      *
      * @param defaultConfig The English reference configuration.
      * @param config        The active language configuration.
@@ -130,7 +131,7 @@ public final class Translator {
             if (activeValue instanceof String) {
                 translatedValue.setTranslatedValue((String) activeValue);
             } else {
-                // Missing in active language: use English silently.
+                // Missing in the active language: use English silently.
                 missingInActive.add(translationKey);
             }
 
@@ -152,9 +153,11 @@ public final class Translator {
         int total = missingInBoth.size() + missingInActive.size();
         if (total > 0) {
             BlockProt.getInstance().getLogger().info(
-                "Translations: " + total + " incomplete key(s) in "
-                + langFile + "; " + missingInActive.size() + " using English fallback, "
-                + missingInBoth.size() + " missing in both files. Details are in the session log.");
+                Translator.get(TranslationKey.CONSOLE__TRANSLATIONS_INCOMPLETE)
+                    .replace("{total}", String.valueOf(total))
+                    .replace("{file}", langFile)
+                    .replace("{fallback}", String.valueOf(missingInActive.size()))
+                    .replace("{missing}", String.valueOf(missingInBoth.size())));
         }
     }
 

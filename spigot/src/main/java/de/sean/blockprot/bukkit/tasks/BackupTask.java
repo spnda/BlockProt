@@ -2,6 +2,8 @@ package de.sean.blockprot.bukkit.tasks;
 
 import de.sean.blockprot.bukkit.BlockProt;
 import de.sean.blockprot.bukkit.BlockProtLogger;
+import de.sean.blockprot.bukkit.TranslationKey;
+import de.sean.blockprot.bukkit.Translator;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -70,7 +72,7 @@ public final class BackupTask implements Runnable {
         File backupDir = new File(dataFolder, "backups");
         if (!backupDir.exists() && !backupDir.mkdirs()) {
             BlockProt.getInstance().getLogger().warning(
-                "Could not create backup directory. Skipping backup.");
+                Translator.get(TranslationKey.CONSOLE__BACKUP_DIR_FAILED));
             return;
         }
 
@@ -86,14 +88,16 @@ public final class BackupTask implements Runnable {
             BlockProtLogger.log("backup", "Pre-existing data detected. Backup created at "
                 + zipFile.getAbsolutePath());
             BlockProt.getInstance().getLogger().info(
-                "Existing BlockProt data found; safety backup created: backups/" + zipFile.getName());
+                Translator.get(TranslationKey.CONSOLE__BACKUP_CREATED)
+                    .replace("{file}", zipFile.getName()));
             if (!forced) {
                 BlockProt.getInstance().getLogger().info(
-                    "Review config.yml before enabling SP26 features. Details are in the session log.");
+                    Translator.get(TranslationKey.CONSOLE__BACKUP_REVIEW_CONFIG));
             }
         } catch (IOException e) {
             BlockProt.getInstance().getLogger().warning(
-                "Failed to create backup: " + e.getMessage());
+                Translator.get(TranslationKey.CONSOLE__BACKUP_FAILED)
+                    .replace("{error}", e.getMessage()));
         }
     }
 

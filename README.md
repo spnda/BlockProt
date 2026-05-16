@@ -1,183 +1,321 @@
-# BlockProt
+# BlockProt - SP26 Fork
 
-[![CurseForge Downloads](http://cf.way2muchnoise.eu/full_440797_downloads.svg?badge_style=flat)](https://www.curseforge.com/minecraft/bukkit-plugins/blockprot)
-[![Modrinth Downloads](https://img.shields.io/modrinth/dt/uF5ePKuc?style=flat-square&color=green&label=Downloads&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGFyaWEtaGlkZGVuPSJ0cnVlIiBjbGFzcz0idGV4dC1sb2dvIiB3aWR0aD0iMTQyIiBoZWlnaHQ9IjE0MiI+PGc+PHBhdGggZD0iTTE1OS4wNyw4OS4yOUE3MC45NCw3MC45NCwwLDEsMCwyMCw2My41MkgzMkE1OC43OCw1OC43OCwwLDAsMSwxNDUuMjMsNDkuOTNsLTExLjY2LDMuMTJhNDYuNTQsNDYuNTQsMCwwLDAtMjktMjYuNTJsLTIuMTUsMTIuMTNhMzQuMzEsMzQuMzEsMCwwLDEsMi43Nyw2My4yNmwzLjE5LDExLjlhNDYuNTIsNDYuNTIsMCwwLDAsMjguMzMtNDlsMTEuNjItMy4xQTU3Ljk0LDU3Ljk0LDAsMCwxLDE0Ny4yNyw4NVoiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xOS43OSkiIGZpbGw9IiMxYmQ5NmEiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PC9wYXRoPjxwYXRoIGQ9Ik0xMDguOTIsMTM5LjNBNzAuOTMsNzAuOTMsMCwwLDEsMTkuNzksNzZoMTJhNTkuNDgsNTkuNDgsMCwwLDAsMS43OCw5LjkxLDU4LjczLDU4LjczLDAsMCwwLDMuNjMsOS45MWwxMC42OC02LjQxYTQ2LjU4LDQ2LjU4LDAsMCwxLDQ0LjcyLTY1TDkwLjQzLDM2LjU0QTM0LjM4LDM0LjM4LDAsMCwwLDU3LjM2LDc5Ljc1QzU3LjY3LDgwLjg4LDU4LDgyLDU4LjQzLDgzbDEzLjY2LTguMTlMNjgsNjMuOTNsMTIuOS0xMy4yNSwxNi4zMS0zLjUxTDEwMS45LDUzbC03LjUyLDcuNjEtNi41NSwyLjA2LTQuNjksNC44MiwyLjMsNi4zOHM0LjY0LDQuOTQsNC42NSw0Ljk0bDYuNTctMS43NCw0LjY3LTUuMTMsMTAuMi0zLjI0LDMsNi44NEwxMDQuMDUsODguNDMsODYuNDEsOTRsLTcuOTItOC44MUw2NC43LDkzLjQ4YTM0LjQ0LDM0LjQ0LDAsMCwwLDI4LjcyLDExLjU5TDk2LjYxLDExN0E0Ni42LDQ2LjYsMCwwLDEsNTQuMTMsOTkuODNsLTEwLjY0LDYuMzhhNTguODEsNTguODEsMCwwLDAsOTkuNi05Ljc3bDExLjgsNC4yOUE3MC43Nyw3MC43NywwLDAsMSwxMDguOTIsMTM5LjNaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTkuNzkpIiBmaWxsPSIjMWJkOTZhIj48L3BhdGg+PC9nPjwvc3ZnPg==)](https://modrinth.com/plugin/blockprot)
-[![Spigot Downloads](https://img.shields.io/spiget/downloads/87829?style=flat-square&color=orange&label=Spigot%20Downloads)](https://www.spigotmc.org/resources/blockprot.87829/)
-[![Spigot Rating](https://img.shields.io/spiget/stars/87829?style=flat-square&color=orange&label=Rating)](https://www.spigotmc.org/resources/blockprot.87829/)
-[![Hangar Downloads](https://img.shields.io/hangar/dt/BlockProt?style=flat-square&label=Hangar%20Downloads)](https://hangar.papermc.io/spnda/BlockProt)
 [![BlockProt CI](https://img.shields.io/github/actions/workflow/status/spnda/BlockProt/ci.yml?branch=master&style=flat-square&label=CI)](https://github.com/spnda/BlockProt)
-[![gitlocalized](https://gitlocalize.com/repo/6775/whole_project/badge.svg)](https://gitlocalize.com/repo/6775)
 [![JitPack](https://img.shields.io/jitpack/version/com.github.spnda/BlockProt?style=flat-square)](https://jitpack.io/#spnda/BlockProt)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square)](LICENSE)
 
+> **This is the SP26 community fork** of [BlockProt by spnda](https://github.com/spnda/BlockProt).  
+> It extends the original plugin with Java 25 / Paper 26.x compatibility, a hybrid MySQL index,
+> per-world configuration, access auditing, automatic backups, and several quality-of-life features.  
+> The upstream NBT block-protection core is preserved and untouched.
 
-[![Servers](https://img.shields.io/bstats/servers/9999?style=flat-square)](https://bstats.org/plugin/bukkit/BlockProt/9999)
-[![Players](https://img.shields.io/bstats/players/9999?style=flat-square)](https://bstats.org/plugin/bukkit/BlockProt/9999)
-[![Discord](https://img.shields.io/discord/860987230453891112?style=flat-square)](https://discord.gg/WVy6DHScFb)
-
-BlockProt is a lightweight Bukkit and Spigot plugin that gives players the ability to protect
-chests, furnaces and many more blocks. The plugin features a modern GUI approach instead of
-commands, so that any player can easily understand how to use all of its features.
-
-![image1](https://github.com/VictorGugug/BlockProt-SP26-U/blob/master/images/main_menu.png)
-
-## SP26-U fork notes
-
-This repository is a maintained SP26-U fork of the original
-[spnda/BlockProt](https://github.com/spnda/BlockProt) project. The original
-BlockProt core remains intact: NBT/Persistent Data Container ownership is still
-the source of truth for individual protected blocks, and the default chest and
-container protection flow remains enabled.
-
-The SP26-U changes are layered around that original core:
-
-- Java 25 build target, class file version 69.0.
-- Runtime diagnostics for modern Spigot/Paper-family servers.
-- Startup validation through `VersionValidator`.
-- Compatibility helpers for classic `1.x` and year-based `26.x` server versions.
-- Modern Bukkit/Paper API fixes, including the `LeavesDecayEvent` package move.
-- Persistent per-session logs under `plugins/BlockProt/logs/`.
-- Safe upgrade backup ZIPs under `plugins/BlockProt/backups/` when previous data is detected.
-- Non-destructive config migration that adds missing keys without overwriting administrator values.
-- Automatic config/language reload watcher with debouncing.
-- Optional `worlds.yml` per-world lockable-block lists, disabled by default.
-- Optional HikariCP/MySQL index while NBT remains authoritative.
-- SQLite audit log and audit inventory for protected-block access history.
-- `/bp friends addall <player>` for bulk friend sync across known protected blocks.
-- Geyser/Floodgate-style Bedrock username prefix resolution for friend lookup.
-- Optional localized subcommand aliases, disabled by default.
-- `/bp help` command.
-- Optional WorldEdit/FAWE paste watcher for NBT auto-locking pasted lockable blocks.
-- Optional explosion and piston hardening for protected blocks.
-- Optional inactivity cleanup for protections owned by inactive players.
-- New cancellable API events: `BlockProtLockEvent` and `BlockProtUnlockEvent`.
-- Expanded translation coverage for console messages, audit, help, chat input, and SP26 features.
-
-High-impact SP26-U features are opt-in. Options such as MySQL, localized
-subcommands, per-world lockable lists, WorldEdit paste auto-lock, and inactivity
-cleanup are disabled by default. The original BlockProt protection behavior is
-not disabled automatically during updates.
-
-### Archived claims prototype
-
-An earlier SP26 prototype included a RedProtect-like 3D claims system with
-regions, flags, a wand, GUI screens, welcome messages, and claim event
-listeners. That code is not active in this fork revision and is not compiled
-from `spigot/src/main`.
-
-The prototype is archived in `_claims_removed/` only as reference material for a
-possible future implementation.
-
-## Installing
-
-To use the original public plugin, you can download it from [CurseForge](https://www.curseforge.com/minecraft/bukkit-plugins/blockprot),
-[Modrinth](https://modrinth.com/plugin/blockprot) or [SpigotMC](https://www.spigotmc.org/resources/blockprot.87829/)
-and place it in your `plugins` directory. You do not have to install anything else and any recent
-version will work with any recent Minecraft version, as long as you're running Java 17 or higher.
-It runs on any Spigot and any fork thereof and does **not** run on CraftBukkit.
-
-For this SP26-U fork, build the shaded JAR from source and place the generated
-JAR in the server `plugins` directory. On existing servers, start once and then
-review `plugins/BlockProt/config.yml`; the fork will create a safety backup when
-old BlockProt data is detected.
-
-To get the latest original upstream updates the quickest, you can "watch" or "star"
-[spnda/BlockProt](https://github.com/spnda/BlockProt) or frequently check the
-[Release tab](https://github.com/spnda/BlockProt/releases). Alternatively, it is also
-possible to [watch the resource](https://www.spigotmc.org/resources/blockprot.87829/watch) on
-Spigot, which will also notify you as soon as new builds get released.
+![Main menu](https://raw.githubusercontent.com/VictorGugug/BlockProt-SP26-U/master/images/main_menu.png)
 
 ---
 
-If you want to build the plugin from source yourself, install the required JDK,
-clone this repository and run:
+## What is BlockProt?
+
+BlockProt is a lightweight Bukkit/Spigot plugin that lets players protect chests, furnaces, and
+many other blocks. It uses a modern GUI instead of commands, so any player can immediately
+understand how to lock and share their blocks.
+
+This fork targets Paper/Spigot-family servers on Minecraft 1.21+ and the new
+year-based 26.x version family, including the 26.1.2 development target.
+
+---
+
+## Installing
+
+### Pre-built JAR
+
+Build the JAR yourself (see below) and place it in your `plugins/` directory. No other
+dependencies are required for the base plugin. The produced JAR targets Java 25
+class files, so servers must run JDK 25.
+
+### Build from source
 
 ```bash
-./gradlew build
+# Requires JDK 25
+git clone https://github.com/VictorGugug/BlockProt-SP26-U.git
+cd BlockProt-SP26-U
+./gradlew :blockprot-spigot:shadowJar
+# Output: spigot/build/libs/blockprot-spigot-*-all.jar
 ```
 
-On Windows:
+> The project compiles against `targetJavaVersion = 25`; the produced JAR uses
+> Java class file version `69.0` and must be deployed on Java 25.
 
-```powershell
-.\gradlew.bat :blockprot-spigot:build
+---
+
+## SP26 Fork Features
+
+All new features are **disabled by default** in `config.yml` so that existing servers are
+never affected without an explicit admin decision. The base NBT block-protection system
+works exactly as in the upstream plugin.
+
+### 1. Java 25 / Paper 26.x Compatibility
+
+- Compiles and runs on Java 25 (class file `69.0`).
+- Detects both the classic `1.x` and the new year-based `26.x` version scheme at runtime.
+- Validates Java version, Paper availability, and typed inventory view support on startup.
+- Logs a one-line diagnostic to console and the session log file.
+
+### 2. Persistent Session Logging
+
+- Creates one log file per server session under `plugins/BlockProt/logs/`.
+- Every line is timestamped. Logs plugin version, server version, and compatibility check results.
+- Logs `PASS`, `FAIL`, or `WARN` for each startup check.
+- Does **not** spam the console; detailed information stays in the log file.
+
+### 3. 3D Claims System *(removed — implementation preserved)*
+
+> **Status: removed from the active build.**  
+> The full claims implementation was developed and compiled successfully, but was later removed
+> from the plugin's runtime registration. All source files are kept in `_claims_removed/` as a
+> reference implementation in case claims are re-enabled in the future.
+>
+> The system was originally inspired by RedProtect-style region protection. It added 3D bounding-box
+> claims owned by individual players, with named regions, per-claim flag control, a wand-based
+> selection flow, welcome messages, and a GUI management hub. A `ClaimManager` handled persistence
+> via `claims.yml` and asynchronous load/save. The system was fully functional but was ultimately
+> removed to keep the plugin scope focused.
+
+**What was implemented (preserved in `_claims_removed/`):**
+
+- Named 3D regions with min/max XYZ coordinates and per-world scope.
+- Persistent storage in `claims.yml` with async load/save.
+- Wand-based selection (left-click = pos A, right-click = pos B) with particle border preview.
+- Chat prompt for naming a new claim with configurable timeout.
+- Welcome message shown to players on claim entry.
+- Overlap detection between claims.
+- Per-claim behaviour flags (see below).
+- GUI management hub (Shift + Right Click inside own claim).
+- Archived claim command tree while the module was active. No claim commands are
+  registered in the current build.
+
+**Claim flags that were implemented:**
+
+| Flag | Description |
+|------|-------------|
+| `TNT` | Allow TNT / creeper explosions to damage blocks |
+| `FIRE` | Allow fire to spread |
+| `PVP` | Allow PvP between players |
+| `REDSTONE` | Allow non-members to trigger redstone |
+| `FLOW` | Allow water and lava to flow |
+| `LEAF_DECAY` | Allow leaf decay |
+| `MOB_SPAWNING` | Allow natural mob spawning |
+| `INVINCIBLE` | Make players inside the claim take no damage |
+| `CHEST` | Allow non-members to open containers |
+| `DOOR` | Allow non-members to use doors and trapdoors |
+| `LEVER_BUTTON` | Allow non-members to use levers and buttons |
+| `USE_BUCKET` | Allow non-members to use buckets |
+| `PET_SPAWNING` | Allow taming new pets inside the claim |
+| `PET_RIDING` | Allow non-members to mount pets |
+| `PET_MOVING` | Allow non-members to lead animals |
+| `DENY_ENDERPEARL` | Prevent ender pearl teleportation into / within the claim |
+
+### 4. Hybrid MySQL / NBT Backend *(optional)*
+
+NBT remains the source of truth for per-block ownership and friend lists. MySQL/MariaDB is
+used as an optional index for fast lookups, auditing, and cross-server global trust.
+
+- Connection pool via HikariCP (shaded to avoid conflicts).
+- MySQL Connector/J bundled inside the shadow JAR.
+- Tables: `blockprot_block_index`, `blockprot_global_trust`.
+- All SQL operations are asynchronous.
+- In-memory cache for global trust, loaded at startup.
+- Disabled by default (`mysql.enabled: false`).
+
+### 5. Master Friend List & `/bp friends addall`
+
+- `/bp friends` - opens the global default-friends GUI.
+- `/bp friends addall <player>` - adds the target player to **every** block the executor owns,
+  and to their global default-friend list. Resolves offline players via Mojang API.
+- When `localized_command_aliases: true` and Spanish is selected, `/bp amigos` and
+  `/bp amigos agregartodos <player>` are also accepted. Canonical English commands
+  always continue to work.
+- Reports how many blocks were updated via an action bar message.
+
+### 6. SQLite Access Audit Log
+
+- Database: `plugins/BlockProt/blockprot_audit.sqlite`.
+- Records `ACCESS_DENIED` and `ACCESS_GRANTED` events with player UUID, name, location, and timestamp.
+- All writes are asynchronous (`CompletableFuture`).
+- Indexed by location, player, and timestamp.
+- Automatic pruning when the table exceeds 50 000 entries.
+- In-game GUI (`AuditInventory`) shows access history per block.
+- Admin teleport button inside the audit GUI.
+
+### 7. Automatic Backup & Safe Migration
+
+- On startup, detects pre-existing plugin data (`data.yml`, `claims.yml`, `blockprot.db`, etc.).
+- If prior data is found, creates a ZIP backup under `plugins/BlockProt/backups/` **before** any
+  migration step runs.
+- Rotates backups; keeps a maximum of 10 ZIP files.
+- `/bp reload` always triggers a forced backup first.
+- Does not back up session log files or the `backups/` folder itself.
+
+### 8. Inactivity Cleanup *(optional)*
+
+- Configurable via `inactivity_cleanup_days` in `config.yml` (default `-1` = disabled).
+- When enabled, runs once at startup and removes protections from blocks owned by players who
+  have not logged in for the configured number of days.
+- Notifies online admins with a summary message.
+
+### 9. Per-World Configuration (`worlds.yml`)
+
+- Each world can have its own lists of lockable tile entities, blocks, shulker boxes, and doors.
+- `enabled: false` disables all block protection in that world.
+- Worlds not listed in `worlds.yml` fall back to `config.yml` globals.
+- At startup, missing worlds are added automatically with `enabled: true` and lists inherited
+  from `config.yml` (non-destructive; existing entries are never overwritten).
+- A broken `worlds.yml` is replaced with the bundled default and a warning is logged.
+
+### 10. Config File Watcher
+
+- Monitors `config.yml`, `worlds.yml`, and all `lang/*.yml` files for changes.
+- Automatically reloads the plugin configuration when a change is detected.
+- Debounced (2 s) to avoid duplicate reloads while an editor is still writing.
+
+### 11. Hardened Security Options
+
+| Config key | Default | Description |
+|---|---|---|
+| `protect_locked_blocks_from_explosions` | `true` | Prevents explosions from destroying NBT-protected blocks |
+| `block_protected_block_piston_movement` | `true` | Prevents pistons from pushing or pulling NBT-protected blocks |
+
+### 12. `/bp help` Command
+
+- `/bp help` (also `/bp ayuda`) lists all available subcommands with a short description.
+
+### 13. New Configuration Keys
+
+```yaml
+# ── Claims (implementation preserved in _claims_removed/) ─────────────────
+claims_enabled: false
+claims_hub_enabled: false
+claims_advanced_enabled: false
+claims_inherit_global_trust: false
+
+# ── MySQL hybrid index ─────────────────────────────────────────────────────
+mysql:
+  enabled: false
+  host: "127.0.0.1"
+  port: 3306
+  database: "blockprot"
+  username: "blockprot"
+  password: ""
+  jdbc_url: ""          # Overrides host/port/database when set
+  pool:
+    maximum_pool_size: 10
+    minimum_idle: 2
+    connection_timeout_ms: 10000
+
+# ── Security hardening ────────────────────────────────────────────────────
+protect_locked_blocks_from_explosions: true
+block_protected_block_piston_movement: true
+
+# ── Claim flags (only relevant if claims_enabled: true) ───────────────────
+claims_flag_flow_enabled: false
+claims_flag_mob_spawning_enabled: false
+claims_flag_invincible_enabled: false
+claims_flag_deny_enderpearl_enabled: false
+claims_flag_pets_enabled: false
+claims_flag_chest_enabled: false
+claims_flag_door_enabled: false
+claims_flag_lever_button_enabled: false
+claims_flag_use_bucket_enabled: false
+
+# ── Inactivity cleanup ────────────────────────────────────────────────────
+inactivity_cleanup_days: -1   # -1 = disabled
 ```
 
-The SP26-U shaded JAR is generated at:
+### 14. New Files Added vs. Upstream
 
-```text
-spigot/build/libs/blockprot-spigot-1.2.9-main-all.jar
-```
+| File | Description |
+|------|-------------|
+| `BlockProtLogger.java` | Persistent session log writer |
+| `VersionCompat.java` | Runtime version detection (1.x and 26.x) |
+| `VersionValidator.java` | Startup compatibility checks |
+| `audit/AuditLogger.java` | SQLite access audit log |
+| `commands/FriendsAddAllCommand.java` | `/bp friends addall` |
+| `commands/HelpCommand.java` | `/bp help` |
+| `config/WorldsConfig.java` | Per-world lockable-block configuration |
+| `inventories/AuditInventory.java` | In-game audit log viewer |
+| `inventories/ChatInput.java` | Chat-based player input helper |
+| `inventories/AnvilInput.java` | Anvil GUI input fallback |
+| `storage/HybridDatabase.java` | MySQL/MariaDB index with HikariCP |
+| `tasks/BackupTask.java` | Pre-operation ZIP backup |
+| `tasks/ConfigFileWatcher.java` | Auto-reload on config file change |
+| `tasks/InactivityCleanupTask.java` | Remove protections of inactive players |
+| `_claims_removed/` | Full claims implementation (preserved, not loaded) |
+
+---
 
 ## Translating
 
-If you know a language that isn't supported by this plugin (yet) or found some translation error
-we'd love if you could translate for us!
+If you know a language that is not yet supported, or you found a translation error, contributions
+are welcome. Language files are in `spigot/src/main/resources/lang/`.
 
-You can do so easily by going to [gitlocalize](https://gitlocalize.com/repo/6775/) or sending me
-the translations on Discord.
+---
 
-SP26-U also localizes console messages that are safe to translate after the
-translation system has loaded. English remains the default language, and missing
-keys fall back to the bundled English translation.
+## Contact / Support
 
-## Contact/Support
+This fork is maintained by the SP26 community. For bugs or questions specific to this fork, open
+an issue in this repository.
 
-For the original project, report bugs or issues on the
-[spnda/BlockProt GitHub issue tracker](https://github.com/spnda/BlockProt/issues).
-If you require more support or want to ask questions, please use the
-[Discord server](https://discord.gg/WVy6DHScFb) for chatting.
+For upstream BlockProt issues, use the [original issue tracker](https://github.com/spnda/BlockProt/issues)
+or the [Discord server](https://discord.gg/WVy6DHScFb).
 
-For SP26-U-specific changes, use this fork repository's issue tracker once the
-fork is published on GitHub.
+---
 
 ## Developing Addons
 
-This plugin offers a basic API which other developers can use to add new features and provide
-support and compatibility with other plugins. BlockProt can be accessed via the
-[jitpack.io repository](https://jitpack.io/#spnda/BlockProt).
+The fork exposes the same `BlockProtAPI` as the upstream plugin. See the upstream documentation
+for usage examples:
 
-Your `build.gradle` file may look like this:
-```groovy
-repositories {
-    maven 'https://jitpack.io'
-}
-
-dependencies {
-    // This version might be slightly outdated. See https://github.com/spnda/BlockProt/releases.
-    implementation 'com.github.spnda.BlockProt:blockprot-spigot:0.4.11'
-}
-```
-
-From here on, you're good to go. We provide an easy to use `BlockProtAPI` class and other utility methods
-to easily add new functionality, with low amount of boilerplate. In the following examples you can see how
-to use that class.
 ```java
-// A BlockNBTHandler is a NBT Handler designed to lock blocks, add friends and edit other settings.
-// This handler exists on a per-block basis.
+// A BlockNBTHandler is an NBT handler designed to lock blocks, add friends, and edit settings.
+// One handler exists per block.
 BlockNBTHandler handler = BlockProtAPI.getInstance().getBlockHandler(block);
 
-// The PlayerSettingsHandler is made to handle settings that are commonly accessible
-// through the "/blockprot settings" command.
+// The PlayerSettingsHandler manages player-level settings accessible via /blockprot settings.
 PlayerSettingsHandler playerHandler = BlockProtAPI.getInstance().getPlayerSettings(player);
 ```
 
-We also offer a variety of events that you can listen to. For an up-to-date and more detailed list, see
-[here](https://github.com/spnda/BlockProt/tree/master/src/main/java/de/sean/blockprot/bukkit/events).
-You can use these to block players from accessing some blocks based on custom conditions and much
-more. For even more fine grain control over events, you can write a `PluginIntegration`. A
-`PluginIntegration` is designed to be specific to a single other plugin and is only activated when
-the referenced plugin is actually loaded through Bukkit. It also provides utilities to quickly load
-a single config file and register listeners. BlockProt natively includes a plugin integration for
-Towny, which you can find
-[here](https://github.com/spnda/BlockProt/blob/master/src/main/java/de/sean/blockprot/bukkit/integrations/TownyIntegration.java).
-You can freely use this as an example.
+SP26-specific classes (`HybridDatabase`, `AuditLogger`, `WorldsConfig`, etc.) are internal and
+not part of the public API.
 
-SP26-U additionally exposes `BlockProtLockEvent` and `BlockProtUnlockEvent` so
-addons can react to or cancel lock/unlock operations.
+---
+
+## Dependencies Added by SP26
+
+| Library | Version | Notes |
+|---------|---------|-------|
+| HikariCP | 7.0.2 | Shaded to `de.sean.blockprot.bukkit.shaded.hikari` |
+| MySQL Connector/J | 9.7.0 | Bundled in shadow JAR |
+| slf4j-api | runtime | Required by HikariCP |
+
+---
+
+## Build Verification
+
+```powershell
+.\gradlew.bat :blockprot-spigot:compileJava
+.\gradlew.bat :blockprot-spigot:shadowJar
+.\gradlew.bat :blockprot-spigot:build
+```
+
+Output JAR: `spigot/build/libs/blockprot-spigot-1.2.9-main-all.jar`
+
+---
 
 ## bStats
 
 [![bStats Graph](https://bstats.org/signatures/bukkit/BlockProt.svg)](https://bstats.org/plugin/bukkit/BlockProt)
 
+---
+
 ## License
 
-BlockProt is licensed under GPLv3 license, view `LICENSE` to learn more.
+BlockProt is licensed under the **GNU General Public License v3**. See `LICENSE` for details.

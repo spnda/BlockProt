@@ -73,6 +73,10 @@ friend_search_similarity: 0.5
 # current settings are ignored until re-activated.
 disable_friend_functionality: false
 
+# Enables translated aliases for subcommands. English commands always continue
+# to work, so scripts and documentation remain stable.
+localized_command_aliases: true
+
 # Optional SP26 feature preset.
 # Disabled by default. When true, BlockProt enables safe optional modules that
 # do not require external credentials. It does NOT enable MySQL or inactivity

@@ -3,6 +3,8 @@ package de.sean.blockprot.bukkit.storage;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import de.sean.blockprot.bukkit.BlockProt;
+import de.sean.blockprot.bukkit.TranslationKey;
+import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.config.DefaultConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -64,10 +66,11 @@ public final class HybridDatabase {
             enabled = true;
             runAsync(this::initSchema);
             runAsync(this::loadGlobalTrustCache);
-            plugin.getLogger().info("Hybrid MySQL index enabled.");
+            plugin.getLogger().info(Translator.get(TranslationKey.CONSOLE__MYSQL_ENABLED));
         } catch (RuntimeException e) {
             enabled = false;
-            plugin.getLogger().warning("Hybrid MySQL index disabled: " + e.getMessage());
+            plugin.getLogger().warning(Translator.get(TranslationKey.CONSOLE__MYSQL_DISABLED)
+                .replace("{error}", e.getMessage()));
         }
     }
 
@@ -191,7 +194,8 @@ public final class HybridDatabase {
                 globalTrustCache.get(owner.toString()).addAll(loaded);
                 future.complete(loaded);
             } catch (SQLException e) {
-                plugin.getLogger().warning("MySQL trust lookup failed: " + e.getMessage());
+                plugin.getLogger().warning(Translator.get(TranslationKey.CONSOLE__MYSQL_LOOKUP_FAILED)
+                    .replace("{error}", e.getMessage()));
                 future.complete(Collections.emptySet());
             }
         });
@@ -224,7 +228,8 @@ public final class HybridDatabase {
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 """);
         } catch (SQLException e) {
-            plugin.getLogger().warning("MySQL schema init failed: " + e.getMessage());
+            plugin.getLogger().warning(Translator.get(TranslationKey.CONSOLE__MYSQL_SCHEMA_FAILED)
+                .replace("{error}", e.getMessage()));
         }
     }
 
@@ -237,7 +242,8 @@ public final class HybridDatabase {
                 addToCache(rs.getString("owner_uuid"), rs.getString("friend_uuid"));
             }
         } catch (SQLException e) {
-            plugin.getLogger().warning("MySQL trust cache load failed: " + e.getMessage());
+            plugin.getLogger().warning(Translator.get(TranslationKey.CONSOLE__MYSQL_CACHE_LOAD_FAILED)
+                .replace("{error}", e.getMessage()));
         }
     }
 
@@ -250,7 +256,8 @@ public final class HybridDatabase {
             try {
                 runnable.run();
             } catch (SQLException e) {
-                plugin.getLogger().warning("MySQL operation failed: " + e.getMessage());
+                plugin.getLogger().warning(Translator.get(TranslationKey.CONSOLE__MYSQL_OPERATION_FAILED)
+                    .replace("{error}", e.getMessage()));
             }
         });
     }

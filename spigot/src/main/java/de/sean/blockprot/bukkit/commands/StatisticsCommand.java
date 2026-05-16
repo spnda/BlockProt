@@ -20,6 +20,8 @@ package de.sean.blockprot.bukkit.commands;
 
 import de.sean.blockprot.bukkit.inventories.InventoryState;
 import de.sean.blockprot.bukkit.inventories.StatisticsInventory;
+import de.sean.blockprot.bukkit.TranslationKey;
+import de.sean.blockprot.bukkit.Translator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -32,7 +34,7 @@ public class StatisticsCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("This command is only executable as a player!");
+            sender.sendMessage(Translator.get(TranslationKey.MESSAGES__ONLY_PLAYERS));
             return false;
         }
 

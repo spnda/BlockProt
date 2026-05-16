@@ -18,6 +18,8 @@
 
 package de.sean.blockprot.bukkit.commands;
 
+import de.sean.blockprot.bukkit.BlockProt;
+import de.sean.blockprot.bukkit.Translator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -98,6 +100,39 @@ public final class BlockProtCommand implements TabExecutor {
                 result.put(alias.toLowerCase(Locale.ROOT), entry.getValue());
             }
         }
+        addLocalizedAliases(result);
         return result;
+    }
+
+    private static void addLocalizedAliases(@NotNull Map<String, CommandExecutor> result) {
+        try {
+            if (!BlockProt.getDefaultConfig().isLocalizedCommandAliasesEnabled()) return;
+        } catch (AssertionError ignored) {
+            return;
+        }
+
+        String lang = Translator.getLocale().getLanguage().toLowerCase(Locale.ROOT);
+        if (!lang.equals("es")) return;
+
+        alias(result, "stats", "estadisticas");
+        alias(result, "settings", "ajustes", "configuracion");
+        alias(result, "about", "acerca");
+        alias(result, "update", "actualizar");
+        alias(result, "reload", "recargar");
+        alias(result, "integrations", "integraciones");
+        alias(result, "debug", "depurar");
+        alias(result, "disablehints", "desactivarsugerencias");
+        alias(result, "friends", "amigos");
+        alias(result, "help", "ayuda");
+    }
+
+    private static void alias(@NotNull Map<String, CommandExecutor> result,
+                              @NotNull String canonical,
+                              @NotNull String... aliases) {
+        CommandExecutor executor = canonicalExecutors.get(canonical);
+        if (executor == null) return;
+        for (String alias : aliases) {
+            result.put(alias.toLowerCase(Locale.ROOT), executor);
+        }
     }
 }

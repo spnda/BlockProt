@@ -101,7 +101,7 @@ public final class ChatInput implements Listener {
 
         final String text = PlainTextComponentSerializer.plainText().serialize(event.message()).trim();
 
-        // Si escribió la palabra de cancelar, mandar mensaje y salir.
+        // If the player typed the localized cancel word, stop the session.
         if (text.equalsIgnoreCase(cancelWord)) {
             event.getPlayer().sendMessage(LegacyComponentSerializer.legacySection().deserialize(
                 Translator.get(TranslationKey.MESSAGES__CHAT_INPUT_CANCELLED)

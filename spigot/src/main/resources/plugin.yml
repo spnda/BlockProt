@@ -31,7 +31,7 @@ permissions:
 commands:
   blockprot:
     description: The main blockprot command
-    usage: "/blockprot [update|settings|stats|reload|about]"
+    usage: "/blockprot [help|settings|friends|stats|about|integrations|update|reload|disablehints|debug]"
     aliases: ["bp"]
 softdepend:
   - Towny

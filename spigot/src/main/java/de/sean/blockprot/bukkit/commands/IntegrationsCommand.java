@@ -6,19 +6,13 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
- * BlockProt is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with BlockProt.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package de.sean.blockprot.bukkit.commands;
 
 import de.sean.blockprot.bukkit.BlockProtAPI;
+import de.sean.blockprot.bukkit.TranslationKey;
+import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.integrations.PluginIntegration;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.command.Command;
@@ -38,14 +32,15 @@ public class IntegrationsCommand implements CommandExecutor {
             .filter(PluginIntegration::isEnabled)
             .toList();
 
-        var builder = new ComponentBuilder();
-        builder.append("§7Enabled integrations (" + enabledIntegrations.size() + "): ");
+        String names = enabledIntegrations.stream()
+            .map(integration -> "§6" + integration.name)
+            .reduce((left, right) -> left + "§7, " + right)
+            .orElse("§8-");
 
-        for (int i = 0; i < enabledIntegrations.size(); ++i) {
-            builder.append("§6" + enabledIntegrations.get(i).name);
-            if (i < enabledIntegrations.size() - 1)
-                builder.append("§7, ");
-        }
+        var builder = new ComponentBuilder();
+        builder.append(Translator.get(TranslationKey.MESSAGES__INTEGRATIONS_ENABLED)
+            .replace("{count}", String.valueOf(enabledIntegrations.size()))
+            .replace("{integrations}", names));
 
         sender.spigot().sendMessage(builder.create());
         return true;
@@ -53,7 +48,8 @@ public class IntegrationsCommand implements CommandExecutor {
 
     @Nullable
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
+                                      @NotNull String label, @NotNull String[] args) {
         return null;
     }
 

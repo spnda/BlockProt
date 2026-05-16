@@ -1,6 +1,7 @@
 package de.sean.blockprot.bukkit.config;
 
 import de.sean.blockprot.bukkit.BlockProtLogger;
+import de.sean.blockprot.bukkit.TranslationKey;
 import de.sean.blockprot.bukkit.Translator;
 import de.sean.blockprot.bukkit.TranslationKey;
 import org.bukkit.Bukkit;
@@ -19,16 +20,15 @@ import java.util.*;
 import java.util.logging.Logger;
 
 /**
- * Granular per-world lockable-block configuration loaded from worlds.yml.
+ * Granular per-world configuration read from worlds.yml.
  *
- * Resolution order for a world when worlds_config_enabled=true:
- *   1. If the world appears in worlds.yml with enabled: false, protection is disabled.
- *   2. If the world appears in worlds.yml with enabled: true, its worlds.yml lists are used.
- *   3. If the world is not listed, global config.yml lists are used.
+ * Resolution hierarchy for a given world when worlds_config_enabled=true:
+ *   1. If the world appears in worlds.yml with enabled: false, no protection applies.
+ *   2. If the world appears in worlds.yml with enabled: true, its own lists are used exclusively.
+ *   3. If the world does not appear in worlds.yml, the global config.yml lists are used.
  *
- * scanAndPopulate() scans loaded worlds at startup and adds missing entries
- * with enabled: true and lists inherited from global config.yml. Existing
- * entries are never overwritten.
+ * The scanAndPopulate() method scans loaded worlds at startup and adds missing entries
+ * with enabled: true and lists inherited from the global config.yml. Existing entries are never overwritten.
  */
 public final class WorldsConfig {
 
@@ -38,7 +38,7 @@ public final class WorldsConfig {
     private final Map<String, WorldEntry> worlds = new HashMap<>();
 
     // -------------------------------------------------------------------------
-    // Construction from the already-loaded worlds.yml configuration.
+    // Build from YamlConfiguration (already loaded from disk)
     // -------------------------------------------------------------------------
 
     public WorldsConfig(@NotNull YamlConfiguration config) {
@@ -61,18 +61,18 @@ public final class WorldsConfig {
     }
 
     // -------------------------------------------------------------------------
-    // Non-destructive world scanning and population.
+    // Scan and auto-populate (non-destructive)
     // -------------------------------------------------------------------------
 
     /**
-     * Scans loaded server worlds and adds missing entries to worlds.yml.
-     * Each new world is created with enabled: true and lists inherited from
-     * the global config.yml. Existing entries are never overwritten.
+     * Scans worlds loaded on the server and adds any missing entries to worlds.yml.
+     * Each new world is created with enabled: true and lists inherited from the global config.yml.
+     * Existing entries are never overwritten.
      *
      * @param file         The worlds.yml file on disk.
-     * @param globalConfig Global config.yml, used to inherit default block lists.
-     * @param logger       Plugin logger used for console messages.
-     * @return             The updated configuration.
+     * @param globalConfig The global config.yml, used to inherit default block lists.
+     * @param logger       Plugin logger for console messages.
+     * @return             The updated configuration (so BlockProt can reload the object).
      */
     @NotNull
     public static YamlConfiguration scanAndPopulate(
@@ -112,19 +112,19 @@ public final class WorldsConfig {
         List<World> serverWorlds = Bukkit.getWorlds();
         int added = 0;
 
-        // Log scan start only to the session log to keep console clean.
+        // Log scan start only to session log — keeps console clean
         BlockProtLogger.log("worlds-scan", Translator.get(TranslationKey.WORLDS__SCAN_START)
             .replace("{count}", String.valueOf(serverWorlds.size())));
 
         for (World world : serverWorlds) {
             String key = "worlds." + world.getName();
 
-            if (disk.contains(key)) continue; // Existing entries are administrator-owned.
+            if (disk.contains(key)) continue; // Entry already exists — preserve admin's configuration.
 
-            // New entries stay active so the core protection system cannot be disabled by accident.
+            // Create the entry as enabled to avoid breaking the base block protection.
             disk.set(key + ".enabled", true);
 
-            // Inherit the global config.yml lists as the starting point.
+            // Inherit lists from global config.yml as a starting point
             copyList(disk, globalConfig, key, "lockable_tile_entities");
             copyList(disk, globalConfig, key, "lockable_shulker_boxes");
             copyList(disk, globalConfig, key, "lockable_blocks");
@@ -166,7 +166,7 @@ public final class WorldsConfig {
     }
 
     // -------------------------------------------------------------------------
-    // Materials.
+    // Materials
     // -------------------------------------------------------------------------
 
     private Set<Material> loadMaterials(@NotNull ConfigurationSection section, @NotNull String key) {
@@ -179,16 +179,16 @@ public final class WorldsConfig {
     }
 
     // -------------------------------------------------------------------------
-    // Public queries.
+    // Public queries
     // -------------------------------------------------------------------------
 
-    /** Returns true when the world has an enabled worlds.yml entry. */
+    /** Returns true if the world has an entry in worlds.yml with enabled: true. */
     public boolean hasWorldConfig(@NotNull World world) {
         WorldEntry e = worlds.get(world.getName().toLowerCase());
         return e != null && e.enabled();
     }
 
-    /** Returns true when the world has a disabled worlds.yml entry. */
+    /** Returns true if the world has an entry in worlds.yml with enabled: false (no protection). */
     public boolean isWorldDisabled(@NotNull World world) {
         WorldEntry e = worlds.get(world.getName().toLowerCase());
         return e != null && !e.enabled();

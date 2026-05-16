@@ -12,13 +12,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-// SQLite audit log. Stores who tried to access which block and when.
-// Las escrituras son siempre async. Las lecturas pueden ser sync o async según el contexto.
+// SQLite-based access audit log. Records who attempted to access which block and when.
+// Writes are always async. Reads may be sync or async depending on context.
 public final class AuditLogger {
 
     public enum Action {
-        ACCESS_DENIED,   // A player without permission tried to open a protected block.
-        ACCESS_GRANTED   // Jugador con permiso accedió (logging opcional, desactivado por defecto)
+        ACCESS_DENIED,   // A player without permission attempted to open a protected block.
+        ACCESS_GRANTED   // A player with permission accessed a block (optional, disabled by default).
     }
 
     public record AuditEntry(
@@ -64,7 +64,7 @@ public final class AuditLogger {
         }
     }
 
-    // Registra un evento de forma asíncrona.
+    // Records an event asynchronously.
     public void log(@NotNull UUID player, @NotNull String playerName, @NotNull Location loc, @NotNull Action action) {
         CompletableFuture.runAsync(() -> {
             try {

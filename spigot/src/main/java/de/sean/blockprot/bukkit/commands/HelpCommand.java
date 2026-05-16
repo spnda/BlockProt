@@ -12,8 +12,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Displays a concise help reference for all BlockProt commands.
- * Registered under both {@code /bp help} and {@code /bp ayuda}.
+ * Displays the live BlockProt command list using the active language file.
+ *
+ * <p>Archived claims commands are kept under {@code _claims_removed} and are
+ * intentionally excluded from this help screen until that module is restored
+ * and registered again.</p>
  *
  * @since SP26
  */
@@ -24,29 +27,27 @@ public final class HelpCommand implements CommandExecutor {
                              @NotNull String label, @NotNull String[] args) {
         send(sender, Translator.get(TranslationKey.HELP__HEADER));
 
-        // ── Block protection ──────────────────────────────────────────────────
-        send(sender, "§6Block protection");
-        send(sender, "§7  /bp §f— Opens your personal block protection settings.");
+        send(sender, Translator.get(TranslationKey.HELP__BLOCK_PROTECTION_TITLE));
+        send(sender, Translator.get(TranslationKey.HELP__BLOCK_PROTECTION_SETTINGS));
 
-        // ── Friends ───────────────────────────────────────────────────────────
-        send(sender, "§6Friends");
-        send(sender, "§7  /bp friends add <player> §f— Add a default friend.");
-        send(sender, "§7  /bp friends remove <player> §f— Remove a default friend.");
+        send(sender, Translator.get(TranslationKey.HELP__FRIENDS_TITLE));
+        send(sender, Translator.get(TranslationKey.HELP__FRIENDS_GUI));
+        send(sender, Translator.get(TranslationKey.HELP__FRIENDS_ADDALL));
 
-        // ── Claims ────────────────────────────────────────────────────────────
-        send(sender, "§6Claims");
-        send(sender, "§7  /bp claim wand §f— Get the selection wand.");
-        send(sender, "§7  /bp claim list §f— List all your claims.");
-        send(sender, "§7  /bp claim info [name] §f— Show claim details.");
-        send(sender, "§7  /bp claim flags [name] §f— Open the flags GUI.");
-        send(sender, "§7  /bp claim welcome [name] <msg> §f— Set a welcome message.");
-        send(sender, "§7  /bp claim delete [name] §f— Delete a claim.");
+        send(sender, Translator.get(TranslationKey.HELP__OTHER_TITLE));
+        send(sender, Translator.get(TranslationKey.HELP__SETTINGS));
+        send(sender, Translator.get(TranslationKey.HELP__STATS));
+        send(sender, Translator.get(TranslationKey.HELP__ABOUT));
+        send(sender, Translator.get(TranslationKey.HELP__DISABLE_HINTS));
 
-        // ── Misc ──────────────────────────────────────────────────────────────
-        send(sender, "§6Other");
-        send(sender, "§7  /bp settings §f— Personal settings.");
-        send(sender, "§7  /bp stats §f— View block statistics.");
-        send(sender, "§7  /bp reload §f— Reload the plugin config. (admin)");
+        if (sender.isOp()) {
+            send(sender, Translator.get(TranslationKey.HELP__INTEGRATIONS));
+            send(sender, Translator.get(TranslationKey.HELP__UPDATE));
+            send(sender, Translator.get(TranslationKey.HELP__RELOAD));
+        }
+        if (sender.hasPermission("blockprot.debug")) {
+            send(sender, Translator.get(TranslationKey.HELP__DEBUG));
+        }
 
         send(sender, Translator.get(TranslationKey.HELP__FOOTER));
         return true;
@@ -59,6 +60,7 @@ public final class HelpCommand implements CommandExecutor {
     }
 
     private void send(@NotNull CommandSender sender, @NotNull String text) {
+        if (text.isBlank()) return;
         sender.sendMessage(LegacyComponentSerializer.legacySection().deserialize(text));
     }
 }

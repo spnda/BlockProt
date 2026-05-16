@@ -24,12 +24,12 @@ import org.jetbrains.annotations.NotNull;
  * Runtime validation of compatibility with the running Minecraft/Paper version.
  *
  * Performs checks on plugin load to detect and warn about known issues or
- * unsupported configurations. All checks are non-fatal — the plugin still loads,
+ * unsupported configurations. All checks are non-fatal; the plugin still loads,
  * but administrators are warned about potential problems.
  *
  * Checks include:
  * - Is Paper available? (required for ChatInput, optional for core features)
- * - Is Java 17+? (required by this plugin)
+ * - Is Java 25+? (required by this fork's class file target)
  * - API version compatibility vs actual server version
  * - Typed inventory views availability (1.21.4+)
  *
@@ -52,18 +52,19 @@ public final class VersionValidator {
     }
 
     /**
-     * Validates that the server is running Java 17 or higher.
-     * BlockProt requires Java 17+ (needed for nbtapi and adventure libraries).
+     * Validates that the server is running Java 25 or higher.
+     * This fork is compiled with targetJavaVersion=25.
      */
     private static void checkJavaVersion() {
         String javaVersion = System.getProperty("java.version");
         int majorVersion = extractMajorVersion(javaVersion);
 
-        if (majorVersion < 17) {
-            warn("Java version too old: " + javaVersion + " (BlockProt requires Java 17+)");
-            BlockProtLogger.warn("Java version " + javaVersion + " detected. Requires 17+.");
+        if (majorVersion < 25) {
+            warn(Translator.get(TranslationKey.CONSOLE__JAVA_TOO_OLD)
+                .replace("{version}", javaVersion));
+            BlockProtLogger.warn("Java version " + javaVersion + " detected. Requires 25+.");
         } else {
-            BlockProtLogger.log("Java", "Version " + javaVersion + " ✓");
+            BlockProtLogger.log("Java", "Version " + javaVersion + " OK");
         }
     }
 
@@ -75,17 +76,13 @@ public final class VersionValidator {
     private static void checkPaperAvailability() {
         boolean isPaper = VersionCompat.isPaper();
         if (!isPaper) {
-            warn(
-                "Not running on Paper. ChatInput (chat-based player search) is disabled. " +
-                "Player search will fall back to anvil-based GUI. " +
-                "Consider using Paper from https://papermc.io for better performance."
-            );
+            warn(Translator.get(TranslationKey.CONSOLE__NOT_PAPER));
             BlockProtLogger.warn(
                 "Not running on Paper. Chat-based player search requires Paper/PaperMC. " +
                 "Falling back to anvil GUI."
             );
         } else {
-            BlockProtLogger.log("Paper", "Available ✓");
+            BlockProtLogger.log("Paper", "Available OK");
         }
     }
 
@@ -97,15 +94,12 @@ public final class VersionValidator {
     private static void checkTypedInventoryViews() {
         boolean hasTypedViews = VersionCompat.hasTypedInventoryViews();
         if (!hasTypedViews && VersionCompat.isAtLeast(1, 21, 0)) {
-            warn(
-                "Running Paper/Spigot 1.21.0-1.21.3 (before typed inventory views). " +
-                "AnvilInput fallbacks will be used. This is normal."
-            );
+            warn(Translator.get(TranslationKey.CONSOLE__TYPED_VIEWS_FALLBACK));
             BlockProtLogger.warn(
                 "Typed inventory views not available (1.21.0-1.21.3). Using fallback methods."
             );
         } else if (hasTypedViews) {
-            BlockProtLogger.log("Inventory", "Typed views available ✓");
+            BlockProtLogger.log("Inventory", "Typed views available OK");
         }
     }
 

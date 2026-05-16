@@ -18,9 +18,10 @@ import java.util.*;
  *
  * <p>Lifecycle: call {@link #init(File)} once in {@code onEnable}, then use {@link #getInstance()}.</p>
  *
- * <h3>SP26 default flags</h3>
- * <p>When claims are loaded from disk, a missing YAML flag defaults to
- * {@code true} (ALLOW), matching the behavior for newly created claims.</p>
+ * <h3>SP26 — flags por defecto</h3>
+ * <p>Al cargar parcelas desde disco, si una flag no aparece en el YAML se usa {@code true}
+ * (ALLOW) como valor por defecto, alineándose con el nuevo comportamiento de
+ * {@link Claim} para parcelas recién creadas.</p>
  *
  * @since SP26
  */

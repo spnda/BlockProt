@@ -23,13 +23,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
- * Handles the {@code /blockprot friends} subcommand:
+ * Handles the {@code /blockprot friends} subcommand.
  *
  * <pre>
- * /bp friends              – opens the friend-list GUI (default-friends context)
- * /bp friends addall &lt;player&gt; – adds &lt;player&gt; to ALL protected blocks of the executor
+ * /bp friends                  - opens the friend-list GUI.
+ * /bp friends addall <player>  - adds <player> to every protected block owned by the executor.
  * </pre>
  */
 public final class FriendsAddAllCommand implements CommandExecutor {
@@ -40,11 +41,11 @@ public final class FriendsAddAllCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
                              @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("Only players can use this command.");
+            sender.sendMessage(LegacyComponentSerializer.legacySection().deserialize(
+                Translator.get(TranslationKey.MESSAGES__ONLY_PLAYERS)));
             return true;
         }
 
-        // /bp friends  →  open GUI
         if (args.length == 1) {
             InventoryState state = new InventoryState(null);
             state.friendSearchState = InventoryState.FriendSearchState.DEFAULT_FRIEND_SEARCH;
@@ -54,27 +55,23 @@ public final class FriendsAddAllCommand implements CommandExecutor {
             return true;
         }
 
-        // /bp friends addall <player>
-        if (args.length < 3 || !args[1].equalsIgnoreCase("addall")) {
+        if (args.length < 3 || !isAddAllAlias(args[1])) {
             sendAction(player, Translator.get(TranslationKey.MESSAGES__FRIENDS_ADDALL_USAGE));
             return true;
         }
 
         final String targetName = args[2];
 
-        // Show "Searching…" action-bar, auto-clear after 3 s
         sendAction(player, Translator.get(TranslationKey.MESSAGES__FRIENDS_SEARCHING)
             .replace("{player}", targetName));
         final BukkitTask[] clearTask = {null};
         clearTask[0] = Bukkit.getScheduler().runTaskLater(BlockProt.getInstance(),
             () -> player.sendActionBar(Component.empty()), SEARCH_MSG_TIMEOUT_TICKS);
 
-        // 1. Resolve player UUID asynchronously (may hit Mojang API)
         Bukkit.getScheduler().runTaskAsynchronously(BlockProt.getInstance(), () -> {
 
             OfflinePlayer target = PlayerNameResolver.findOfflinePlayer(targetName);
             if (target == null) {
-                // Last-resort deprecated lookup
                 @SuppressWarnings("deprecation")
                 OfflinePlayer fallback = Bukkit.getOfflinePlayer(targetName);
                 if (fallback.hasPlayedBefore()) target = fallback;
@@ -93,11 +90,9 @@ public final class FriendsAddAllCommand implements CommandExecutor {
 
             final String targetUuid = target.getUniqueId().toString();
 
-            // 2. All NBT work MUST run on the main thread
             Bukkit.getScheduler().runTask(BlockProt.getInstance(), () -> {
                 player.sendActionBar(Component.empty());
 
-                // Collect the player's protected block locations from stats
                 final PlayerBlocksStatistic stat = new PlayerBlocksStatistic();
                 StatHandler.getStatistic(stat, player);
 
@@ -118,7 +113,6 @@ public final class FriendsAddAllCommand implements CommandExecutor {
                     } catch (Exception ignored) {}
                 }
 
-                // Add to player's global default-friend list if not already present
                 PlayerSettingsHandler settings = new PlayerSettingsHandler(player);
                 if (!settings.containsFriend(targetUuid)) {
                     settings.addFriend(targetUuid);
@@ -139,8 +133,8 @@ public final class FriendsAddAllCommand implements CommandExecutor {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
                                                 @NotNull String alias, @NotNull String[] args) {
         if (args.length == 2)
-            return "addall".startsWith(args[1].toLowerCase()) ? List.of("addall") : Collections.emptyList();
-        if (args.length == 3 && args[1].equalsIgnoreCase("addall"))
+            return isAddAllAliasPrefix(args[1]) ? List.of(preferredAddAllAlias()) : Collections.emptyList();
+        if (args.length == 3 && isAddAllAlias(args[1]))
             return Bukkit.getOnlinePlayers().stream()
                 .map(Player::getName)
                 .filter(n -> n.toLowerCase().startsWith(args[2].toLowerCase()))
@@ -150,5 +144,33 @@ public final class FriendsAddAllCommand implements CommandExecutor {
 
     private void sendAction(@NotNull Player player, @NotNull String text) {
         player.sendActionBar(LegacyComponentSerializer.legacySection().deserialize(text));
+    }
+
+    private boolean isAddAllAlias(@NotNull String value) {
+        String normalized = value.toLowerCase(Locale.ROOT);
+        if (normalized.equals("addall")) return true;
+        try {
+            return BlockProt.getDefaultConfig().isLocalizedCommandAliasesEnabled()
+                && Translator.getLocale().getLanguage().equalsIgnoreCase("es")
+                && normalized.equals("agregartodos");
+        } catch (AssertionError ignored) {
+            return false;
+        }
+    }
+
+    private boolean isAddAllAliasPrefix(@NotNull String value) {
+        String normalized = value.toLowerCase(Locale.ROOT);
+        return preferredAddAllAlias().startsWith(normalized) || "addall".startsWith(normalized);
+    }
+
+    @NotNull
+    private String preferredAddAllAlias() {
+        try {
+            if (BlockProt.getDefaultConfig().isLocalizedCommandAliasesEnabled()
+                && Translator.getLocale().getLanguage().equalsIgnoreCase("es")) {
+                return "agregartodos";
+            }
+        } catch (AssertionError ignored) {}
+        return "addall";
     }
 }

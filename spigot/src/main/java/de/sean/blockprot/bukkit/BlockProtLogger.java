@@ -35,8 +35,8 @@ public final class BlockProtLogger {
     @Nullable private static PrintWriter writer = null;
     @Nullable private static File currentLogFile = null;
 
-    // Idioma secundario para la consola. Se activa con secondary_language_file en config.yml.
-    // Si está configurado, cada log de la consola muestra el mensaje en ambos idiomas.
+    // Secondary language for the console. Activated with secondary_language_file in config.yml.
+    // When configured, each console log line shows the message in both languages.
     @Nullable private static java.util.function.Function<String, String> secondaryTranslator = null;
 
     public static void setSecondaryTranslator(@Nullable java.util.function.Function<String, String> fn) {

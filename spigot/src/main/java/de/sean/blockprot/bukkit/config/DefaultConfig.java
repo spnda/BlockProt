@@ -354,6 +354,14 @@ public final class DefaultConfig extends BlockProtConfig {
         return config.getBoolean("optional_features_enable_all", false);
     }
 
+    /**
+     * Enables translated aliases for subcommands while keeping the canonical
+     * English command names available for documentation and scripts.
+     */
+    public boolean isLocalizedCommandAliasesEnabled() {
+        return config.getBoolean("localized_command_aliases", true);
+    }
+
     public boolean isMysqlEnabled() {
         if (!config.contains("mysql.enabled")) return false;
         return config.getBoolean("mysql.enabled");

@@ -204,8 +204,6 @@ public final class BlockProt extends JavaPlugin {
             BlockProtLogger.log("Detected 26.x year-based version scheme.");
         }
         
-        // Run startup compatibility checks
-        VersionValidator.validateStartup();
         StatHandler.enable();
         this.saveDefaultConfig();
         boolean hasUpgradeData = BackupTask.hasPriorData(this.getDataFolder());
@@ -215,11 +213,13 @@ public final class BlockProt extends JavaPlugin {
         this.mergeMissingConfigKeys();
         this.saveResource("worlds.yml", false);
         this.reloadConfigAndTranslations();
+        // Run startup compatibility checks after translations are loaded.
+        VersionValidator.validateStartup();
 
         hybridDatabase = new HybridDatabase(this);
         hybridDatabase.start(defaultConfig);
 
-        // Audit logger (SQLite, no requiere dependencias externas)
+        // SQLite audit logger; no external database is required.
         try {
             auditLogger = new AuditLogger(this.getDataFolder());
             getLogger().info(Translator.get(TranslationKey.CONSOLE__AUDIT_LOGGER_STARTED));
@@ -231,8 +231,6 @@ public final class BlockProt extends JavaPlugin {
         // Reload configuration automatically when relevant files change on disk.
         fileWatcher = new ConfigFileWatcher(this);
         fileWatcher.start();
-
-        // Startup backup runs only when previous plugin data is detected.
 
         // Optional inactivity cleanup.
         int inactivityDays = this.getConfig().getInt("inactivity_cleanup_days", -1);
@@ -268,7 +266,7 @@ public final class BlockProt extends JavaPlugin {
             try {
                 integration.enable();
                 if (integration.isEnabled()) {
-                    getLogger().info(String.format("Enabled plugin integration for plugin with id '%s'", integration.name));
+                    BlockProtLogger.log("integration", "Enabled plugin integration for plugin with id '" + integration.name + "'");
                 }
             } catch (NoClassDefFoundError ignored) {}
         }
@@ -279,7 +277,7 @@ public final class BlockProt extends JavaPlugin {
     @Override
     public void onDisable() {
         if (!isRunningCraftBukkit()) {
-            getLogger().info("Saving statistic file...");
+            BlockProtLogger.log("Saving statistic file...");
             StatHandler.disable();
             getServer().getOnlinePlayers().forEach(HumanEntity::closeInventory);
         }
@@ -311,7 +309,7 @@ public final class BlockProt extends JavaPlugin {
             if (!diskFile.exists()) {
                 this.saveResource(langFolder + resource, false);
             } else {
-                // File exists — merge any missing keys from the JAR version into it.
+                // File exists: merge any missing keys from the JAR version into it.
                 mergeMissingLangKeys(langFolder, resource, diskFile);
             }
         }
@@ -390,7 +388,8 @@ public final class BlockProt extends JavaPlugin {
             } catch (IllegalArgumentException e) {
                 // The resource doesn't exist in the JAR. Therefore, the config file doesn't
                 // exist, and we should return an empty config.
-                getLogger().warning("The configured language file does not exist: " + name);
+                getLogger().warning(Translator.get(TranslationKey.CONSOLE__CONFIG_LANGUAGE_MISSING)
+                    .replace("{file}", name));
                 return new YamlConfiguration();
             }
         }
@@ -413,23 +412,27 @@ public final class BlockProt extends JavaPlugin {
         YamlConfiguration jarConfig  = YamlConfiguration.loadConfiguration(new BufferedReader(new InputStreamReader(jarStream)));
         YamlConfiguration diskConfig = YamlConfiguration.loadConfiguration(diskFile);
 
-        boolean changed = false;
+        int added = 0;
         for (String key : jarConfig.getKeys(true)) {
             // Only copy leaf values (not section headers).
             if (jarConfig.isConfigurationSection(key)) continue;
             if (!diskConfig.contains(key)) {
                 diskConfig.set(key, jarConfig.get(key));
-                changed = true;
+                added++;
                 BlockProtLogger.log("lang-merge", resource + " added missing key: " + key);
             }
         }
 
-        if (changed) {
+        if (added > 0) {
             try {
                 diskConfig.save(diskFile);
-            getLogger().info("Updated " + resource + " with missing translation keys.");
-        } catch (IOException e) {
-                getLogger().warning("Failed to save merged lang file " + resource + ": " + e.getMessage());
+                getLogger().info(Translator.get(TranslationKey.CONSOLE__LANG_KEYS_UPDATED)
+                    .replace("{file}", resource)
+                    .replace("{count}", String.valueOf(added)));
+            } catch (IOException e) {
+                getLogger().warning(Translator.get(TranslationKey.CONSOLE__LANG_KEYS_SAVE_FAILED)
+                    .replace("{file}", resource)
+                    .replace("{error}", e.getMessage()));
             }
         }
     }
@@ -462,10 +465,12 @@ public final class BlockProt extends JavaPlugin {
 
         try {
             diskConfig.save(diskFile);
-            getLogger().info("config.yml updated with " + added + " missing option(s). Review it before enabling SP26 features.");
+            getLogger().info(Translator.get(TranslationKey.CONSOLE__CONFIG_KEYS_UPDATED)
+                .replace("{count}", String.valueOf(added)));
             BlockProtLogger.log("config-merge", "config.yml merge completed; added " + added + " missing option(s).");
         } catch (IOException e) {
-            getLogger().warning("Failed to save merged config.yml: " + e.getMessage());
+            getLogger().warning(Translator.get(TranslationKey.CONSOLE__CONFIG_KEYS_SAVE_FAILED)
+                .replace("{error}", e.getMessage()));
             BlockProtLogger.log("config-merge", "Failed to save config.yml after merge: " + e.getMessage());
         }
     }

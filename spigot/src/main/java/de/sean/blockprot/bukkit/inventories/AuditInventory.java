@@ -28,7 +28,7 @@ import java.util.List;
 // Owners see denied attempts. Admins also get a teleport button.
 public final class AuditInventory extends BlockProtInventory {
 
-    private static final int PAGE_SIZE = 45; // 5 filas para entradas, última fila para controles
+    private static final int PAGE_SIZE = 45; // Five rows for entries, last row for controls.
     private static final SimpleDateFormat DATE_FMT = new SimpleDateFormat("dd/MM HH:mm");
 
     private List<AuditEntry> entries = new ArrayList<>();
@@ -113,7 +113,7 @@ public final class AuditInventory extends BlockProtInventory {
         blockY = block.getY();
         blockZ = block.getZ();
 
-        // Cargamos las entradas una sola vez (o en cambio de página reutilizamos la lista)
+        // Load entries once; page changes reuse the cached list.
         if (entries.isEmpty()) {
             entries = audit.getEntriesForBlock(blockWorld, blockX, blockY, blockZ, 500);
         }
@@ -132,7 +132,7 @@ public final class AuditInventory extends BlockProtInventory {
             ItemStack skull = new ItemStack(Material.SKELETON_SKULL, 1);
             ItemMeta meta = skull.getItemMeta();
             if (meta != null) {
-                String actionLabel = e.action() == AuditLogger.Action.ACCESS_DENIED ? "§cX" : "§a✓";
+                String actionLabel = e.action() == AuditLogger.Action.ACCESS_DENIED ? "§cX" : "§aOK";
                 meta.setDisplayName(actionLabel + " §f" + (e.playerName() != null ? e.playerName() : e.playerUuid()));
                 List<String> lore = new ArrayList<>();
                 lore.add("§7" + DATE_FMT.format(new Date(e.timestamp())));
@@ -143,11 +143,11 @@ public final class AuditInventory extends BlockProtInventory {
             inventory.setItem(i, skull);
         }
 
-        // Controles en la última fila
+        // Controls on the last row.
         setItemStack(45, Material.CYAN_STAINED_GLASS_PANE,  TranslationKey.INVENTORIES__LAST_PAGE);
         setItemStack(46, Material.BLUE_STAINED_GLASS_PANE,  TranslationKey.INVENTORIES__NEXT_PAGE);
 
-        // Botón de teletransporte solo para admins
+        // Teleport button for admins only.
         if (player.hasPermission(Permissions.ADMIN.key())) {
             setItemStack(49, Material.COMPASS, TranslationKey.INVENTORIES__AUDIT__TELEPORT);
         }

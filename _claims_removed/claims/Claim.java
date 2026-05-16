@@ -9,10 +9,10 @@ import java.util.*;
 /**
  * Represents a named 3D protected region owned by a single player.
  *
- * <h3>Default flag values (SP26)</h3>
- * <p>When a new claim is created, all flags (TNT, Fire, PvP, Redstone)
- * are set to {@code true} (ALLOW) so the owner does not have to configure
- * them manually from the start.</p>
+ * <h3>Valores por defecto de flags (SP26)</h3>
+ * <p>Al crear una parcela nueva, todas las flags (TNT, Fuego, PvP, Redstone)
+ * se establecen como {@code true} (ALLOW) para que el dueño no tenga que
+ * configurarlas manualmente desde el primer momento.</p>
  *
  * @since SP26
  */
@@ -39,10 +39,10 @@ public class Claim {
     // ─── Constructor: new claim from wand positions ──────────────────────────
 
     /**
-     * Creates a new claim from the two corners selected with the wand.
+     * Crea una nueva parcela a partir de las dos esquinas seleccionadas con la varita.
      *
-     * <p>All flags are initialised to {@code true} (ALLOW) so the player
-     * does not have to configure them manually.</p>
+     * <p>Todas las flags se inicializan a {@code true} (ALLOW) para que el jugador
+     * no tenga que configurarlas manualmente.</p>
      */
     public Claim(@NotNull UUID id, @NotNull String ownerUuid, @NotNull String name,
                  @NotNull Location posA, @NotNull Location posB) {
@@ -126,11 +126,11 @@ public class Claim {
     // ─── Flag access ─────────────────────────────────────────────────────────
 
     /**
-     * Returns the value of a flag.
+     * Obtiene el valor de una flag.
      *
-     * <p>For new claims all flags are {@code true}; for claims loaded from disk
-     * the saved value takes precedence, with {@code true} as the default if the
-     * key is missing for backward compatibility.</p>
+     * <p>Para parcelas nuevas todas son {@code true}; para parcelas cargadas desde
+     * disco el valor guardado tiene precedencia (con {@code true} como default si
+     * la key falta, manteniendo compatibilidad hacia atrás).</p>
      */
     public boolean getFlag(@NotNull ClaimFlag flag) {
         return flags.getOrDefault(flag, true);

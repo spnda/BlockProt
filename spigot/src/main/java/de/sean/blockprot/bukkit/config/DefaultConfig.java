@@ -427,11 +427,6 @@ public final class DefaultConfig extends BlockProtConfig {
         return Math.max(1L, config.getLong("worldedit_paste_autolock.delay_ticks", 20L));
     }
 
-    public boolean shouldWorldEditPasteAutolockRequireClaim() {
-        if (!config.contains("worldedit_paste_autolock.require_claim_owner")) return true;
-        return config.getBoolean("worldedit_paste_autolock.require_claim_owner");
-    }
-
     @NotNull
     public List<String> getBedrockUsernamePrefixes() {
         if (!config.contains("bedrock_username_prefixes")) {

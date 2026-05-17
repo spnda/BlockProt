@@ -21,7 +21,7 @@ import java.util.zip.ZipOutputStream;
 /**
  * Creates a ZIP backup of the plugin data folder before critical operations.
  *
- * <p>Backup is ONLY created when existing data is detected (claims.yml, blockprot.db,
+ * <p>Backup is ONLY created when existing data is detected (blockprot.db,
  * or any nbt data file). This prevents noise on completely fresh installations.
  * When a backup is made, the console receives a clear notice and a reminder to
  * review the new config options.</p>
@@ -38,7 +38,6 @@ public final class BackupTask implements Runnable {
     /** Files whose presence signals that the server has pre-existing plugin data. */
     private static final String[] DATA_SENTINELS = {
         "data.yml",
-        "claims.yml",
         "blockprot.db",
         "blockprot_audit.sqlite",
         "stats.yml"

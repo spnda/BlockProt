@@ -67,7 +67,6 @@ public final class WorldEditPasteListener implements Listener {
 
         int radius = BlockProt.getDefaultConfig().getWorldEditPasteAutolockRadius();
         int maxBlocks = BlockProt.getDefaultConfig().getWorldEditPasteAutolockMaxBlocks();
-        boolean requireClaim = BlockProt.getDefaultConfig().shouldWorldEditPasteAutolockRequireClaim();
         int locked = 0;
         int scanned = 0;
 
@@ -85,7 +84,6 @@ public final class WorldEditPasteListener implements Listener {
 
                     Block block = world.getBlockAt(x, y, z);
                     if (!BlockProt.getDefaultConfig().isLockable(block.getType(), world)) continue;
-                    if (requireClaim && !isOwnClaim(player, block.getLocation())) continue;
 
                     try {
                         BlockNBTHandler handler = new BlockNBTHandler(block);
@@ -105,11 +103,6 @@ public final class WorldEditPasteListener implements Listener {
             }
         }
         logSummary(player, origin, locked, scanned, false);
-    }
-
-    private boolean isOwnClaim(@NotNull Player player, @NotNull Location location) {
-        // Claims system removed — location always considered accessible.
-        return true;
     }
 
     private void logSummary(@NotNull Player player, @NotNull Location origin, int locked, int scanned, boolean capped) {

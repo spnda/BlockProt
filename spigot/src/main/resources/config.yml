@@ -113,7 +113,6 @@ worldedit_paste_autolock:
   radius: 24
   max_blocks_per_paste: 5000
   delay_ticks: 20
-  require_claim_owner: false
 
 # Floodgate/Geyser Bedrock username prefixes to try when resolving friend names.
 # Floodgate defaults vary by server; keep all prefixes used by your network here.

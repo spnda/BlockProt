@@ -67,54 +67,7 @@ works exactly as in the upstream plugin.
 - Logs `PASS`, `FAIL`, or `WARN` for each startup check.
 - Does **not** spam the console; detailed information stays in the log file.
 
-### 3. 3D Claims System *(removed — implementation preserved)*
-
-> **Status: removed from the active build.**  
-> The full claims implementation was developed and compiled successfully, but was later removed
-> from the plugin's runtime registration. All source files are kept in `_claims_removed/` as a
-> reference implementation in case claims are re-enabled in the future.
->
-> The system was originally inspired by RedProtect-style region protection. It added 3D bounding-box
-> claims owned by individual players, with named regions, per-claim flag control, a wand-based
-> selection flow, welcome messages, and a GUI management hub. A `ClaimManager` handled persistence
-> via `claims.yml` and asynchronous load/save. The system was fully functional but was ultimately
-> removed to keep the plugin scope focused.
-
-**What was implemented (preserved in `_claims_removed/`):**
-
-- Named 3D regions with min/max XYZ coordinates and per-world scope.
-- Persistent storage in `claims.yml` with async load/save.
-- Wand-based selection (left-click = pos A, right-click = pos B) with particle border preview.
-- Chat prompt for naming a new claim with configurable timeout.
-- Welcome message shown to players on claim entry.
-- Overlap detection between claims.
-- Per-claim behaviour flags (see below).
-- GUI management hub (Shift + Right Click inside own claim).
-- Archived claim command tree while the module was active. No claim commands are
-  registered in the current build.
-
-**Claim flags that were implemented:**
-
-| Flag | Description |
-|------|-------------|
-| `TNT` | Allow TNT / creeper explosions to damage blocks |
-| `FIRE` | Allow fire to spread |
-| `PVP` | Allow PvP between players |
-| `REDSTONE` | Allow non-members to trigger redstone |
-| `FLOW` | Allow water and lava to flow |
-| `LEAF_DECAY` | Allow leaf decay |
-| `MOB_SPAWNING` | Allow natural mob spawning |
-| `INVINCIBLE` | Make players inside the claim take no damage |
-| `CHEST` | Allow non-members to open containers |
-| `DOOR` | Allow non-members to use doors and trapdoors |
-| `LEVER_BUTTON` | Allow non-members to use levers and buttons |
-| `USE_BUCKET` | Allow non-members to use buckets |
-| `PET_SPAWNING` | Allow taming new pets inside the claim |
-| `PET_RIDING` | Allow non-members to mount pets |
-| `PET_MOVING` | Allow non-members to lead animals |
-| `DENY_ENDERPEARL` | Prevent ender pearl teleportation into / within the claim |
-
-### 4. Hybrid MySQL / NBT Backend *(optional)*
+### 3. Hybrid MySQL / NBT Backend *(optional)*
 
 NBT remains the source of truth for per-block ownership and friend lists. MySQL/MariaDB is
 used as an optional index for fast lookups, auditing, and cross-server global trust.
@@ -126,7 +79,7 @@ used as an optional index for fast lookups, auditing, and cross-server global tr
 - In-memory cache for global trust, loaded at startup.
 - Disabled by default (`mysql.enabled: false`).
 
-### 5. Master Friend List & `/bp friends addall`
+### 4. Master Friend List & `/bp friends addall`
 
 - `/bp friends` - opens the global default-friends GUI.
 - `/bp friends addall <player>` - adds the target player to **every** block the executor owns,
@@ -136,7 +89,7 @@ used as an optional index for fast lookups, auditing, and cross-server global tr
   always continue to work.
 - Reports how many blocks were updated via an action bar message.
 
-### 6. SQLite Access Audit Log
+### 5. SQLite Access Audit Log
 
 - Database: `plugins/BlockProt/blockprot_audit.sqlite`.
 - Records `ACCESS_DENIED` and `ACCESS_GRANTED` events with player UUID, name, location, and timestamp.
@@ -146,23 +99,23 @@ used as an optional index for fast lookups, auditing, and cross-server global tr
 - In-game GUI (`AuditInventory`) shows access history per block.
 - Admin teleport button inside the audit GUI.
 
-### 7. Automatic Backup & Safe Migration
+### 6. Automatic Backup & Safe Migration
 
-- On startup, detects pre-existing plugin data (`data.yml`, `claims.yml`, `blockprot.db`, etc.).
+- On startup, detects pre-existing plugin data (`data.yml`, `blockprot.db`, etc.).
 - If prior data is found, creates a ZIP backup under `plugins/BlockProt/backups/` **before** any
   migration step runs.
 - Rotates backups; keeps a maximum of 10 ZIP files.
 - `/bp reload` always triggers a forced backup first.
 - Does not back up session log files or the `backups/` folder itself.
 
-### 8. Inactivity Cleanup *(optional)*
+### 7. Inactivity Cleanup *(optional)*
 
 - Configurable via `inactivity_cleanup_days` in `config.yml` (default `-1` = disabled).
 - When enabled, runs once at startup and removes protections from blocks owned by players who
   have not logged in for the configured number of days.
 - Notifies online admins with a summary message.
 
-### 9. Per-World Configuration (`worlds.yml`)
+### 8. Per-World Configuration (`worlds.yml`)
 
 - Each world can have its own lists of lockable tile entities, blocks, shulker boxes, and doors.
 - `enabled: false` disables all block protection in that world.
@@ -171,32 +124,26 @@ used as an optional index for fast lookups, auditing, and cross-server global tr
   from `config.yml` (non-destructive; existing entries are never overwritten).
 - A broken `worlds.yml` is replaced with the bundled default and a warning is logged.
 
-### 10. Config File Watcher
+### 9. Config File Watcher
 
 - Monitors `config.yml`, `worlds.yml`, and all `lang/*.yml` files for changes.
 - Automatically reloads the plugin configuration when a change is detected.
 - Debounced (2 s) to avoid duplicate reloads while an editor is still writing.
 
-### 11. Hardened Security Options
+### 10. Hardened Security Options
 
 | Config key | Default | Description |
 |---|---|---|
 | `protect_locked_blocks_from_explosions` | `true` | Prevents explosions from destroying NBT-protected blocks |
 | `block_protected_block_piston_movement` | `true` | Prevents pistons from pushing or pulling NBT-protected blocks |
 
-### 12. `/bp help` Command
+### 11. `/bp help` Command
 
 - `/bp help` (also `/bp ayuda`) lists all available subcommands with a short description.
 
-### 13. New Configuration Keys
+### 12. New Configuration Keys
 
 ```yaml
-# ── Claims (implementation preserved in _claims_removed/) ─────────────────
-claims_enabled: false
-claims_hub_enabled: false
-claims_advanced_enabled: false
-claims_inherit_global_trust: false
-
 # ── MySQL hybrid index ─────────────────────────────────────────────────────
 mysql:
   enabled: false
@@ -215,22 +162,11 @@ mysql:
 protect_locked_blocks_from_explosions: true
 block_protected_block_piston_movement: true
 
-# ── Claim flags (only relevant if claims_enabled: true) ───────────────────
-claims_flag_flow_enabled: false
-claims_flag_mob_spawning_enabled: false
-claims_flag_invincible_enabled: false
-claims_flag_deny_enderpearl_enabled: false
-claims_flag_pets_enabled: false
-claims_flag_chest_enabled: false
-claims_flag_door_enabled: false
-claims_flag_lever_button_enabled: false
-claims_flag_use_bucket_enabled: false
-
 # ── Inactivity cleanup ────────────────────────────────────────────────────
 inactivity_cleanup_days: -1   # -1 = disabled
 ```
 
-### 14. New Files Added vs. Upstream
+### 13. New Files Added vs. Upstream
 
 | File | Description |
 |------|-------------|
@@ -248,7 +184,6 @@ inactivity_cleanup_days: -1   # -1 = disabled
 | `tasks/BackupTask.java` | Pre-operation ZIP backup |
 | `tasks/ConfigFileWatcher.java` | Auto-reload on config file change |
 | `tasks/InactivityCleanupTask.java` | Remove protections of inactive players |
-| `_claims_removed/` | Full claims implementation (preserved, not loaded) |
 
 ---
 

@@ -14,7 +14,7 @@ buildscript {
 plugins {
     id("org.gradle.java-library")
     id("org.ajoberstar.grgit") version "5.2.1"
-    id("org.cadixdev.licenser") version "0.6.1"
+    id("net.minecraftforge.licenser") version "1.2.0"
 }
 
 fun gitBranchName(): String {
@@ -33,7 +33,7 @@ val blockProtVersion: String by project
 
 allprojects {
     apply(plugin = "org.gradle.java-library")
-    apply(plugin = "org.cadixdev.licenser")
+    apply(plugin = "net.minecraftforge.licenser")
 
     group = "de.sean.blockprot"
     version = blockProtVersion
@@ -47,9 +47,9 @@ allprojects {
     }
 
     tasks.compileJava {
-        options.release.set(17)
-        java.sourceCompatibility = JavaVersion.VERSION_17
-        java.targetCompatibility = JavaVersion.VERSION_17
+        options.release.set(25)
+        java.sourceCompatibility = JavaVersion.VERSION_25
+        java.targetCompatibility = JavaVersion.VERSION_25
     }
 
     ext["gitBranchName"] = gitBranchName()
@@ -93,7 +93,7 @@ tasks.register("github") {
         // Get the output JARs for each subproject.
         val files = mutableListOf<File?>()
         subprojects.filter { it.name != "common" }.forEach {
-            val dir = "${it.buildDir}/libs/"
+            val dir = "${it.layout.buildDirectory.get().asFile}/libs/"
             files.add(file(dir).listFiles()?.last { file ->
                 file.nameWithoutExtension.endsWith("all")
             })

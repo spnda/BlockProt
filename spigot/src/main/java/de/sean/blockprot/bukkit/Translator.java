@@ -38,7 +38,7 @@ public final class Translator {
      * The list of all included translation files. This is updated at compile
      * time from our gradle buildscript.
      */
-    public static final HashSet<String> DEFAULT_TRANSLATION_FILES = Sets.newHashSet(BlockProtUtil.parseStringList("$TRANSLATION_FILES"));
+    public static final HashSet<String> DEFAULT_TRANSLATION_FILES = Sets.newHashSet(BlockProtUtil.parseStringList(TranslationFiles.LIST));
 
     /**
      * The default locale we use for default translation

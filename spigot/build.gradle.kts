@@ -6,11 +6,9 @@ buildscript {
 
 plugins {
     id("maven-publish")
-    // Since the original shadow is currently not being updated, we need to use this fork instead.
-    // See https://plugins.gradle.org/plugin/io.github.goooler.shadow
-    id("io.github.goooler.shadow") version "8.1.7"
-    id("net.kyori.blossom") version "1.3.1"
-    id("xyz.jpenilla.run-paper") version "2.3.0"
+    id("com.gradleup.shadow") version "9.6.1"
+    id("net.kyori.blossom") version "2.2.0"
+    id("xyz.jpenilla.run-paper") version "3.0.2"
 }
 
 val nbtApiVersion: String by project
@@ -44,7 +42,7 @@ dependencies {
     implementation(project(":common"))
 
     // Spigot
-    compileOnly("org.spigotmc:spigot-api:1.21.3-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:26.3-R0.1-SNAPSHOT")
     compileOnly("org.apache.commons:commons-lang3:3.13.0")
 
     // bStats
@@ -62,20 +60,25 @@ dependencies {
     implementation("com.github.angeschossen:LandsAPI:6.28.11")
 }
 
-blossom {
-    // We use blossom to dynamically get the list of language files
-    // and inject them into the Translator.java source file.
-    replaceToken(
-        "\$TRANSLATION_FILES",
-        // Get the first sourceSet and iterate over all resource files.
-        fileTree(sourceSets["main"].resources.srcDirs.first()).files.filter {
-            // Use a regex string to only include translations_xx.yml files.
-            it.path.contains("translations_[a-z].+?.yml".toRegex())
-        }.map {
-            it.name
-        }.toString(),
-        "src/main/java/de/sean/blockprot/bukkit/Translator.java"
-    )
+sourceSets {
+    main {
+        blossom {
+            // We use blossom to dynamically get the list of language files
+            // and inject them into the TranslationFiles.java template.
+            javaSources {
+                property(
+                    "translationFiles",
+                    // Get the first resource dir and iterate over all resource files.
+                    fileTree(resources.srcDirs.first()).files.filter {
+                        // Use a regex string to only include translations_xx.yml files.
+                        it.path.contains("translations_[a-z].+?.yml".toRegex())
+                    }.map {
+                        it.name
+                    }.toString()
+                )
+            }
+        }
+    }
 }
 
 java {
@@ -93,7 +96,7 @@ tasks.processResources {
 
 tasks.javadoc {
     options {
-        source = "17"
+        source = "25"
         encoding = "UTF-8"
         memberLevel = JavadocMemberLevel.PACKAGE
         (this as CoreJavadocOptions).addStringOption("Xdoclint:none", "-quiet")
@@ -132,9 +135,9 @@ tasks.build {
 
 tasks.runServer {
     downloadPlugins {
-        url("https://download.luckperms.net/1561/bukkit/loader/LuckPerms-Bukkit-5.4.146.jar")
+        modrinth("luckperms", "v5.5.71-bukkit")
     }
-    minecraftVersion("1.21.5")
+    minecraftVersion("26.3")
 }
 
 publishing {
